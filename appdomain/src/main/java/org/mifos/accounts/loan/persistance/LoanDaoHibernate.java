@@ -90,10 +90,14 @@ public class LoanDaoHibernate implements LoanDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<LoanBO> findAllLoansWaitingForApproval(int position,int noOfObjects) {
+    public List<LoanBO> findAllLoansWaitingForApproval(int position,int noOfObjects,String ordering) {
         List<LoanBO> inapprovedLoansList = new ArrayList<LoanBO>();
-        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffset(NamedQueryConstants.GET_ALL_WAITING_FOR_APPROVAL_LOANS, queryParameters,position,noOfObjects);
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        if(ordering==null){
+            ordering = "loan.globalAccountNum";
+        }
+        queryParameters.put("ordering",ordering);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_ALL_WAITING_FOR_APPROVAL_LOANS, queryParameters,position,noOfObjects);
         if (queryResult != null) {
             inapprovedLoansList.addAll(queryResult);
         }
@@ -102,10 +106,14 @@ public class LoanDaoHibernate implements LoanDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<LoanBO> findAllBadStandingLoans(int position,int noOfObjects) {
+    public List<LoanBO> findAllBadStandingLoans(int position,int noOfObjects,String ordering) {
         List<LoanBO> badStandingLoans = new ArrayList<LoanBO>();
-        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffset(NamedQueryConstants.GET_ALL_BAD_STANDING_LOANS, queryParameters,position,noOfObjects);
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        if(ordering==null){
+            ordering = "loan.globalAccountNum";
+        }
+        queryParameters.put("ordering",ordering);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_ALL_BAD_STANDING_LOANS, queryParameters,position,noOfObjects);
         if (queryResult != null) {
             badStandingLoans.addAll(queryResult);
         }
@@ -114,14 +122,18 @@ public class LoanDaoHibernate implements LoanDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<LoanBO> findLoansToBePaidCurrentWeek(int position,int noOfObjects) {
+    public List<LoanBO> findLoansToBePaidCurrentWeek(int position,int noOfObjects,String ordering) {
         List<LoanBO> loans = new ArrayList<LoanBO>();
-        Map<String, Date> queryParameters = new HashMap<String, Date>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         LocalDate lDate = new LocalDate();
         queryParameters.put("START_DATE", lDate.toDateTimeAtStartOfDay().toDate());
         lDate=lDate.plusWeeks(1);
         queryParameters.put("END_DATE",lDate.toDateTimeAtStartOfDay().toDate());
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffset(NamedQueryConstants.GET_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK, queryParameters,position,noOfObjects);
+        if(ordering==null){
+            ordering = "loan.globalAccountNum";
+        }
+        queryParameters.put("ordering",ordering);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK, queryParameters,position,noOfObjects);
         if (queryResult != null) {
             loans.addAll(queryResult);
         }
@@ -154,11 +166,15 @@ public class LoanDaoHibernate implements LoanDao {
     }
 
     @Override
-    public List<LoanBO> findBadStandingLoansUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId) {
+    public List<LoanBO> findBadStandingLoansUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId,String ordering) {
         List<LoanBO> badStandingLoans = new ArrayList<LoanBO>();
-        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ID",loanOfficerId);
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffset(NamedQueryConstants.GET_BAD_STANDING_LOANS_UNDER_LOANOFF, queryParameters,position,noOfObjects);
+        if(ordering==null){
+            ordering = "loan.globalAccountNum";
+        }
+        queryParameters.put("ordering",ordering);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_BAD_STANDING_LOANS_UNDER_LOANOFF, queryParameters,position,noOfObjects);
         if (queryResult != null) {
             badStandingLoans.addAll(queryResult);
         }
@@ -174,11 +190,15 @@ public class LoanDaoHibernate implements LoanDao {
     }
 
     @Override
-    public List<LoanBO> findLoansWaitingForApprovalUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId) {
+    public List<LoanBO> findLoansWaitingForApprovalUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId,String ordering) {
         List<LoanBO> inapprovedLoansList = new ArrayList<LoanBO>();
-        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ID",loanOfficerId);
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffset(NamedQueryConstants.GET_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF, queryParameters,position,noOfObjects);
+        if(ordering==null){
+            ordering = "loan.globalAccountNum";
+        }
+        queryParameters.put("ordering",ordering);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF, queryParameters,position,noOfObjects);
         if (queryResult != null) {
             inapprovedLoansList.addAll(queryResult);
         }
@@ -194,7 +214,7 @@ public class LoanDaoHibernate implements LoanDao {
     }
 
     @Override
-    public List<LoanBO> findLoansToBePaidCurrentWeekUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId) {
+    public List<LoanBO> findLoansToBePaidCurrentWeekUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId,String ordering) {
         List<LoanBO> loans = new ArrayList<LoanBO>();
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         LocalDate lDate = new LocalDate();
@@ -202,7 +222,11 @@ public class LoanDaoHibernate implements LoanDao {
         lDate=lDate.plusWeeks(1);
         queryParameters.put("END_DATE",lDate.toDateTimeAtStartOfDay().toDate());
         queryParameters.put("ID",loanOfficerId);
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffset(NamedQueryConstants.GET_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF,queryParameters,position,noOfObjects);
+        if(ordering==null){
+            ordering = "loan.globalAccountNum";
+        }
+        queryParameters.put("ordering",ordering);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF,queryParameters,position,noOfObjects);
         if (queryResult != null){
             loans.addAll(queryResult);
         }

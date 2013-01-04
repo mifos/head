@@ -20,13 +20,13 @@ public interface DashboardServiceFacade {
     int countBadStandingLoans();
     int countLoansToBePaidCurrentWeek();
     
-    List<?> getActiveClients(int position,int noOfObjects);
-    List<?> getActiveGroups(int position,int noOfObjects);
-    List<?> getActiveCenters(int position,int noOfObjects);
-    List<?> getBorrowers(int position,int noOfObj);
-    List<?> getBorrowersGroup(int position,int noOfObjects);
-    List<?> getWaitingForApprovalLoans(int position,int noOfObjects);
-    List<?> getLoansInArrears(int position,int noOfObjects);
-    List<?> getLoansToBePaidCurrentWeek(int position,int noOfObjects);
+    List<?> getActiveClients(int position,int noOfObjects,String ordering);
+    List<?> getActiveGroups(int position,int noOfObjects,String ordering);
+    List<?> getActiveCenters(int position,int noOfObjects,String ordering);
+    List<?> getBorrowers(int position,int noOfObj,String ordering);
+    List<?> getBorrowersGroup(int position,int noOfObjects,String ordering);
+    List<?> getWaitingForApprovalLoans(int position,int noOfObjects,String ordering);
+    List<?> getLoansInArrears(int position,int noOfObjects,String ordering);
+    List<?> getLoansToBePaidCurrentWeek(int position,int noOfObjects,String ordering);
 
 }

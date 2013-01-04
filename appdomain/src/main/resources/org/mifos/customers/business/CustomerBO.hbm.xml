@@ -1888,8 +1888,8 @@
     
     <query name="Customer.getAllBorrowers">
         <![CDATA[
-                from org.mifos.customers.client.business.ClientBO c
-                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                from org.mifos.customers.client.business.ClientBO customer
+                WHERE customer.customerId in (Select Distinct loan.customer.customerId 
                 FROM org.mifos.accounts.loan.business.LoanBO loan
                 WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
         ]]>
@@ -1897,18 +1897,18 @@
     
     <query name="Customer.getBorrowersUnderLoanOfficerID">
         <![CDATA[
-                from org.mifos.customers.client.business.ClientBO c
-                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                from org.mifos.customers.client.business.ClientBO customer
+                WHERE customer.customerId in (Select Distinct loan.customer.customerId 
                 FROM org.mifos.accounts.loan.business.LoanBO loan
                 WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
-                AND c.personnel.personnelId=:ID
+                AND customer.personnel.personnelId=:ID
         ]]>
     </query>
     
     <query name="Customer.getAllBorrowersGroup">
         <![CDATA[
-                from org.mifos.customers.group.business.GroupBO c
-                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                from org.mifos.customers.group.business.GroupBO customer
+                WHERE customer.customerId in (Select Distinct loan.customer.customerId 
                 FROM org.mifos.accounts.loan.business.LoanBO loan
                 WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
         ]]>
@@ -1916,11 +1916,11 @@
     
     <query name="Customer.getBorrowersGroupUnderLoanOfficerID">
         <![CDATA[
-                from org.mifos.customers.group.business.GroupBO c
-                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                from org.mifos.customers.group.business.GroupBO customer
+                WHERE customer.customerId in (Select Distinct loan.customer.customerId 
                 FROM org.mifos.accounts.loan.business.LoanBO loan
                 WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
-                AND c.personnel.personnelId=:ID
+                AND customer.personnel.personnelId=:ID
         ]]>
     </query>
     
@@ -2014,9 +2014,9 @@
     
     <query name="Customer.getActiveGroupsUnderLoanOff">
         <![CDATA[
-                from org.mifos.customers.group.business.GroupBO c
-                WHERE c.customerStatus.description='Customer was Active'
-                AND c.personnel.personnelId=:ID
+                from org.mifos.customers.group.business.GroupBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+                AND customer.personnel.personnelId=:ID
         ]]>
     </query>
     
@@ -2029,9 +2029,9 @@
     
     <query name="Customer.getActiveCentersUnderLoanOff">
         <![CDATA[
-                from org.mifos.customers.center.business.CenterBO c
-                WHERE c.customerStatus.description='Customer was Active'
-                AND c.personnel.personnelId=:ID
+                from org.mifos.customers.center.business.CenterBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+                AND customer.personnel.personnelId=:ID
         ]]>
     </query>
 </hibernate-mapping>

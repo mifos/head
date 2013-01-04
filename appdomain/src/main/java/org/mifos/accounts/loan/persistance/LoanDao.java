@@ -38,25 +38,25 @@ public interface LoanDao {
 
     List<LoanBO> findIndividualLoans(Integer accountId);
     
-    List<LoanBO> findAllBadStandingLoans(int position,int noOfObjects);
+    List<LoanBO> findAllBadStandingLoans(int position,int noOfObjects,String ordering);
     
-    List<LoanBO> findBadStandingLoansUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId);
+    List<LoanBO> findBadStandingLoansUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId,String ordering);
     
     int countAllBadStandingLoans();
     
     int countBadStandingLoansUnderLoanOfficer(Short loanOfficerId);
     
-    List<LoanBO> findAllLoansWaitingForApproval(int position,int noOfObjects);
+    List<LoanBO> findAllLoansWaitingForApproval(int position,int noOfObjects,String ordering);
     
-    List<LoanBO> findLoansWaitingForApprovalUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId);
+    List<LoanBO> findLoansWaitingForApprovalUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId,String ordering);
     
     int countAllLoansWaitingForApproval();
     
     int countLoansWaitingForApprovalUnderLoanOfficer(Short loanOfficerId);
     
-    List<LoanBO> findLoansToBePaidCurrentWeek(int position,int noOfObjects);
+    List<LoanBO> findLoansToBePaidCurrentWeek(int position,int noOfObjects,String ordering);
     
-    List<LoanBO> findLoansToBePaidCurrentWeekUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId);
+    List<LoanBO> findLoansToBePaidCurrentWeekUnderLoanOfficer(int position,int noOfObjects,Short loanOfficerId,String ordering);
     
     int countLoansToBePaidCurrentWeek();
     
