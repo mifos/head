@@ -2261,7 +2261,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new BusinessRuleException(LoanConstants.NOSEARCHRESULTS);
         }
 
-        if (!loan.isAccountActive()) {
+        if (!loan.isAccountActive() || loan.isGroupLoanAccountMember()) {
             throw new BusinessRuleException(LoanConstants.NOSEARCHRESULTS);
         }
 

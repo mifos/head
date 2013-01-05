@@ -115,6 +115,12 @@ public class ReverseLoanDisbursalAction extends BaseAction {
         LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         this.loanAccountServiceFacade.reverseLoanDisbursal(loan.getGlobalAccountNum(), actionForm.getNote());
+        
+        if (loan.isGroupLoanAccountParent()) {
+            for (LoanBO member : loan.getMemberAccounts()) {
+                this.loanAccountServiceFacade.reverseLoanDisbursal(member.getGlobalAccountNum(), actionForm.getNote());
+            }
+        }
 
         logger.debug("Outside update method");
         return mapping.findForward(ActionForwards.update_success.toString());
