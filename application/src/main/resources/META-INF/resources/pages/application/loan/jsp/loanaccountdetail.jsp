@@ -842,7 +842,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose>
 							<c:choose>
 								<c:when
-									test="${loanInformationDto.accountStateId==3 || loanInformationDto.accountStateId==4}">
+									test="${(loanInformationDto.accountStateId==3 || loanInformationDto.accountStateId==4) && !loanAccount.groupLoanAccountMember}">
 									<tr>
 										<td class="paddingL10"><span class="fontnormal8pt">
 										<c:url value="loanDisbursementAction.do" var="loanDisbursementActionLoadMethodUrl" >
