@@ -40,11 +40,13 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.business.RatePenaltyBO;
 import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -666,8 +668,32 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 }
             }
             
-            Double chargeAmount  = sumCharge(idsAndValues);    
-                    
+            boolean isRateCharge = false;
+            
+            if (!chargeId.equals(Short.valueOf(AccountConstants.MISC_FEES)) 
+                    && !chargeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
+                
+                if (isPenaltyType) {
+                    PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                    if (penalty instanceof RatePenaltyBO) {
+                        isRateCharge = true;
+                    }
+                } else {
+                    FeeBO fee = feeDao.findById(chargeId);
+                    if (fee.getFeeType().equals(RateAmountFlag.RATE)) {
+                        isRateCharge = true;
+                    }
+                }
+            }
+            
+            Double chargeAmount = null;
+            
+            if (!isRateCharge) {
+                chargeAmount  = sumCharge(idsAndValues);    
+            } else {
+                chargeAmount = Double.valueOf(idsAndValueAsTreeMap.firstEntry().getValue());
+            }
+                   
             parentAccount.updateDetails(userContext);
 
             CustomerLevel customerLevel = null;
