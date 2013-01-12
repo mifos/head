@@ -162,7 +162,8 @@ explanation of the license and how it is applied.
                                             <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />                                            
                                     </c:url>
 							<c:choose>
-								<c:when test="${BusinessKey.parentGroupLoanAccount || BusinessKey.groupLoanAccountMember }">
+								<c:when test="${(BusinessKey.parentGroupLoanAccount || BusinessKey.groupLoanAccountMember) && 
+										(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9' || BusinessKey.accountState.id=='6')  }">
 									<html-el:link styleId="loanaccountdetail.link.applyPayment"
 										href="${applyGroupPaymentActionMethodUrl}">
 										<mifos:mifoslabel name="loan.apply_payment" />
