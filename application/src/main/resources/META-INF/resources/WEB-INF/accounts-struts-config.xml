@@ -248,6 +248,7 @@
                 scope="session">
             <forward name="load_success" path="/pages/accounts/jsp/change_status.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
+            <forward name="group_loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
             <forward name="preview_success" path="/pages/accounts/jsp/change_status_preview.jsp"/>
             <forward name="previous_success" path="/pages/accounts/jsp/change_status.jsp"/>
