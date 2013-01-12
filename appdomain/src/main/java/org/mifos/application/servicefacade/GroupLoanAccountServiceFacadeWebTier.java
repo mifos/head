@@ -593,11 +593,34 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         BigDecimal amountSpent = BigDecimal.ZERO;
         List<LoanBO> members = new ArrayList<LoanBO>(loanAccount.getMemberAccounts());
         Iterator<LoanBO> itr = members.iterator();
+        List<BigDecimal> factors = new ArrayList<BigDecimal>();
+        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal totalFactor = BigDecimal.ZERO;
         
         while(itr.hasNext()) {
             LoanBO memberAccount = itr.next();
-                if(itr.hasNext()) {
-                    BigDecimal currentAmount = amount.divide(memberAccount.calcFactorOfEntireLoan(), RoundingMode.HALF_UP);
+            BigDecimal factor = memberAccount.calcFactorOfEntireLoan(); 
+            total = total.add(factor);
+            if (memberAccount.isAccountActive() || memberAccount.isInState(AccountState.LOAN_PARTIAL_APPLICATION)
+                    || memberAccount.isInState(AccountState.LOAN_PENDING_APPROVAL)) {
+                factors.add(factor);   
+                totalFactor = totalFactor.add(factor);
+            } else {
+                itr.remove();
+            }
+        }
+        
+        BigDecimal scale = totalFactor.divide(total, RoundingMode.HALF_EVEN);
+        
+        for (int i = 0; i < factors.size(); ++i) {
+            BigDecimal rescaled = factors.get(i).multiply(scale);
+            factors.set(i, rescaled);
+        }
+        
+        for (int i = 0; i < members.size(); ++i) {
+            LoanBO memberAccount = members.get(i);
+                if(i < members.size() - 1) {
+                    BigDecimal currentAmount = amount.divide(factors.get(i), RoundingMode.HALF_UP);
                     memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
                     amountSpent = amountSpent.add(currentAmount);
                 } else {
