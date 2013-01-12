@@ -127,7 +127,8 @@ public class ApplyChargeAction extends BaseAction {
     private List<LoanBO> getMemberAccountsInformation(String accountId) {
         List<LoanBO> membersInfo = new ArrayList<LoanBO>();
         for (LoanBO memberAcc : loanDao.findById(Integer.valueOf(accountId)).getMemberAccounts()) {
-            if (memberAcc.isAccountActive() || memberAcc.isInState(AccountState.LOAN_APPROVED)) {
+            if (memberAcc.isAccountActive() || memberAcc.isInState(AccountState.LOAN_PARTIAL_APPLICATION)
+                    || memberAcc.isInState(AccountState.LOAN_PENDING_APPROVAL)) {
                 membersInfo.add(memberAcc);
             }
         }
