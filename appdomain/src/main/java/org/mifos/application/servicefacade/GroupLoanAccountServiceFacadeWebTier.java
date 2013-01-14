@@ -602,7 +602,8 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             BigDecimal factor = memberAccount.calcFactorOfEntireLoan(); 
             total = total.add(factor);
             if (memberAccount.isAccountActive() || memberAccount.isInState(AccountState.LOAN_PARTIAL_APPLICATION)
-                    || memberAccount.isInState(AccountState.LOAN_PENDING_APPROVAL)) {
+                    || memberAccount.isInState(AccountState.LOAN_PENDING_APPROVAL)
+                    || memberAccount.isInState(AccountState.LOAN_APPROVED)) {
                 factors.add(factor);   
                 totalFactor = totalFactor.add(factor);
             } else {
