@@ -549,6 +549,13 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 //adjust New Group Loan member payments
                 if (accountBO.isGroupLoanAccount()){
                     for (LoanBO memberAccount : ((LoanBO)accountBO).getMemberAccounts()){
+                        
+                        AccountPaymentEntity memberPayment = memberAccount.getLastPmntToBeAdjusted();
+                        if (memberPayment.getParentPaymentId() == null ||
+                                !memberPayment.getParentPaymentId().getPaymentId().equals(accountPaymentEntity.getPaymentId())) {
+                            continue;
+                        }
+                        
                         memberAccount.setUserContext(getUserContext());
                         memberAccount.adjustLastPayment(adjustmentNote, personnelBO);
                         legacyAccountDao.createOrUpdate(memberAccount);

@@ -646,17 +646,16 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         BigDecimal amountSpent = BigDecimal.ZERO;
         
         List<LoanBO> members = new ArrayList<LoanBO>(parentLoanAccount.getMemberAccounts());
-        for(int i = 0; i < members.size(); i++) {
-            if (!members.get(i).isAccountActive()) {
-                members.remove(i);
-            }
-        }
+
         Iterator<LoanBO> itr = members.iterator();
         while(itr.hasNext()) {
             memberAccount = itr.next();
             if(itr.hasNext()) {
                 currentAmount = newAmount.divide(memberAccount.calcFactorOfEntireLoan(), RoundingMode.HALF_UP);
                 memberPayment = memberAccount.findPaymentByParentPaymentId(parentPaymentId);
+                if (memberPayment == null) {
+                    continue;
+                }
                 memberAdjustmentDtoList.add(new GroupLoanMemberAdjustmentDto(memberPayment.getPaymentId(), memberAccount.getAccountId(),
                         memberPayment.getAmount().getAmount(), currentAmount, new LocalDate(memberPayment.getPaymentDate()),
                         memberAccount.getGlobalAccountNum(), memberAccount.getCustomer().getGlobalCustNum(),
