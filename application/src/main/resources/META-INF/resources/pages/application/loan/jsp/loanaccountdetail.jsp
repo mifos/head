@@ -579,10 +579,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										value="${feesSet.accountFeeAmount}" />&nbsp;( <mifos:mifoslabel
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${feesSet.meetingRecurrence}" />)
-									<html-el:link styleId="loanAccountDetail.link.removePeriodicFee_${status.count}"
-										href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
-										<mifos:mifoslabel name="loan.remove" />
-									</html-el:link> <br>
+										<c:if test="${!loanAccount.groupLoanAccountMember}">
+											<html-el:link styleId="loanAccountDetail.link.removePeriodicFee_${status.count}"
+												href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+												<mifos:mifoslabel name="loan.remove" />
+											</html-el:link> 
+										</c:if>
+										<br>
 									</span>
 								</c:if>
 							</c:forEach><br>
@@ -595,11 +598,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										<span class="fontnormal"> <fmt:formatNumber
 										value="${feesSet.accountFeeAmount}" />&nbsp;
 										<!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
-									<c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">					
+									<c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">
+										<c:if test="${!loanAccount.groupLoanAccountMember}">					
 											<html-el:link styleId="loanAccountDetail.link.removeOneTimeFee_${status.count}"
 											href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
 											<mifos:mifoslabel name="loan.remove" />
-										</html-el:link> 
+											</html-el:link>
+										</c:if> 
 									</c:if> <br>
 									</span>
 								</c:if>
@@ -620,10 +625,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                     <span class="fontnormal">
                                         <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
                                         (<c:out value="${penaltySet.penaltyFrequencyName}"/>) &nbsp;
-                                        <html-el:link styleId="loanAccountDetail.link.removePenalty_${status.count}"
-                                            href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
-                                            <mifos:mifoslabel name="loan.remove" />
-                                        </html-el:link> 
+                                        <c:if test="${!loanAccount.groupLoanAccountMember}">
+	                                        <html-el:link styleId="loanAccountDetail.link.removePenalty_${status.count}"
+	                                            href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+	                                            <mifos:mifoslabel name="loan.remove" />
+	                                        </html-el:link> 
+                                        </c:if>
                                         <br>
                                     </span>
                                 </c:if>
@@ -642,10 +649,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
                                         <!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
                                         <c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">
-                                            <html-el:link styleId="loanAccountDetail.link.removeOneTimePenalty_${status.count}"
-                                                href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
-                                                <mifos:mifoslabel name="loan.remove" />
-                                            </html-el:link> 
+                                        	<c:if test="${!loanAccount.groupLoanAccountMember}">
+	                                            <html-el:link styleId="loanAccountDetail.link.removeOneTimePenalty_${status.count}"
+	                                                href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+	                                                <mifos:mifoslabel name="loan.remove" />
+	                                            </html-el:link> 
+                                            </c:if>
                                         </c:if>
                                         <br>
                                     </span>
@@ -794,12 +803,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         </c:if>
                                         <br/>
 									</c:if> 
-									<c:if test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7'}">
+									<c:if test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7' && !loanAccount.groupLoanAccountMember}">
 										<html-el:link styleId="loanaccountdetail.link.applyCharges"
 											href="applyChargeAction.do?method=load&accountId=${loanInformationDto.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.apply_charges" />
 										</html-el:link>
-									</c:if><br>
+										<br>
+									</c:if>
 													<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl" >
 														<c:param name="method" value="loadAdjustmentWhenObligationMet" />
 														<c:param name="accountId" value="${loanInformationDto.accountId}" />
@@ -833,11 +843,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <c:choose>
 								<c:when
 									test="${loanInformationDto.accountStateId=='1' || loanInformationDto.accountStateId=='2' || loanInformationDto.accountStateId=='3' || loanInformationDto.accountStateId=='4'}">
-									<span class="fontnormal8pt"> <html-el:link styleId="loanaccountdetail.link.applyCharges"
-										href="applyChargeAction.do?method=load&accountId=${loanInformationDto.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-										<mifos:mifoslabel name="loan.apply_charges" />
-									</html-el:link><br>
-									</span>
+									<c:if test="${!loanAccount.groupLoanAccountMember}">			
+										<span class="fontnormal8pt"> <html-el:link styleId="loanaccountdetail.link.applyCharges"
+											href="applyChargeAction.do?method=load&accountId=${loanInformationDto.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											<mifos:mifoslabel name="loan.apply_charges" />
+										</html-el:link><br>
+										</span>
+									</c:if>
 								</c:when>
 							</c:choose>
 							<c:choose>
