@@ -100,9 +100,9 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
         List<Number> totalInstallmentAmounts = new ArrayList<Number>();
         for (LoanSchedule schedule : membersSchedule) {
             installment = 0.0;
-            loanAmount.add(schedule.getRawAmount());
             for (int i = 0; i < schedule.getRoundedLoanSchedules().size(); i++) {
                 installment += schedule.getRoundedLoanSchedules().get(i).getTotalAmountOfInstallment().getAmount().doubleValue();
+                loanAmount = loanAmount.add(schedule.getRoundedLoanSchedules().get(i).getPrincipal());
             }
             totalInstallmentAmounts.add(installment);
             
