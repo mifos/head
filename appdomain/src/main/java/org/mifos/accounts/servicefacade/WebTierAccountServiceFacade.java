@@ -21,6 +21,7 @@
 package org.mifos.accounts.servicefacade;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -665,6 +667,8 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         
         try {
             AccountBO parentAccount = ((LoanBO)legacyAccountDao.getAccount(new AccountBusinessService().getAccount(idsAndValueAsTreeMap.firstKey()).getAccountId())).getParentAccount();
+            BigDecimal parentAmount = ((LoanBO) parentAccount).getLoanAmount().getAmount();
+            BigDecimal membersAmount = BigDecimal.ZERO; 
             
             for (Map.Entry<Integer, String> entry: idsAndValues.entrySet()) {
                 LoanBO individual = loanDao.findById(entry.getKey());
@@ -672,6 +676,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 if (chargeAmount.equals(0.0)) {
                 	continue;
                 }
+                membersAmount = membersAmount.add(individual.getLoanAmount().getAmount());
                 individual.updateDetails(userContext);
 
                 if (isPenaltyType && !chargeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
@@ -706,6 +711,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 chargeAmount  = sumCharge(idsAndValues);    
             } else {
                 chargeAmount = Double.valueOf(idsAndValueAsTreeMap.firstEntry().getValue());
+                BigDecimal chargeAmountBig = new BigDecimal(chargeAmount);
+                membersAmount = membersAmount.multiply(chargeAmountBig);
+                int scale = Money.getInternalPrecision();
+                chargeAmountBig = membersAmount.divide(parentAmount, scale, RoundingMode.HALF_EVEN);
+                chargeAmount = chargeAmountBig.doubleValue();
             }
                    
             parentAccount.updateDetails(userContext);
@@ -721,7 +731,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 checkPermissionForApplyCharges(parentAccount.getType(), customerLevel, userContext,
                         parentAccount.getOffice().getOfficeId(), userContext.getId());
             }
-
+            
             this.transactionHelper.startTransaction();
             
             if(isPenaltyType && parentAccount instanceof LoanBO) {

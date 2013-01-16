@@ -360,4 +360,8 @@ public final class Money implements Serializable, Comparable<Money> {
         double delta = 9 * Math.pow(10, -(getDigitsAfterDecimal() + Short.valueOf("1")));
         return Math.abs(this.getAmount().doubleValue()) <= delta;
     }
+    
+	public static int getInternalPrecision() {
+		return internalPrecision;
+	}
 }
