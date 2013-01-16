@@ -145,6 +145,8 @@ public interface AccountConstants {
     String ERROR_INVALID_TRXN = "errors.invalidTxndate";
     String ERROR_INVALID_PERSONNEL = "errors.invalidPersonnel";
     String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+    String ERRORS_MUST_SUM_TO_VALID_AMOUNT = "errors.mustSumToValidAmount";
+    String ERRORS_MUST_BE_GREATER_OR_EQUAL_ZERO = "errors.mustBeGreaterOrEqualZero";
     String WAIVE_TYPE = "WaiveType";
     short COMMENT_LENGTH = 500;
     String MAX_LENGTH = "errors.maximumlength";

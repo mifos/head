@@ -194,12 +194,20 @@ public class ApplyChargeActionForm extends BaseActionForm {
     
     private void validateHashMap(ActionErrors errors) {
         ArrayList<String> mapValue = new ArrayList<String>(individualValues.values());
+        double total = 0.0;
         for (int i=0; i<individualValues.size(); i++){
             DoubleConversionResult conversionResult = validateAmount(mapValue.get(i), getChargeCurrency() , AccountConstants.ACCOUNT_AMOUNT, errors, "");
-            if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+            if (conversionResult.getErrors().size() > 0 || conversionResult.getDoubleValue() < 0.0) {
+                addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_OR_EQUAL_ZERO,
                         getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
+            } else {
+            	total += conversionResult.getDoubleValue();
             }
+        }
+        
+        if (!isRateType() && total != getDoubleValue(charge)) {
+        	addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_SUM_TO_VALID_AMOUNT,
+        			getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT), charge);
         }
     }
 

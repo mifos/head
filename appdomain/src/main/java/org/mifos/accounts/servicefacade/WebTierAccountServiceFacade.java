@@ -665,6 +665,9 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             for (Map.Entry<Integer, String> entry: idsAndValues.entrySet()) {
                 LoanBO individual = loanDao.findById(entry.getKey());
                 Double chargeAmount = Double.valueOf(entry.getValue());
+                if (chargeAmount.equals(0.0)) {
+                	continue;
+                }
                 individual.updateDetails(userContext);
 
                 if (isPenaltyType && !chargeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
