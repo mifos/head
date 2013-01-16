@@ -29,6 +29,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -259,9 +260,13 @@ public class ApplyAdjustment extends BaseAction {
         }
         
         if ( appAdjustActionForm.getNewAmounts() != null && !appAdjustActionForm.getNewAmounts().isEmpty()){
-            Double newAmount = 0.0;
-            for (String memberNewAmount : appAdjustActionForm.getNewAmounts().values()){
-                newAmount += Double.valueOf(memberNewAmount);
+            BigDecimal newAmount = BigDecimal.ZERO;
+            for (String memberNewAmountString : appAdjustActionForm.getNewAmounts().values()){
+            	BigDecimal memberNewAmount = BigDecimal.ZERO;
+            	if (!StringUtils.isBlank(memberNewAmountString)) {
+            		memberNewAmount = new BigDecimal(memberNewAmountString);
+            	}
+            	newAmount = newAmount.add(memberNewAmount);
             }
             appAdjustActionForm.setAmount(newAmount.toString());
         }

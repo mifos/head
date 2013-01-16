@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
@@ -586,8 +587,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 if (accountBO.isGroupLoanAccount()){
                     for (AdjustedPaymentDto adjustedMemberPayment : adjustedPaymentDto.getMemberPayments()){
                         AccountBO memberAccount = ((LoanBO)accountBO).findMemberById(adjustedMemberPayment.getAccountId());
-                        
-                        Money memberAmount = new Money(memberAccount.getCurrency(), adjustedMemberPayment.getAmount());
+                        BigDecimal adjustedMemberPaymentAmount = BigDecimal.ZERO;
+                        if (!StringUtils.isBlank(adjustedMemberPayment.getAmount())) {
+                        	adjustedMemberPaymentAmount = new BigDecimal(adjustedMemberPayment.getAmount());
+                        }
+                        Money memberAmount = new Money(memberAccount.getCurrency(), adjustedMemberPaymentAmount.toString());
                         
                         PaymentData memberPaymentData = memberAccount.createPaymentData(memberAmount, adjustedPaymentDto.getPaymentDate(), 
                                 accountPaymentEntity.getReceiptNumber(), accountPaymentEntity.getReceiptDate(), adjustedPaymentDto.getPaymentType(), 
