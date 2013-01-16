@@ -1596,6 +1596,12 @@ public class LoanBO extends AccountBO implements Loan {
             updateTotalPenaltyAmount(chargeWaived);
             updateAccountActivity(principal, interest, fee, chargeWaived, userContext.getId(),
                     LoanConstants.PENALTY_WAIVED);
+            for (LoanBO member : getMemberAccounts()) {
+                List<AccountActionDateEntity> memberAccountActionDateList = member.getApplicableIdsForNextInstallmentAndArrears();
+                LoanScheduleEntity memberAccountActionDateEntity = 
+                        (LoanScheduleEntity) memberAccountActionDateList.get(memberAccountActionDateList.size()-1);
+                memberAccountActionDateEntity.waivePenaltyCharges();
+            }
         }
         try {
             getlegacyLoanDao().createOrUpdate(this);
