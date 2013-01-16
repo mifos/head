@@ -331,6 +331,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }
+        getAccountFeesActionDetails().clear();
         return chargeWaived;
     }
 

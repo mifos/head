@@ -181,8 +181,20 @@ explanation of the license and how it is applied.
 							<td align="right" class="drawtablerow">
 							<fmt:formatNumber value='${viewUpcomingInstallmentDetail.fees}'/></td>
 							<td align="right" class="drawtablerow">	&nbsp;
-							<c:if test='${viewUpcomingInstallmentDetail.fees != 0.0 }'>						 
-							<html-el:link styleId="nextPayment_loanAccount.link.waiveFeeDue" href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${param.prdOfferingName}&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${param.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							<c:if test='${viewUpcomingInstallmentDetail.fees != 0.0 }'>
+							<c:url value="loanAccountAction.do" var="waiveChargeDueMethodUrl" >
+							     <c:param name="method" value="waiveChargeDue" />
+							     <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+							     <c:param name="accountId" value="${param.accountId}" />
+							     <c:param name="WaiveType" value="fees" />
+							     <c:param name="type" value="LoanAccount" />
+							     <c:param name="input" value="LoanAccount" />
+							     <c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+							     <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							     <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url>
+													 
+							<html-el:link styleId="nextPayment_loanAccount.link.waiveFeeDue" href="${waiveChargeDueMethodUrl}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
 							</html-el:link>
 							</c:if>

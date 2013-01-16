@@ -764,23 +764,23 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
                 new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
                         account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
             }
-
-            if (account.isLoanAccount()) {
-                ((LoanBO)account).waiveAmountDue(waiveEnum);
-            } else if (account.isSavingsAccount()) {
-                ((SavingsBO)account).waiveNextDepositAmountDue(loggedInUser);
-            } else  {
-                try {
-                    this.transactionHelper.startTransaction();
+            
+            try {
+                this.transactionHelper.startTransaction();
+                if (account instanceof LoanBO) {
+                    ((LoanBO)account).waiveAmountDue(waiveEnum);
+                } else if (account instanceof SavingsBO) {
+                    ((SavingsBO)account).waiveNextDepositAmountDue(loggedInUser);
+                } else  {
                     ((CustomerAccountBO)account).waiveAmountDue();
-                    this.customerDao.save(account);
-                    this.transactionHelper.commitTransaction();
-                } catch (Exception e) {
-                    this.transactionHelper.rollbackTransaction();
-                    throw new BusinessRuleException(account.getAccountId().toString(), e);
-                } finally {
-                    this.transactionHelper.closeSession();
                 }
+                this.customerDao.save(account);
+                this.transactionHelper.commitTransaction();
+            } catch (Exception e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new BusinessRuleException(account.getAccountId().toString(), e);
+            } finally {
+                this.transactionHelper.closeSession();
             }
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
