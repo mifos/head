@@ -1597,7 +1597,7 @@ public class ActivityMapper {
 
     private short getActivityIdForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT)) {
             if (waiveEnum.equals(WaiveEnum.FEES)) {
                 activityId = SecurityConstants.LOAN_WAIVE_FEE_INSTALLMENT;
             } else if (waiveEnum.equals(WaiveEnum.PENALTY)) {

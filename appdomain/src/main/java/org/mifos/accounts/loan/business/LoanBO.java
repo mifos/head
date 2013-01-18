@@ -1570,12 +1570,7 @@ public class LoanBO extends AccountBO implements Loan {
             updateTotalFeeAmount(chargeWaived);
             updateAccountActivity(principal, interest, chargeWaived, penalty, userContext.getId(),
                     LoanConstants.FEE_WAIVED);
-            for (LoanBO member : getMemberAccounts()) {
-                List<AccountActionDateEntity> memberAccountActionDateList = member.getApplicableIdsForNextInstallmentAndArrears();
-                LoanScheduleEntity memberAccountActionDateEntity = 
-                        (LoanScheduleEntity) memberAccountActionDateList.get(memberAccountActionDateList.size()-1);
-                memberAccountActionDateEntity.waiveFeeCharges();
-            }
+            waiveChargesFromMemberAccounts(LoanConstants.FEE_WAIVED);
         }
         try {
             getlegacyLoanDao().createOrUpdate(this);
@@ -1596,12 +1591,7 @@ public class LoanBO extends AccountBO implements Loan {
             updateTotalPenaltyAmount(chargeWaived);
             updateAccountActivity(principal, interest, fee, chargeWaived, userContext.getId(),
                     LoanConstants.PENALTY_WAIVED);
-            for (LoanBO member : getMemberAccounts()) {
-                List<AccountActionDateEntity> memberAccountActionDateList = member.getApplicableIdsForNextInstallmentAndArrears();
-                LoanScheduleEntity memberAccountActionDateEntity = 
-                        (LoanScheduleEntity) memberAccountActionDateList.get(memberAccountActionDateList.size()-1);
-                memberAccountActionDateEntity.waivePenaltyCharges();
-            }
+            waiveChargesFromMemberAccounts(LoanConstants.PENALTY_WAIVED);
         }
         try {
             getlegacyLoanDao().createOrUpdate(this);
@@ -1631,6 +1621,7 @@ public class LoanBO extends AccountBO implements Loan {
             updateTotalFeeAmount(chargeWaived);
             updateAccountActivity(principal, interest, chargeWaived, penalty, userContext.getId(),
                     AccountConstants.AMOUNT + chargeWaived + AccountConstants.WAIVED);
+            waiveOverdueChargesFromMemberAccounts(LoanConstants.FEE_WAIVED);
         }
         try {
             getlegacyLoanDao().createOrUpdate(this);
@@ -1657,11 +1648,70 @@ public class LoanBO extends AccountBO implements Loan {
             updateTotalPenaltyAmount(chargeWaived);
             updateAccountActivity(principal, interest, fee, chargeWaived, userContext.getId(), AccountConstants.AMOUNT
                     + chargeWaived + AccountConstants.WAIVED);
+            waiveOverdueChargesFromMemberAccounts(LoanConstants.PENALTY_WAIVED);
         }
         try {
             getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
+        }
+    }
+    
+    public void waiveChargesFromMemberAccounts(String chargeType) {
+        for (LoanBO member : getMemberAccounts()) {
+            List<AccountActionDateEntity> memberAccountActionDateList = member
+                    .getApplicableIdsForNextInstallmentAndArrears();
+            LoanScheduleEntity memberAccountActionDateEntity = (LoanScheduleEntity) memberAccountActionDateList
+                    .get(memberAccountActionDateList.size() - 1);
+            Money principal = new Money(getCurrency());
+            Money interest = new Money(getCurrency());
+            Money fee = new Money(getCurrency());
+            Money penalty = new Money(getCurrency());
+            if (chargeType == LoanConstants.FEE_WAIVED) {
+                fee = memberAccountActionDateEntity.waiveFeeCharges();
+                member.updateTotalFeeAmount(fee);
+            } else if (chargeType == LoanConstants.PENALTY_WAIVED) {
+                penalty = memberAccountActionDateEntity.waivePenaltyCharges();
+                member.updateTotalPenaltyAmount(penalty);
+            }
+            try {
+                member.updateAccountActivity(principal, interest, fee, penalty, userContext.getId(), chargeType);
+            } catch (AccountException e) {
+                throw new BusinessRuleException(e.getKey());
+            }
+        }
+    }
+    
+    public void waiveOverdueChargesFromMemberAccounts(String chargeType) {
+        for (LoanBO member : getMemberAccounts()) {
+            List<AccountActionDateEntity> memberAccountActionDateList = member
+                    .getApplicableIdsForNextInstallmentAndArrears();
+            List<LoanScheduleEntity> overdueMemberAccountActionDateEntities = new ArrayList<LoanScheduleEntity>();
+            for (AccountActionDateEntity accountActionDateEntity : memberAccountActionDateList) {
+                if (accountActionDateEntity.getActionDate().before(DateUtils.getCurrentDateWithoutTimeStamp())) {
+                    overdueMemberAccountActionDateEntities.add((LoanScheduleEntity) accountActionDateEntity);
+                }
+            }
+            Money principal = new Money(getCurrency());
+            Money interest = new Money(getCurrency());
+            Money fee = new Money(getCurrency());
+            Money penalty = new Money(getCurrency());
+            if (chargeType == LoanConstants.FEE_WAIVED) {
+                for (LoanScheduleEntity memberAccountActionDateEntity : overdueMemberAccountActionDateEntities) {
+                    fee = fee.add(memberAccountActionDateEntity.waiveFeeCharges());
+                }
+                member.updateTotalFeeAmount(fee);
+            } else if (chargeType == LoanConstants.PENALTY_WAIVED) {
+                for (LoanScheduleEntity memberAccountActionDateEntity : overdueMemberAccountActionDateEntities) {
+                    penalty = penalty.add(memberAccountActionDateEntity.waivePenaltyCharges());
+                }
+                member.updateTotalPenaltyAmount(penalty);
+            }
+            try {
+                member.updateAccountActivity(principal, interest, fee, penalty, userContext.getId(), chargeType);
+            } catch (AccountException e) {
+                throw new BusinessRuleException(e.getKey());
+            }
         }
     }
 
