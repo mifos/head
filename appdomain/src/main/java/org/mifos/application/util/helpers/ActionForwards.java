@@ -24,6 +24,7 @@ public enum ActionForwards {
     load_success,
     load_failure,
     preview_success,
+    process_success,
     preview_failure,
     editpreview_success,
     editpreview_failure,
