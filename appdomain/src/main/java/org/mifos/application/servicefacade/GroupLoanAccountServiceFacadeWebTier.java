@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -30,12 +31,14 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.accounts.loan.business.MaxMinLoanAmount;
 import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.penalties.business.AmountPenaltyBO;
 import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.persistence.PenaltyDao;
@@ -61,7 +64,6 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.util.helpers.LoanActivityEntityDataComperable;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGroupLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
@@ -102,7 +104,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
@@ -371,6 +372,34 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             // update loan schedule for Group Loan Account
             loanSchedule = this.loanScheduleService.generateGroupLoanSchedule(loanAccountDetail.getLoanProduct(), repaymentDayMeeting, loanSchedule, memberLoanSchedules, 
                     loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), overridenDetail, configuration, userOffice.getOfficeId(), loanAccountDetail.getCustomer(), accountFeeEntities);
+            
+            // fix installment details in order to match sum of interest of member accounts to interest of parent account
+            Map<Integer, LoanScheduleEntity> parentScheduleEntities = loan.getLoanScheduleEntityMap();
+            List<RepaymentScheduleInstallment> correctedInstallments = new ArrayList<RepaymentScheduleInstallment>();
+            
+            for (Integer installmentId : parentScheduleEntities.keySet()) {
+            	
+            	LoanScheduleEntity parentEntity = parentScheduleEntities.get(installmentId);
+            	
+            	RepaymentScheduleInstallment correctedInstallment = new RepaymentScheduleInstallment();
+            	correctedInstallment.setInstallment(installmentId);
+            	correctedInstallment.setDueDateValue(parentEntity.getActionDate());
+            	
+            	BigDecimal principal = BigDecimal.ZERO;
+            	BigDecimal interest = BigDecimal.ZERO;
+            	
+            	for (LoanBO memberLoan : memberLoans) {
+            		LoanScheduleEntity memberEntity = memberLoan.getLoanScheduleEntityMap().get(installmentId);
+            		principal = principal.add(memberEntity.getPrincipal().getAmount());
+            		interest = interest.add(memberEntity.getInterest().getAmount());
+            	}
+            	
+            	correctedInstallment.setPrincipal(new Money(parentEntity.getPrincipal().getCurrency(), principal));
+            	correctedInstallment.setInterest(new Money(parentEntity.getInterest().getCurrency(), interest));
+            }
+            
+            loan.updateInstallmentSchedule(correctedInstallments);
+            
             this.loanDao.save(loan);
             transactionHelper.flushSession();
             
