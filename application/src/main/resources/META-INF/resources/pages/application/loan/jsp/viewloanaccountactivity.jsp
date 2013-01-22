@@ -112,11 +112,12 @@ explanation of the license and how it is applied.
 												</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										</c:when>
 									</c:choose>
-									<html-el:link styleId="loanaccountdetail.link.applyCharges"
-											href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-											<mifos:mifoslabel name="loan.apply_charges" />
-											</html-el:link><br>
-										
+									<c:if test="${!BusinessKey.groupLoanAccountMember }">
+										<html-el:link styleId="loanaccountdetail.link.applyCharges"
+												href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+												<mifos:mifoslabel name="loan.apply_charges" />
+												</html-el:link><br>
+									</c:if>
 								</c:when>
 								<c:otherwise>
 								
