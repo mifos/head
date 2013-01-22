@@ -129,10 +129,11 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:if>
-							 <html-el:link styleId="nextPayment_loanAccount.link.applyCharges" href="applyChargeAction.do?method=load&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-								<mifos:mifoslabel name="loan.apply_charges" bundle="loanUIResources" />
-							</html-el:link>	
-							
+							<c:if test="${!BusinessKey.groupLoanAccountMember }">
+								 <html-el:link styleId="nextPayment_loanAccount.link.applyCharges" href="applyChargeAction.do?method=load&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									<mifos:mifoslabel name="loan.apply_charges" bundle="loanUIResources" />
+								</html-el:link>	
+							</c:if>
 							
 							</c:otherwise>
 							</c:choose>

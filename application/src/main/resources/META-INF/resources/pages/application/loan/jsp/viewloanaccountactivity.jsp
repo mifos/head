@@ -142,10 +142,11 @@ explanation of the license and how it is applied.
 									</c:when>
 								</c:choose>
 								</c:if>
+								<c:if test="${!BusinessKey.groupLoanAccountMember }">
         						 <html-el:link styleId="viewloanaccountactivity.link.applyCharges" href="applyChargeAction.do?method=load&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.apply_charges" />
 								</html-el:link>
-								
+								</c:if>
 								
 								</c:otherwise>
 							</c:choose>
