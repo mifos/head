@@ -119,12 +119,12 @@ explanation of the license and how it is applied.
 							
 							
 												
-							<c:if test="${param.accountStateId==5 || param.accountStateId==9}">
+							<c:if test="${BusinessKey.accountState.id==5 || BusinessKey.accountState.id==9}">
 							<html-el:link styleId="nextPayment_loanAccount.link.applyPayment" href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="loan.apply_payment" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:if>
-							<c:if test="${param.lastPaymentAction != 10 && (param.accountStateId==5 || param.accountStateId==9)}">							
+							<c:if test="${param.lastPaymentAction != 10 && (BusinessKey.accountState.id==5 || BusinessKey.accountState.id==9)}">							
 							<html-el:link styleId="nextPayment_loanAccount.link.applyAdjustment" href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
