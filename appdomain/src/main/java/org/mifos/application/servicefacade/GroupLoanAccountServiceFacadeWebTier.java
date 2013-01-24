@@ -396,6 +396,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             	
             	correctedInstallment.setPrincipal(new Money(parentEntity.getPrincipal().getCurrency(), principal));
             	correctedInstallment.setInterest(new Money(parentEntity.getInterest().getCurrency(), interest));
+            	correctedInstallments.add(correctedInstallment);
             }
             
             loan.updateInstallmentSchedule(correctedInstallments);
