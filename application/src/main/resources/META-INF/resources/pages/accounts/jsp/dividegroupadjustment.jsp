@@ -41,6 +41,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyAdjustment"></span>
+	<mifos:NumberFormattingInfo />
+	   <script type="text/javascript" src="pages/js/separator.js"></script>
 		<SCRIPT SRC="pages/accounts/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -158,7 +160,7 @@ explanation of the license and how it is applied.
 					<table width="95%" border="0" cellspacing="0" cellpadding="1">
 						<tr>
 							<td align="center">
-								<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn" property="submit_btn">
+								<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn submit" property="submit_btn">
 									<mifos:mifoslabel name="accounts.btn_reviewAdjustment">
 									</mifos:mifoslabel>
 								</html-el:submit>

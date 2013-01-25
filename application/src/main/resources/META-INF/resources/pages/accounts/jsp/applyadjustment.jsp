@@ -34,8 +34,10 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyAdjustment"></span>
+	<mifos:NumberFormattingInfo />
 		<SCRIPT SRC="pages/accounts/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+		<script type="text/javascript" src="pages/js/separator.js"></script>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		
         <form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
@@ -329,13 +331,13 @@ explanation of the license and how it is applied.
 									<c:when test="${requestScope.method=='loadAdjustment'}">
 										<c:choose>
 										<c:when test="${requestScope.isDisabled}">
-											<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn" property="submit_btn" disabled="true">
+											<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn submit" property="submit_btn" disabled="true">
 												<mifos:mifoslabel name="accounts.btn_reviewAdjustment">
 												</mifos:mifoslabel>
 											</html-el:submit>
 										</c:when>
 										<c:otherwise>
-											<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn" property="submit_btn">
+											<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn submit" property="submit_btn">
 												<mifos:mifoslabel name="accounts.btn_reviewAdjustment">
 												</mifos:mifoslabel>
 											</html-el:submit>
@@ -343,7 +345,7 @@ explanation of the license and how it is applied.
 									</c:choose>
 									</c:when>
 									<c:otherwise>
-										<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn" property="submit_btn">
+										<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn submit" property="submit_btn">
 											<mifos:mifoslabel name="accounts.submit">
 											</mifos:mifoslabel>
 										</html-el:submit>
