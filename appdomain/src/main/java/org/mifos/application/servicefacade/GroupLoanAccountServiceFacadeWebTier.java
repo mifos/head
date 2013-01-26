@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -26,6 +28,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
@@ -297,6 +300,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             List<LoanProductOverridenDetail> memberOverridenDetails = new ArrayList<LoanProductOverridenDetail>();
             List<LoanSchedule> memberLoanSchedules = new ArrayList<LoanSchedule>();
             List<ClientBO> clients = new ArrayList<ClientBO>();
+            
             for (CreateLoanAccount groupMemberAccount : memberDetails) {
                 ClientBO member = this.customerDao.findClientById(groupMemberAccount.getCustomerId());
                 Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
@@ -374,12 +378,18 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                     loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), overridenDetail, configuration, userOffice.getOfficeId(), loanAccountDetail.getCustomer(), accountFeeEntities);
             
             // fix installment details in order to match sum of interest of member accounts to interest of parent account
+            // update member fee amounts in order to match parent fee amount
             Map<Integer, LoanScheduleEntity> parentScheduleEntities = loan.getLoanScheduleEntityMap();
             List<RepaymentScheduleInstallment> correctedInstallments = new ArrayList<RepaymentScheduleInstallment>();
             
             for (Integer installmentId : parentScheduleEntities.keySet()) {
             	
             	LoanScheduleEntity parentEntity = parentScheduleEntities.get(installmentId);
+            	Map<Short, BigDecimal> feeAmountsForInstallment = new HashMap<Short, BigDecimal>();
+            	
+        		for (AccountFeesActionDetailEntity feesActionDetailEntity : parentEntity.getAccountFeesActionDetails()) {
+        			feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), feesActionDetailEntity.getFeeAmount().getAmount());
+        		}
             	
             	RepaymentScheduleInstallment correctedInstallment = new RepaymentScheduleInstallment();
             	correctedInstallment.setInstallment(installmentId);
@@ -392,15 +402,38 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             		LoanScheduleEntity memberEntity = memberLoan.getLoanScheduleEntityMap().get(installmentId);
             		principal = principal.add(memberEntity.getPrincipal().getAmount());
             		interest = interest.add(memberEntity.getInterest().getAmount());
+
+            		for (AccountFeesActionDetailEntity feesActionDetailEntity : memberEntity.getAccountFeesActionDetails()) {
+            			
+            			if (feesActionDetailEntity.getFee().getFeeType().equals(RateAmountFlag.RATE)) {
+            				continue;
+            			}
+            			
+            			BigDecimal currentAmount = feeAmountsForInstallment.get(feesActionDetailEntity.getFee().getFeeId());
+            			currentAmount = currentAmount.subtract(feesActionDetailEntity.getFeeAmount().getAmount());
+            			
+            			if (currentAmount.compareTo(BigDecimal.ZERO) == -1) {
+            				BigDecimal toUpdate = feesActionDetailEntity.getFeeAmount().getAmount().add(currentAmount);
+            				feesActionDetailEntity.updateFeeAmount(toUpdate);
+            				currentAmount = BigDecimal.ZERO;
+            			}
+            			
+            			feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), currentAmount);
+            		}
             	}
             	
             	correctedInstallment.setPrincipal(new Money(parentEntity.getPrincipal().getCurrency(), principal));
             	correctedInstallment.setInterest(new Money(parentEntity.getInterest().getCurrency(), interest));
+            	
             	correctedInstallments.add(correctedInstallment);
+            }
+
+            for (LoanBO memberLoan : memberLoans) {
+            	memberLoan.updateLoanSummary();
+            	loanDao.save(memberLoan);
             }
             
             loan.updateInstallmentSchedule(correctedInstallments);
-            
             this.loanDao.save(loan);
             transactionHelper.flushSession();
             

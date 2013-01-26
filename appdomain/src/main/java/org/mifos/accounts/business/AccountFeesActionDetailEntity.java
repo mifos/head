@@ -22,6 +22,8 @@ package org.mifos.accounts.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.min;
 
+import java.math.BigDecimal;
+
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.business.AbstractEntity;
@@ -82,6 +84,10 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
 
     protected void setFeeAmount(Money feeAmount) {
         this.feeAmount = feeAmount;
+    }
+    
+    public void updateFeeAmount(BigDecimal feeAmount) {
+        this.feeAmount = new Money(accountFee.getAccount().getCurrency(), feeAmount);
     }
 
     public Money getFeeAmountPaid() {

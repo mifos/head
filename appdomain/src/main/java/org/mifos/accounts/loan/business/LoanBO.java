@@ -2693,7 +2693,7 @@ public class LoanBO extends AccountBO implements Loan {
 
     }
 
-    private void updateLoanSummary(){
+    public void updateLoanSummary(){
         Money interest = new Money(getCurrency());
         Money fees = new Money(getCurrency());
         Money principal = new Money(getCurrency());
