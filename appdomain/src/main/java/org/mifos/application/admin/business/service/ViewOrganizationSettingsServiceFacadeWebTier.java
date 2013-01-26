@@ -193,6 +193,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         MifosConfigurationManager configurationManager = MifosConfigurationManager.getInstance();
         misc.setProperty("backDatedLoanProductCreationAllowed", booleanToYesNo(
                 configurationManager.getBoolean(LoanConstants.BACK_DATED_LOAN_PRODUCT_CREATION)));
+        misc.setProperty("grouploanwithmembers", booleanToYesNo(AccountingRules.isGroupLoanWithMembers()));
         return misc;
     }
 
