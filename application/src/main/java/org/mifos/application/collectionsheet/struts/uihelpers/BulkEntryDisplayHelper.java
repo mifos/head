@@ -431,8 +431,13 @@ public class BulkEntryDisplayHelper {
             }
 
             Money actualMoneyValue = new Money(amountToBeShown.getCurrency(), amountToBeShown.toString());
-            groupTotals[columns] = groupTotals[columns] == null ? actualMoneyValue : groupTotals[columns].add(actualMoneyValue);
-            centerTotals[columns] = centerTotals[columns] == null ? actualMoneyValue : centerTotals[columns].add(actualMoneyValue);
+            if (groupTotals[columns] == null) {
+                groupTotals[columns] = actualMoneyValue;
+                centerTotals[columns] = actualMoneyValue;
+            } else if (rows != size + initialAccNo) {
+                groupTotals[columns] = groupTotals[columns].add(actualMoneyValue);
+                centerTotals[columns] = centerTotals[columns].add(actualMoneyValue);
+            }
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             Money totalAmount = new Money(Money.getDefaultCurrency(), "0");
             Money enteredAmount;
@@ -455,8 +460,13 @@ public class BulkEntryDisplayHelper {
                 builder.append(ConversionUtil.formatNumber(totalAmount.toString()));
             }
             Money actualMoneyValue = new Money(amountToBeShown.getCurrency(), totalAmount.toString());
-            groupTotals[columns] = groupTotals[columns] == null ? actualMoneyValue : groupTotals[columns].add(actualMoneyValue);
-            centerTotals[columns] = centerTotals[columns] == null ? actualMoneyValue : centerTotals[columns].add(actualMoneyValue);
+            if (groupTotals[columns] == null) {
+                groupTotals[columns] = actualMoneyValue;
+                centerTotals[columns] = actualMoneyValue;
+            } else if (rows != size + initialAccNo) {
+                groupTotals[columns] = groupTotals[columns].add(actualMoneyValue);
+                centerTotals[columns] = centerTotals[columns].add(actualMoneyValue);
+            }
         } else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
                 || method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)) {
 
@@ -492,8 +502,13 @@ public class BulkEntryDisplayHelper {
                 }
             }
             Money actualMoneyValue = new Money(amountToBeShown.getCurrency(), totalAmount.toString());
-            groupTotals[columns] = groupTotals[columns] == null ? actualMoneyValue : groupTotals[columns].add(actualMoneyValue);
-            centerTotals[columns] = centerTotals[columns] == null ? actualMoneyValue: centerTotals[columns].add(actualMoneyValue);
+            if (groupTotals[columns] == null) {
+                groupTotals[columns] = actualMoneyValue;
+                centerTotals[columns] = actualMoneyValue;
+            } else if (rows != size + initialAccNo) {
+                groupTotals[columns] = groupTotals[columns].add(actualMoneyValue);
+                centerTotals[columns] = centerTotals[columns].add(actualMoneyValue);
+            }
         }
     }
 

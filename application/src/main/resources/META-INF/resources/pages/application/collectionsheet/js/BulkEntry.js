@@ -122,14 +122,41 @@ function checkTotalForCenter(rows, columns, size, initialAccNo, centerTotalCount
     var groupTotalInitial = document.getElementsByName("group[" + (initialAccNo + size + 1) + "][" + columns + "]")[0].value;
     var centerTotalInitial = document.getElementsByName("center[" + centerTotalCount + "]")[0].value;
     var groupTotal = 0;
+    
+    var glimAccount = false;
+    var groupAccountRow = size + initialAccNo;
+    if (document.getElementsByName("enteredAmount[" + groupAccountRow + "][" + columns + "]")[0] != undefined) {
+        for (i = initialAccNo; i < (size + initialAccNo); i++) {
+            if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
+                glimAccount = true;
+            }
+        }
+    }
+    
+    var numberOfIndividualClients = 0;
     for (i = initialAccNo; i < (size + initialAccNo + 1); i++) {
         if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
             if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value == "" || document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value == ".") {
                 document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value = 0;
             }
-            groupTotal = parseFloat(groupTotal) + parseFloat(document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value);
+            if (i != size + initialAccNo || !glimAccount) {
+                groupTotal = 
+                    parseFloat(groupTotal) + parseFloat(document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value);
+                numberOfIndividualClients++;
+            }
         }
     }
+    if (glimAccount && rows != size + initialAccNo) {
+        document.getElementsByName("enteredAmount[" + (initialAccNo + size) + "][" + columns + "]")[0].value = groupTotal;
+    } else if (glimAccount && rows == size + initialAccNo) {
+        groupTotal = document.getElementsByName("enteredAmount[" + groupAccountRow + "][" + columns + "]")[0].value;
+        for (i = initialAccNo; i < (size + initialAccNo); i++) {
+            if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
+                document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value =
+                   groupTotal / numberOfIndividualClients;
+            }
+        }
+    } 
     document.getElementsByName("group[" + (initialAccNo + size + 1) + "][" + columns + "]")[0].value = groupTotal;
     var difference = (groupTotalInitial - groupTotal);
     document.getElementsByName("center[" + centerTotalCount + "]")[0].value = (centerTotalInitial - difference);
