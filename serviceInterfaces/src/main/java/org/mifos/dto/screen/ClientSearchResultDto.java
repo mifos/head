@@ -51,10 +51,11 @@ public class ClientSearchResultDto implements Serializable {
     private List<String> savingsGlobalAccountNum = new ArrayList<String>();
     private HashMap<String, Short> loanGlobalAccountStateIds = new HashMap<String, Short>();
     private HashMap<String, Short> savingsGlobalAccountStateIds = new HashMap<String, Short>();
+    private HashMap<String, Short> groupLoanGlobalAccountStateIds = new HashMap<String, Short>();
     private String status;
     
 
-	public List<String> getGroupLoanGlobalAccountNum() {
+    public List<String> getGroupLoanGlobalAccountNum() {
         return groupLoanGlobalAccountNum;
     }
     public void setGroupLoanGlobalAccountNum(List<String> groupLoanGlobalAccountNum) {
@@ -167,6 +168,12 @@ public class ClientSearchResultDto implements Serializable {
     }
     public void setSavingsGlobalAccountStateIds(HashMap<String, Short> savingsGlobalAccountStateIds) {
         this.savingsGlobalAccountStateIds = savingsGlobalAccountStateIds;
+    }
+    public HashMap<String, Short> getGroupLoanGlobalAccountStateIds() {
+        return groupLoanGlobalAccountStateIds;
+    }
+    public void setGroupLoanGlobalAccountStateIds(HashMap<String, Short> groupLoanGlobalAccountStateIds) {
+        this.groupLoanGlobalAccountStateIds = groupLoanGlobalAccountStateIds;
     }
 
     
