@@ -133,6 +133,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backDatedLoanProductCreationAllowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedLoanProductCreationAllowed}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.grouploanwithmembers"/]</span>:&nbsp;<span class="fontnormal">${properties.grouploanwithmembers}</span></div> 
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxPointsPerPPISurvey"/]</span>:&nbsp;<span class="fontnormal">${properties.maxPointsPerPPISurvey}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.batchSizeForBatchJobs"/]</span>:&nbsp;<span class="fontnormal">${properties.batchSizeForBatchJobs}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.recordCommittingSizeForBatchJobs"/]</span>:&nbsp;<span class="fontnormal">${properties.recordCommittingSizeForBatchJobs}</span></div>
