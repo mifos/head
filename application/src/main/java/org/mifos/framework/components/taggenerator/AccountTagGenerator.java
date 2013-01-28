@@ -40,7 +40,10 @@ public class AccountTagGenerator extends TagGenerator {
         if (selfLinkRequired) {
             createAccountLink(strBuilder, account, randomNum); // create self
                                                                // link
-        } else {
+        }else if(account.isGroupLoanAccountMember()){
+        	createAccountLink(strBuilder, ((LoanBO)account).getParentAccount(), randomNum);
+        	strBuilder.append(" / ");
+        }else {
             // TODO internationalize this
             strBuilder.append("<b>" + getAccountName(account) + "</b>"); // get
                                                                          // Self
@@ -67,6 +70,8 @@ public class AccountTagGenerator extends TagGenerator {
             return ((SavingsBO) account).getSavingsOffering().getPrdOfferingName();
         } else if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
             return ((LoanBO) account).getLoanOffering().getPrdOfferingName();
+        } else if (account.getType() == AccountTypes.GROUP_LOAN_ACCOUNT) {
+        	return ((LoanBO) account).getLoanOffering().getPrdOfferingName();
         }
         return "";
     }
@@ -76,7 +81,10 @@ public class AccountTagGenerator extends TagGenerator {
             return "viewSavingsAccountDetails.ftl?globalAccountNum=";
         } else if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
             return "viewLoanAccountDetails.ftl?globalAccountNum=";
-        }
+        } else if (account.getType() == AccountTypes.GROUP_LOAN_ACCOUNT) {
+            return "viewLoanAccountDetails.ftl?globalAccountNum=";
+        } 
+        
         return "";
     }
 }
