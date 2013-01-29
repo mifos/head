@@ -140,7 +140,9 @@
 								<span>
 								[#list client.groupLoanGlobalAccountNum as gLoan]
 									<span>
-										<a href='groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${gLoan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${gLoan}</a>
+									
+										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${gLoan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${client.groupLoanGlobalAccountStateIds[gLoan]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${gLoan}</a>
 									</span>
 								[/#list]
 								</span>
@@ -239,7 +241,8 @@
 								<span>
 								[#list group.groupLoanGlobalAccountNum as gLoan]
 									<span>
-										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${gLoan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${gLoan}</a>
+									<a href='viewLoanAccountDetails.ftl?globalAccountNum=${gLoan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${group.groupLoanGlobalAccountStateIds[gLoan]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${gLoan}</a>
 									</span>
 								[/#list]
 								</span>
