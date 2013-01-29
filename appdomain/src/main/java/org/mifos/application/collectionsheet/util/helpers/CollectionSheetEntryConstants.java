@@ -104,6 +104,7 @@ public interface CollectionSheetEntryConstants {
     String ISSUE_WITHDRAWAL = "bulkEntry.issuesWithdrawals";
     String ATTN = "bulkEntry.attn";
     String ACCOUNT_GROUP_CENTER = "bulkEntry.accountGroupCenter";
+    String ACCOUNTS_GROUP_CENTER = "bulkEntry.accountsGroupCenter";
     String TOTAL_GROUP_CENTER = "bulkEntry.totalGroupCenter";
     String TOTAL = "bulkEntry.total";
     String TOTAL_COLLECTION = "bulkEntry.totalCollections";

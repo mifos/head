@@ -129,7 +129,7 @@ public class BulkEntryDisplayHelper {
         Money[] groupTotals = new Money[(totalProductsSize + 1)];
         MifosCurrency currency = parent.getCurrency();
         Locale locale = userContext.getPreferredLocale();
-        String account = getLocalizedMessage(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
+        String account = getLocalizedMessage(CollectionSheetEntryConstants.ACCOUNTS_GROUP_CENTER);
         String group = getLabel(ConfigurationConstants.GROUP, userContext);
         String groupAccountStr = account.format(account, group);
         groupAccountStr = " " + groupAccountStr + " ";
@@ -162,7 +162,7 @@ public class BulkEntryDisplayHelper {
         Money[] groupTotals = new Money[(totalProductsSize + 1)];
 
         final MifosCurrency currency = centerEntry.getCurrency();
-        final String accountLabel = getLocalizedMessage(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
+        final String accountLabel = getLocalizedMessage(CollectionSheetEntryConstants.ACCOUNTS_GROUP_CENTER);
 
         final List<CollectionSheetEntryDto> groupEntries = centerEntry.getCollectionSheetEntryChildren();
 
@@ -407,7 +407,11 @@ public class BulkEntryDisplayHelper {
             final String method, final boolean isShowingDue) {
         Money amountToBeShown;
         if (isShowingDue) {
-            amountToBeShown = new Money(Money.getDefaultCurrency(), accountViewBO.getTotalAmountDue());
+            if (rows == size && groupTotals[columns] != null) {
+                amountToBeShown = groupTotals[columns];
+            } else {
+                amountToBeShown = new Money(Money.getDefaultCurrency(), accountViewBO.getTotalAmountDue());
+            }
             if (amountToBeShown.isLessThanOrEqualZero() && accountViewBO.isDisburseLoanAccountPresent()) {
                 builder.append("&nbsp;");
                 return;
@@ -426,7 +430,7 @@ public class BulkEntryDisplayHelper {
                         initialAccNo, columns, loanproductSize, savingsProductSize);
             } else {
                 BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
-                        "enteredAmount[" + rows + "][" + columns + "]", amountToBeShown, columns, size,
+                        "enteredAmount[" + rows + "][" + columns + "]", amountToBeShown, rows, columns, size,
                         loanproductSize, savingsProductSize);
             }
 
@@ -483,7 +487,7 @@ public class BulkEntryDisplayHelper {
                         initialAccNo, columns, loanproductSize, savingsProductSize);
             } else {
                 BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
-                        "enteredAmount[" + rows + "][" + columns + "]", enteredAmount, columns, size, loanproductSize,
+                        "enteredAmount[" + rows + "][" + columns + "]", enteredAmount, rows, columns, size, loanproductSize,
                         savingsProductSize);
             }
 

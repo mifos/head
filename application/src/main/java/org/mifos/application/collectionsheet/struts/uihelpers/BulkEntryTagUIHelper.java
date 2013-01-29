@@ -102,13 +102,13 @@ public class BulkEntryTagUIHelper {
         builder.append(" size=\"6\" style=\"width:40px\" " + "class=\"fontnormal8pt\">");
     }
 
-    public void generateTextInput(StringBuilder builder, String name, Object value, int columns, int size,
+    public void generateTextInput(StringBuilder builder, String name, Object value, int rows, int columns, int size,
             int loanProductSize, int savingsProductSize) {
         builder.append("<input type=\"text\"");
         builder.append(" name=\"" + name + "\"");
         builder.append(" value=\"" + value + "\"");
         builder.append(" onBlur=\"adjustGroupTotalForLoan(");
-        builder.append(columns);
+        builder.append(rows + "," + columns);
         builder.append("," + size + "," + loanProductSize + "," + savingsProductSize + ")\"");
         builder.append(" size=\"6\" style=\"width:40px\" " + "class=\"fontnormal8pt\">");
     }

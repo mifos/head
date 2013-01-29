@@ -108,13 +108,13 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         topOfHierarchyParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
         topOfHierarchyParameters.put("TRANSACTION_DATE", transactionDate.toString());
 
-        final CollectionSheetCustomerLoanDto loanRepaymentsForCustomerAtTopOfHierarchy = execUniqueResultNamedQueryWithResultTransformer(
+        final List<CollectionSheetCustomerLoanDto> loanRepaymentsForCustomerAtTopOfHierarchy = executeNamedQueryWithResultTransformer(
                 "findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto", topOfHierarchyParameters,
                 CollectionSheetCustomerLoanDto.class);
 
         if (loanRepaymentsForCustomerAtTopOfHierarchy != null) {
-            allLoanRepaymentsGroupedByCustomerId.put(customerAtTopOfHierarchyId, Arrays
-                    .asList(loanRepaymentsForCustomerAtTopOfHierarchy));
+            allLoanRepaymentsGroupedByCustomerId.put(customerAtTopOfHierarchyId,
+                    loanRepaymentsForCustomerAtTopOfHierarchy);
         }
 
         final Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -132,7 +132,17 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
             if (allLoanRepaymentsGroupedByCustomerId.containsKey(customerId)) {
                 final List<CollectionSheetCustomerLoanDto> loansForCustomer = allLoanRepaymentsGroupedByCustomerId
                         .get(customerId);
-                loansForCustomer.add(customerLoan);
+                Comparator<CollectionSheetCustomerLoanDto> comparator = new Comparator<CollectionSheetCustomerLoanDto>() {
+
+                    @Override
+                    public int compare(CollectionSheetCustomerLoanDto cseDto1, CollectionSheetCustomerLoanDto cseDto2) {
+                        return cseDto1.getAccountId().compareTo(cseDto2.getAccountId());
+                    }
+                };
+                Collections.sort(loansForCustomer, comparator);
+                if (Collections.binarySearch(loansForCustomer, customerLoan, comparator) < 0) {
+                    loansForCustomer.add(customerLoan);
+                }
             } else {
                 final List<CollectionSheetCustomerLoanDto> customerLoansForCustomer = new ArrayList<CollectionSheetCustomerLoanDto>();
                 customerLoansForCustomer.add(customerLoan);
@@ -253,7 +263,17 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
 
                 final List<CollectionSheetCustomerAccountCollectionDto> customerAccountFeesList = accountCollectionsOnCustomerAccountGroupedByCustomerId
                         .get(customerId);
-                customerAccountFeesList.add(accountCollectionFee);
+                Comparator<CollectionSheetCustomerAccountCollectionDto> comparator = new Comparator<CollectionSheetCustomerAccountCollectionDto>() {
+
+                    @Override
+                    public int compare(CollectionSheetCustomerAccountCollectionDto cseDto1, CollectionSheetCustomerAccountCollectionDto cseDto2) {
+                        return cseDto1.getAccountId().compareTo(cseDto2.getAccountId());
+                    }
+                };
+                Collections.sort(customerAccountFeesList, comparator);
+                if (Collections.binarySearch(customerAccountFeesList, accountCollectionFee, comparator) < 0) {
+                    customerAccountFeesList.add(accountCollectionFee);
+                }
             } else {
                 final List<CollectionSheetCustomerAccountCollectionDto> customerAccountFeesList = new ArrayList<CollectionSheetCustomerAccountCollectionDto>();
                 customerAccountFeesList.add(accountCollectionFee);

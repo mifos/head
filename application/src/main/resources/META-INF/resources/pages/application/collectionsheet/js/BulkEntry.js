@@ -23,19 +23,53 @@ function fnCancel(form) {
     form.action = "collectionsheetaction.do";
     form.submit();
 }
-function adjustGroupTotalForLoan(columns, size, loanProductSize, savingsProductSize) {
+function adjustGroupTotalForLoan(rows, columns, size, loanProductSize, savingsProductSize) {
     if (document.getElementsByName("group[" + (size + 1) + "][" + columns + "]")[0] == undefined) {
         return;
     }
     var groupTotal = 0;
+    
+    var glimAccount = false;
+    var groupAccountRow = size;
+    if (document.getElementsByName("enteredAmount[" + groupAccountRow + "][" + columns + "]")[0] != undefined) {
+        for (i = 0; i < (size); i++) {
+            if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
+                glimAccount = true;
+            }
+        }
+    }
+    
+    var numberOfIndividualClients = 0;
+    
     for (i = 0; i < (size + 1); i++) {
         if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
             if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value == "" || document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value == ".") {
                 document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value = 0;
             }
-            groupTotal = parseFloat(groupTotal) + parseFloat(document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value);
+            if (i != size || !glimAccount) {
+                groupTotal = 
+                    parseFloat(groupTotal) + parseFloat(document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value);
+                numberOfIndividualClients++;
+            }
         }
     }
+    
+    if (glimAccount && rows != size) {
+        document.getElementsByName("enteredAmount[" + (size) + "][" + columns + "]")[0].value = groupTotal;
+    } else if (glimAccount && rows == size) {
+        groupTotal = document.getElementsByName("enteredAmount[" + groupAccountRow + "][" + columns + "]")[0].value;
+        var lastClientIndex = 0;
+        for (i = 0; i < (size); i++) {
+            if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
+                document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value =
+                   Math.round(groupTotal / numberOfIndividualClients);
+                   lastClientIndex = i;
+            }
+        }
+        document.getElementsByName("enteredAmount[" + lastClientIndex + "][" + columns + "]")[0].value =
+            groupTotal - Math.round(groupTotal / numberOfIndividualClients) * (numberOfIndividualClients - 1);
+    } 
+    
     document.getElementsByName("group[" + (size + 1) + "][" + columns + "]")[0].value = groupTotal;
     setTotalsForGroup(loanProductSize, savingsProductSize, size);
 }
@@ -150,12 +184,16 @@ function checkTotalForCenter(rows, columns, size, initialAccNo, centerTotalCount
         document.getElementsByName("enteredAmount[" + (initialAccNo + size) + "][" + columns + "]")[0].value = groupTotal;
     } else if (glimAccount && rows == size + initialAccNo) {
         groupTotal = document.getElementsByName("enteredAmount[" + groupAccountRow + "][" + columns + "]")[0].value;
+        var lastClientIndex = 0;
         for (i = initialAccNo; i < (size + initialAccNo); i++) {
             if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
                 document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value =
                    groupTotal / numberOfIndividualClients;
+                lastClientIndex++;
             }
         }
+        document.getElementsByName("enteredAmount[" + lastClientIndex + "][" + columns + "]")[0].value =
+            groupTotal - Math.round(groupTotal / numberOfIndividualClients) * (numberOfIndividualClients - 1);
     } 
     document.getElementsByName("group[" + (initialAccNo + size + 1) + "][" + columns + "]")[0].value = groupTotal;
     var difference = (groupTotalInitial - groupTotal);
