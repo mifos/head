@@ -550,6 +550,7 @@ having max(cs.installment_id) > max(cfs.installment_id)
                 and loanAccount.office.officeId = :OFFICE_ID
                 and loanAccount.personnel.personnelId = :PERSONNEL_ID
                 and loanAccount.accountType.accountTypeId != 4
+                and loanAccount.parentAccount is null
                 order by loanAccount.accountId]]>
     </query>
     <query name="accounts.account_IdSearch">
