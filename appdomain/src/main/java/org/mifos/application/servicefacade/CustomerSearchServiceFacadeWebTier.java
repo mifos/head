@@ -115,8 +115,11 @@ public class CustomerSearchServiceFacadeWebTier implements
                             savingsDao.findBySystemId(accountStr).getState().getValue());   
         		}
         		for (Object groupLoanAccount: customerSearchDto.getGroupLoanGlobalAccountNum()) {
-        		    clientSearchResultDto.getGroupLoanGlobalAccountNum().add((String) groupLoanAccount);
-        		}
+                    String accountStr = (String)groupLoanAccount;
+                    clientSearchResultDto.getGroupLoanGlobalAccountNum().add(accountStr);
+                    clientSearchResultDto.getGroupLoanGlobalAccountStateIds().put(accountStr,
+                            loanDao.findByGlobalAccountNum(accountStr).getAccountState().getId());   
+                }
         		
         		clientSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
@@ -154,10 +157,13 @@ public class CustomerSearchServiceFacadeWebTier implements
                     groupSearchResultDto.getSavingsGlobalAccountNum().add(accountStr);
                     groupSearchResultDto.getSavingsGlobalAccountStateIds().put(accountStr,
                             savingsDao.findBySystemId(accountStr).getState().getValue());   
+                    }
+        		for (Object groupLoanAccount: customerSearchDto.getGroupLoanGlobalAccountNum()) {
+                    String accountStr = (String)groupLoanAccount;
+                    groupSearchResultDto.getGroupLoanGlobalAccountNum().add(accountStr);
+                    groupSearchResultDto.getGroupLoanGlobalAccountStateIds().put(accountStr,
+                            loanDao.findByGlobalAccountNum(accountStr).getAccountState().getId());   
         		}
-                for (Object groupLoanAccount: customerSearchDto.getGroupLoanGlobalAccountNum()) {
-                    groupSearchResultDto.getGroupLoanGlobalAccountNum().add((String) groupLoanAccount);
-                }
         		
         		groupSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
