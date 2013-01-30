@@ -22,7 +22,9 @@ package org.mifos.application.servicefacade;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -180,6 +182,8 @@ public class SaveCollectionSheetAssembler {
             final List<String> failedLoanRepaymentAccountNumbers) {
 
         final List<LoanBO> loans = new ArrayList<LoanBO>();
+        Map<Integer, AccountPaymentEntity> groupLoanAccountParentsPayments = 
+                new HashMap<Integer, AccountPaymentEntity>();
 
         for (SaveCollectionSheetCustomerDto saveCollectionSheetCustomer : saveCollectionSheetCustomers) {
             if (saveCollectionSheetCustomer.getSaveCollectionSheetCustomerLoans() != null
@@ -222,7 +226,13 @@ public class SaveCollectionSheetAssembler {
                             try {
                                 final PaymentData paymentData = getCustomerAccountPaymentDataView(new Money(account
                                         .getCurrency(), loanPaymentAmount.toString()), payment);
-                                account.applyPayment(paymentData);
+                                AccountPaymentEntity paymentEntity = account.applyPayment(paymentData);
+                                if (account.isGroupLoanAccountParent()) {
+                                    groupLoanAccountParentsPayments.put(account.getAccountId(), paymentEntity);
+                                } else if (account.isGroupLoanAccountMember()) {
+                                    paymentEntity.setParentPaymentId(
+                                            groupLoanAccountParentsPayments.get(account.getParentAccount().getAccountId()));
+                                }
                                 loans.add(account);
                             } catch (AccountException ae) {
                                 logger.warn("Loan repayment on account [" + globalAccountNum

@@ -188,8 +188,8 @@ function checkTotalForCenter(rows, columns, size, initialAccNo, centerTotalCount
         for (i = initialAccNo; i < (size + initialAccNo); i++) {
             if (document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0] != undefined) {
                 document.getElementsByName("enteredAmount[" + i + "][" + columns + "]")[0].value =
-                   groupTotal / numberOfIndividualClients;
-                lastClientIndex++;
+                   Math.round(groupTotal / numberOfIndividualClients);
+                lastClientIndex = i;
             }
         }
         document.getElementsByName("enteredAmount[" + lastClientIndex + "][" + columns + "]")[0].value =
