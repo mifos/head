@@ -37,6 +37,10 @@ public class AccountTagGenerator extends TagGenerator {
         AccountBO account = (AccountBO) obj;
         StringBuilder strBuilder = getAssociatedGenerator().build(account.getCustomer(), randomNum);
         strBuilder.append(" / ");
+        if(account.isGroupLoanAccountMember()){
+            createAccountLink(strBuilder, ((LoanBO)account).getParentAccount(), randomNum);
+            strBuilder.append(" / ");
+        }
         if (selfLinkRequired) {
             createAccountLink(strBuilder, account, randomNum); // create self
                                                                // link
@@ -67,6 +71,8 @@ public class AccountTagGenerator extends TagGenerator {
             return ((SavingsBO) account).getSavingsOffering().getPrdOfferingName();
         } else if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
             return ((LoanBO) account).getLoanOffering().getPrdOfferingName();
+        } else if (account.getType() == AccountTypes.GROUP_LOAN_ACCOUNT) {
+            return ((LoanBO) account).getLoanOffering().getPrdOfferingName();
         }
         return "";
     }
@@ -75,6 +81,8 @@ public class AccountTagGenerator extends TagGenerator {
         if (account.getType() == AccountTypes.SAVINGS_ACCOUNT) {
             return "viewSavingsAccountDetails.ftl?globalAccountNum=";
         } else if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+            return "viewLoanAccountDetails.ftl?globalAccountNum=";
+        } else if (account.getType() == AccountTypes.GROUP_LOAN_ACCOUNT) {
             return "viewLoanAccountDetails.ftl?globalAccountNum=";
         }
         return "";
