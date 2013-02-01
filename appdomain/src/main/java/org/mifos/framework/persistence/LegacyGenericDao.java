@@ -177,6 +177,22 @@ public abstract class LegacyGenericDao {
         }
     }
 
+    // Hugo Technologies
+    public int executeNamedQueryForUpdate(final String queryName, final Map<String, ?> queryParameters) throws PersistenceException {
+        try {
+		StaticHibernateUtil.startTransaction();
+            Query query = createdNamedQuery(queryName);
+            System.out.println(query.getQueryString());
+            query.setProperties(queryParameters);
+            int result = query.executeUpdate();
+            StaticHibernateUtil.commitTransaction();
+            return result;
+
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
+
     public Object executeUniqueHqlQuery(final String hqlQuery) {
         return getSession().createQuery(hqlQuery).uniqueResult();
     }
