@@ -125,7 +125,8 @@ public class DefaultLoanScheduleRounderHelper implements LoanScheduleRounderHelp
      */
     @Override
     public void roundAndAdjustButLastNonGraceInstallment_v2(final LoanScheduleEntity installment) {
-        Money roundedTotalInstallmentPaymentDue = MoneyUtils.initialRound(installment.getTotalPaymentDue());
+        Money roundedTotalFeesDue = MoneyUtils.currencyRound(installment.getTotalFeesDue());
+        Money roundedTotalInstallmentPaymentDue = MoneyUtils.initialRound(installment.getTotalDue()).add(roundedTotalFeesDue);
         roundInstallmentAccountFeesDue_v2(installment);
 
         installment.setInterest(MoneyUtils.currencyRound(installment.getInterest()));
