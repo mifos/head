@@ -398,8 +398,8 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             	BigDecimal principal = BigDecimal.ZERO;
             	BigDecimal interest = BigDecimal.ZERO;
             	
-            	for (LoanBO memberLoan : memberLoans) {
-            		LoanScheduleEntity memberEntity = memberLoan.getLoanScheduleEntityMap().get(installmentId);
+            	for (int i = 0; i < memberLoans.size(); i++) {
+            		LoanScheduleEntity memberEntity = memberLoans.get(i).getLoanScheduleEntityMap().get(installmentId);
             		principal = principal.add(memberEntity.getPrincipal().getAmount());
             		interest = interest.add(memberEntity.getInterest().getAmount());
 
@@ -412,7 +412,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             			BigDecimal currentAmount = feeAmountsForInstallment.get(feesActionDetailEntity.getFee().getFeeId());
             			currentAmount = currentAmount.subtract(feesActionDetailEntity.getFeeAmount().getAmount());
             			
-            			if (currentAmount.compareTo(BigDecimal.ZERO) == -1) {
+            			if (currentAmount.compareTo(BigDecimal.ZERO) != 0 && i == memberLoans.size() - 1) {
             				BigDecimal toUpdate = feesActionDetailEntity.getFeeAmount().getAmount().add(currentAmount);
             				feesActionDetailEntity.updateFeeAmount(toUpdate);
             				currentAmount = BigDecimal.ZERO;

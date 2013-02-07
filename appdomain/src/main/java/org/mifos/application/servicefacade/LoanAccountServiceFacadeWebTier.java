@@ -69,6 +69,7 @@ import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundCodeDto;
@@ -2174,6 +2175,70 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
         } catch (Exception e) {
             throw new MifosRuntimeException(e.getMessage(), e);
+        }
+    }
+    
+    @Override
+    public void updateMemberLoansFeeAmounts(Integer accountId) {
+        LoanBO loan = this.loanDao.findById(accountId);
+        List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(accountId);
+        
+        try {
+            transactionHelper.startTransaction();
+            Map<Integer, LoanScheduleEntity> parentScheduleEntities = loan.getLoanScheduleEntityMap();
+            
+            for (Integer installmentId : parentScheduleEntities.keySet()) {
+                
+                LoanScheduleEntity parentEntity = parentScheduleEntities.get(installmentId);
+                Map<Short, BigDecimal> feeAmountsForInstallment = new HashMap<Short, BigDecimal>();
+                
+                for (AccountFeesActionDetailEntity feesActionDetailEntity : parentEntity.getAccountFeesActionDetails()) {
+                    feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), feesActionDetailEntity.getFeeAmount().getAmount());
+                }
+                
+                for (int i = 0; i < individualLoans.size(); i++) {
+                    LoanScheduleEntity memberEntity = individualLoans.get(i).getLoanScheduleEntityMap().get(installmentId);
+    
+                    for (AccountFeesActionDetailEntity feesActionDetailEntity : memberEntity.getAccountFeesActionDetails()) {
+                        
+                        if (feesActionDetailEntity.getFee().getFeeType().equals(RateAmountFlag.RATE)) {
+                            continue;
+                        }
+                        
+                        BigDecimal currentAmount = feeAmountsForInstallment.get(feesActionDetailEntity.getFee().getFeeId());
+                        currentAmount = currentAmount.subtract(feesActionDetailEntity.getFeeAmount().getAmount());
+                        
+                        if (currentAmount.compareTo(BigDecimal.ZERO) != 0 && i == individualLoans.size() - 1) {
+                            BigDecimal toUpdate = feesActionDetailEntity.getFeeAmount().getAmount().add(currentAmount);
+                            feesActionDetailEntity.updateFeeAmount(toUpdate);
+                            currentAmount = BigDecimal.ZERO;
+                        }
+                        
+                        feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), currentAmount);
+                    }
+                }
+            }
+            
+            for (LoanBO memberLoan : individualLoans) {
+                memberLoan.updateLoanSummary();
+                loanDao.save(memberLoan);
+            }
+            loanDao.save(loan);
+            transactionHelper.flushSession();
+            
+            this.loanBusinessService.clearAndPersistOriginalSchedule(loan);
+            for(LoanBO memberLoan : individualLoans) {
+                this.loanBusinessService.clearAndPersistOriginalSchedule(memberLoan);
+            }
+            
+            transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException();
+        } finally {
+            this.transactionHelper.closeSession();
         }
     }
 

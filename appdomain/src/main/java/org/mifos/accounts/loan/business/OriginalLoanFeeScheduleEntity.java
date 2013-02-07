@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.business;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -99,6 +100,10 @@ public class OriginalLoanFeeScheduleEntity implements Comparable<OriginalLoanFee
 
     protected void setFeeAmount(Money feeAmount) {
         this.feeAmount = feeAmount;
+    }
+    
+    public void updateFeeAmount(BigDecimal feeAmount) {
+        this.feeAmount = new Money(accountFee.getAccount().getCurrency(), feeAmount);
     }
 
     protected void setFeeAmountPaid(Money feeAmountPaid) {

@@ -9,6 +9,7 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.RepaymentTotals;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -142,8 +143,10 @@ public class DefaultLoanScheduleRounder implements LoanScheduleRounder {
                     roundedInstallment = loanScheduleInstallmentRounder.roundAndAdjustGraceInstallment_v2(roundedInstallment);
                 } else if (interestType.equals(InterestType.DECLINING_EPI)) {
                 	loanScheduleInstallmentRounder.roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(roundedInstallment);
+                } else if (AccountingRules.isGroupLoanWithMembers() && interestType.equals(InterestType.FLAT)) {
+                    loanScheduleInstallmentRounder.roundAndAdjustNonGraceInstallmentForNewGLIM_v2(roundedInstallment);
                 } else {
-                	loanScheduleInstallmentRounder.roundAndAdjustButLastNonGraceInstallment_v2(roundedInstallment);
+                    loanScheduleInstallmentRounder.roundAndAdjustButLastNonGraceInstallment_v2(roundedInstallment);
                 }
                 loanScheduleInstallmentRounder.updateRunningTotals_v2(totals, roundedInstallment);
             } else {

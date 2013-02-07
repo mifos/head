@@ -407,9 +407,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
         totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
-        String[] expectedPrincipalAmounts = new String[] { "24.9", "249.2", "249.2" };
+        String[] expectedPrincipalAmounts = new String[] { "24.9", "249.2", "249.3" };
         String[] expectedInterestAmounts = new String[] { "46", "460.3", "460.3" };
-        String[] expectedFeeAmounts = new String[] { "0.5", "4.8", "4.8" };
+        String[] expectedFeeAmounts = new String[] { "0.5", "4.8", "4.7" };
         verifyProRatedGLIMPayments(loanAccountPage, 3, expectedPrincipalAmounts, expectedInterestAmounts, expectedFeeAmounts);
 
         loanTestHelper.repayLoan(loanId);

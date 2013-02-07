@@ -186,6 +186,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DISBURSE_LOAN')")
     void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateMemberLoansFeeAmounts(Integer accountId);
 
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_APPROVE_LOANS_IN_BULK', 'ROLE_CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS')")
     ChangeAccountStatusDto retrieveAllActiveBranchesAndLoanOfficerDetails();

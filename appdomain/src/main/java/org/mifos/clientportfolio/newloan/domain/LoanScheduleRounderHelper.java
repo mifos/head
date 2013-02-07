@@ -18,6 +18,8 @@ public interface LoanScheduleRounderHelper {
 	LoanScheduleEntity roundAndAdjustGraceInstallment_v2(LoanScheduleEntity roundedInstallment);
 
 	void roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(LoanScheduleEntity roundedInstallment);
+	
+	void roundAndAdjustNonGraceInstallmentForNewGLIM_v2(LoanScheduleEntity roundedInstallment);
 
 	void roundAndAdjustButLastNonGraceInstallment_v2(LoanScheduleEntity roundedInstallment);
 
