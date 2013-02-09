@@ -37,7 +37,7 @@
 <p>[@spring.message "createLoanAccount.preview.instructions" /]</p>
 <br/>
 
-<p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanScheduleReferenceData.groupSchedule.accountOwner}</p>
+<p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanScheduleReferenceData.accountOwner}</p>
 <br />
 <h1><span class="standout">[@spring.message "createLoanAccount.preview.loanHeading" /]</span></h1>
 <p><span class="standout">[@spring.message "selectProduct.selectProductLabel" /]</span> 
@@ -62,13 +62,13 @@
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.gracePeriodtype"/]</div>
-        [#if loanScheduleReferenceData.groupSchedule.graceType == 1]
+        [#if loanScheduleReferenceData.graceType == 1]
         <div class="value">[@spring.message "productSummary.gracePeriod.none"/]</div>
         [/#if]
-        [#if loanScheduleReferenceData.groupSchedule.graceType == 2]
+        [#if loanScheduleReferenceData.graceType == 2]
         <div class="value">[@spring.message "productSummary.gracePeriod.allrepayments"/]</div>
         [/#if]
-        [#if loanScheduleReferenceData.groupSchedule.graceType == 3]
+        [#if loanScheduleReferenceData.graceType == 3]
         <div class="value">[@spring.message "productSummary.gracePeriod.principalonly"/]</div>
         [/#if]
     </div>
@@ -119,7 +119,7 @@
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.disbursalDate"/]</div>
-        <div class="value">${loanScheduleReferenceData.groupSchedule.disbursementDate?date?string.medium}</div>
+        <div class="value">${loanScheduleReferenceData.disbursementDate?date?string.medium}</div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "reviewInstallments.mode_of_payment"/]</div>

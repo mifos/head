@@ -73,7 +73,7 @@ $(document).ready(function() {
 <div class="product-summary">
     <div class="row">
         <div class="attribute"><span class="standout">[@spring.message "selectProduct.accountOwnerName"/]</span></div>
-        <div class="value">${loanScheduleReferenceData.groupSchedule.accountOwner}</div>
+        <div class="value">${loanScheduleReferenceData.accountOwner}</div>
     </div>
     <div class="row">
         <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.loanAmount"/]</span></div>
@@ -81,7 +81,7 @@ $(document).ready(function() {
     </div>
     <div class="row">
         <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.disbursmentDate"/]</span></div>
-        <div class="value">${loanScheduleReferenceData.groupSchedule.disbursementDate?date?string.medium}</div>
+        <div class="value">${loanScheduleReferenceData.disbursementDate?date?string.medium}</div>
     </div>
     <div class="row">
         <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.mode_of_payment"/]</span></div>

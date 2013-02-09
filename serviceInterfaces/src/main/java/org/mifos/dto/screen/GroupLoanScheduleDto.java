@@ -1,19 +1,25 @@
 package org.mifos.dto.screen;
 
-import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
-public class GroupLoanScheduleDto implements Serializable {
+import org.joda.time.LocalDate;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 
+public class GroupLoanScheduleDto extends LoanScheduleDto {
+    
     /**
      * 
      */
-    private static final long serialVersionUID = 1635046317252143916L;
-
-    private LoanScheduleDto groupSchedule;
+    private static final long serialVersionUID = 7340531381114653515L;
     
     private Map<Integer, LoanScheduleDto> memberSchedules;
 
+    public GroupLoanScheduleDto(String accountOwner, Double loanAmount, LocalDate disbursementDate, Integer graceType,
+            List<LoanCreationInstallmentDto> installments) {
+        super(accountOwner, loanAmount, disbursementDate, graceType, installments);
+    }
+    
     public Map<Integer, LoanScheduleDto> getMemberSchedules() {
         return memberSchedules;
     }
@@ -22,12 +28,4 @@ public class GroupLoanScheduleDto implements Serializable {
         this.memberSchedules = memberSchedules;
     }
 
-    public LoanScheduleDto getGroupSchedule() {
-        return groupSchedule;
-    }
-
-    public void setGroupSchedule(LoanScheduleDto groupSchedule) {
-        this.groupSchedule = groupSchedule;
-    }
-    
 }

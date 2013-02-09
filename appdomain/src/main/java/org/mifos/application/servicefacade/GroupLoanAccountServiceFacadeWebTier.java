@@ -1193,15 +1193,11 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             }
         }
         
-        GroupLoanScheduleDto groupLoanScheduleDto = new GroupLoanScheduleDto();
-        groupLoanScheduleDto.setMemberSchedules(new HashMap<Integer, LoanScheduleDto>());
-        
-        LoanScheduleDto groupScheduleDto = new LoanScheduleDto(customer.getDisplayName(),
+        GroupLoanScheduleDto groupScheduleDto = new GroupLoanScheduleDto(customer.getDisplayName(),
                 Double.valueOf(loan.getLoanAmount().getAmountDoubleValue()),
                 loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(),
                 loan.getGraceType().getValue().intValue(), parentInstallments);
-        
-        groupLoanScheduleDto.setGroupSchedule(groupScheduleDto);
+        groupScheduleDto.setMemberSchedules(new HashMap<Integer, LoanScheduleDto>());
 
         for (LoanBO memberLoan : memberLoans) {
             Integer id = memberLoan.getCustomer().getCustomerId();
@@ -1209,10 +1205,10 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                     Double.valueOf(memberLoan.getLoanAmount().getAmountDoubleValue()),
                     loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(),
                     loan.getGraceType().getValue().intValue(), memberInstallments.get(id));  
-            groupLoanScheduleDto.getMemberSchedules().put(id, memberScheduleDto);
+            groupScheduleDto.getMemberSchedules().put(id, memberScheduleDto);
         }
         
-        return groupLoanScheduleDto;
+        return groupScheduleDto;
     }
 
 }

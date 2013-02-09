@@ -118,7 +118,7 @@ public class GroupLoanAccountController {
             }
     }
     
-    public GroupLoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean,
+    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean,
             LoanScheduleFormBean loanScheduleFormBean, boolean resetRedoLoanAccountDetails) {
         
         LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
@@ -150,7 +150,7 @@ public class GroupLoanAccountController {
         List<String> globalMemberIds = loanControllerHelper.getSelectedMemberGlobalIds(formBean);
         List<Integer> memberIds = loanControllerHelper.getSelectedMemberIdsFromFormBean(formBean);
         List<BigDecimal> memberAmounts = loanControllerHelper.getSelectedMemberAmounts(formBean);
-        loanScheduleFormBean.setVariableInstallments(groupLoanScheduleDto.getGroupSchedule().getInstallments());
+        loanScheduleFormBean.setVariableInstallments(groupLoanScheduleDto.getInstallments());
         
         for (int i = 0; i < memberIds.size(); ++i) {
             Integer memberId = memberIds.get(i);
@@ -165,10 +165,10 @@ public class GroupLoanAccountController {
             loanControllerHelper.populateFormBeanFromDto(memberId, productId, formBean,
                     memberScheduleBean, disbursementDate, memberLoanSchedule, resetRedoLoanAccountDetails);
             memberScheduleBean.setLoanPrincipal(memberAmounts.get(i));
-            
+            loanScheduleFormBean.setInstallments(memberScheduleBean.getInstallments());
         }
         loanScheduleFormBean.setActualPaymentAmounts(new ArrayList<Number>());
-
+        
         return groupLoanScheduleDto;
     }
     
