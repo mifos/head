@@ -30,16 +30,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
@@ -47,9 +46,8 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.util.DateTimeService;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.platform.util.CollectionUtils;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
@@ -503,6 +501,23 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return new RepaymentScheduleInstallment(this.installmentId,
                 this.actionDate, this.principal, this.interest,
                 this.getTotalFeesDue(), this.miscFee, this.miscPenalty);
+    }
+    
+    public LoanCreationInstallmentDto toLoanCreationInstallmentDto(Short digitsAfterDecimal) {
+
+        Integer installmentNumber = getInstallmentId().intValue();
+        LocalDate dueDate = new LocalDate(getActionDate());
+        String principal = getPrincipal().toString(digitsAfterDecimal);
+        String interest = getInterest().toString(digitsAfterDecimal);
+        String fees = getTotalFees().toString(digitsAfterDecimal);
+        String penalty = "0.0";
+        
+        String total = getPrincipal().add(getInterest()).add(getTotalFees()).toString(digitsAfterDecimal);
+        LoanCreationInstallmentDto installment = new LoanCreationInstallmentDto(installmentNumber, dueDate,
+                Double.valueOf(principal), Double.valueOf(interest), Double.valueOf(fees), Double.valueOf(penalty),
+                Double.valueOf(total));
+        
+        return installment;
     }
 
     public boolean isSameAs(AccountActionDateEntity accountActionDateEntity) {

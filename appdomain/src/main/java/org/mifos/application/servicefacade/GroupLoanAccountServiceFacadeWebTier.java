@@ -92,6 +92,7 @@ import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.GroupIndividualLoanDto;
 import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
@@ -99,9 +100,11 @@ import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.AccountFeesDto;
 import org.mifos.dto.screen.AccountPenaltiesDto;
 import org.mifos.dto.screen.GroupLoanMemberAdjustmentDto;
+import org.mifos.dto.screen.GroupLoanScheduleDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanPerformanceHistoryDto;
+import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -174,14 +177,15 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
     @Override
     public LoanCreationResultDto createGroupLoan(CreateGroupLoanAccount loanAccountInfo,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
-        return createGroupLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), loanAccountInfo.getMemberDetails(), false);
+        return createGroupLoanAccount(loanAccountInfo, new HashMap<Integer, List<LoanPaymentDto>>(), questionGroups,
+        		loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), loanAccountInfo.getMemberDetails(), false);
     }
     
     private UserContext toUserContext(MifosUser user) {
         return new UserContextFactory().create(user);
     }
     
-    private LoanCreationResultDto createGroupLoanAccount(CreateGroupLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
+    private LoanCreationResultDto createGroupLoanAccount(CreateGroupLoanAccount loanAccountInfo, Map<Integer, List<LoanPaymentDto>> backdatedLoanPayments,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<DateTime> loanScheduleInstallmentDates,
             List<Number> totalInstallmentAmounts, List<CreateLoanAccount> memberDetails, boolean isBackdatedLoan) {
 
@@ -377,63 +381,14 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             loanSchedule = this.loanScheduleService.generateGroupLoanSchedule(loanAccountDetail.getLoanProduct(), repaymentDayMeeting, loanSchedule, memberLoanSchedules, 
                     loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), overridenDetail, configuration, userOffice.getOfficeId(), loanAccountDetail.getCustomer(), accountFeeEntities);
             
-            // fix installment details in order to match sum of interest of member accounts to interest of parent account
-            // update member fee amounts in order to match parent fee amount
-            Map<Integer, LoanScheduleEntity> parentScheduleEntities = loan.getLoanScheduleEntityMap();
-            List<RepaymentScheduleInstallment> correctedInstallments = new ArrayList<RepaymentScheduleInstallment>();
-            
-            for (Integer installmentId : parentScheduleEntities.keySet()) {
-            	
-            	LoanScheduleEntity parentEntity = parentScheduleEntities.get(installmentId);
-            	Map<Short, BigDecimal> feeAmountsForInstallment = new HashMap<Short, BigDecimal>();
-            	
-        		for (AccountFeesActionDetailEntity feesActionDetailEntity : parentEntity.getAccountFeesActionDetails()) {
-        			feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), feesActionDetailEntity.getFeeAmount().getAmount());
-        		}
-            	
-            	RepaymentScheduleInstallment correctedInstallment = new RepaymentScheduleInstallment();
-            	correctedInstallment.setInstallment(installmentId);
-            	correctedInstallment.setDueDateValue(parentEntity.getActionDate());
-            	
-            	BigDecimal principal = BigDecimal.ZERO;
-            	BigDecimal interest = BigDecimal.ZERO;
-            	
-            	for (int i = 0; i < memberLoans.size(); i++) {
-            		LoanScheduleEntity memberEntity = memberLoans.get(i).getLoanScheduleEntityMap().get(installmentId);
-            		principal = principal.add(memberEntity.getPrincipal().getAmount());
-            		interest = interest.add(memberEntity.getInterest().getAmount());
 
-            		for (AccountFeesActionDetailEntity feesActionDetailEntity : memberEntity.getAccountFeesActionDetails()) {
-            			
-            			if (feesActionDetailEntity.getFee().getFeeType().equals(RateAmountFlag.RATE)) {
-            				continue;
-            			}
-            			
-            			BigDecimal currentAmount = feeAmountsForInstallment.get(feesActionDetailEntity.getFee().getFeeId());
-            			currentAmount = currentAmount.subtract(feesActionDetailEntity.getFeeAmount().getAmount());
-            			
-            			if (currentAmount.compareTo(BigDecimal.ZERO) != 0 && i == memberLoans.size() - 1) {
-            				BigDecimal toUpdate = feesActionDetailEntity.getFeeAmount().getAmount().add(currentAmount);
-            				feesActionDetailEntity.updateFeeAmount(toUpdate);
-            				currentAmount = BigDecimal.ZERO;
-            			}
-            			
-            			feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), currentAmount);
-            		}
-            	}
-            	
-            	correctedInstallment.setPrincipal(new Money(parentEntity.getPrincipal().getCurrency(), principal));
-            	correctedInstallment.setInterest(new Money(parentEntity.getInterest().getCurrency(), interest));
-            	
-            	correctedInstallments.add(correctedInstallment);
-            }
+            fixMemberAndParentInstallmentDetails(loan, memberLoans);
 
             for (LoanBO memberLoan : memberLoans) {
             	memberLoan.updateLoanSummary();
             	loanDao.save(memberLoan);
             }
             
-            loan.updateInstallmentSchedule(correctedInstallments);
             this.loanDao.save(loan);
             transactionHelper.flushSession();
             
@@ -469,6 +424,11 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                 LocalDate approvalDate = loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate();
                 loan.approve(createdBy, comment, approvalDate);
 
+                for (LoanBO memberLoan : memberLoans) {
+                    memberLoan.approve(createdBy, comment, approvalDate);
+                }
+                
+                
                 // 4. disburse loan
                 String receiptNumber = null;
                 Date receiptDate = null;
@@ -499,19 +459,29 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                 }
 
                 loan.disburse(createdBy, disbursalPayment);
-
+                for (LoanBO memberLoan : memberLoans) {
+                    memberLoan.disburse(createdBy, disbursalPayment);
+                }
+                
                 customer.updatePerformanceHistoryOnDisbursement(loan, loan.getLoanAmount());
                 // end of refactoring of loan disbural
                 this.loanDao.save(loan);
                 transactionHelper.flushSession();
-
+                
                 // 5. apply each payment
-                for (LoanPaymentDto loanPayment : backdatedLoanPayments) {
-                    Money amountPaidToDate = new Money(loan.getCurrency(), loanPayment.getAmount());
-                    PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, loanPayment.getPaymentTypeId(), loanPayment
-                            .getPaymentDate().toDateMidnight().toDate());
-                    loan.applyPayment(paymentData);
-                    this.loanDao.save(loan);
+                for (LoanBO memberLoan : memberLoans) {
+                    Integer id = memberLoan.getCustomer().getCustomerId();
+                    List<LoanPaymentDto> payments = backdatedLoanPayments.get(id);
+
+                    for (LoanPaymentDto loanPayment : payments) {
+                        Money amountPaidToDate = new Money(loan.getCurrency(), loanPayment.getAmount());
+                        PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy,
+                                loanPayment.getPaymentTypeId(), loanPayment.getPaymentDate().toDateMidnight().toDate());
+                        memberLoan.applyPayment(paymentData);
+                        loan.applyPayment(paymentData);
+                        this.loanDao.save(memberLoan);
+                        this.loanDao.save(loan);
+                    }
                 }
             }
             transactionHelper.commitTransaction();
@@ -526,6 +496,61 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         } finally {
             this.transactionHelper.closeSession();
         }
+    }
+    
+    // fix installment details in order to match sum of interest of member accounts to interest of parent account
+    // update member fee amounts in order to match parent fee amount
+    private void fixMemberAndParentInstallmentDetails(LoanBO loan, List<LoanBO> memberLoans) {
+
+        Map<Integer, LoanScheduleEntity> parentScheduleEntities = loan.getLoanScheduleEntityMap();
+        List<RepaymentScheduleInstallment> correctedInstallments = new ArrayList<RepaymentScheduleInstallment>();
+        
+        for (Integer installmentId : parentScheduleEntities.keySet()) {
+        	
+        	LoanScheduleEntity parentEntity = parentScheduleEntities.get(installmentId);
+        	Map<Short, BigDecimal> feeAmountsForInstallment = new HashMap<Short, BigDecimal>();
+        	
+        	for (AccountFeesActionDetailEntity feesActionDetailEntity : parentEntity.getAccountFeesActionDetails()) {
+        		feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), feesActionDetailEntity.getFeeAmount().getAmount());
+        	}
+        	
+        	RepaymentScheduleInstallment correctedInstallment = new RepaymentScheduleInstallment();
+        	correctedInstallment.setInstallment(installmentId);
+        	correctedInstallment.setDueDateValue(parentEntity.getActionDate());
+        	
+        	BigDecimal principal = BigDecimal.ZERO;
+        	BigDecimal interest = BigDecimal.ZERO;
+        	
+        	for (LoanBO memberLoan : memberLoans) {
+        		LoanScheduleEntity memberEntity = memberLoan.getLoanScheduleEntityMap().get(installmentId);
+        		principal = principal.add(memberEntity.getPrincipal().getAmount());
+        		interest = interest.add(memberEntity.getInterest().getAmount());
+
+        		for (AccountFeesActionDetailEntity feesActionDetailEntity : memberEntity.getAccountFeesActionDetails()) {
+        			
+        			if (feesActionDetailEntity.getFee().getFeeType().equals(RateAmountFlag.RATE)) {
+        				continue;
+        			}
+        			
+        			BigDecimal currentAmount = feeAmountsForInstallment.get(feesActionDetailEntity.getFee().getFeeId());
+        			currentAmount = currentAmount.subtract(feesActionDetailEntity.getFeeAmount().getAmount());
+        			
+        			if (currentAmount.compareTo(BigDecimal.ZERO) == -1) {
+        				BigDecimal toUpdate = feesActionDetailEntity.getFeeAmount().getAmount().add(currentAmount);
+        				feesActionDetailEntity.updateFeeAmount(toUpdate);
+        				currentAmount = BigDecimal.ZERO;
+        			}
+        			
+        			feeAmountsForInstallment.put(feesActionDetailEntity.getFee().getFeeId(), currentAmount);
+        		}
+        	}
+        	
+        	correctedInstallment.setPrincipal(new Money(parentEntity.getPrincipal().getCurrency(), principal));
+        	correctedInstallment.setInterest(new Money(parentEntity.getInterest().getCurrency(), interest));
+        	
+        	correctedInstallments.add(correctedInstallment);
+        }
+        loan.updateInstallmentSchedule(correctedInstallments);
     }
     
     private LoanAccountDetail assembleLoanAccountDetail(CreateGroupLoanAccount loanAccountInfo) {
@@ -983,6 +1008,211 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
     
     private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
         return meeting != null ? new MeetingHelper().getMessageWithFrequency(meeting, userContext) : null;
+    }
+
+	@Override
+	public LoanCreationResultDto createBackdatedGroupLoan(CreateGroupLoanAccount createGroupLoanAccount, 
+			Map<Integer, List<LoanPaymentDto>> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
+			LoanAccountCashFlow loanAccountCashFlow) {
+		
+        return createGroupLoanAccount(createGroupLoanAccount, backdatedLoanPayments, questionGroups,
+        		loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), createGroupLoanAccount.getMemberDetails(), true);
+	}
+
+    @Override
+    public GroupLoanScheduleDto getGroupLoanScheduleDto(CreateGroupLoanAccount loanAccountInfo, List<CreateLoanAccount> memberDetails) {
+
+        DateTime creationDate = new DateTime();
+
+        // 0. verify member details for GLIM group accounts
+        for (CreateLoanAccount groupMemberAccount : memberDetails) {
+            ClientBO member = this.customerDao.findClientById(groupMemberAccount.getCustomerId());
+            if (creationDate.isBefore(new DateTime(member.getCreatedDate()))) {
+                throw new BusinessRuleException("errors.cannotCreateLoan.because.clientsAreCreatedInFuture");
+            }
+        }
+
+        // 1. assemble loan details
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getGroupLoanAccountDetails().getCustomerId());
+        if (customer.isGroup()) {
+            customer = this.customerDao.findGroupBySystemId(customer.getGlobalCustNum());
+        }
+
+        // assemble
+        LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
+
+        List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getGroupLoanAccountDetails().getAccountFees());
+        List<AccountPenaltiesEntity> accountPenaltyEntities = assembleAccountPenalties(loanAccountInfo.getGroupLoanAccountDetails().getAccountPenalties());
+        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(),
+                loanAccountInfo.getGroupLoanAccountDetails().getInterestRate(), loanAccountInfo.getGroupLoanAccountDetails().getNumberOfInstallments(), loanAccountInfo.getGroupLoanAccountDetails().getGraceDuration(), accountFeeEntities, accountPenaltyEntities);
+
+        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
+        boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.getGroupLoanAccountDetails().isRepaymentScheduleIndependentOfCustomerMeeting();
+        LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+
+        MeetingBO repaymentDayMeeting = null;
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), loanAccountInfo.getGroupLoanAccountDetails(), loanAccountDetail.getCustomer());
+        } else {
+            MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
+            repaymentDayMeeting = new MeetingFactory().create(customerMeetingDto);
+            
+            Short recurAfter = loanAccountDetail.getLoanProduct().getLoanOfferingMeeting().getMeeting().getRecurAfter();
+            repaymentDayMeeting.getMeetingDetails().setRecurAfter(recurAfter);
+        }
+
+        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
+
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(),
+                overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates,
+                loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), new ArrayList<Number>());
+
+        // 2. create loan
+        InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getGroupLoanAccountDetails().getMinAllowedNumberOfInstallments().shortValue(),
+                loanAccountInfo.getGroupLoanAccountDetails().getMaxAllowedNumberOfInstallments().shortValue(), null);
+        AmountRange amountRange = new MaxMinLoanAmount(loanAccountInfo.getGroupLoanAccountDetails().getMaxAllowedLoanAmount().doubleValue(), loanAccountInfo.getGroupLoanAccountDetails().getMinAllowedLoanAmount().doubleValue(), null);
+
+        creationDate = loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate().toDateMidnight().toDateTime();
+
+        CreationDetail creationDetail = new CreationDetail(creationDate, Integer.valueOf(user.getUserId()));
+        LoanBO loan = LoanBO.openGroupLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting,
+                loanSchedule, loanAccountDetail.getAccountState(), loanAccountDetail.getFund(), overridenDetail, configuration, installmentRange, amountRange,
+                creationDetail, createdBy);
+        loan.setBusinessActivityId(loanAccountInfo.getGroupLoanAccountDetails().getLoanPurposeId());
+        loan.setExternalId(loanAccountInfo.getGroupLoanAccountDetails().getExternalId());
+        loan.setCollateralNote(loanAccountInfo.getGroupLoanAccountDetails().getCollateralNotes());
+        loan.setCollateralTypeId(loanAccountInfo.getGroupLoanAccountDetails().getCollateralTypeId());
+
+        loan.markAsCreatedWithBackdatedPayments();
+
+        //set up predefined loan account for importing loans
+        if(loanAccountInfo.getGroupLoanAccountDetails().getPredefinedAccountNumber()!=null){
+            loan.setGlobalAccountNum(loanAccountInfo.getGroupLoanAccountDetails().getPredefinedAccountNumber());
+        }
+        
+
+        // for GLIM loans only
+        List<CreateLoanAccount> individualMembersOfGroupLoan = new ArrayList<CreateLoanAccount>();
+        List<BigDecimal> radio = new ArrayList<BigDecimal>(loan.getNoOfInstallments());
+        
+        List<LoanProductOverridenDetail> memberOverridenDetails = new ArrayList<LoanProductOverridenDetail>();
+        List<LoanSchedule> memberLoanSchedules = new ArrayList<LoanSchedule>();
+        List<ClientBO> clients = new ArrayList<ClientBO>();
+        
+        for (CreateLoanAccount groupMemberAccount : memberDetails) {
+            ClientBO member = this.customerDao.findClientById(groupMemberAccount.getCustomerId());
+            Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
+            List<CreateAccountFeeDto> defaultAccountFees = new ArrayList<CreateAccountFeeDto>();
+            List<CreateAccountPenaltyDto> defaultAccountPenalties = new ArrayList<CreateAccountPenaltyDto>();
+            
+            radio.add(loanAmount.divide(loan.getLoanAmount()));
+            
+            for(CreateAccountFeeDto createAccountFeeDto : loanAccountInfo.getGroupLoanAccountDetails().getAccountFees()) {
+                Integer feeId = createAccountFeeDto.getFeeId();
+                String amount = createAccountFeeDto.getAmount();
+                FeeBO feeBO = this.feeDao.findById(feeId.shortValue());
+                
+                if(feeBO instanceof AmountFeeBO) {
+                    amount = String.valueOf(Double.valueOf(createAccountFeeDto.getAmount()) * (loanAmount.divide(loanAccountInfo.getGroupLoanAccountDetails().getLoanAmount()).getAmount().doubleValue()));
+                }
+                
+                defaultAccountFees.add(new CreateAccountFeeDto(feeId, amount));
+            }
+            
+            int memberCount = memberDetails.size();
+            for(CreateAccountPenaltyDto createAccountPenaltyDto : loanAccountInfo.getGroupLoanAccountDetails().getAccountPenalties()) {
+                Integer penaltyId = createAccountPenaltyDto.getPenaltyId();
+                String amount = createAccountPenaltyDto.getAmount();
+                PenaltyBO penaltyBO = this.penaltyDao.findPenaltyById(penaltyId.shortValue());
+                
+                if(penaltyBO instanceof AmountPenaltyBO) {
+                    amount = String.valueOf(Double.valueOf(createAccountPenaltyDto.getAmount()) / memberCount);
+                }
+                
+                defaultAccountPenalties.add(new CreateAccountPenaltyDto(penaltyId, amount));
+            }
+            
+            List<AccountFeesEntity> feeEntities = assembleAccountFees(defaultAccountFees);
+            List<AccountPenaltiesEntity> penaltyEntities = assembleAccountPenalties(defaultAccountPenalties);
+            LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, feeEntities, overridenDetail, penaltyEntities);
+
+            LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>(), loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), new ArrayList<Number>());
+            memberOverridenDetails.add(memberOverridenDetail);
+            memberLoanSchedules.add(memberSchedule);
+            clients.add(member);
+            individualMembersOfGroupLoan.add(groupMemberAccount);
+        }
+        
+        List<LoanBO> memberLoans = new ArrayList<LoanBO>(); //for original schedule persisting
+        int index = 0;
+        for (CreateLoanAccount groupMemberAccount : individualMembersOfGroupLoan) {
+
+            LoanBO memberLoan = LoanBO.openGroupLoanForAccount(loan, loanAccountDetail.getLoanProduct(), clients.get(index), repaymentDayMeeting, memberLoanSchedules.get(index), memberOverridenDetails.get(index), configuration,
+                    installmentRange, amountRange, creationDetail, createdBy, Boolean.TRUE);
+            if (groupMemberAccount.getLoanPurposeId() > 0) {
+                memberLoan.setBusinessActivityId(groupMemberAccount.getLoanPurposeId());
+            }
+                
+            memberLoan.markAsCreatedWithBackdatedPayments();
+            memberLoans.add(memberLoan);
+            index ++;
+        }
+        
+        
+        // update loan schedule for Group Loan Account
+        loanSchedule = this.loanScheduleService.generateGroupLoanSchedule(loanAccountDetail.getLoanProduct(), repaymentDayMeeting, loanSchedule, memberLoanSchedules, 
+                loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), overridenDetail, configuration, userOffice.getOfficeId(), loanAccountDetail.getCustomer(), accountFeeEntities);
+
+        fixMemberAndParentInstallmentDetails(loan, memberLoans);
+        
+
+        // translate schedules to dto form
+        Map<Integer, LoanScheduleEntity> parentScheduleEntities = loan.getLoanScheduleEntityMap();
+        
+        List<LoanCreationInstallmentDto> parentInstallments = new ArrayList<LoanCreationInstallmentDto>();
+        Map<Integer, List<LoanCreationInstallmentDto>> memberInstallments = new HashMap<Integer, List<LoanCreationInstallmentDto>>();
+        
+        for (CreateLoanAccount member : memberDetails) {
+            memberInstallments.put(member.getCustomerId(), new ArrayList<LoanCreationInstallmentDto>());
+        }
+        
+        Short digitsAfterDecimal = AccountingRules.getDigitsAfterDecimal();
+        
+        for (Integer installmentId : parentScheduleEntities.keySet()) {
+            LoanScheduleEntity loanScheduleEntity = parentScheduleEntities.get(installmentId);
+            parentInstallments.add(loanScheduleEntity.toLoanCreationInstallmentDto(digitsAfterDecimal));
+            
+            for (LoanBO memberLoan : memberLoans) {
+                LoanScheduleEntity memberLoanScheduleEntity = memberLoan.getLoanScheduleEntityMap().get(installmentId);
+                memberInstallments.get(memberLoan.getCustomer().getCustomerId()).add(
+                        memberLoanScheduleEntity.toLoanCreationInstallmentDto(digitsAfterDecimal));
+            }
+        }
+        
+        GroupLoanScheduleDto groupLoanScheduleDto = new GroupLoanScheduleDto();
+        groupLoanScheduleDto.setMemberSchedules(new HashMap<Integer, LoanScheduleDto>());
+        
+        LoanScheduleDto groupScheduleDto = new LoanScheduleDto(customer.getDisplayName(),
+                Double.valueOf(loan.getLoanAmount().getAmountDoubleValue()),
+                loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(),
+                loan.getGraceType().getValue().intValue(), parentInstallments);
+        
+        groupLoanScheduleDto.setGroupSchedule(groupScheduleDto);
+
+        for (LoanBO memberLoan : memberLoans) {
+            Integer id = memberLoan.getCustomer().getCustomerId();
+            LoanScheduleDto memberScheduleDto = new LoanScheduleDto(memberLoan.getCustomer().getDisplayName(),
+                    Double.valueOf(memberLoan.getLoanAmount().getAmountDoubleValue()),
+                    loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(),
+                    loan.getGraceType().getValue().intValue(), memberInstallments.get(id));  
+            groupLoanScheduleDto.getMemberSchedules().put(id, memberScheduleDto);
+        }
+        
+        return groupLoanScheduleDto;
     }
 
 }

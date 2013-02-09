@@ -102,7 +102,11 @@
         <on-entry>
             <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(flowScope.productId)" result="flowScope.cashFlowEnabled" />
         </on-entry>
-        <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="calculateAndReviewLoanSchedule"/>
+        <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="chooseReviewForAccountType"/>
+    </decision-state>
+    
+    <decision-state id="chooseReviewForAccountType">
+        <if test="loanAccountFormBean.groupLoanWithMembersEnabled" then="calculateAndReviewGroupLoanSchedule" else="calculateAndReviewLoanSchedule" />
     </decision-state>
     
     <view-state id="captureCashFlowDetails" view="createLoanAccountCashFlow" model="cashFlow">
@@ -132,13 +136,28 @@
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
         </on-entry>
         <transition on="validate" to="reviewLoanSchedule" validate="true"/>
-        <transition on="preview" to="previewStep" />
+        <transition on="preview" to="previewStep" validate="true"/>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="calculateAndReviewGroupLoanSchedule" view="redoloanAccountReviewGroupLoanSchedule" model="loanScheduleFormBean">
+        <on-entry>
+            <evaluate expression="groupLoanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
+        </on-entry>
+        <transition on="validate" to="reviewGroupLoanSchedule" validate="true"/>
+        <transition on="preview" to="previewGroupStep" validate="true"/>
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
     
     <view-state id="reviewLoanSchedule" view="redoloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
         <transition on="validate" to="reviewLoanSchedule" validate="true"/>
         <transition on="preview" to="previewStep" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="reviewGroupLoanSchedule" view="redoloanAccountReviewGroupLoanSchedule" model="loanScheduleFormBean">
+        <transition on="validate" to="reviewGroupLoanSchedule" validate="true"/>
+        <transition on="preview" to="previewGroupStep" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
     
@@ -149,20 +168,42 @@
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
     
-    <view-state id="previewStep" view="redoLoanAccountPreview">
+    <view-state id="previewGroupStep" view="redoGroupLoanAccountPreview"  model="loanScheduleFormBean">
         <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false" bind="false"/>
-        <transition on="editLoanSchedule" to="chooseCorrectViewForEditLoanSchedule" validate="false" bind="false"/>
+        <transition on="editLoanSchedule" to="reviewGroupLoanSchedule" validate="false" bind="false"/>
         <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
         
-        <transition on="submit" to="confirmation">
-        	<set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
-        	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
-        	<evaluate expression="loanAccountController.openLoanWithBackdatedPayments(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean, messageContext)" result="flowScope.loanCreationResultDto" />
+        <transition on="submit" to="submitGroupRedo">
+            <set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
         </transition>
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
         <transition on-exception="org.mifos.service.BusinessRuleException" to="enterAccountDetailsStep" />
     </view-state>
+    
+    <view-state id="previewStep" view="redoLoanAccountPreview">
+        <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false" bind="false"/>
+        <transition on="editLoanSchedule" to="chooseCorrectViewForEditLoanSchedule" validate="false" bind="false"/>
+        <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
+        
+        <transition on="submit" to="submitRedo">
+        	<set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
+        	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
+        </transition>
+        
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+        <transition on-exception="org.mifos.service.BusinessRuleException" to="enterAccountDetailsStep" />
+    </view-state>
+    
+    <action-state id="submitGroupRedo">
+        <evaluate expression="groupLoanAccountController.openLoanWithBackdatedPayments(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean, messageContext)" result="flowScope.loanCreationResultDto" />
+        <transition to="confirmation" />
+    </action-state>
+    
+    <action-state id="submitRedo">
+        <evaluate expression="loanAccountController.openLoanWithBackdatedPayments(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean, messageContext)" result="flowScope.loanCreationResultDto" />
+        <transition to="confirmation"  />
+     </action-state>
     
      <decision-state id="chooseCorrectViewForEditLoanSchedule">
         <if test="flowScope.cashFlowEnabled" then="summaryOfCashflow" else="reviewLoanSchedule"/>
