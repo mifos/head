@@ -123,6 +123,20 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         else if (loan.isGroupLoanAccountMember()) {
             SessionUtils.setAttribute(LOAN_TYPE, MEMBER, request);
         }
+        
+        List<LoanBO> memberInfos = getMemberAccountsInformation(actionForm.getAccountId());
+        SessionUtils.setCollectionAttribute("memberInfos", memberInfos, request);
+        
+        if (memberInfos.size() > 0) {
+            actionForm.getIndividualValues().clear();
+            
+            List<GroupIndividualLoanDto> memberAccounts = groupLoanService.getMemberLoansAndDefaultPayments(
+                    Integer.valueOf(actionForm.getAccountId()), new BigDecimal(actionForm.getAmount()));
+                        
+            for(int i = 0 ; i < memberAccounts.size() ; i++) {
+                actionForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue()));
+            }
+        }
 
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -133,7 +147,9 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         actionForm.getIndividualValues().clear();
         
-        List<GroupIndividualLoanDto> memberAccounts = groupLoanService.getMemberLoansAndDefaultPayments(Integer.valueOf(actionForm.getAccountId()), new BigDecimal(actionForm.getAmount()));
+        List<GroupIndividualLoanDto> memberAccounts = 
+                groupLoanService.getMemberLoansAndDefaultPayments(
+                        Integer.valueOf(actionForm.getAccountId()), new BigDecimal(actionForm.getAmount()));
                     
         for(int i = 0 ; i < memberAccounts.size() ; i++) {
             actionForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue()));
@@ -142,7 +158,7 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         List<LoanBO> memberInfos = getMemberAccountsInformation(actionForm.getAccountId());
         SessionUtils.setCollectionAttribute("memberInfos", memberInfos, request);
         
-        return mapping.findForward("divide");
+        return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     private List<LoanBO> getMemberAccountsInformation(String accountId) {

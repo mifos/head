@@ -684,6 +684,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         List<BigDecimal> factors = new ArrayList<BigDecimal>();
         BigDecimal total = BigDecimal.ZERO;
         BigDecimal totalFactor = BigDecimal.ZERO;
+        amount = amount.setScale(AccountingRules.getDigitsAfterDecimal());
         
         while(itr.hasNext()) {
             LoanBO memberAccount = itr.next();
