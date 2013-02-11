@@ -38,7 +38,9 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -148,8 +150,16 @@ public class ApplyChargeActionForm extends BaseActionForm {
         String methodCalled = request.getParameter(MethodNameConstants.METHOD);
         
         boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
-
-        if (groupLoanWithMembers) {
+        
+        AccountBusinessService service = new AccountBusinessService();
+        AccountBO accountBO = null;
+        try {
+            accountBO = service.getAccount(Integer.valueOf(getAccountId()));
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+        
+        if (groupLoanWithMembers && accountBO.isParentGroupLoanAccount()) {
             if (methodCalled != null && methodCalled.equals("divide")) {
                 if (StringUtils.isNotBlank(selectedChargeFormula)) {
                     validateRate(errors, request);
