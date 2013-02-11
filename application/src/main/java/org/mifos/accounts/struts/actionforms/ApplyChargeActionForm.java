@@ -153,10 +153,12 @@ public class ApplyChargeActionForm extends BaseActionForm {
         
         AccountBusinessService service = new AccountBusinessService();
         AccountBO accountBO = null;
-        try {
-            accountBO = service.getAccount(Integer.valueOf(getAccountId()));
-        } catch (ServiceException e) {
-            throw new MifosRuntimeException(e);
+        if(groupLoanWithMembers){
+            try {
+                accountBO = service.getAccount(Integer.valueOf(getAccountId()));
+            } catch (ServiceException e) {
+                throw new MifosRuntimeException(e);
+            }
         }
         
         if (groupLoanWithMembers && accountBO.isParentGroupLoanAccount()) {
