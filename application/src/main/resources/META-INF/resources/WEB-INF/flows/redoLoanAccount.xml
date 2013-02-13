@@ -197,11 +197,13 @@
     
     <action-state id="submitGroupRedo">
         <evaluate expression="groupLoanAccountController.openLoanWithBackdatedPayments(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean, messageContext)" result="flowScope.loanCreationResultDto" />
+        <transition on-exception="org.mifos.service.BusinessRuleException" to="enterAccountDetailsStep" />
         <transition to="confirmation" />
     </action-state>
     
     <action-state id="submitRedo">
         <evaluate expression="loanAccountController.openLoanWithBackdatedPayments(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean, messageContext)" result="flowScope.loanCreationResultDto" />
+        <transition on-exception="org.mifos.service.BusinessRuleException" to="enterAccountDetailsStep" />
         <transition to="confirmation"  />
      </action-state>
     
