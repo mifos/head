@@ -143,8 +143,6 @@ public class DefaultLoanScheduleRounder implements LoanScheduleRounder {
                     roundedInstallment = loanScheduleInstallmentRounder.roundAndAdjustGraceInstallment_v2(roundedInstallment);
                 } else if (interestType.equals(InterestType.DECLINING_EPI)) {
                 	loanScheduleInstallmentRounder.roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(roundedInstallment);
-                } else if (AccountingRules.isGroupLoanWithMembers() && interestType.equals(InterestType.FLAT)) {
-                    loanScheduleInstallmentRounder.roundAndAdjustNonGraceInstallmentForNewGLIM_v2(roundedInstallment);
                 } else {
                     loanScheduleInstallmentRounder.roundAndAdjustButLastNonGraceInstallment_v2(roundedInstallment);
                 }
