@@ -40,6 +40,8 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
+import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
@@ -392,6 +394,19 @@ public class LoanTestHelper {
 
         return loanAccountPage;
     }
+
+    
+    public LoanAccountPage applyGroupPayment(String loanId, PaymentParameters paymentParams) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+
+        ApplyGroupPaymentPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        
+        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams);
+        loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+
+        return loanAccountPage;
+    }
+
 
     /**
      * Waive the fee associated with the loan account with id <tt>loanId</tt>.
