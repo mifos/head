@@ -399,6 +399,12 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return new ApplyPaymentPage(selenium);
     }
+    
+    public ApplyGroupPaymentPage navigateToApplyGroupPayment() {
+        selenium.click("loanaccountdetail.link.applyPayment");
+        waitForPageToLoad();
+        return new ApplyGroupPaymentPage(selenium);
+    }
 
     public AccountAddNotesPage navigateToAddNotesPage() {
         selenium.click("loanaccountdetail.link.addNote");
