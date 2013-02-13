@@ -36,6 +36,8 @@ import freemarker.ext.servlet.IncludePage;
 
 @Controller
 public class ViewLoanAccountDetailsController {
+    
+    private static final Integer GROUP_LOAN_PARENT = 1;
 
     @Autowired
     private LoanAccountServiceFacade loanAccountServiceFacade;
@@ -160,6 +162,18 @@ public class ViewLoanAccountDetailsController {
             gan = globalAccountNum;
         }
         AccountPaymentDto loanAccountPayment = loanAccountServiceFacade.getLoanAccountPayments(gan).get(0);
+        
+        if (loanAccountServiceFacade.getGroupLoanType(gan).equals(GROUP_LOAN_PARENT)) {
+            Integer accountId = loanAccountServiceFacade.retrieveLoanInformation(gan).getAccountId();
+            List<AccountPaymentDto> loanAccountPayments = loanAccountServiceFacade.getLoanAccountPayments(gan);
+            for (AccountPaymentDto payment : loanAccountPayments) {
+                if (payment.getAccount().getAccountId() == accountId) {
+                    loanAccountPayment = payment;
+                    break;
+                }
+            }
+        }
+        
             List<AdminDocumentDto> adminDocuments = adminDocumentsServiceFacade.getAdminDocumentsForAccountPayment(loanAccountPayment.getPaymentId());
             if (adminDocuments != null && !adminDocuments.isEmpty()){
                 loanAccountPayment.setAdminDocuments(adminDocuments);
