@@ -1674,6 +1674,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(Double.valueOf(repayLoanInfoDto.getEarlyRepayAmount()),
                     repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId());
             
+            paymentDto.setPaymentTypeId(Short.valueOf(repayLoanInfoDto.getPaymentTypeId()));
+            
             if (repayLoanInfoDto.getSavingsPaymentId() != null){
                 paymentDto.setMemberNumWithAmount(generateAmountWithInterest(null == repayLoanInfoDto.getMembersValue() ? new HashMap<String, Double>() : repayLoanInfoDto.getMembersValue(), repayLoanInfoDto));
                 loan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
@@ -1750,8 +1752,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
-
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+       
         if (loan.isDecliningBalanceInterestRecalculation()) {
             loanBusinessService.computeExtraInterest(loan, DateUtils.getCurrentDateWithoutTimeStamp());
         }
@@ -3183,6 +3185,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 
                 org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(repayLoanInfoDto.getTotalRepaymentAmount().doubleValue(),
                         repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId(), generateAmountWithInterest(memberNumWithAmount,repayLoanInfoDto));
+                
+                paymentDto.setPaymentTypeId(Short.valueOf(repayLoanInfoDto.getPaymentTypeId()));
                 
                 if (repayLoanInfoDto.getSavingsPaymentId() != null){
                     parentLoan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
