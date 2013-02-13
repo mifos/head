@@ -207,6 +207,7 @@ explanation of the license and how it is applied.
 	<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/> 
 	<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
 	<html-el:hidden property="accountId" value="${param.accountId}"/>
+    <html-el:hidden property="paymentTypeId" value="${param.paymentTypeId}"/>
 </html-el:form>
 </tiles:put>
 </tiles:insert>
