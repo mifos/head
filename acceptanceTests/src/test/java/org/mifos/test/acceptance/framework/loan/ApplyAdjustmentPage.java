@@ -50,6 +50,12 @@ public class ApplyAdjustmentPage extends AbstractPage {
         applyAdjustmentWithoutReverting(adjustmentAmount);
         return submitAdjustment();
     }
+    public ApplyAdjustmentPage fillAdjustmentFieldsWithoutRevertingAndSubmitGroupLoan(String adjustmentAmount) {
+        applyAdjustmentWithoutReverting(adjustmentAmount);
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+        return new ApplyAdjustmentPage(selenium);
+    }
     
     public LoanAccountPage submitAdjustment() {
         selenium.click("applyadjustment.button.submit");
