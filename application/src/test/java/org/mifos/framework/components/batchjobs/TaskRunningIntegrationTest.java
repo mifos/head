@@ -90,6 +90,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void cleanuUpBatchTables() throws SQLException {
+        getStatement().executeUpdate("SET FOREIGN_KEY_CHECKS=0");
         getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION_CONTEXT");
         getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION");
         getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION_SEQ");
