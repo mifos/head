@@ -41,6 +41,7 @@ import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentIndividualClientPage;
 import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
@@ -400,6 +401,17 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
         ApplyGroupPaymentPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        
+        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams);
+        loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+
+        return loanAccountPage;
+    }
+    
+    public LoanAccountPage applyGroupIndividualClientPayment(String loanId, PaymentParameters paymentParams) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+
+        ApplyGroupPaymentIndividualClientPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupIndividualClientPayment();
         
         ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams);
         loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
