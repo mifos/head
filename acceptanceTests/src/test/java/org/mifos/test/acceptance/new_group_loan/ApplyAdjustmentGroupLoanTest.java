@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.loan;
+package org.mifos.test.acceptance.new_group_loan;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
