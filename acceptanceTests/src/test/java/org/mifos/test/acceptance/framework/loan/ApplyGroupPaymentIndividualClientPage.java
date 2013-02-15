@@ -1,27 +1,14 @@
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.MifosPage;
-
 import com.thoughtworks.selenium.Selenium;
 
-public class ApplyGroupPaymentPage extends MifosPage {
+public class ApplyGroupPaymentIndividualClientPage extends ApplyGroupPaymentPage {
 
-    public ApplyGroupPaymentPage(Selenium selenium) {
+    public ApplyGroupPaymentIndividualClientPage(Selenium selenium) {
         super(selenium);
-        verifyPage("ApplyGroupPayment");
     }
 
-    public ApplyGroupPaymentConfirmationPage submitAndNavigateToApplyGroupPaymentConfirmationPage(PaymentParameters params)
-    {
-        enterPaymentData(params);
-        return new ApplyGroupPaymentConfirmationPage(selenium);
-    }
-
-    public void verifyPaymentPriorLastPaymentDate(PaymentParameters params) {
-        enterPaymentData(params);
-        selenium.isTextPresent("Date of transaction cannot be less than the last payment date");
-    }
-
+    @Override
     protected void enterPaymentData(PaymentParameters params) {
         selenium.type("transactionDateDD", params.getTransactionDateDD());
         selenium.type("transactionDateMM", params.getTransactionDateMM());
@@ -34,7 +21,6 @@ public class ApplyGroupPaymentPage extends MifosPage {
         this.typeTextIfNotEmpty("receiptDateYY", params.getReceiptDateYYYY());
         
         selenium.type("applypayment.input.amount", params.getAmount());
-        waitForPageToLoad();
         selenium.click("applypayment.button.reviewTransaction");
         waitForPageToLoad();
     }
