@@ -11,18 +11,18 @@ public class ApplyGroupPaymentPage extends MifosPage {
         verifyPage("ApplyGroupPayment");
     }
 
-    public ApplyGroupPaymentConfirmationPage submitAndNavigateToApplyGroupPaymentConfirmationPage(PaymentParameters params)
+    public ApplyGroupPaymentConfirmationPage submitAndNavigateToApplyGroupPaymentConfirmationPage(PaymentParameters params, boolean waitFoReloadAfterAmountType)
     {
-        enterPaymentData(params);
+        enterPaymentData(params, waitFoReloadAfterAmountType);
         return new ApplyGroupPaymentConfirmationPage(selenium);
     }
 
     public void verifyPaymentPriorLastPaymentDate(PaymentParameters params) {
-        enterPaymentData(params);
+        enterPaymentData(params, true);
         selenium.isTextPresent("Date of transaction cannot be less than the last payment date");
     }
 
-    private void enterPaymentData(PaymentParameters params) {
+    private void enterPaymentData(PaymentParameters params, boolean waitForReloadAfterAmountType) {
         selenium.type("transactionDateDD", params.getTransactionDateDD());
         selenium.type("transactionDateMM", params.getTransactionDateMM());
         selenium.type("transactionDateYY", params.getTransactionDateYYYY());
@@ -34,7 +34,9 @@ public class ApplyGroupPaymentPage extends MifosPage {
         this.typeTextIfNotEmpty("receiptDateYY", params.getReceiptDateYYYY());
         
         selenium.type("applypayment.input.amount", params.getAmount());
-        waitForPageToLoad();
+        if (waitForReloadAfterAmountType) {
+        	waitForPageToLoad();
+        }
         selenium.click("applypayment.button.reviewTransaction");
         waitForPageToLoad();
     }

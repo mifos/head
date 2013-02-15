@@ -401,7 +401,18 @@ public class LoanTestHelper {
 
         ApplyGroupPaymentPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
         
-        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams);
+        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams, true);
+        loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+
+        return loanAccountPage;
+    }
+    
+    public LoanAccountPage applyGroupIndividualClientPayment(String loanId, PaymentParameters paymentParams) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+
+        ApplyGroupPaymentPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        
+        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams, false);
         loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
 
         return loanAccountPage;
