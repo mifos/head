@@ -325,6 +325,12 @@ public class LoanAccountPage extends MifosPage {
         return new ViewRepaymentSchedulePage(selenium);
     }
 
+    public LoanAccountPage navigateToIndividualLoanAccountPage(int clientIndex) {
+    	selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (clientIndex + 2) + "]/td[7]/a");
+    	waitForPageToLoad();
+    	return new LoanAccountPage(selenium);
+    }
+    
     public ViewRepaymentSchedulePage navigateToIndividualRepaymentSchedulePage(int row) {
         selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (row + 2) + "]/td[6]/a");
         waitForPageToLoad();
@@ -578,6 +584,12 @@ public class LoanAccountPage extends MifosPage {
         
         ListAdjustmentsPage listAdjustmentsPage = new ListAdjustmentsPage(selenium);       
         return listAdjustmentsPage.navigateToFirstAdjustment();
+    }
+    
+    public LoanAccountPage navigateToGroupLoanPageFromIndividualLoanPage() {
+    	selenium.click("//span[@class='fontnormal8pt'][1]/a[5]");
+    	waitForPageToLoad();
+    	return new LoanAccountPage(selenium);
     }
 
     public TransactionHistoryPage navigateToTransactionHistoryPage() {
