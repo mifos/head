@@ -176,6 +176,7 @@ explanation of the license and how it is applied.
                                           <c:set value="${memberAccount.accountId}" var="accId"/>
                                           <html-el:text property="updateIndividualValues(${accId})" styleClass="separatedNumber"
                                                 value="${memberIdsAndValues[accId]}"
+                                                styleId="clientAmount${rowId.index}"
                                                 name="individualValues.value[${rowId.count-1}]" 
                                                 onchange="recalculateGroupLoanAmount(${digitsAfterDecimal})" />
                                       </td>
