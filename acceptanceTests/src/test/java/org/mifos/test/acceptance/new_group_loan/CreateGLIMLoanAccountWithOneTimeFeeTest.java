@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.loan;
+package org.mifos.test.acceptance.new_group_loan;
 
 import java.sql.SQLException;
 
@@ -38,11 +38,10 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
+import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -56,9 +55,7 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
-    
-    @Autowired
-    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    private CustomPropertiesHelper customPropertiesHelper;
     
     private final static String[] EXPECTED_PRINCIPALS = {"101", "100", "100", "100", "100", "100", "100", "100", "100", "99"};
     private final static String[] EXPECTED_INTERESTS = {"4", "4", "4", "4", "4", "4", "4", "4", "4", "6"};
@@ -86,10 +83,10 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
     @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
-        applicationDatabaseOperation.updateGLIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
-        
+        customPropertiesHelper = new CustomPropertiesHelper(selenium);
+        customPropertiesHelper.setNewGroupLoanWithMembers(true);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 03, 4, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -97,17 +94,14 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() throws SQLException {
-        applicationDatabaseOperation.updateGLIM(0);
+    	customPropertiesHelper.setNewGroupLoanWithMembers(false);
         (new MifosPage(selenium)).logout();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void checkGLIMLoanWithThreeClientsCreeatedCorrectly() throws Exception {
-    	//Given
-        applicationDatabaseOperation.updateGLIM(1);
-        //When
-        
+
         LoanAccountPage loanAccountPage = createLoan();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("10");
@@ -146,8 +140,6 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
         loanAccountPage = clientRepayLoan(loanAccountPage, 1);
         loanAccountPage = clientRepayLoan(loanAccountPage, 2);
         loanAccountPage.verifyLoanStatus(LoanAccountPage.CLOSED);
-        
-        applicationDatabaseOperation.updateGLIM(0);
     }
     
     private LoanAccountPage createLoan() {
