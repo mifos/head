@@ -779,72 +779,72 @@
             <dependency>
                 <groupId>pentaho-reporting-engine</groupId>
                 <artifactId>pentaho-reporting-engine-classic-extensions</artifactId>
-                <version>3.8.3-GA</version>
+                <version>3.9.1-GA</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-report-designer</groupId>
                 <artifactId>pentaho-reporting-engine-wizard-xul</artifactId>
-                <version>3.8.0-GA</version>
+                <version>3.9.1-GA</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-reporting-engine</groupId>
                 <artifactId>pentaho-reporting-engine-classic-core</artifactId>
-                <version>3.8.3-GA</version>
+                <version>3.9.1-GA</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-reporting-engine</groupId>
                 <artifactId>pentaho-reporting-engine-wizard-core</artifactId>
-                <version>3.8.3-GA</version>
+                <version>3.9.1-GA</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libloader</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libbase</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libserializer</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libformula</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libxml</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libsparkline</artifactId>
-                <version>1.2.1</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>librepository</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libformat</artifactId>
-                <version>1.2.4</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libfonts</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.8</version>
             </dependency>
             <dependency>
                 <groupId>pentaho-library</groupId>
                 <artifactId>libdocbundle</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.8</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
