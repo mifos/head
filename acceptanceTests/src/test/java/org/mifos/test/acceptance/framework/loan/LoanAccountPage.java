@@ -331,6 +331,12 @@ public class LoanAccountPage extends MifosPage {
     	return new LoanAccountPage(selenium);
     }
     
+    public LoanAccountPage navigateToIndividualLoanAccountPageFromPendingApprovalGroupLoan(int clientIndex) {
+        selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (clientIndex + 2) + "]/td[6]/a");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
+    
     public ViewRepaymentSchedulePage navigateToIndividualRepaymentSchedulePage(int row) {
         selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (row + 2) + "]/td[6]/a");
         waitForPageToLoad();

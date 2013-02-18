@@ -129,7 +129,7 @@ explanation of the license and how it is applied.
 
 						<tr>
 							<td align="center">
-									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="Confirm">
+									<html-el:submit styleId="divideGroupCharges.button.reviewTransaction" styleClass="buttn submit"  property="Confirm">
 										<mifos:mifoslabel name="accounts.apply.charges.confirm">
 										</mifos:mifoslabel>
 									</html-el:submit>
