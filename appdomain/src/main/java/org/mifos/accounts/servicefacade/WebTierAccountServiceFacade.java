@@ -554,8 +554,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                     for (LoanBO memberAccount : ((LoanBO)accountBO).getMemberAccounts()){
                         
                         AccountPaymentEntity memberPayment = memberAccount.getLastPmntToBeAdjusted();
-                        if (memberPayment.getParentPaymentId() == null ||
-                                !memberPayment.getParentPaymentId().getPaymentId().equals(accountPaymentEntity.getPaymentId())) {
+                        if (memberPayment.getParentPaymentId() == null) {
                             continue;
                         }
                         
