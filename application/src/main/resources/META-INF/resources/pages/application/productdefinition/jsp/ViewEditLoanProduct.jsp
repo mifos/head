@@ -67,9 +67,35 @@ explanation of the license and how it is applied.
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 										</fmt:message>
 									</html-el:link><br> <br> </span><span class="fontnormalbold"><br> </span> <span class="fontnormalbold"> </span> <font class="fontnormalRedBold"><html:errors bundle="ProductDefUIResources" /> </font>
-
+                            </td>
+                        </tr>
+                        <c:if test='${sessionScope.isMultiCurrencyEnabled}'>
+                            <tr>
+                                <td align="left" style="padding-bottom: 10px">
+                                    <span class="fontnormalbold"><mifos:mifoslabel name="product.currency" bundle="ProductDefUIResources" />:</span>
+                                    <select id="currencyFilter" style="padding-left: 4px; padding-right: 4px;">
+                                        <option value="-1" <c:if test="${empty param.currencyId}">selected</c:if>>-</option>
+                                        <c:forEach items="${sessionScope.currencies}" var="currency">
+                                            <option value="${currency.currencyId}" <c:if test="${param.currencyId == currency.currencyId}">selected</c:if>>${currency.currencyCode}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <script type="text/javascript">
+                                    $("#currencyFilter").change(function() {
+                                        var url = "loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&randomNUm=${param.randomNUm}";
+                                        if ($(this).val() != "-1") {
+                                            url += "&currencyId=" + $(this).val();
+                                        }
+                                        window.location.replace(url); 
+                                    });
+                                    </script>
+                                </td>
+                            </tr>
+                        </c:if>    
+                        <tr>
+                           <td>
 								<table width="90%" border="0" cellspacing="0" cellpadding="0">
 									<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductList')}" var="LoanProduct">
+                                        <c:if test='${!sessionScope.isMultiCurrencyEnabled || empty param.currencyId || param.currencyId == LoanProduct.currency.currencyId}'>
 										<tr class="fontnormal">
 											<td width="1%">
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
@@ -82,7 +108,8 @@ explanation of the license and how it is applied.
 											&nbsp;<span class="fontnormal"><img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp; <c:out value="${LoanProduct.prdStatus.prdState.name}" /></span>
 												</c:if>
 											</td>
-										</tr>
+                                        </tr>
+                                        </c:if>    
 									</c:forEach>
 								</table>
 							</td>

@@ -480,6 +480,8 @@ public class LoanPrdAction extends BaseAction {
                 ((LoanPrdBusinessService) ServiceFactory.getInstance().getBusinessService(
                         BusinessServiceName.LoanProduct)).getAllLoanOfferings(getUserContext(request).getLocaleId()),
                 request);
+        request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
+        request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
         return mapping.findForward(ActionForwards.viewAllLoanProducts_success.toString());
     }
 
