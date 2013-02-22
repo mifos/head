@@ -21,18 +21,15 @@
 package org.mifos.accounts.loan.struts.uihelpers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
@@ -122,25 +119,28 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 htmlHeader1.startTag("td", "width", "6%", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.no", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "15%", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.due_date", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "15%", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.date_paid", locale));
                 htmlHeader1.endTag("td");
                 htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.principal", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "10%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.INTEREST));
                 htmlHeader1.endTag("td");
                 htmlHeader1.startTag("td", "width", "10%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.fees", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "11%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.penalty", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "11%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.daysLate", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "10%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.total", locale));
                 htmlHeader1.endTag("td");
                 htmlHeader1.endTag("tr");
@@ -184,7 +184,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 }
 
                 html1.startTag("tr");
-                html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
+                html1.startTag("td", "colspan", "9", "class", "drawtablerowbold");
                 html1.nonBreakingSpace();
                 html1.endTag("td");
                 html1.endTag("tr");
@@ -199,7 +199,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
                 if (twoTables) {
                     html1.startTag("tr");
-                    html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
+                    html1.startTag("td", "colspan", "9", "class", "drawtablerowbold");
                     html1.text(getLabel("loan.instt_paid", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
@@ -239,7 +239,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
                 if (dueInstallments) {
                     html1.startTag("tr");
-                    html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
+                    html1.startTag("td", "colspan", "9", "class", "drawtablerowbold");
                     html1.text(getLabel("loan.instt_due", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
@@ -259,7 +259,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 }
                 if (futureInstallments) {
                     html1.startTag("tr");
-                    html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
+                    html1.startTag("td", "colspan", "9", "class", "drawtablerowbold");
                     html1.text(getLabel("loan.future_install", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
@@ -273,6 +273,23 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 if (!installment.isPaid()) {
                     html1.append(createInstallmentRow(installment, false, isNewGropLoan));
                 }
+                
+                long totalDaysLate = 0;
+                for (AccountActionDateEntity accountActionDateEntity: list) {
+                    totalDaysLate += accountActionDateEntity.getDaysLate();
+                }
+                
+                XmlBuilder totalDaysLateXmlBuilder = new XmlBuilder();
+                totalDaysLateXmlBuilder.startTag("tr");
+                totalDaysLateXmlBuilder.startTag("td", "class", "drawtablerow", "colspan", "8", "align", "right");
+                totalDaysLateXmlBuilder.text(getLabel("loan.total", locale) + ": " + totalDaysLate);
+                totalDaysLateXmlBuilder.endTag("td");
+                totalDaysLateXmlBuilder.startTag("td", "class", "drawtablerow");
+                totalDaysLateXmlBuilder.nonBreakingSpace();
+                totalDaysLateXmlBuilder.endTag("td");
+                totalDaysLateXmlBuilder.endTag("tr");
+                
+                html1.append(totalDaysLateXmlBuilder);
 
                 if (twoTables) {
                     // add a tr with 2 td for each of the 2 tables
@@ -413,11 +430,11 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.text(installment.getInstallmentId().toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "18%", "class", "drawtablerow");
+        html.startTag("td", "width", "15%", "class", "drawtablerow");
         html.text(DateUtils.getDBtoUserFormatString(installment.getActionDate(), locale).toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "18%", "class", "drawtablerow");
+        html.startTag("td", "width", "15%", "class", "drawtablerow");
         html.text((isPaymentMade && installment.getPaymentDate() != null ? DateUtils.getDBtoUserFormatString(
                 installment.getPaymentDate(), locale) : "-").toString());
         html.endTag("td");
@@ -433,7 +450,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
         }
         html.endTag("td");
 
-        html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
         if (isNewGropLoan) {
             html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
                 ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + ( 
@@ -459,7 +476,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
         }
         html.endTag("td");
         
-        html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
         if (isNewGropLoan) {
             html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) :
                 ConversionUtil.formatNumber(installment.getPenaltyDue().toString()) + "(" + ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) + ")" ));
@@ -470,7 +487,11 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 ConversionUtil.formatNumber(installment.getPenaltyDue().toString())));  
         }
         html.endTag("td");
-
+        
+        html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
+        html.text(ConversionUtil.formatNumber(installment.getDaysLate().toString()));
+        html.endTag("td");
+        
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         if (isNewGropLoan) {
             html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(

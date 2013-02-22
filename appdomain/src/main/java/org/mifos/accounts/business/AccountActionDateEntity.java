@@ -21,6 +21,7 @@
 package org.mifos.accounts.business;
 
 import java.sql.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.util.helpers.PaymentStatus;
@@ -154,5 +155,11 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
 
     public void setInstallmentId(Short installmentId) {
         this.installmentId = installmentId;
+    }
+    
+    public Long getDaysLate() {
+    	Long daysLate = getPaymentDate() != null ? 
+    			TimeUnit.MILLISECONDS.toDays(getPaymentDate().getTime() - getActionDate().getTime()) : 0;
+        return daysLate < 0 ? 0 : daysLate;
     }
 }
