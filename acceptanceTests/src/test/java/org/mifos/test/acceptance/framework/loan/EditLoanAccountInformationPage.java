@@ -88,8 +88,14 @@ public class EditLoanAccountInformationPage extends MifosPage {
     	return selenium.getValue("editLoanAccount.input.loanAmount");
     }
     
+    public void setNumberOfInstallments(String numberOfInstallments){
+        selenium.type("editLoanAccount.input.numberOfInstallments", numberOfInstallments);
+    }
     public String getInterestRate(){
     	return selenium.getValue("editLoanAccount.input.interestRate");
+    }
+    public void setInterestRate(String interestRate){
+        selenium.type("editLoanAccount.input.interestRate", interestRate);
     }
     
     public String getNoOfInstallments(){
