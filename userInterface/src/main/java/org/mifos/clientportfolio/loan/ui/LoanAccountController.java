@@ -232,6 +232,11 @@ public class LoanAccountController {
     	    Integer[] loanPurpose = new Integer[clientData.size()];
     	    formBean.setClientLoanPurposeId(loanPurpose);
 
+    	    Number[][] selectedFeeIndividualAmounts = new Number[3][clientData.size()];
+    	    formBean.setSelectedFeeIndividualAmounts(selectedFeeIndividualAmounts);
+    	    
+    	    Number[][] defaultFeeIndividualAmounts = new Number[dto.getDefaultFees().size()][clientData.size()];
+    	    formBean.setDefaultFeeIndividualAmounts(defaultFeeIndividualAmounts);
     	} else {
     	    formBean.setAmount(Double.valueOf(dto.getDefaultLoanAmount().toPlainString()));
     	}

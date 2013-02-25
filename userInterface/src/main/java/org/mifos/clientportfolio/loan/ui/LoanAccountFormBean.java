@@ -138,9 +138,11 @@ public class LoanAccountFormBean implements Serializable {
     private Boolean[] defaultFeeSelected;
     private Number[] defaultFeeAmountOrRate;
     private Number[] defaultFeeId;
+    private Number[][] defaultFeeIndividualAmounts;
 
     private Number[] selectedFeeId;
     private Number[] selectedFeeAmount;
+    private Number[][] selectedFeeIndividualAmounts;
     
     // penalties
     private List<PenaltyDto> defaultPenalties;
@@ -696,6 +698,14 @@ public class LoanAccountFormBean implements Serializable {
 		this.selectedFeeAmount = selectedFeeAmount;
 	}
 
+    public Number[][] getSelectedFeeIndividualAmounts() {
+        return selectedFeeIndividualAmounts;
+    }
+
+    public void setSelectedFeeIndividualAmounts(Number[][] selectedFeeIndividualAmount) {
+        this.selectedFeeIndividualAmounts = selectedFeeIndividualAmount;
+    }
+
 	public String getExternalId() {
 		return externalId;
 	}
@@ -1144,6 +1154,14 @@ public class LoanAccountFormBean implements Serializable {
         this.defaultFeeId = defaultFeeId;
     }
     
+    public Number[][] getDefaultFeeIndividualAmounts() {
+        return defaultFeeIndividualAmounts;
+    }
+
+    public void setDefaultFeeIndividualAmounts(Number[][] defaultFeeIndividualAmounts) {
+        this.defaultFeeIndividualAmounts = defaultFeeIndividualAmounts;
+    }
+
     public Number[] getDefaultPenaltyId() {
         return defaultPenaltyId;
     }

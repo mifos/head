@@ -148,7 +148,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     private void selectAdditionalFees() {
         selenium.select("selectedFeeId0", "label=loanWeeklyFee");
-        selenium.type("selectedFeeId0Amount", "100");
+        selenium.type("selectedFeeAmount[0]", "100");
     }
             
     private void verifyFirstInstallmentDateAndDisbursalDateOnReviewPage(){

@@ -308,22 +308,9 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             for (CreateLoanAccount groupMemberAccount : memberDetails) {
                 ClientBO member = this.customerDao.findClientById(groupMemberAccount.getCustomerId());
                 Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
-                List<CreateAccountFeeDto> defaultAccountFees = new ArrayList<CreateAccountFeeDto>();
                 List<CreateAccountPenaltyDto> defaultAccountPenalties = new ArrayList<CreateAccountPenaltyDto>();
                 
                 radio.add(loanAmount.divide(loan.getLoanAmount()));
-                
-                for(CreateAccountFeeDto createAccountFeeDto : loanAccountInfo.getGroupLoanAccountDetails().getAccountFees()) {
-                    Integer feeId = createAccountFeeDto.getFeeId();
-                    String amount = createAccountFeeDto.getAmount();
-                    FeeBO feeBO = this.feeDao.findById(feeId.shortValue());
-                    
-                    if(feeBO instanceof AmountFeeBO) {
-                        amount = String.valueOf(Double.valueOf(createAccountFeeDto.getAmount()) * (loanAmount.divide(loanAccountInfo.getGroupLoanAccountDetails().getLoanAmount()).getAmount().doubleValue()));
-                    }
-                    
-                    defaultAccountFees.add(new CreateAccountFeeDto(feeId, amount));
-                }
                 
                 int memberCount = memberDetails.size();
                 for(CreateAccountPenaltyDto createAccountPenaltyDto : loanAccountInfo.getGroupLoanAccountDetails().getAccountPenalties()) {
@@ -338,7 +325,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                     defaultAccountPenalties.add(new CreateAccountPenaltyDto(penaltyId, amount));
                 }
                 
-                List<AccountFeesEntity> feeEntities = assembleAccountFees(defaultAccountFees);
+                List<AccountFeesEntity> feeEntities = assembleAccountFees(groupMemberAccount.getAccountFees());
                 List<AccountPenaltiesEntity> penaltyEntities = assembleAccountPenalties(defaultAccountPenalties);
                 LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, feeEntities, overridenDetail, penaltyEntities);
 
@@ -1107,22 +1094,9 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         for (CreateLoanAccount groupMemberAccount : memberDetails) {
             ClientBO member = this.customerDao.findClientById(groupMemberAccount.getCustomerId());
             Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
-            List<CreateAccountFeeDto> defaultAccountFees = new ArrayList<CreateAccountFeeDto>();
             List<CreateAccountPenaltyDto> defaultAccountPenalties = new ArrayList<CreateAccountPenaltyDto>();
             
             radio.add(loanAmount.divide(loan.getLoanAmount()));
-            
-            for(CreateAccountFeeDto createAccountFeeDto : loanAccountInfo.getGroupLoanAccountDetails().getAccountFees()) {
-                Integer feeId = createAccountFeeDto.getFeeId();
-                String amount = createAccountFeeDto.getAmount();
-                FeeBO feeBO = this.feeDao.findById(feeId.shortValue());
-                
-                if(feeBO instanceof AmountFeeBO) {
-                    amount = String.valueOf(Double.valueOf(createAccountFeeDto.getAmount()) * (loanAmount.divide(loanAccountInfo.getGroupLoanAccountDetails().getLoanAmount()).getAmount().doubleValue()));
-                }
-                
-                defaultAccountFees.add(new CreateAccountFeeDto(feeId, amount));
-            }
             
             int memberCount = memberDetails.size();
             for(CreateAccountPenaltyDto createAccountPenaltyDto : loanAccountInfo.getGroupLoanAccountDetails().getAccountPenalties()) {
@@ -1137,7 +1111,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                 defaultAccountPenalties.add(new CreateAccountPenaltyDto(penaltyId, amount));
             }
             
-            List<AccountFeesEntity> feeEntities = assembleAccountFees(defaultAccountFees);
+            List<AccountFeesEntity> feeEntities = assembleAccountFees(groupMemberAccount.getAccountFees());
             List<AccountPenaltiesEntity> penaltyEntities = assembleAccountPenalties(defaultAccountPenalties);
             LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, feeEntities, overridenDetail, penaltyEntities);
 

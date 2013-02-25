@@ -77,6 +77,14 @@ public class GroupLoanAccountController {
         List<CreateAccountPenaltyDto> accountPenalties = LoanCreationHelper.translateToAccountPenaltyDtos(formBean);
         accountFees.addAll(additionalAccountFees);
         
+        Map<String, List<CreateAccountFeeDto>> memberAccountsFees = 
+                LoanCreationHelper.translateToMemberAccountsFeeDtos(formBean);
+        Map<String, List<CreateAccountFeeDto>> memberAccountsAdditionalFees = 
+                LoanCreationHelper.translateToMemberAccountsAdditionalFeeDtos(formBean);
+        for (Map.Entry<String, List<CreateAccountFeeDto>> memberAccountEntry : memberAccountsAdditionalFees.entrySet()) {
+            memberAccountsFees.get(memberAccountEntry.getKey()).addAll(memberAccountsAdditionalFees.get(memberAccountEntry.getKey()));
+        }
+        
         BigDecimal loanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
         BigDecimal minAllowedLoanAmount = BigDecimal.valueOf(formBean.getMinAllowedAmount().doubleValue());
         BigDecimal maxAllowedLoanAmount = BigDecimal.valueOf(formBean.getMaxAllowedAmount().doubleValue());
@@ -87,7 +95,7 @@ public class GroupLoanAccountController {
 
         LoanCreationResultDto loanCreationResultDto = null;
 
-        List<CreateLoanAccount> memberAccounts = createGroupLoanMembers(accountState, formBean, disbursementDate, recurringSchedule, additionalAccountFees,
+        List<CreateLoanAccount> memberAccounts = createGroupLoanMembers(accountState, formBean, disbursementDate, recurringSchedule, memberAccountsFees,
                 accountPenalties, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount);
         BigDecimal totalLoanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
 
@@ -130,6 +138,14 @@ public class GroupLoanAccountController {
         List<CreateAccountPenaltyDto> accountPenalties = LoanCreationHelper.translateToAccountPenaltyDtos(formBean);
         accountFees.addAll(additionalAccountFees);
         
+        Map<String, List<CreateAccountFeeDto>> memberAccountsFees = 
+                LoanCreationHelper.translateToMemberAccountsFeeDtos(formBean);
+        Map<String, List<CreateAccountFeeDto>> memberAccountsAdditionalFees = 
+                LoanCreationHelper.translateToMemberAccountsAdditionalFeeDtos(formBean);
+        for (Map.Entry<String, List<CreateAccountFeeDto>> memberAccountEntry : memberAccountsAdditionalFees.entrySet()) {
+            memberAccountsFees.get(memberAccountEntry.getKey()).addAll(memberAccountsAdditionalFees.get(memberAccountEntry.getKey()));
+        }
+        
         BigDecimal loanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
         BigDecimal minAllowedLoanAmount = BigDecimal.valueOf(formBean.getMinAllowedAmount().doubleValue());
         BigDecimal maxAllowedLoanAmount = BigDecimal.valueOf(formBean.getMaxAllowedAmount().doubleValue());
@@ -138,7 +154,7 @@ public class GroupLoanAccountController {
                 recurringSchedule, accountFees, accountPenalties, loanAmount, minAllowedLoanAmount,
                 maxAllowedLoanAmount);
 
-        List<CreateLoanAccount> memberAccounts = createGroupLoanMembers(accountState, formBean, disbursementDate, recurringSchedule, additionalAccountFees,
+        List<CreateLoanAccount> memberAccounts = createGroupLoanMembers(accountState, formBean, disbursementDate, recurringSchedule, memberAccountsFees,
                 accountPenalties, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount);
         BigDecimal totalLoanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
 
@@ -182,6 +198,14 @@ public class GroupLoanAccountController {
         List<CreateAccountFeeDto> additionalAccountFees = LoanCreationHelper.translateToAdditionalAccountFeeDtos(formBean);
         accountFees.addAll(additionalAccountFees);
         
+        Map<String, List<CreateAccountFeeDto>> memberAccountsFees = 
+                LoanCreationHelper.translateToMemberAccountsFeeDtos(formBean);
+        Map<String, List<CreateAccountFeeDto>> memberAccountsAdditionalFees = 
+                LoanCreationHelper.translateToMemberAccountsAdditionalFeeDtos(formBean);
+        for (Map.Entry<String, List<CreateAccountFeeDto>> memberAccountEntry : memberAccountsAdditionalFees.entrySet()) {
+            memberAccountsFees.get(memberAccountEntry.getKey()).addAll(memberAccountsAdditionalFees.get(memberAccountEntry.getKey()));
+        }
+        
         BigDecimal loanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
         BigDecimal minAllowedLoanAmount = BigDecimal.valueOf(formBean.getMinAllowedAmount().doubleValue());
         BigDecimal maxAllowedLoanAmount = BigDecimal.valueOf(formBean.getMaxAllowedAmount().doubleValue());
@@ -212,7 +236,7 @@ public class GroupLoanAccountController {
                 recurringSchedule, accountFees, accountPenalties, loanAmount, minAllowedLoanAmount,
                 maxAllowedLoanAmount);
 
-        List<CreateLoanAccount> memberAccounts = createGroupLoanMembers(accountState, formBean, disbursementDate, recurringSchedule, additionalAccountFees,
+        List<CreateLoanAccount> memberAccounts = createGroupLoanMembers(accountState, formBean, disbursementDate, recurringSchedule, memberAccountsFees,
                 accountPenalties, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount);
         BigDecimal totalLoanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
 
@@ -252,7 +276,7 @@ public class GroupLoanAccountController {
     }
 
     private List<CreateLoanAccount> createGroupLoanMembers(Integer accountState, LoanAccountFormBean formBean,
-            LocalDate disbursementDate, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFees,
+            LocalDate disbursementDate, RecurringSchedule recurringSchedule, Map<String,List<CreateAccountFeeDto>> accountFees,
             List<CreateAccountPenaltyDto> accountPenalties, BigDecimal loanAmount, BigDecimal minAllowedLoanAmount,
             BigDecimal maxAllowedLoanAmount) {
         List<CreateLoanAccount> memberAccounts = new ArrayList<CreateLoanAccount>();
@@ -260,7 +284,8 @@ public class GroupLoanAccountController {
         int index = 0;
         for (Boolean clientSelected : formBean.getClientSelectForGroup()) {
             if (clientSelected != null && clientSelected.booleanValue()) {
-                CreateLoanAccount memberAccount = prepareGroupLoanAccountMember(accountState, formBean, disbursementDate, recurringSchedule, accountFees, accountPenalties,
+                String clientGlobalId = formBean.getClientGlobalId()[index];
+                CreateLoanAccount memberAccount = prepareGroupLoanAccountMember(accountState, formBean, disbursementDate, recurringSchedule, accountFees.get(clientGlobalId), accountPenalties,
                         BigDecimal.valueOf(formBean.getClientAmount()[index].doubleValue()), minAllowedLoanAmount, maxAllowedLoanAmount, index);
                 memberAccounts.add(memberAccount);
             }

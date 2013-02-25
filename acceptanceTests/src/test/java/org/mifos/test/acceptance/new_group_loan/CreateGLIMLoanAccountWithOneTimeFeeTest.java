@@ -158,7 +158,9 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
          createLoanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "500", "0003-Goat Purchase");
          createLoanAccountEntryPage.setInstallments("10");
          createLoanAccountEntryPage.setInterestRate("21");
-         selenium.type("defaultFeeAmountOrRate[0]", "1"); // oneTimeFee = 1
+         selenium.type("defaultFeeIndividualAmounts[0][0]", "0.2");
+         selenium.type("defaultFeeIndividualAmounts[0][1]", "0.3");
+         selenium.type("defaultFeeIndividualAmounts[0][2]", "0.5");
          CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
          CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
          CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submitForApprovalAndNavigateToConfirmationPage();
@@ -193,7 +195,7 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
             viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(i, 3, principals[i-3]);
             viewRepaymentSchedulePage.verifyRepaymentScheduleTableInterest(i, 4, interests[i-3]);
             viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(i, 5, fees[i-3]);
-            Assert.assertEquals(selenium.getTable("installments." + i + ".7"), totals[i-3]);           
+            Assert.assertEquals(selenium.getTable("installments." + i + ".8"), totals[i-3]);           
         }
     }
 }
