@@ -105,7 +105,7 @@ public class PenaltyHelper {
         for (int i = 0; i < schedulePenalty.length; ++i) {
             if (schedulePenalty[i] != null) {
                 repaymentSchedulePage.verifyRepaymentScheduleTableRow(3 + i, 6, schedulePenalty[i][0]);
-                repaymentSchedulePage.verifyRepaymentScheduleTableRow(3 + i, 7, schedulePenalty[i][1]);
+                repaymentSchedulePage.verifyRepaymentScheduleTableRow(3 + i, 8, schedulePenalty[i][1]);
             }
         }
         
@@ -123,7 +123,7 @@ public class PenaltyHelper {
         for (int i = 0; i < schedulePenalty.length; ++i) {
             if (schedulePenalty[i] != null) {
                 repaymentSchedulePage.verifyInstallmentAmount(4 + i, 7, schedulePenalty[i][0]);
-                repaymentSchedulePage.verifyInstallmentAmount(4 + i, 8, schedulePenalty[i][1]);
+                repaymentSchedulePage.verifyInstallmentAmount(4 + i, 9, schedulePenalty[i][1]);
             }
         }
     }

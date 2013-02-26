@@ -56,7 +56,20 @@ public class EditLoanAccountInformationPage extends MifosPage {
         selenium.type("editLoanAccount.input.loanAmount", amount);
     }
 
-    public EditLoanAccountInformationPage editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+    private void typeInterestRate(CreateLoanAccountSubmitParameters accountSubmitParameters) {
+    	if (accountSubmitParameters.getNumberOfInstallments() != null) {
+            selenium.type("editLoanAccount.input.numberOfInstallments", accountSubmitParameters.getNumberOfInstallments());
+        }
+    }
+    
+    private void typeNumberOfInstallments(CreateLoanAccountSubmitParameters accountSubmitParameters) {
+        if (accountSubmitParameters.getInterestRate() != null) {
+            selenium.type("editLoanAccount.input.interestRate", accountSubmitParameters.getInterestRate());
+        }
+    }
+    
+    public EditLoanAccountInformationPage editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, 
+    		EditLoanAccountInformationParameters editAccountParameters) {
         if (accountSubmitParameters.getAmount() != null) {
             selenium.type("editLoanAccount.input.loanAmount", accountSubmitParameters.getAmount());
         }
@@ -75,6 +88,8 @@ public class EditLoanAccountInformationPage extends MifosPage {
         if (editAccountParameters.getPurposeOfLoan() != null) {
             selenium.select("editLoanAccount.input.purposeofloan", "label=" + editAccountParameters.getPurposeOfLoan());
         }
+        typeInterestRate(accountSubmitParameters);
+        typeNumberOfInstallments(accountSubmitParameters);
         return this;
     }
     public void setWeekFrequency(String weekFreq){

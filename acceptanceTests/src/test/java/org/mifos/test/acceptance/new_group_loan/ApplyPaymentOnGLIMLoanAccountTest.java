@@ -56,13 +56,13 @@ public class ApplyPaymentOnGLIMLoanAccountTest extends UiTestCaseBase {
     
     private CustomPropertiesHelper customPropertiesHelper;
     
-    private final static String[][] EXPECTED_PAID_INSTALLMENTS = { {"175", "0", "0", "0", "175"},
-    														  {"15", "0", "0", "0", "15"} };
+    private final static String[][] EXPECTED_PAID_INSTALLMENTS = { {"175", "0", "0", "0", "0", "175"},
+                                                                   {"15", "0", "0", "0", "0", "15"} };
     private final static String[][][] INDIVIDUAL_EXPECTED_PAID_INSTALLMENTS = {
-    	{ { "20", "0", "0", "0", "20"} }, //Client 1
-    	{ {"50", "0", "0", "0", "50"} }, //Client 2
-    	{ {"100", "0", "0", "0", "100"}, //Client 3
-    	  {"20", "0", "0", "0", "20"} }
+        { {  "20", "0", "0", "0", "0", "20"} }, //Client 1
+        { {  "50", "0", "0", "0", "0", "50"} }, //Client 2
+        { { "100", "0", "0", "0", "0", "100"}, //Client 3
+          {  "20", "0", "0", "0", "0", "20"} }
     };
     
     @Override
