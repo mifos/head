@@ -80,7 +80,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
     
     private String getTotalOfInstallmentFromSchedule(int row) {
-        return getCellOfScheduleTable(row, 7);
+        return getCellOfScheduleTable(row, 8);
     }
     
     private void verifyTotalOfInstallmentFromSchedule(int row, String amount) {
