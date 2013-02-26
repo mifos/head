@@ -717,6 +717,13 @@
             and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
         ]]>
     </query>
+     <query name="Customer.getClientBasedOnName">
+         <![CDATA[select count(*)
+             from org.mifos.customers.client.business.ClientBO as client
+             where client.displayName = :clientName and client.customerLevel.id =:LEVELID and ((:customerId = 0) or 
+             (:customerId != 0 and client.customerId !=:customerId))
+        ]]>
+    </query>
     <query name="Customer.getNonClosedClientBasedOnNameAndDateOfBirth">
          <![CDATA[select count(*)
              from org.mifos.customers.client.business.ClientBO as client
@@ -743,6 +750,8 @@
             year(:DATE_OFBIRTH) and client.customerId !=:customerId)]]>
         -->
     </query>
+    
+   
 
     <query name="Customer.getLOForCustomer">
         <![CDATA[select customer.personnel.personnelId from org.mifos.customers.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>

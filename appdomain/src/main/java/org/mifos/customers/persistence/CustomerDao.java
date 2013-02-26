@@ -210,6 +210,8 @@ public interface CustomerDao {
     void updateLoanOfficersForAllChildrenAndAccounts(Short loanOfficerId, String searchId, Short officeId);
 
     boolean validateGovernmentIdForClient(String governmentId);
+    
+    boolean validateGovernmentIdForUnclosedClient(String governmentId);
 
     void validateClientForDuplicateNameOrGovtId(String name, Date dob, String governmentId) throws CustomerException;
 
@@ -222,6 +224,8 @@ public interface CustomerDao {
     void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
 
     boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
+    
+    boolean validateForClientsOnName(final String name);
 
     boolean validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
 
