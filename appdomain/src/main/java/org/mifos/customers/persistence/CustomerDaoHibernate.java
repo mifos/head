@@ -873,6 +873,14 @@ public class CustomerDaoHibernate implements CustomerDao {
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
+    public boolean validateGovernmentIdForUnclosedClient(String governmentId) {
+        return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId,
+                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
+    }
+
+    public boolean validateForClientsOnName(final String name) {
+        return checkForDuplicacyBasedOnName("Customer.getClientBasedOnName", name, new DateTime() , Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
+    }
     @Override
     public boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
