@@ -370,6 +370,12 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         if (processRules.isDuplicateNameOnClosedClient()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_CLOSED);
         }
+        if (processRules.isGovermentIdValidationUnclosedFailing()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_UNCLOSED);
+        }
+        if (processRules.isduplicateNameOnClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_EXIST);
+        }
     }
 
     public ActionForward cancel(ActionMapping mapping, ActionForm form,

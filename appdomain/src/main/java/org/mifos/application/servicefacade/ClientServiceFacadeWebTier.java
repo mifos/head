@@ -290,25 +290,33 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             boolean governmentIdValidationFailing = false;
             boolean duplicateNameOnClosedClient = false;
             boolean duplicateNameOnBlackListedClient = false;
+            boolean governmentIdValidationUnclosedFailing = false;
+            boolean duplicateNameOnClient = false;
 
             if (defaultFeeRemoval) {
                 customerDao.checkPermissionForDefaultFeeRemoval(userContext, officeId, loanOfficerId);
             }
 
             if (StringUtils.isNotBlank(governmentId)) {
-                governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
+                governmentIdValidationUnclosedFailing = this.customerDao.validateGovernmentIdForUnclosedClient(governmentId);
+                if (!governmentIdValidationUnclosedFailing ){
+                    governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
+                }
             }
-            if (!governmentIdValidationFailing) {
+            if (!governmentIdValidationFailing && !governmentIdValidationUnclosedFailing) {
                 duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
                         dateOfBirth);
                 if (!duplicateNameOnBlackListedClient) {
                     duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
                             dateOfBirth);
+                    if(!duplicateNameOnClosedClient){
+                        duplicateNameOnClient = this.customerDao.validateForClientsOnName(clientName);
+                    }
                 }
             }
 
             return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
-                    duplicateNameOnClosedClient, duplicateNameOnBlackListedClient);
+                    duplicateNameOnClosedClient, duplicateNameOnBlackListedClient, governmentIdValidationUnclosedFailing, duplicateNameOnClient);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
