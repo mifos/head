@@ -670,7 +670,7 @@ $(document).ready(function() {
         if (selectedValue == null || selectedValue == "") {
             $('#selectedFeeAmount\\[' + index + '\\]').val("");
             $('#selectedFeeAmountRow\\[' + index + '\\]').hide();
-            $('#selectedFeeIndividualAmountsRow\\[' + index + '\\]').hide();
+            $('[id^=selectedFeeIndividualAmountsRow\\[' + index + '\\]]').hide();
             $('input[id^=selectedFeeIndividualAmounts\\[' + index + '\\]]').val("");
             $('#selectedFeeAmount\\[' + index + '\\]').attr('readonly', true);
         } else {
