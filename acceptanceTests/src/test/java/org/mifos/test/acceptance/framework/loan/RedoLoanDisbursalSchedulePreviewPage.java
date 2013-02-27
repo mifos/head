@@ -38,6 +38,8 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     String dateField = "paymentDataBeans[%s].dueDate";
     String paidDateField = "actualPaymentDates[%s]";
     String paidAmountField = "actualPaymentAmounts[%s]";
+    private static final String INDIVIDUAL_PAID_AMOUNT_FIELD = "memberSchedules[%s].actualPaymentAmounts[%s]";
+    private static final String INDIVIDUAL_PAYMENT_DATE_FIELD = "memberSchedules[%s].actualPaymentDates[%s]";
     String dateFieldDatePicker = "//input[@name='paymentDataBeans[%s].dueDate']/following-sibling::img[@class='ui-datepicker-trigger']";
     String actualDateFieldDatePicker = "//input[@name='paymentDataBeans[%s].date']/following-sibling::img[@class='ui-datepicker-trigger']";
     String editScheduleInformation = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
@@ -46,17 +48,43 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         super(selenium);
         verifyPage("SchedulePreview");
     }
+    
+    public RedoLoanDisbursalSchedulePreviewPage(Selenium selenium, boolean isNewGlim) {
+    	super(selenium);
+    	if (isNewGlim) {
+    		verifyPage("GroupScheduleRedoPreview");
+    	} else {
+    		verifyPage("SchedulePreview");
+    	}
+    }
 
-    public RedoLoanDisbursalPreviewPage submitAndNavigateToRedoLoanDisbursalPreviewPage() {
+    public RedoLoanDisbursalPreviewPage submitAndNavigateToRedoLoanDisbursalPreviewPage(boolean isNewGlim) {
         selenium.click("schedulePreview.button.preview");
         waitForPageToLoad();
-        return new RedoLoanDisbursalPreviewPage(selenium);
+        return new RedoLoanDisbursalPreviewPage(selenium, isNewGlim);
+    }
+    
+    public RedoLoanDisbursalPreviewPage submitAndNavigateToRedoLoanDisbursalPreviewPage() {
+    	return submitAndNavigateToRedoLoanDisbursalPreviewPage(false);
     }
 
     public void typeAmountPaid(int amountPaid, int row) {
         selenium.type("name="+String.format(paidAmountField, row), String.valueOf(amountPaid));
     }
+    
+    public void typeIndividualAmountPaid(int client, int installment, String amountPaid) {
+        selenium.type("name="+String.format(INDIVIDUAL_PAID_AMOUNT_FIELD, client, installment), amountPaid);
+    }
 
+    public void typeIndividualPaymentDate(int client, int installment, String date) {
+    	 selenium.type("name="+String.format(INDIVIDUAL_PAYMENT_DATE_FIELD, client, installment), date);
+    }
+    
+    public void typeIndividualPaidInstallment(int client, int installment, String amountPaid, String date) {
+    	typeIndividualAmountPaid(client, installment, amountPaid);
+    	typeIndividualPaymentDate(client, installment, date);
+    }
+    
     public RedoLoanDisbursalSchedulePreviewPage validateRepaymentScheduleFieldDefault(int defInstallments) {
         for (int instalment = 0; instalment < defInstallments-1  ; instalment++) {
             assertTrue(selenium.isEditable(String.format(dateField,instalment)));
