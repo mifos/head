@@ -80,7 +80,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
     
     private String getTotalOfInstallmentFromSchedule(int row) {
-        return getCellOfScheduleTable(row, 8);
+        return getCellOfScheduleTable(row, 7);
     }
     
     private void verifyTotalOfInstallmentFromSchedule(int row, String amount) {
@@ -267,6 +267,12 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         }
     }
 
+    public void verifyRepaymentScheduleTableRow(int row, String... values) {
+    	for (int i=0; i<values.length; i+=1) {
+    	    Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + i), values[i]);
+    	}
+    }
+    
     public void verifyRepaymentScheduleTablePrincipal(int row, int column, String value) {
         Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
     }
