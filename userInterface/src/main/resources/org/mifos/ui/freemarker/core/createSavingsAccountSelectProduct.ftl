@@ -24,7 +24,6 @@
                  states=["createSavingsAccount.flowState.selectCustomer", 
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
-<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 <h1>[@spring.message "createSavingsAccount.selectProduct.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.selectProduct.pageSubtitle" /]</span></h1>
