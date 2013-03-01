@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, enabled = true,groups = {"acceptance", "loan"})
+@Test(singleThreaded = true, enabled = true,groups = {"acceptance", "loan", "no_db_unit"})
 
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class ModifyingGroupLoanTest extends UiTestCaseBase {
