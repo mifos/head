@@ -431,6 +431,24 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    public void removeFromBlacklist(UserContext userContext, Integer customerId) {
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        customer.updateDetails(userContext);
+        try{
+        hibernateTransactionHelper.startTransaction();
+        hibernateTransactionHelper.beginAuditLoggingFor(customer);
+        customer.unBlacklist();
+        customerDao.save(customer);
+        hibernateTransactionHelper.commitTransaction();
+        }catch (Exception e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+        
+    }
+    
     @Override
     public void updateClientFamilyInfo(UserContext userContext, ClientFamilyInfoUpdate clientFamilyInfoUpdate)
             throws CustomerException {

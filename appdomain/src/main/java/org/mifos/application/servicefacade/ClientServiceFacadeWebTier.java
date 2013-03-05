@@ -608,6 +608,14 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             throw new BusinessRuleException(e.getKey(), e);
         }
     }
+    
+    public void removeFromBlacklist(Integer customerId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        this.customerService.removeFromBlacklist(userContext, customerId);
+    }
 
     @Override
     public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum) {
