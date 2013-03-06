@@ -160,8 +160,9 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     }
     
     public Integer getDaysLate() {
-    	return Days.daysBetween(getPaymentDate() != null ? new DateTime(getPaymentDate()) : new DateTime(), 
-    			new DateTime(getActionDate())).getDays();
+    	int daysLate = Days.daysBetween( new DateTime(getActionDate()),
+    			getPaymentDate() != null ? new DateTime(getPaymentDate()) : new DateTime()).getDays();
+    	return daysLate < 0 ? 0 : daysLate;
     }
     
 }
