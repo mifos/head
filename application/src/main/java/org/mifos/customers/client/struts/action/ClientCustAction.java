@@ -141,6 +141,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
         Short officeId = actionForm.getOfficeIdValue();
+        String officeName = actionForm.getOfficeName();
         Short groupFlag = actionForm.getGroupFlagValue();
         String parentGroupId = actionForm.getParentGroupId();
 
@@ -156,8 +157,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setCenterDisplayName(clientFormCreationDto.getCenterDisplayName());
         actionForm.setGroupDisplayName(clientFormCreationDto.getGroupDisplayName());
         actionForm.setOfficeId(clientFormCreationDto.getOfficeId().toString());
-        actionForm.setOfficeName(clientFormCreationDto.getOfficeName());
-
+        actionForm.setOfficeName(officeName);
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             actionForm.setLoanOfficerId(clientFormCreationDto.getFormedByPersonnelId().toString());
         }
