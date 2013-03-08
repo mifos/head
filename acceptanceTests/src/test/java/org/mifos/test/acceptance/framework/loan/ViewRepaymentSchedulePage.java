@@ -279,7 +279,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
 
     public void verifyRepaymentScheduleTableRow(int row, String... values) {
     	for (int i=0; i<values.length; i+=1) {
-    		if (i == COLUMN_DAYS_LATE) {
+    		if (i == COLUMN_DAYS_LATE-1) {
         		//TODO: MIFOS-5987 Fix repayment schedule tests related to days late changes
         		continue;
         	}
