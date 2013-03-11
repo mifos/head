@@ -46,6 +46,7 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,6 +112,7 @@ import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.OriginalScheduleInfoHelper;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -898,6 +900,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
 
         loanBO.setExternalId(loanAccountActionForm.getExternalId());
+        boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
+        if ((configService.isGlimEnabled() && customer.isGroup()) || (groupLoanWithMembers && customer.isGroup())) {
+            List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
+            List<LoanBO> individualLoans = loanDao.findIndividualLoans(Integer.valueOf(
+                  loanBO.getAccountId()));
+            handleIndividualLoans(loanBO, loanAccountActionForm, isRepaymentIndepOfMeetingEnabled,
+                    loanAccountDetailsList, individualLoans, getUserContext(request).getPreferredLocale());
+            request.setAttribute(CUSTOMER_ID, loanBO.getCustomer().getCustomerId().toString());
+        }
+        
         loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(), new Money(loanBO.getCurrency(),
                 loanAccountActionForm.getLoanAmount()), loanAccountActionForm.getInterestDoubleValue(),
                 loanAccountActionForm.getNoOfInstallmentsValue(), loanAccountActionForm
@@ -906,16 +918,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 loanAccountActionForm.getCollateralNote(), loanAccountActionForm.getCollateralTypeIdValue(),
                 loanAccountActionForm.getCustomFields(), isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay,
                 getFund(loanAccountActionForm));
-
-        if (configService.isGlimEnabled() && customer.isGroup()) {
-            List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
-            List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
-                    loanBO.getAccountId()).toString());
-            handleIndividualLoans(loanBO, loanAccountActionForm, isRepaymentIndepOfMeetingEnabled,
-                    loanAccountDetailsList, individualLoans, getUserContext(request).getPreferredLocale());
-            request.setAttribute(CUSTOMER_ID, loanBO.getCustomer().getCustomerId().toString());
-        }
-
         loanBOInSession = null;
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
@@ -932,8 +934,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
                 @Override
                 public boolean evaluate(final Object object) {
-                    return ((LoanBO) object).getCustomer().getCustomerId().toString().equals(
-                            loanAccountDetail.getClientId());
+                    return ((LoanBO) object).getAccountId().toString().equals(
+                            loanAccountDetail.getLoanAccountId());
                 }
 
             };
@@ -944,8 +946,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             } else {
                 foundLoans.add(individualLoan.getAccountId());
                 try {
+                    loanAccountDetail.setLoanAmount(loanAccountActionForm.getLoanAmountAsBigDecimal().divide(individualLoan.calcFactorOfEntireLoan(), 10, RoundingMode.HALF_UP).toString());
                     glimLoanUpdater.updateIndividualLoan(
-                            loanAccountActionForm.getDisbursementDateValue(locale), loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
+                            loanAccountActionForm.getDisbursementDateValue(locale), loanAccountActionForm.getInterestDoubleValue(), loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
                 } catch (InvalidDateException e) {
                     e.printStackTrace();
                 }
