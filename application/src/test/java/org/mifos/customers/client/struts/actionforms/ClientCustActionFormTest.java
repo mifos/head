@@ -111,6 +111,7 @@ public class ClientCustActionFormTest extends TestCase {
             ClientRules.setMaximumAgeForNewClient(60);
             ClientRules.setMinimumAgeForNewClient(18);
             ClientRules.setAgeCheckEnabled(true);
+            ClientRules.setAgeCheckWarningInsteadOfError(false);
          }
 
         form.setDateOfBirthDD("2");
@@ -128,6 +129,7 @@ public class ClientCustActionFormTest extends TestCase {
             ClientRules.setMaximumAgeForNewClient(60);
             ClientRules.setMinimumAgeForNewClient(18);
             ClientRules.setAgeCheckEnabled(true);
+            ClientRules.setAgeCheckWarningInsteadOfError(false);
          }
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
@@ -136,6 +138,36 @@ public class ClientCustActionFormTest extends TestCase {
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_AGE, message.getKey());
+    }
+    
+    public void testLessThanMinimumAgeWarningPass() throws Exception {
+        if(!ClientRules.isAgeCheckEnabled()){
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setAgeCheckEnabled(true);
+            ClientRules.setAgeCheckWarningInsteadOfError(true);
+         }
+
+        form.setDateOfBirthDD("2");
+        form.setDateOfBirthMM("2");
+        form.setDateOfBirthYY("1999");
+        form.validateDateOfBirth(errors);
+        Assert.assertEquals(0, errors.size());
+
+    }
+
+    public void testMoreThanMaximumAgeWarningPass() throws Exception {
+        if(!ClientRules.isAgeCheckEnabled()){
+            ClientRules.setMaximumAgeForNewClient(60);
+            ClientRules.setMinimumAgeForNewClient(18);
+            ClientRules.setAgeCheckEnabled(true);
+            ClientRules.setAgeCheckWarningInsteadOfError(true);
+         }
+        form.setDateOfBirthDD("2");
+        form.setDateOfBirthMM("2");
+        form.setDateOfBirthYY("1940");
+        form.validateDateOfBirth(errors);
+        Assert.assertEquals(0, errors.size());
     }
 
     public void testInvaildFamilyDateOfBirth() throws Exception {
