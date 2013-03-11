@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -348,8 +349,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             clientFormCreationDto.getParentCustomerMeeting().setMeetingSchedule(CustomerUIHelperFn.getMeetingSchedule(groupMeeting, userContext));     
             SessionUtils.setAttribute("meeting", clientFormCreationDto.getParentCustomerMeeting(), request);
         }
-        
-        addWarningMessages(request, processRules);
+        addWarningMessages(request, processRules,calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));
         actionForm.setEditFamily("edit");
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));
         actionForm.setClientName(clientNameDetail);
@@ -357,7 +357,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
-    private void addWarningMessages(HttpServletRequest request, ProcessRulesDto processRules)
+    private void addWarningMessages(HttpServletRequest request, ProcessRulesDto processRules, int age)
             throws PageExpiredException {
         if (processRules.isGovernmentIdValidationFailing()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
@@ -375,6 +375,13 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         }
         if (processRules.isduplicateNameOnClient()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_EXIST);
+        }
+        if(ClientRules.isAgeCheckEnabled()&&ClientRules.isAgeCheckWarningInsteadOfErrorEnabled()) {
+        	if(age > ClientRules.getMaximumAgeForNewClient() || age< ClientRules.getMinimumAgeForNewClient()){
+        		SessionUtils.addWarningMessage(request, new ActionMessage(CustomerConstants.CLIENT_AGE_OUT_OF_BOUNDS
+        																 ,ClientRules.getMinimumAgeForNewClient()
+        																 ,ClientRules.getMaximumAgeForNewClient()));        		
+        	}
         }
     }
 

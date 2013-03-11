@@ -847,7 +847,7 @@ public class XlsClientsImporter implements MessageSourceAware {
 
         if (age.getYears() < 0) {
             throw new CellException(getMessage(XlsMessageConstants.FUTURE_DATE));
-        } else if (ClientRules.isAgeCheckEnabled() && (age.getYears() < minimumAge || age.getYears() > maximumAge)) {
+        } else if (ClientRules.isAgeCheckEnabled() && !ClientRules.isAgeCheckWarningInsteadOfErrorEnabled() && (age.getYears() < minimumAge || age.getYears() > maximumAge)) {
             throw new CellException(getMessage(XlsMessageConstants.INVALID_AGE, new Object[] { minimumAge, maximumAge }));
         }
     }
