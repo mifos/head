@@ -291,6 +291,7 @@ public interface CustomerConstants {
     String CLIENT_WITH_SAME_NAME_EXIST = "warning.clientWithSameNameExist";
     String CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_BLACKLISTED = "warning.clientWithSameNameDOBExistInBlackListed";
     String CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_CLOSED = "warning.clientWithSameNameDOBExistInClosed";
+    String CLIENT_AGE_OUT_OF_BOUNDS = "warning.clientAgeOutOfBounds";
     String AMOUNT_OF_LOAN_KEY = "label.amountofloanLabel";
     String INTEREST_PAID_KEY = "Customer.History.InterestPaid";
     String TOTAL_AMOUNT_PAID_KEY = "label.totalamountpaidLabel";
