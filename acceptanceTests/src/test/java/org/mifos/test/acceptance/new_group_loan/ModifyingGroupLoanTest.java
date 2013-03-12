@@ -55,6 +55,7 @@ public class ModifyingGroupLoanTest extends UiTestCaseBase {
         
         List<GLIMClient> glimClients = new ArrayList<GLIMClient>();
         glimClients.add(new GLIMClient(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "1500", null));
+        glimClients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "37", null));
         glimClients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "1500", null));
         LoanAccountPage loanAccountPage = loanTestHelper.createGroupLoanAccount(searchParameters, glimClients);
         
@@ -71,7 +72,7 @@ public class ModifyingGroupLoanTest extends UiTestCaseBase {
         editLoanAccountInformationPage.editAccountParams(new CreateLoanAccountSubmitParameters(), editAccountParameters);
         loanAccountPage = editLoanAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage().submitAndNavigateToLoanAccountPage();
         verifyEditedAccountParameters(loanAccountPage);
-        verifyModifyAccountParametersFromIndividualMemberAccount(loanAccountPage);
+        verifyModifiedAccountParametersFromIndividualMemberAccount(loanAccountPage);
     }
     
     private void verifyEditedAccountParameters(LoanAccountPage loanAccountPage) {
@@ -84,9 +85,12 @@ public class ModifyingGroupLoanTest extends UiTestCaseBase {
         loanAccountPage.verifyExternalId("1234");
     }
     
-    private void verifyModifyAccountParametersFromIndividualMemberAccount(LoanAccountPage loanAccountPage) {
-        loanAccountPage.navigateToIndividualLoanAccountPageFromPendingApprovalGroupLoan(0);
+    private void verifyModifiedAccountParametersFromIndividualMemberAccount(LoanAccountPage loanAccountPage) {
+        loanAccountPage.navigateToIndividualLoanAccountPageFromPendingApprovalGroupLoan(1);
         Assert.assertFalse(selenium.isTextPresent("Edit account information"));
+        loanAccountPage.verifyInterestRate("33");
+        loanAccountPage.verifyLoanAmount("42.6");
+        loanAccountPage.verifyNumberOfInstallments("8");
         loanAccountPage.navigateBack();
     }
 }
