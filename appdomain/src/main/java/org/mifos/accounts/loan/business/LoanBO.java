@@ -566,7 +566,7 @@ public class LoanBO extends AccountBO implements Loan {
         return interestRate;
     }
 
-    void setInterestRate(final Double interestRate) {
+    public void setInterestRate(final Double interestRate) {
         this.interestRate = interestRate;
     }
 
