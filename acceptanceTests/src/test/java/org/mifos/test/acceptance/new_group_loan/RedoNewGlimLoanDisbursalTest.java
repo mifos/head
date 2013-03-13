@@ -100,17 +100,17 @@ public class RedoNewGlimLoanDisbursalTest extends UiTestCaseBase {
     	
     	ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountDetailsPage.navigateToRepaymentSchedulePage();
     
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(3, "1", "25-Feb-2011", "11-Mar-2011", "297.3", "5.7", "0", "0", "14");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(4, "2", "04-Mar-2011", "12-Mar-2011", "297.8", "5.2", "0", "0", "8");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(5, "3", "11-Mar-2011", "12-Mar-2011", "89.4", "4.6", "0", "0", "1");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(7, "3", "11-Mar-2011", "-", "209", "0", "0", "0", "1");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(9, "4", "18-Mar-2011", "-", "299", "4", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(10, "5", "25-Mar-2011", "-", "299.5", "3.5", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(11, "6", "01-Apr-2011", "-", "300.1", "2.9", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(12, "7", "08-Apr-2011", "-", "300.7", "2.3", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(13, "8", "15-Apr-2011", "-", "301.2", "1.8", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(14, "9", "22-Apr-2011", "-", "301.8", "1.2", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(15, "10", "29-Apr-2011", "-", "304.2", "1.8", "0", "0", "0");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(3, "1", "25-Feb-2011", "11-Mar-2011", "297.3", "5.7", "0", "0", "14", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(4, "2", "04-Mar-2011", "12-Mar-2011", "297.8", "5.2", "0", "0", "8", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(5, "3", "11-Mar-2011", "12-Mar-2011", "89.4", "4.6", "0", "0", "1", "94");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(7, "3", "11-Mar-2011", "-", "209", "0", "0", "0", "1", "209");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(9, "4", "18-Mar-2011", "-", "299", "4", "0", "0", "0", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(10, "5", "25-Mar-2011", "-", "299.5", "3.5", "0", "0", "0", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(11, "6", "01-Apr-2011", "-", "300.1", "2.9", "0", "0", "0", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(12, "7", "08-Apr-2011", "-", "300.7", "2.3", "0", "0", "0", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(13, "8", "15-Apr-2011", "-", "301.2", "1.8", "0", "0", "0", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(14, "9", "22-Apr-2011", "-", "301.8", "1.2", "0", "0", "0", "303");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(15, "10", "29-Apr-2011", "-", "304.2", "1.8", "0", "0", "0", "306");
     	
     	loanAccountDetailsPage = viewRepaymentSchedulePage.navigateToLoanAccountPage().navigateToIndividualLoanAccountPage(0);
     	
@@ -123,17 +123,17 @@ public class RedoNewGlimLoanDisbursalTest extends UiTestCaseBase {
     	
     	viewRepaymentSchedulePage = loanAccountDetailsPage.navigateToRepaymentSchedulePage();
     	
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(3, "1", "25-Feb-2011", "11-Mar-2011", "99.1", "1.9", "0", "0", "14");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(4, "2", "04-Mar-2011", "12-Mar-2011", "99.3", "1.7", "0", "0", "8");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(5, "3", "11-Mar-2011", "12-Mar-2011", "96.5", "1.5", "0", "0", "1");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(7, "3", "11-Mar-2011", "-", "3", "0", "0", "0", "1");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(9, "4", "18-Mar-2011", "-", "99.7", "1.3", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(10, "5", "25-Mar-2011", "-", "99.8", "1.2", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(11, "6", "01-Apr-2011", "-", "100", "1", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(12, "7", "08-Apr-2011", "-", "100.2", "0.8", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(13, "8", "15-Apr-2011", "-", "100.4", "0.6", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(14, "9", "22-Apr-2011", "-", "100.6", "0.4", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(15, "10", "29-Apr-2011", "-", "101.4", "0.6", "0", "0", "0");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(3, "1", "25-Feb-2011", "11-Mar-2011", "99.1", "1.9", "0", "0", "14", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(4, "2", "04-Mar-2011", "12-Mar-2011", "99.3", "1.7", "0", "0", "8", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(5, "3", "11-Mar-2011", "12-Mar-2011", "96.5", "1.5", "0", "0", "1", "98");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(7, "3", "11-Mar-2011", "-", "3", "0", "0", "0", "1", "3");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(9, "4", "18-Mar-2011", "-", "99.7", "1.3", "0", "0", "0", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(10, "5", "25-Mar-2011", "-", "99.8", "1.2", "0", "0", "0", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(11, "6", "01-Apr-2011", "-", "100", "1", "0", "0", "0", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(12, "7", "08-Apr-2011", "-", "100.2", "0.8", "0", "0", "0", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(13, "8", "15-Apr-2011", "-", "100.4", "0.6", "0", "0", "0", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(14, "9", "22-Apr-2011", "-", "100.6", "0.4", "0", "0", "0", "101");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(15, "10", "29-Apr-2011", "-", "101.4", "0.6", "0", "0", "0", "102");
     	
     	loanAccountDetailsPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
     	loanAccountDetailsPage = loanAccountDetailsPage.navigateToGroupLoanPageFromIndividualLoanPage();
@@ -147,17 +147,17 @@ public class RedoNewGlimLoanDisbursalTest extends UiTestCaseBase {
     	loanAccountDetailsPage.verifyInterestOriginal("22");
     	viewRepaymentSchedulePage = loanAccountDetailsPage.navigateToViewRepaymentSchedule();
     	
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(3, "1", "25-Feb-2011", "11-Mar-2011", "198.2", "3.8", "0", "0", "14");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(4, "2", "04-Mar-2011", "12-Mar-2011", "194.5", "3.5", "0", "0", "8");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(6, "2", "04-Mar-2011", "-", "4", "0", "0", "0", "8");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(7, "3", "11-Mar-2011", "-", "198.9", "3.1", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(9, "4", "18-Mar-2011", "-", "199.3", "2.7", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(10, "5", "25-Mar-2011", "-", "199.7", "2.3", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(11, "6", "01-Apr-2011", "-", "200.1", "1.9", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(12, "7", "08-Apr-2011", "-", "200.5", "1.5", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(13, "8", "15-Apr-2011", "-", "200.8", "1.2", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(14, "9", "22-Apr-2011", "-", "201.2", "0.8", "0", "0", "0");
-    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(15, "10", "29-Apr-2011", "-", "202.8", "1.2", "0", "0", "0");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(3, "1", "25-Feb-2011", "11-Mar-2011", "198.2", "3.8", "0", "0", "14", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(4, "2", "04-Mar-2011", "12-Mar-2011", "194.5", "3.5", "0", "0", "8", "198");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(6, "2", "04-Mar-2011", "-", "4", "0", "0", "0", "8", "4");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(7, "3", "11-Mar-2011", "-", "198.9", "3.1", "0", "0", "4", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(9, "4", "18-Mar-2011", "-", "199.3", "2.7", "0", "0", "0", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(10, "5", "25-Mar-2011", "-", "199.7", "2.3", "0", "0", "0", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(11, "6", "01-Apr-2011", "-", "200.1", "1.9", "0", "0", "0", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(12, "7", "08-Apr-2011", "-", "200.5", "1.5", "0", "0", "0", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(13, "8", "15-Apr-2011", "-", "200.8", "1.2", "0", "0", "0", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(14, "9", "22-Apr-2011", "-", "201.2", "0.8", "0", "0", "0", "202");
+    	viewRepaymentSchedulePage.verifyRepaymentScheduleTableRow(15, "10", "29-Apr-2011", "-", "202.8", "1.2", "0", "0", "0", "204");
     }	
     
     @AfterMethod

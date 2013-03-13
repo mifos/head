@@ -96,7 +96,7 @@ public class ApplyChargeGroupLoanTest extends UiTestCaseBase {
 
     private void verifyRepaymentSchedulePage(LoanAccountPage loanAccountPage, String penalty) {
         ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
-        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, 6, penalty);
+        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, penalty);
         loanAccountPage.navigateBack();
     }
 
