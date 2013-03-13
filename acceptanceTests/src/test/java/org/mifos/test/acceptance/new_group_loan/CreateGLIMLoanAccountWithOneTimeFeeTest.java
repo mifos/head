@@ -192,9 +192,9 @@ public class CreateGLIMLoanAccountWithOneTimeFeeTest extends UiTestCaseBase {
     
     private void verifyRepaymentSchedule(ViewRepaymentSchedulePage viewRepaymentSchedulePage, int installmentCount, String[] principals, String[] interests, String[] fees, String[] totals) {
         for (int i=3; i<=installmentCount+2; i+=1) { 
-            viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(i, 3, principals[i-3]);
-            viewRepaymentSchedulePage.verifyRepaymentScheduleTableInterest(i, 4, interests[i-3]);
-            viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(i, 5, fees[i-3]);
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(i, principals[i-3]);
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableInterest(i, interests[i-3]);
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(i, fees[i-3]);
             Assert.assertEquals(selenium.getTable("installments." + i + ".8"), totals[i-3]);           
         }
     }

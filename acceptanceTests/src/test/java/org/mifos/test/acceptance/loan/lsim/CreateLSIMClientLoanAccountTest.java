@@ -297,9 +297,9 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             
             ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
             
-            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "01-Apr-2011");
-            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "08-Apr-2011");
-            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "22-Apr-2011");
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, "01-Apr-2011");
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, "08-Apr-2011");
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, "22-Apr-2011");
             
             loanAccountPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
             EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
