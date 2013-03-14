@@ -232,5 +232,13 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     public void verifyRepaymentScheduleTableTotal(int row, String value) {
     	Assert.assertEquals(selenium.getTable("installments." + row + "." + (TOTAL_COLUMN-1)), value);
     }
+    
+    public void verifyRepaymentScheduleTableAfterPayInterest(int row, String value) {
+    	Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + (INTEREST_COLUMN-1)), value);
+    }
+    
+    public void verifyRepaymentScheduleTableAfterPayPrincipal(int row, String value) {
+    	Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + (PRINCIPAL_COLUMN-1)), value);
+    }
 
 }
