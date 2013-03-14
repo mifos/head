@@ -96,11 +96,11 @@ public class LoanAccountOverdueInterestTest extends UiTestCaseBase {
         loanPage = repaymentPage.navigateToApplyPaymentPage().submitAndNavigateToApplyPaymentConfirmationPage(params).submitAndNavigateToLoanAccountDetailsPage();
         loanPage = navigationHelper.navigateToLoanAccountPage(loanId);
         repaymentPage = loanPage.navigateToRepaymentSchedulePage();
-        repaymentPage.verifyRepaymentScheduleTablePrincipal(3, "0");
-        repaymentPage.verifyRepaymentScheduleTableInterest(3, "3.7");
-        repaymentPage.verifyRepaymentScheduleTablePrincipal(5, "17.3");
-        repaymentPage.verifyRepaymentScheduleTableInterest(5, "0 (3.7)");
-        repaymentPage.verifyRepaymentScheduleTablePrincipal(6, "17.4");
-        repaymentPage.verifyRepaymentScheduleTableInterest(6, "3.1 (0.5)");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(3, "0");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(3, "3.7");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(5, "17.3");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(5, "0 (3.7)");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(6, "17.4");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(6, "3.1 (0.5)");
     }
 }
