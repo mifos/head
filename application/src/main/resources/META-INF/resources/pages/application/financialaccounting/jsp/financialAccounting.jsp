@@ -75,7 +75,39 @@ explanation of the license and how it is applied.
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><a href="yearEndProcessAction.do?method=load"><mifos:mifoslabel name="financialAccounting.yearEndProcess" bundle="FinancialAccountingUIResources"/></a></td>
                   </tr> 
+                   <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="importClientDataAction.do?method=load"><mifos:mifoslabel name="financialAccounting.uploadXlsData" bundle="FinancialAccountingUIResources"/></a></td>
+                  </tr>
+                                     <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="viewstagetransactionsaction.do?method=load"><mifos:mifoslabel name="financialAccounting.viewStageTransactions" bundle="FinancialAccountingUIResources"/></a></td>
+                  </tr>
+                      <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="interofficetransferaction.do?method=load"><mifos:mifoslabel name="financialAccounting.interOfficeTransafer" bundle="FinancialAccountingUIResources"/></a></td>
+                  </tr>
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="audittransactionsaction.do?method=load"><mifos:mifoslabel name="financialAccounting.audit" bundle="FinancialAccountingUIResources"/></a></td>
+                  </tr>
+
+
+
                </table>
+               <!--<span class="fontnormalbold"><mifos:mifoslabel name="financialAccounting.uploadClientData" bundle="FinancialAccountingUIResources" /></span><br>
+               <table>
+
+				<tr class="fontnormal">
+			<td align="center" colspan="2">
+				<div id="accountDetailsId">
+				 <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="importClientDataAction.do?method=load"><mifos:mifoslabel name="financialAccounting.uploadXlsData" bundle="FinancialAccountingUIResources"/></a></td>
+                  </tr>
+
+               </table>-->
 			</div>
 			</td>
 			</tr>

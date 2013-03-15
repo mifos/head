@@ -166,7 +166,11 @@ public class AccountApplyPaymentAction extends BaseAction {
         }
         else {
             findForward = mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
+
         }
+        System.out.println((getForward(((AccountApplyPaymentActionForm) form).getInput())));
+
+        System.out.println(mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput())));
         return findForward;
 
     }
@@ -233,7 +237,7 @@ public class AccountApplyPaymentAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+	public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
@@ -245,7 +249,9 @@ public class AccountApplyPaymentAction extends BaseAction {
         
         if (method != null) {
             forward = method + "_failure";
+           // System.out.println("forward"+forward);
         }
+        System.out.println("second"+forward);
         return mapping.findForward(forward);
     }
 }
