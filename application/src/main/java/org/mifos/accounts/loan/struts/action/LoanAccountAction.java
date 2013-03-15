@@ -930,8 +930,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                final List<LoanBO> individualLoans, final Locale locale) throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
-            Predicate predicate = new Predicate() {
-
+            Predicate predicateNewGlim = new Predicate() {
+                
                 @Override
                 public boolean evaluate(final Object object) {
                     return ((LoanBO) object).getAccountId().toString().equals(
@@ -939,13 +939,29 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 }
 
             };
-            LoanBO individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicate);
+            Predicate predicateOldGlim = new Predicate() {
+                
+                @Override
+                public boolean evaluate(final Object object) {
+                    return ((LoanBO) object).getCustomer().getCustomerId().toString().equals(
+                                                        loanAccountDetail.getClientId());
+                }
+
+            };
+            LoanBO individualLoan ;
+            if(AccountingRules.isGroupLoanWithMembers()){
+                individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicateNewGlim);
+            }
+            else{
+                individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicateOldGlim);
+            }
             if (individualLoan == null) {
 //                glimLoanUpdater.createIndividualLoan(loanAccountActionForm, loanBO, isRepaymentIndepOfMeetingEnabled,
 //                        loanAccountDetail);
             } else {
                 foundLoans.add(individualLoan.getAccountId());
                 try {
+                    if(loanAccountActionForm.getLoanAmount()!=null)
                     loanAccountDetail.setLoanAmount(loanAccountActionForm.getLoanAmountAsBigDecimal().divide(individualLoan.calcFactorOfEntireLoan(), 10, RoundingMode.HALF_UP).toString());
                     glimLoanUpdater.updateIndividualLoan(
                             loanAccountActionForm.getDisbursementDateValue(locale), loanAccountActionForm.getInterestDoubleValue(), loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
