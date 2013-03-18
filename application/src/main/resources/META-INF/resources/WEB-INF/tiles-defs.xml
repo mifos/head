@@ -114,6 +114,9 @@
 
     <definition name=".individualLoansForm" template="/pages/application/loan/jsp/glimLoanForm.jsp">
     </definition>
+    
+    <definition name=".searchFilters" template="/pages/application/customer/jsp/searchFilters.jsp">
+    </definition>
 
 </tiles-definitions>
 

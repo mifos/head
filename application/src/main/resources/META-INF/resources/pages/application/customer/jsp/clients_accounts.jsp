@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
+    <script src="pages/application/customer/js/searchFilters.js"></script>
     <span id="page.id" title="ClientsAccounts"></span>	
 		<form action="searchResult.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -95,6 +96,8 @@ explanation of the license and how it is applied.
 										</select>
 									</td>
 								</tr>
+                                <tiles:insert definition=".searchFilters" flush="false">
+                                </tiles:insert>
 								<tr>
 									<td>&nbsp;</td>
 									<td align="right" class="paddingleft05notop"><html-el:submit
