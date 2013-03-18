@@ -45,8 +45,10 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -56,10 +58,12 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 
 public class EditCustomerStatusAction extends BaseAction {
 
@@ -169,6 +173,14 @@ public class EditCustomerStatusAction extends BaseAction {
         EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
+        if(customerBOInSession.isBlackListed() && customerBOInSession.getStatus().getValue() == CustomerConstants.CLIENT_CLOSED){
+            try{
+            this.clientServiceFacade.removeFromBlacklist(customerBOInSession.getCustomerId());
+            customerBOInSession.setVersionNo(customerBOInSession.getVersionNo()+1);
+            } catch (AccessDeniedException e) {
+                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+            }
+        }
         try {
             this.centerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(),
                                                           editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(),
