@@ -179,7 +179,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
 
         if (groupLoanWithMembers) {
-            if (methodCalled != null && (methodCalled.equals("divide") || methodCalled.equals("preview"))) {
+            if (methodCalled != null && methodCalled.equals("preview")) {
                 validateTransfer(errors);
                 validateTransactionDate(errors);
                 validatePaymentType(errors);

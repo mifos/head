@@ -130,18 +130,18 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("737.4");
         verifyFees();
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "11-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "18-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "25-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "01-Apr-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "9999.9");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "9999.9");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "9999.9");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "9999.9");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(3, 5, "110.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(4, 5, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(5, 5, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(6, 5, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, "11-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, "18-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, "25-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, "01-Apr-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, "9999.9");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, "9999.9");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, "9999.9");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, "9999.9");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(3, "110.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(4, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(5, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(6, "100.0");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
         loanId = loanAccountPage.getAccountId();
         dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2011, 3, 8).toDateTimeAtStartOfDay());
@@ -407,9 +407,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
         totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
-        String[] expectedPrincipalAmounts = new String[] { "24.9", "249.2", "249.2" };
+        String[] expectedPrincipalAmounts = new String[] { "24.9", "249.2", "249.3" };
         String[] expectedInterestAmounts = new String[] { "46", "460.3", "460.3" };
-        String[] expectedFeeAmounts = new String[] { "0.5", "4.8", "4.8" };
+        String[] expectedFeeAmounts = new String[] { "0.5", "4.8", "4.7" };
         verifyProRatedGLIMPayments(loanAccountPage, 3, expectedPrincipalAmounts, expectedInterestAmounts, expectedFeeAmounts);
 
         loanTestHelper.repayLoan(loanId);
@@ -458,7 +458,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
             String[] expectedFeeAmounts) {
         for (int i = 0; i < count; i++) {
             ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToIndividualRepaymentSchedulePage(i);
-            repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.PRINCIPAL_COLUMM, expectedPrincipalAmounts[i]);
+            repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.PRINCIPAL_COLUMN, expectedPrincipalAmounts[i]);
             repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.INTEREST_COLUMN, expectedInterestAmounts[i]);
             repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.FEE_COLUMN, expectedFeeAmounts[i]);
             loanAccountPage = repaymentSchedulePage.navigateToLoanAccountPage();

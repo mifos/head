@@ -76,6 +76,13 @@ explanation of the license and how it is applied.
 									</fmt:message>
 								</a>
 							</c:if> <br>
+							<span class="fontnormal"> <!-- Edit center status link --> <c:if
+                            test="${clientInformationDto.clientDisplay.blackListed && clientInformationDto.clientDisplay.customerStatusId == 6}">
+							<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}">
+							<fmt:message key="client.removeFromBlacklist">
+                                </fmt:message>
+                            </a>
+                        </c:if>
 							</span></td>
 						</tr>
 						<tr>

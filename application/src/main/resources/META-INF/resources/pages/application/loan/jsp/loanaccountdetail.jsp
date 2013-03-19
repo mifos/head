@@ -373,6 +373,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								</c:otherwise>
 							</c:choose><br>
 							<br>
+                                <mifos:mifoslabel name="product.currency" bundle="ProductDefUIResources"/> : <span class ="fontnormal"><span id="loanaccountdetail.text.currency">
+                                <c:out value="${loanAccount.currency.currencyCode}"/> </span></span>
+                                <br><br>
+                            
+                         
+							
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.repaymentRules" /> </span><br>
 							<mifos:mifoslabel name="loan.freq_of_inst" />:&nbsp;
@@ -662,7 +668,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                             </c:forEach>
                             <br>
                             </td>
-						</tr>
+                            
+						</tr>						
 					</table>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>

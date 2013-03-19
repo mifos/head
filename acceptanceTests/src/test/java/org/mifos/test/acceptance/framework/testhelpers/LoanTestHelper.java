@@ -40,6 +40,8 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
+import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.ApplyGroupPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
@@ -58,6 +60,7 @@ import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectP
 import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.DivideGroupChargesPage;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
@@ -189,6 +192,24 @@ public class LoanTestHelper {
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
 
         return loanAccountPage;
+    }
+    
+    public LoanAccountPage createGroupLoanAccount(CreateLoanAccountSearchParameters searchParameters, 
+            List<GLIMClient> glimClients) {
+        CreateLoanAccountEntryPage loanAccountEntryPage = navigateToCreateLoanAccountEntryPage(searchParameters);
+
+        for (GLIMClient client : glimClients) {
+            loanAccountEntryPage.selectGLIMClients(client.getClientNumber(), client.getClientName(), client.getLoanAmount());
+        }
+
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = 
+                loanAccountEntryPage.navigateToReviewInstallmentsPage();
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = 
+                createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = 
+                createLoanAccountPreviewPage.submitForApprovalAndNavigateToConfirmationPage();
+        
+        return createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
     /**
@@ -352,6 +373,20 @@ public class LoanTestHelper {
 
         return loanAccountPage;
     }
+    
+    /**
+     * Applies a charge to the group loan account with id <tt>loanId</tt>.  
+     * @param loanId The account id.
+     * @param params The charge parameters (amount, type and list of amounts for member accounts).
+     * @return The loan account page for the group loan account.
+     */
+    public LoanAccountPage applyChargeToGroupLoan(String loanId, ChargeParameters params) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
+        DivideGroupChargesPage divideGroupChargesPage = applyChargePage.submitAndNavigateToDivideGroupChargesPage(params);
+        loanAccountPage = divideGroupChargesPage.submitAndNavigateToLoanAccountPage(params);
+        return loanAccountPage;
+    }
 
     /**
      * Repay loan account with id <tt>loanId</tt>.
@@ -392,6 +427,30 @@ public class LoanTestHelper {
 
         return loanAccountPage;
     }
+
+    
+    public LoanAccountPage applyGroupPayment(String loanId, PaymentParameters paymentParams) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+
+        ApplyGroupPaymentPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        
+        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams, true);
+        loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+
+        return loanAccountPage;
+    }
+    
+    public LoanAccountPage applyGroupIndividualClientPayment(String loanId, PaymentParameters paymentParams) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+
+        ApplyGroupPaymentPage applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        
+        ApplyGroupPaymentConfirmationPage applyGroupPaymentConfirmationPage = applyGroupPaymentPage.submitAndNavigateToApplyGroupPaymentConfirmationPage(paymentParams, false);
+        loanAccountPage = applyGroupPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+
+        return loanAccountPage;
+    }
+
 
     /**
      * Waive the fee associated with the loan account with id <tt>loanId</tt>.

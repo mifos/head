@@ -105,6 +105,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.clientcanexistoutsidegroup"/]</span>:&nbsp;<span class="fontnormal">${properties.clientsOutsideGroups}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.namesequence"/]</span>:&nbsp;<span class="fontnormal">${properties.nameSequence}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.agecheckenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.isAgeCheckEnabled}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.agecheckwarningenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.isAgeCheckWarningInsteadOfErrorEnabled}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.minimumAge}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumAge}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.additionalfamilydetailsrequired"/]</span>:&nbsp;<span class="fontnormal">${properties.isFamilyDetailsRequired}</span></div>

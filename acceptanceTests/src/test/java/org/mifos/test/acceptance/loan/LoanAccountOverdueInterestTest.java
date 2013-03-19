@@ -83,10 +83,10 @@ public class LoanAccountOverdueInterestTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
         loanPage = navigationHelper.navigateToLoanAccountPage(loanId);
         ViewRepaymentSchedulePage repaymentPage = loanPage.navigateToRepaymentSchedulePage();
-        repaymentPage.verifyRepaymentScheduleTablePrincipal(3, 3, "17.3");
-        repaymentPage.verifyRepaymentScheduleTableInterest(3, 4, "3.7 (0)");
-        repaymentPage.verifyRepaymentScheduleTablePrincipal(4, 3, "17.4");
-        repaymentPage.verifyRepaymentScheduleTableInterest(4, 4, "3.6 (0)");
+        repaymentPage.verifyRepaymentScheduleTablePrincipal(3, "17.3");
+        repaymentPage.verifyRepaymentScheduleTableInterest(3, "3.7 (0)");
+        repaymentPage.verifyRepaymentScheduleTablePrincipal(4, "17.4");
+        repaymentPage.verifyRepaymentScheduleTableInterest(4, "3.6 (0)");
         PaymentParameters params = new PaymentParameters();
         params.setTransactionDateDD(Integer.toString(systemDateTime.getDayOfMonth()));
         params.setTransactionDateMM(Integer.toString(systemDateTime.getMonthOfYear()));
@@ -96,11 +96,11 @@ public class LoanAccountOverdueInterestTest extends UiTestCaseBase {
         loanPage = repaymentPage.navigateToApplyPaymentPage().submitAndNavigateToApplyPaymentConfirmationPage(params).submitAndNavigateToLoanAccountDetailsPage();
         loanPage = navigationHelper.navigateToLoanAccountPage(loanId);
         repaymentPage = loanPage.navigateToRepaymentSchedulePage();
-        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(3, 3, "0");
-        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(3, 4, "3.7");
-        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(5, 3, "17.3");
-        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(5, 4, "0 (3.7)");
-        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(6, 3, "17.4");
-        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(6, 4, "3.1 (0.5)");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(3, "0");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(3, "3.7");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(5, "17.3");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(5, "0 (3.7)");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayPrincipal(6, "17.4");
+        repaymentPage.verifyRepaymentScheduleTableAfterPayInterest(6, "3.1 (0.5)");
     }
 }

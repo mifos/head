@@ -47,25 +47,36 @@ explanation of the license and how it is applied.
 	function ViewLoanDetails(){
 		goBackToLoanAccountDetails.submit();
 	}
+
+    function recalculateIndividualAmounts() {
+        applyPaymentActionForm.action = "applyGroupPaymentAction.do?method=divide";
+        applyPaymentActionForm.submit();
+    }
     
-    function changeAction(form, loanType) {
-    	if (loanType === "parent") {
-            form.action = "applyGroupPaymentAction.do?method=divide";
+    function recalculateGroupLoanAmount() {
+        var memberAmounts = $('input[name^="updateIndividualValues"]');
+        var sumOfMemberAmounts = 0;
+        var digitsAfterDecimal = 0;
+        for (var i = 0; i < memberAmounts.length; i++) {
+            var amount = memberAmounts[i].value.replace(/\,/g,'');
+            if ((amount.length - 1)- amount.indexOf('.') > digitsAfterDecimal && amount.indexOf('.') > 0) {
+                digitsAfterDecimal = (amount.length - 1)- amount.indexOf('.');
+            }
+            sumOfMemberAmounts += parseFloat(amount);
         }
-        else if (loanType === "member") {
-            form.action = "applyGroupPaymentAction.do?method=preview";
-        }
+        $("#applypayment\\.input\\.amount").val(sumOfMemberAmounts.toFixed(digitsAfterDecimal)); 
     }
 </SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
 			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
 		</form>
-		<html-el:form method="post" action="/applyGroupPaymentAction.do?method=divide"
+		<html-el:form method="post" action="/applyGroupPaymentAction.do?method=preview"
 			focus="paymentTypeId">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountType')}" var="AccountType" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountId')}" var="AccountId" />
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanType')}" var="loanType" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'memberInfos')}" var="memberAccounts" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -122,14 +133,26 @@ explanation of the license and how it is applied.
 							<td class="fontnormal"><date:datetag renderstyle="simple" property="transactionDate" /></td>
 						</tr>
 						<tr>
-							<td width="24%" align="right" class="fontnormal"><span id="applypayment.label.amount"><mifos:mifoslabel
-								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></span></td>
+                            <td width="24%" align="right" class="fontnormal">
+                               <span id="applypayment.label.amount">
+                                    <c:choose>
+                                    <c:when test="${loanType == 'member' }">
+                                        <mifos:mifoslabel
+                                            mandatory="yes" name="accounts.amount" isColonRequired="Yes" />
+                                    </c:when>
+                                    <c:otherwise>
+                                    <mifos:mifoslabel
+                                            mandatory="yes" name="accounts.amountGroupLoan" isColonRequired="Yes" />
+                                    </c:otherwise>
+                                    </c:choose>
+                                </span>
+                            </td>
 							<td width="76%">
 							<c:choose>
-								<c:when test="${AccountType=='LOAN_ACCOUNT' || AccountType=='GROUP_LOAN_ACCOUNT' }">
+								<c:when test="${AccountType=='GROUP_LOAN_ACCOUNT' && loanType=='parent' }">
 								<html-el:text property="amount" styleClass="separatedNumber"
 								styleId="applypayment.input.amount"
-								name="applyPaymentActionForm" />
+								name="applyPaymentActionForm" onchange="recalculateIndividualAmounts()" />
 								</c:when>
 								<c:otherwise>
 								<html-el:text property="amount" styleClass="separatedNumber"
@@ -139,6 +162,29 @@ explanation of the license and how it is applied.
 							</c:choose>
 							</td>
 						</tr>
+                        <c:if test="${loanType == 'parent' }">
+                              <tr><td>&nbsp;</td></tr>  
+                              <c:set value="${applyPaymentActionForm.individualValues}" var="memberIdsAndValues"/>
+                              <tr><td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
+                                            mandatory="yes" name="accounts.memberAmounts" isColonRequired="Yes" /></td></tr>
+                              <c:forEach var="memberAccount" items="${memberAccounts}" varStatus="rowId">
+                                  <tr>
+                                      <td width="24%" align="right" class="fontnormal">
+                                          ${memberAccount.customer.displayName}
+                                      </td>
+                                      <td width="76%">
+                                          <c:set value="${memberAccount.accountId}" var="accId"/>
+                                          <html-el:text property="updateIndividualValues(${accId})" styleClass="separatedNumber"
+                                                value="${memberIdsAndValues[accId]}"
+                                                styleId="clientAmount${rowId.index}"
+                                                name="individualValues.value[${rowId.count-1}]" 
+                                                onchange="recalculateGroupLoanAmount(${digitsAfterDecimal})" />
+                                      </td>
+                                  </tr>
+                              </c:forEach>
+                              <tr><td>&nbsp;</td></tr>
+                        </c:if>
+							
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="accounts.mode_of_payment" mandatory="yes" isColonRequired="Yes" /></td>
@@ -157,7 +203,7 @@ explanation of the license and how it is applied.
                             <td class="fontnormal"><mifos:select
                                 name="applyPaymentActionForm" styleId="applypayment.input.accountForTransfer" property="accountForTransfer">
                                 <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
-                                    <html-el:option value="${acc.id}">${acc.displayValue}</html-el:option>
+                                   <html-el:option value="${acc.globalAccountNum}">${acc.globalAccountNum} - ${acc.prdOfferingName}</html-el:option>
                                 </c:forEach>
                             </mifos:select></td>
                         </tr>
@@ -198,10 +244,10 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td align="center">
-									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="accounts.apply.payment.confirm" onclick="changeAction(this.form,'${loanType}')">
-										<mifos:mifoslabel name="accounts.reviewtransaction">
-										</mifos:mifoslabel>
-									</html-el:submit>
+                                    <html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="Preview">
+                                        <mifos:mifoslabel name="accounts.reviewtransaction">
+                                        </mifos:mifoslabel>
+                                    </html-el:submit>
 									<html-el:button styleId="applypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
 										onclick="ViewLoanDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
@@ -218,6 +264,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="accountType" value="${AccountType}" />			
 			<html-el:hidden property="accountId" value="${AccountId}" />
             <html-el:hidden property="memberType" value="${loanType}" />
+            
 		</html-el:form>
 		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />

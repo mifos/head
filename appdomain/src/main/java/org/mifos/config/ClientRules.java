@@ -43,11 +43,13 @@ public class ClientRules {
     public static final String ClientRulesNameSequence = "ClientRules.NameSequence";
     public static final String ClientCanExistOutsideGroupKey = "ClientCanExistOutsideGroup";
     public static final String GroupCanApplyLoansKey = "GroupCanApplyLoans";
+    public static final String AgeCheckWarningInsteadOfErrorKey = "ClientRules.AgeCheckWarningInsteadOfError";
     public static final String MaximumAgeForNewClients = "ClientRules.MaximumAgeForNewClients";
     public static final String MinimumAgeForNewClients = "ClientRules.MinimumAgeForNewClients";
     private static Boolean centerHierarchyExists;
     private static Boolean groupCanApplyLoans;
     private static Boolean clientCanExistOutsideGroup;
+    private static Boolean ageCheckWarningInsteadOfError;
     private static int minimumAgeForNewClient;
     private static int maximumAgeForNewClient;
     private static boolean ageCheckEnabled;
@@ -127,16 +129,35 @@ public class ClientRules {
     protected static void refresh() throws ConfigurationException {
         centerHierarchyExists = null;
         groupCanApplyLoans = null;
+        ageCheckWarningInsteadOfError = null;
         clientCanExistOutsideGroup = null;
         nameSequence = null;
         centerHierarchyExists = getCenterHierarchyExists();
         groupCanApplyLoans = getGroupCanApplyLoans();
         clientCanExistOutsideGroup = getClientCanExistOutsideGroup();
+        ageCheckWarningInsteadOfError = isAgeCheckWarningInsteadOfErrorEnabled();
         nameSequence = getNameSequence();
         initializeAges();
         intializeFamilyConfig();
     }
+    
 
+    public static void setAgeCheckWarningInsteadOfError(boolean exists) {
+    	ageCheckWarningInsteadOfError = exists;
+    }
+    
+    private static Boolean getAgeCheckWarningInsteadOfErrorFromConfig() {
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
+		return configMgr.getBoolean(AgeCheckWarningInsteadOfErrorKey);    
+    }
+    
+    public static boolean isAgeCheckWarningInsteadOfErrorEnabled() {
+        if (ageCheckWarningInsteadOfError == null) {
+        	ageCheckWarningInsteadOfError = getAgeCheckWarningInsteadOfErrorFromConfig();
+        }
+        return ageCheckWarningInsteadOfError;
+    }
+    
     public static Boolean getCenterHierarchyExists() {
         if (centerHierarchyExists == null) {
             centerHierarchyExists = getCenterHierarchyExistsFromConfig();

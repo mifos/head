@@ -49,6 +49,7 @@ import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.client.ClientCloseReason;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
@@ -1396,6 +1397,24 @@ public class ClientTest extends UiTestCaseBase {
                     cancelReason,clientDetailsPage);
             clientDetailsPage.verifyNumberOfBlackflags(numberOfBlackFlags);
         }
+    }
+    @Test(enabled=true)
+    public void removeClientFromBlacklistTest(){
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer","MyOfficeDHMFT");
+        String clientName = clientDetailsPage.getHeading();
+        clientTestHelper.activateClient(clientName);
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setClientCloseReason(ClientCloseReason.BLACKLISTED);
+        editCustomerStatusParameters.setClientStatus(ClientStatus.CLOSED);
+        editCustomerStatusParameters.setNote("Adding Client to blacklist");
+        clientTestHelper.changeCustomerStatus(clientName, editCustomerStatusParameters);
+        clientDetailsPage.verifyCancellationReason(ClientCloseReason.BLACKLISTED.getPurposeText());
+        clientDetailsPage.verifyElementExistence("viewClientDetails.img.blackFlag");
+        clientTestHelper.activateClient(clientName);
+        Assert.assertFalse(selenium.isTextPresent("Blacklisted"));
+        Assert.assertFalse(selenium.isElementPresent("viewClientDetails.img.blackFlag"));
+        Assert.assertFalse(selenium.isTextPresent("Blacklisted"));
+        clientDetailsPage.verifyStatus(ClientTestHelper.ACTIVE);
     }
 
     private ClientViewDetailsPage changeBackToPartialApplication(

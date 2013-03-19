@@ -455,4 +455,38 @@
 
         </rollback>
 	</changeSet>
+
+   <changeSet id="MIFOS-5626" author="Krzysztof Kaczmarczyk" context="expansion">
+       <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Can unblacklist a Client');
+                
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Can unblacklist a Client'),null); 
+                
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(308,34,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Can unblacklist a Client'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Can unblacklist a Client'));
+                
+            insert into roles_activity(activity_id, role_id) values(308, 1);          
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 308 or activity_id in (select activity_id from activity where parent_id = 308);
+                
+                delete from activity where parent_id = 308 or activity_id = 308;
+                
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Can unblacklist a Client');
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Can unblacklist a Client';
+           </sql>
+       </rollback>
+   </changeSet>
+
 </databaseChangeLog>

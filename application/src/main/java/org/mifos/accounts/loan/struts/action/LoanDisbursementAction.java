@@ -25,7 +25,9 @@ import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +39,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -135,6 +140,7 @@ public class LoanDisbursementAction extends BaseAction {
 
         Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
         AccountBO accountBO = new AccountBusinessService().getAccount(loanAccountId);
+        Date originalDisbursementDate = DateUtils.getDateWithoutTimeStamp(((LoanBO)accountBO).getDisbursementDate());
         
         createGroupQuestionnaire.saveResponses(request, actionForm, loanAccountId);
 
@@ -173,6 +179,12 @@ public class LoanDisbursementAction extends BaseAction {
                 
                 this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
             }
+            
+            if (!((LoanBO)accountBO).isFixedRepaymentSchedule() && 
+                    !originalDisbursementDate.equals(((LoanBO)accountBO).getDisbursementDate())) {
+                this.loanAccountServiceFacade.updateMemberLoansFeeAmounts(loanAccountId);
+            }
+            
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessage());
         } catch (MifosRuntimeException e) {

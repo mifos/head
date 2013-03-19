@@ -1,6 +1,8 @@
 package org.mifos.application.servicefacade;
 
 import java.util.List;
+import java.util.Map;
+
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
@@ -45,7 +47,7 @@ public class CustomerSearchServiceFacadeWebTier implements
 	OfficeDao officeDao;
 	
 	@Override
-	public CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize  ){
+	public CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize, Map<Short, Boolean> customerLevelIds){
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
 
@@ -65,7 +67,7 @@ public class CustomerSearchServiceFacadeWebTier implements
         List<CustomerSearchDto> resultList = null;
         
         try {
-            searchResult = new CustomerPersistence().search(normalisedSearchString, officeId, userContext.getId(), userContext.getBranchId());
+            searchResult = new CustomerPersistence().search(normalisedSearchString, officeId, userContext.getId(), userContext.getBranchId(), customerLevelIds);
         } catch ( PersistenceException e ) {
             throw new MifosRuntimeException(e);
         }

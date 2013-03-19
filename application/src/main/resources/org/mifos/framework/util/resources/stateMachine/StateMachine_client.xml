@@ -76,6 +76,16 @@
         <state>
             <statename>Closed</statename>
             <stateid>6</stateid>
+            <possiblestates>
+              <possiblestate>
+                    <statename>PartialApplication</statename>
+                    <stateid>1</stateid>
+              </possiblestate>
+              <possiblestate>
+                    <statename>Apporved</statename>
+                    <stateid>3</stateid>
+                </possiblestate>
+            </possiblestates>
         </state>
     </stateConfiguration>
 
@@ -135,6 +145,16 @@
         <state>
             <statename>Closed</statename>
             <stateid>6</stateid>
+            <possiblestates>
+              <possiblestate>
+                    <statename>PartialApplication</statename>
+                    <stateid>1</stateid>
+              </possiblestate>
+              <possiblestate>
+                    <statename>Apporved</statename>
+                    <stateid>3</stateid>
+                </possiblestate>
+            </possiblestates>
         </state>
     </stateConfiguration>
 </statemaps>

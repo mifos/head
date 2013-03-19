@@ -273,17 +273,17 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerId, branchId,
                 searchId, transactionDate);
 
-        String searchIdForLoanRepaymentsAndFees = "";
+        String searchIdForLoanRepayments = "";
         if (ClientRules.getCenterHierarchyExists()) {
-            searchIdForLoanRepaymentsAndFees = searchId;
+            searchIdForLoanRepayments = searchId;
         } else {
-            searchIdForLoanRepaymentsAndFees = customerHierarchy.get(0).getSearchId() + "%";
+            searchIdForLoanRepayments = customerHierarchy.get(0).getSearchId() + "%";
         }
         final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepaymentsGroupedByCustomerId = collectionSheetDao
-                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchIdForLoanRepaymentsAndFees, transactionDate, customerId);
+                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchIdForLoanRepayments, transactionDate, customerId);
 
         final Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> allLoanFeesGroupedByCustomerIdAndAccountId = collectionSheetDao
-                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchIdForLoanRepaymentsAndFees, transactionDate, customerId);
+                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId, transactionDate, customerId);
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> allAccountCollectionsByCustomerId = collectionSheetDao
                 .findAccountCollectionsOnCustomerAccount(branchId, searchId, transactionDate, customerId);

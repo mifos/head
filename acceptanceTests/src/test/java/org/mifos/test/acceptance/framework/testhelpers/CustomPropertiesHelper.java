@@ -176,6 +176,10 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundOffMultiple=" + initialRoundOffMultiple);
     }
     
+    public void setNewGroupLoanWithMembers(boolean newGLIM) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.GroupLoanWithMembers=" + newGLIM);
+    }
+    
     public void setOverdueInterestPaidFirst(String overdueInterestPaidFirst) {
         selenium.open(UPDATE_PAGE + "?OverdueInterestPaidFirst=" + overdueInterestPaidFirst);
     }

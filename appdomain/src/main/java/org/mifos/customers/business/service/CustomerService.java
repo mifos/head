@@ -71,6 +71,8 @@ public interface CustomerService {
     void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException;
 
     void updateClientPersonalInfo(UserContext userContext, ClientPersonalInfoUpdate personalInfo) throws CustomerException;
+    
+    void removeFromBlacklist(UserContext userContext, Integer customerId);
 
     void updateClientFamilyInfo(UserContext userContext, ClientFamilyInfoUpdate clientFamilyInfoUpdate) throws CustomerException;
 

@@ -29,10 +29,12 @@ import java.util.Locale;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.OriginalLoanFeeScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
@@ -340,6 +342,22 @@ public class LoanBusinessService implements BusinessService {
         Collection<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
         for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
                    originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
+        }
+        this.getlegacyLoanDao().saveOriginalSchedule(originalLoanScheduleEntities);
+    }
+    
+    public void clearAndPersistOriginalSchedule(LoanBO loan) throws PersistenceException {
+        List<OriginalLoanScheduleEntity> originalLoanScheduleEntities = 
+                this.getlegacyLoanDao().getOriginalLoanScheduleEntity(loan.getAccountId());
+        Collection<LoanScheduleEntity> loanScheduleEntities = loan.getLoanScheduleEntities();
+        Iterator<LoanScheduleEntity> loanScheduleEntitiesIterator = loanScheduleEntities.iterator();
+        
+        for (OriginalLoanScheduleEntity originalLoanScheduleEntity : originalLoanScheduleEntities) {
+            Iterator<AccountFeesActionDetailEntity> accountFeesIterator = 
+                    loanScheduleEntitiesIterator.next().getAccountFeesActionDetails().iterator();
+            for(OriginalLoanFeeScheduleEntity originalLoanFeeScheduleEntity : originalLoanScheduleEntity.getAccountFeesActionDetails()) {
+                originalLoanFeeScheduleEntity.updateFeeAmount(accountFeesIterator.next().getFeeAmount().getAmount());
+            }
         }
         this.getlegacyLoanDao().saveOriginalSchedule(originalLoanScheduleEntities);
     }
