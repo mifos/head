@@ -197,7 +197,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.isTrxnDateValid(date, date, false)).thenReturn(true);
         when(customer.getLoanOfficerId()).thenReturn((short)1);
         when(customer.getCustomerId()).thenReturn(2);
-        String paymentMethod = "Cash";
+        String paymentMethod = "1";
         String receiptNumber = "001";
         org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(new Double(100), date, receiptNumber, date, Short.valueOf((short)1));
         loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", receiptNumber, date,
@@ -274,7 +274,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.isTrxnDateValid(date, date, false)).thenReturn(true);
         when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
-        String paymentMethod = "Cash";
+        String paymentMethod = "1";
         String receiptNumber = "001";
         AccountPaymentDto paymentDto = new AccountPaymentDto(new Double(100), date, receiptNumber, date, Short.valueOf((short)1));
         loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100.0", receiptNumber, date, paymentMethod, (short) 1,
@@ -302,7 +302,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(customer.getCustomerId()).thenReturn(2);
         try {
             loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", "001", mock(java.sql.Date.class),
-                    "Cash", (short) 1, true, date,BigDecimal.ZERO,BigDecimal.ZERO));
+                    "1", (short) 1, true, date,BigDecimal.ZERO,BigDecimal.ZERO));
         } catch (BusinessRuleException e) {
             verify(loanBO, never()).makeEarlyRepayment((AccountPaymentDto) anyObject(), (Short) anyObject(), anyBoolean(), Matchers.<Money>anyObject());
             verify(loanBO, never()).getCurrency();

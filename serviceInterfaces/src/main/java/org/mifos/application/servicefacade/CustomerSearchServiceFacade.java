@@ -21,9 +21,10 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.dto.screen.CustomerHierarchyDto;
+import java.util.Map;
 
 public interface CustomerSearchServiceFacade {
 
-    CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize);
+    CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize, Map<Short, Boolean> customerLevelIds);
 
 }

@@ -41,6 +41,16 @@ public class ApplyChargePage extends MifosPage {
 
         return new LoanAccountPage(selenium);
     }
+    
+    public DivideGroupChargesPage submitAndNavigateToDivideGroupChargesPage(ChargeParameters params)
+    {
+        selenium.select("applyCharges.input.type", "value=" + params.getTypeValue());
+        this.typeTextIfNotEmpty("applyCharges.input.amount", params.getAmount());
+        selenium.click("applyCharges.button.submit");
+        waitForPageToLoad();
+
+        return new DivideGroupChargesPage(selenium);
+    }
 
     public LoanAccountPage submitUsingLabelAndNavigateToApplyChargeConfirmationPage(ChargeParameters params)
     {

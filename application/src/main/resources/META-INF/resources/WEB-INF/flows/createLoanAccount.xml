@@ -97,7 +97,7 @@
         <on-entry>
             <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(flowScope.productId)" result="flowScope.cashFlowEnabled" />
         </on-entry>
-        <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="calculateAndReviewLoanSchedule"/>
+        <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="chooseReviewForAccountType"/>
     </decision-state>
     
     <view-state id="captureCashFlowDetails" view="createLoanAccountCashFlow" model="cashFlow">
@@ -123,9 +123,22 @@
         <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
     </view-state>
     
+    <decision-state id="chooseReviewForAccountType">
+        <if test="loanAccountFormBean.groupLoanWithMembersEnabled" then="calculateAndReviewGroupLoanSchedule" else="calculateAndReviewLoanSchedule" />
+    </decision-state>
+    
     <view-state id="calculateAndReviewLoanSchedule" view="createloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
     	<on-entry>
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
+        </on-entry>
+        <transition on="validate" to="reviewLoanSchedule" validate="true"/>
+        <transition on="preview" to="isGroupLoanWithMembersEnabled" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="calculateAndReviewGroupLoanSchedule" view="createloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
+        <on-entry>
+            <evaluate expression="groupLoanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
         </on-entry>
         <transition on="validate" to="reviewLoanSchedule" validate="true"/>
         <transition on="preview" to="isGroupLoanWithMembersEnabled" />

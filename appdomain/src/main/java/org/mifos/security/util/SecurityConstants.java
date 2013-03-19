@@ -178,6 +178,8 @@ public interface SecurityConstants {
     short CIENT_BLACKLIST_A_CLIENT = 55;
 
     short CAN_EDIT_PHONE_NUMBER = 245;
+    
+    short CAN_REMOVE_FROM_BLACKLIST = 301;
 
     // Group management
     short GROUP_ADD_NOTE_TO_GROUP = 70;

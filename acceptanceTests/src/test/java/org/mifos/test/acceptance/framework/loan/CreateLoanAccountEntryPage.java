@@ -219,10 +219,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public void selectAdditionalFees() {
         selenium.select("selectedFeeId0", "label=oneTimeFee");
-        selenium.type("selectedFeeId0Amount", "6.6");
+        selenium.type("selectedFeeAmount[0]", "6.6");
 
         selenium.select("selectedFeeId1", "label=oneTimeFee");
-        selenium.type("selectedFeeId1Amount", "3.3");
+        selenium.type("selectedFeeAmount[1]", "3.3");
     }
 
     public void unselectAdditionalFee() {

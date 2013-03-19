@@ -31,6 +31,15 @@ public class RedoLoanDisbursalPreviewPage extends MifosPage {
         super(selenium);
         verifyPage("CreateLoanPreview");
     }
+    
+    public RedoLoanDisbursalPreviewPage(Selenium selenium, boolean isRedoGroupLoanPreview) {
+    	super(selenium);
+    	if (isRedoGroupLoanPreview) {
+    		verifyPage("RedoGroupLoanPreview");
+    	} else {
+    		verifyPage("CreateLoanPreview");
+    	}
+    }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage() {
         this.submit();

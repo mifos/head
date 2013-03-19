@@ -1259,10 +1259,26 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         if (checkStatusChangeCancelToPartial(oldStatus, newStatus)) {
             this.customerFlags.clear();
         }
+        if (checkStatusChangeClosedToActiveOrPartial(oldStatus, newStatus)) {
+            this.customerFlags.clear();
+        }
     }
 
+    public boolean checkStatusChangeClosedToActiveOrPartial(final CustomerStatus oldStatus, final CustomerStatus newStatus) {
+        if ((oldStatus.equals(CustomerStatus.CLIENT_CLOSED)
+                && newStatus.equals(CustomerStatus.CLIENT_ACTIVE)) || (oldStatus.equals(CustomerStatus.CLIENT_CLOSED)
+                        && newStatus.equals(CustomerStatus.CLIENT_PARTIAL))) {
+            return true;
+        }
+        return false;
+    }
+    
     public void blacklist() {
         this.blackListed = YesNoFlag.YES.getValue();
+    }
+    
+    public void unBlacklist(){
+        this.blackListed = YesNoFlag.NO.getValue();
     }
 
     public CustomerDetailDto toCustomerDetailDto() {

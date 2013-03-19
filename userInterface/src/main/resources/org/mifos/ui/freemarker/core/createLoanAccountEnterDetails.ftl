@@ -133,6 +133,95 @@
 				$('#glimsumloanamount').val(total.toFixed(decimalPlaces));
     		});
     	}
+    	
+    	function calculateFeeAmounts() {
+    	    calculateIndividualDefaultFeeAmounts();
+    	    calculateIndividualAdditionalFeeAmounts();
+    	}
+    	
+    	function calculateIndividualDefaultFeeAmounts() {
+    	   $(document).ready(function () {
+    	       $('[id^=defaultFeeAmountRow]').each(function (defaultFeeIndex) {
+    	           var isRateBasedFee = $("#hiddenDefaultFeeRateBased" + defaultFeeIndex).val();
+    	           calculateIndividualFeeAmounts("default", defaultFeeIndex, isRateBasedFee);
+    	       });
+    	   });
+    	}
+    	
+    	function calculateIndividualAdditionalFeeAmounts() {
+            $(document).ready(function () {
+                $("[id^=selectedFeeId]").each(function (additionalFeeIndex) {
+                    var selectedValue = $(this).val();
+                    if (selectedValue != null && selectedValue != "") {
+                        var isRateBasedFee = $("#hiddenFeeRateBased" + selectedValue).val();
+                        calculateIndividualFeeAmounts("selected", additionalFeeIndex, isRateBasedFee);
+                    }
+                }); 
+            });
+        }
+        
+        function calculateIndividualFeeAmounts(feeType, feeIndex, isRateBasedFee) {
+            var totalGroupLoanAmount = $("#glimsumloanamount").val();
+            var decimalPlaces = ${loanAccountFormBean.digitsAfterDecimalForMonetaryAmounts};
+            var groupFeeAmount = $("#" + feeType + "FeeAmount\\[" + feeIndex + "\\]").val();
+            var amountLeft = groupFeeAmount;
+            var biggestClientAmountIndex = 0;
+            var biggestClientAmount = -1;
+            $('.clientbox').each(function(clientIndex) {
+                var clientRow = $("[id^=" + feeType + "FeeIndividualAmountsRow][id$=\\[" + feeIndex + "\\]\\[" + clientIndex + "\\]]");
+                if (this.checked) {
+                    var clientLoanAmount = $("#clientAmount\\[" + clientIndex + "\\]").val();
+                    if (clientLoanAmount > biggestClientAmount) {
+                        biggestClientAmount = clientLoanAmount;
+                        biggestClientAmountIndex = clientIndex;
+                    }
+                    var factor = clientLoanAmount / totalGroupLoanAmount;
+                    if (isRateBasedFee == "false") {
+                        var clientFeeAmount = (groupFeeAmount*factor).toFixed(decimalPlaces);
+                        $(clientRow).children('input').val(clientFeeAmount);
+                        $(clientRow).children('input').attr('readonly', false);
+                        amountLeft -= clientFeeAmount;
+                        $("#" + feeType + "FeeAmount\\[" + feeIndex + "\\]").attr('readonly', true);
+                    } else {
+                        $(clientRow).children('input').val(groupFeeAmount);
+                        $(clientRow).children('input').attr('readonly', true);
+                        $("#" + feeType + "FeeAmount\\[" + feeIndex + "\\]").attr('readonly', false);
+                    }
+                    $(clientRow).show();
+                } else {
+                    $(clientRow).hide();
+                };
+            });
+            if (amountLeft != 0 && isRateBasedFee == "false") {
+                var biggestClientInput = $("#" + feeType + "FeeIndividualAmounts\\[" + feeIndex + "\\]\\[" + biggestClientAmountIndex + "\\]");
+                var biggestClientValue = biggestClientInput.val();
+                var adjustedAmount = parseFloat(biggestClientValue) + parseFloat(amountLeft);
+                adjustedAmount = adjustedAmount.toFixed(decimalPlaces);
+                biggestClientInput.val(adjustedAmount);
+            }
+        }
+        
+        function updateFeeAmounts(feeType) {
+            var decimalPlaces = ${loanAccountFormBean.digitsAfterDecimalForMonetaryAmounts};
+            $('[id^=' + feeType + 'FeeAmountRow]').each(function(index) {
+                if ($('#' + feeType + 'FeeAmount\\[' + index + '\\]').attr('readonly')) {
+                    var groupAmount = 0.0;
+                    $('input[id^=' + feeType + 'FeeIndividualAmounts\\[' + index + '\\]]').each(function() {
+                        if ($(this).val() != undefined && $(this).val() != "") {
+                            groupAmount += parseFloat($(this).val());
+                        }
+                    });
+                    $('#' + feeType + 'FeeAmount\\[' + index + '\\]').val(groupAmount.toFixed(decimalPlaces));
+                } else {
+                    var groupAmount = $('#' + feeType + 'FeeAmount\\[' + index + '\\]').val();
+                    $('input[id^=' + feeType + 'FeeIndividualAmounts\\[' + index + '\\]]').each(function() {
+                        if ($(this).is(':visible')) {
+                            $(this).val(groupAmount);
+                        }
+                    });
+                }
+            });
+        }
     
     	$(document).ready(function () {
 			$('#selectAll').change(function() {
@@ -143,15 +232,26 @@
 				 	$('.clientbox').attr("checked",false);
 				 }
 				 calculateTotalLoanAmount();
+				 calculateFeeAmounts();
 			});
 			
 			$('.clientbox').click(function() {
 				calculateTotalLoanAmount();
+				calculateFeeAmounts();
 			});
 			
 			$('.amountfield').change(function() {
 				calculateTotalLoanAmount();
+				calculateFeeAmounts();
 			});
+			
+            $('input[id^=defaultFee]').change(function() {
+                updateFeeAmounts("default");
+            });
+
+            $('input[id^=selectedFee]').change(function() {
+                updateFeeAmounts("selected");
+            });
     	});
     </script>
     <table border="1">
@@ -349,14 +449,23 @@
 	<div class="default-fees">
 		[#assign index = 0]
     	[#list loanProductReferenceData.defaultFees as defaultFee]
-		    <div class="row">
+            <input type="hidden" id="hiddenDefaultFeeRateBased${index}" value="${defaultFee.rateBasedFee?string}" />
+            <div class="row" id="defaultFeeAmountRow[${index}]">
 		        [@form.label "defaultFeeAmountOrRate[${index}]" false ]${defaultFee.name}:[/@form.label]
 		        
-		        [#if defaultFee.feeFrequency.oneTime]
-		        	[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="class=separatedNumber" /]
-		        [#else]
-					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]							        	
-		        [/#if]
+                [#if loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled]
+                   [#if defaultFee.rateBasedFee]
+                        [@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmount[${index}]" attributes="class=separatedNumber" /]
+                    [#else]
+                        [@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmount[${index}]" attributes="class=separatedNumber; readonly='readonly'"/]
+                    [/#if]
+                [#else]
+                    [#if defaultFee.feeFrequency.oneTime]
+                        [@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="class=separatedNumber" /]
+                    [#else]
+                        [@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]
+                    [/#if]
+                [/#if]
 		        
 		        <span style="margin-left: 4px;">
 		        [#if defaultFee.feeFrequency.oneTime]
@@ -377,7 +486,25 @@
 		       	<div style="position:relative; left: 655px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultFeeSelected[${index}]"/]Check to remove</div>
 		       	[@spring.formHiddenInput "loanAccountFormBean.defaultFeeId[${index}]" /]
 		    </div>
-     		[#assign index = index + 1]	    	
+            [#if loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled]
+                [#assign clientIdx = 0]
+                [#list loanProductReferenceData.clientDetails as clientdata]
+                    <div class="row" id="defaultFeeIndividualAmountsRow[${index}][${clientIdx}]">
+                        [@form.label "defaultFeeIndividualAmounts[${index}][${clientIdx}]" false ]${clientdata.clientName}:[/@form.label]
+                        [#if defaultFee.rateBasedFee]
+                            [@form.input path="loanAccountFormBean.defaultFeeIndividualAmounts[${index}][${clientIdx}]" 
+                                         id="defaultFeeIndividualAmounts[${index}][${clientIdx}]" attributes="class=separatedNumber; readonly='readonly'" /]
+                        [#else]
+                            [@form.input path="loanAccountFormBean.defaultFeeIndividualAmounts[${index}][${clientIdx}]" 
+                                         id="defaultFeeIndividualAmounts[${index}][${clientIdx}]" attributes="class=separatedNumber" /]
+                        [/#if]
+                    </div>
+                    [#assign clientIdx = clientIdx + 1]
+                [/#list]
+                <div class="clear">
+                <br />
+            [/#if]
+            [#assign index = index + 1]
 	    [/#list]
 	</div>  
 	<div class="clear"/>  
@@ -420,24 +547,59 @@
     <p><div class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</div></p>
     
     <div class="additional-fees">
-	    <div class="row">
-			[@form.label "selectedFeeId0" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId0" attributes="class='noAutoSelect'" /]
-	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
-	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
-	    </div>
-	    <div class="row">
-			[@form.label "selectedFeeId1" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId1" attributes="class='noAutoSelect'" /]
-	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
-	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
-	    </div>
-	    <div class="row">
-			[@form.label "selectedFeeId2" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId2" attributes="class='noAutoSelect'" /]
-	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
-	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
-	    </div>
+        [#assign feeIdx = 0]
+        [#list loanAccountFormBean.selectedFeeId as selectedFee]
+            <div class="row">
+                [@form.label "selectedFeeId${feeIdx}" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+                [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[${feeIdx}]" 
+                                              options=loanProductReferenceData.additionalFeeOptions 
+                                              selectPrompt="selectPrompt" id="selectedFeeId${feeIdx}" attributes="class='noAutoSelect'" /]
+                [#if !((loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled))]
+                    <span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
+                    [@form.input path="loanAccountFormBean.selectedFeeAmount[${feeIdx}]" 
+                                 id="selectedFeeAmount[${feeIdx}]" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
+                [/#if]
+            </div>
+            [#if loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled]
+                [#assign clientIdx = 0]
+                [#assign isRateBasedFee = false]
+                [#if selectedFee??]
+                    [#list loanProductReferenceData.additionalFees as additionalFee]
+                        [#if additionalFee.id == selectedFee?string && additionalFee.rateBasedFee]
+                            [#assign isRateBasedFee = true]
+                        [/#if]
+                    [/#list]
+                [/#if]
+                [#list loanProductReferenceData.clientDetails as clientdata]
+                    <div class="row" id="selectedFeeIndividualAmountsRow[${feeIdx}][${clientIdx}]">
+                        [@form.label "selectedFeeIndividualAmounts[${feeIdx}][${clientIdx}]" false ]${clientdata.clientName}:[/@form.label]
+                        [#if isRateBasedFee]
+                            [@form.input path="loanAccountFormBean.selectedFeeIndividualAmounts[${feeIdx}][${clientIdx}]" 
+                                     id="selectedFeeIndividualAmounts[${feeIdx}][${clientIdx}]" 
+                                     attributes="class='separatedNumber'; readonly='readonly'"/]
+                        [#else]
+                            [@form.input path="loanAccountFormBean.selectedFeeIndividualAmounts[${feeIdx}][${clientIdx}]" 
+                                     id="selectedFeeIndividualAmounts[${feeIdx}][${clientIdx}]" 
+                                     attributes="class='separatedNumber'"/]
+                        [/#if]
+                    </div>
+                    [#assign clientIdx = clientIdx + 1]
+                [/#list]
+                <div class="row" id="selectedFeeAmountRow[${feeIdx}]">
+                    [@form.label "selectedFeeAmount[${feeIdx}]" false][@spring.message "accounts.amountGroupLoan" /]:[/@form.label]
+                    [#if isRateBasedFee]
+                        [@form.input path="loanAccountFormBean.selectedFeeAmount[${feeIdx}]" 
+                                     id="selectedFeeAmount[${feeIdx}]" attributes="class='separatedNumber'" /]
+                    [#else]
+                        [@form.input path="loanAccountFormBean.selectedFeeAmount[${feeIdx}]" 
+                                     id="selectedFeeAmount[${feeIdx}]" attributes="class='separatedNumber'; readonly='readonly'" /]
+                    [/#if]
+                </div>
+                <div class="clear">
+                <br />
+            [/#if]
+            [#assign feeIdx = feeIdx + 1]
+        [/#list]
 	</div>
 	<div class="clear"/>  
 	<br/>
@@ -475,9 +637,9 @@
         [@form.submitButton label="widget.form.buttonLabel.continue" id="loancreationdetails.button.continue" webflowEvent="detailsEntered" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
-    
     [#list loanProductReferenceData.additionalFees as additionalFee]
     	<input type="hidden" id="hiddenFeeAmount${additionalFee.id}" value="${additionalFee.amountOrRate?string.number}" />
+    	<input type="hidden" id="hiddenFeeRateBased${additionalFee.id}" value="${additionalFee.rateBasedFee?string}" />
     [/#list]
         <input type="hidden" id="flowExecutionUrl" value="${flowExecutionUrl}" />
 </form>
@@ -488,56 +650,76 @@ $(document).ready(function() {
         $(this).closest('form').submit();
     });
     
-    $('#selectedFeeId0Amount, #selectedFeeId1Amount, #selectedFeeId2Amount').each(function(index){
+    $('input[id^=selectedFeeAmount]').each(function(index){
     	if ( $(this).val() === "" || !$(this).val() || !$('#selectedFeeId'+index).attr('selectedIndex') ){
-			$(this).attr('disabled', true);
-			$(this).val("");    	
+			$(this).attr('readonly', true);
+			$(this).val("");
+			$('#selectedFeeAmountRow\\[' + index + '\\]').hide();
     	}
     });
     
-    $('#selectedFeeId0').change(function(e) {
-          $("#selectedFeeId0 option:selected").each(function () {
-          		var selectedValue = $(this).val();
-                if (selectedValue == null || selectedValue == "") {
-          			$('#selectedFeeId0Amount').val("");
-          			$('#selectedFeeId0Amount').attr('disabled', true);
-          		} else {
-	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
-	                var hiddenValue = $(hiddenField).val();
-	                $('#selectedFeeId0Amount').val(hiddenValue);
-	          		$('#selectedFeeId0Amount').attr('disabled', false);
-                }
-           });
+    $('[id*=FeeIndividualAmountsRow]').each(function(index){
+        if ( $(this).children('input').val() === "" || !$(this).children('input').val() ){
+            $(this).hide();
+        }
     });
     
-    $('#selectedFeeId1').change(function(e) {
-          $("#selectedFeeId1 option:selected").each(function () {
-          		var selectedValue = $(this).val();
-                if (selectedValue == null || selectedValue == "") {
-          			$('#selectedFeeId1Amount').val("");
-          			$('#selectedFeeId1Amount').attr('disabled', true);
-          		} else {
-	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
-	                var hiddenValue = $(hiddenField).val();
-	                $('#selectedFeeId1Amount').val(hiddenValue);
-	                $('#selectedFeeId1Amount').attr('disabled', false);
+    $('[id^=selectedFeeId]').change(function(e) {
+        var index = $('[id^=selectedFeeId]').index($(this));
+        var selectedValue = $(this).val();
+        if (selectedValue == null || selectedValue == "") {
+            $('#selectedFeeAmount\\[' + index + '\\]').val("");
+            $('#selectedFeeAmountRow\\[' + index + '\\]').hide();
+            $('[id^=selectedFeeIndividualAmountsRow\\[' + index + '\\]]').hide();
+            $('input[id^=selectedFeeIndividualAmounts\\[' + index + '\\]]').val("");
+            $('#selectedFeeAmount\\[' + index + '\\]').attr('readonly', true);
+        } else {
+            var hiddenField = '#hiddenFeeAmount' + selectedValue;
+            var hiddenValue = $(hiddenField).val();
+            $('#selectedFeeAmount\\[' + index + '\\]').val(hiddenValue);
+            $('#selectedFeeAmount\\[' + index + '\\]').attr('readonly', false);
+            if ($('[id^=selectedFeeIndividualAmountsRow]').length != 0) {
+                $('#selectedFeeAmountRow\\[' + index + '\\]').show();
+                var isRateBasedFee = $('#hiddenFeeRateBased' + selectedValue).val();
+                if (isRateBasedFee == "true") {
+                   $('#selectedFeeAmount\\[' + index + '\\]').attr('readonly', false);
+                } else {
+                   $('#selectedFeeAmount\\[' + index + '\\]').attr('readonly', true);
                 }
-           });
-    });
-    
-    $('#selectedFeeId2').change(function(e) {
-          $("#selectedFeeId2 option:selected").each(function () {
-          		var selectedValue = $(this).val();
-                if (selectedValue == null || selectedValue == "") {
-          			$('#selectedFeeId2Amount').val("");
-          			$('#selectedFeeId2Amount').attr('disabled', true);
-          		} else {
-	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
-	                var hiddenValue = $(hiddenField).val();
-	                $('#selectedFeeId2Amount').val(hiddenValue);
-	                $('#selectedFeeId2Amount').attr('disabled', false);
+                var decimalPlaces = ${loanAccountFormBean.digitsAfterDecimalForMonetaryAmounts};
+                var totalGroupLoanAmount = $('#glimsumloanamount').val();
+                var amountLeft = hiddenValue;
+                var biggestClientAmountIndex = 0;
+                var biggestClientAmount = -1;
+                $('.clientbox').each(function (subindex) {
+                    var selectedFeeIndividualAmountRow = $('#selectedFeeIndividualAmountsRow\\[' + index + "\\]\\[" + subindex + "\\]");
+                    if (this.checked && isRateBasedFee == "false") {
+                        $(selectedFeeIndividualAmountRow).show();
+                        var clientLoanAmount = $('#clientAmount\\[' + subindex + '\\]').val();
+                        if (clientLoanAmount > biggestClientAmount) {
+                            biggestClientAmount = clientLoanAmount;
+                            biggestClientAmountIndex = subindex;
+                        }
+                        var factor = clientLoanAmount / totalGroupLoanAmount;
+                        var feeAmount = (hiddenValue * factor).toFixed(decimalPlaces);
+                        $(selectedFeeIndividualAmountRow).children('input').val(feeAmount);
+                        $(selectedFeeIndividualAmountRow).children('input').attr('readonly', false);
+                        amountLeft -= feeAmount;
+                    } else if (this.checked && isRateBasedFee == 'true') {
+                        $(selectedFeeIndividualAmountRow).show();
+                        $(selectedFeeIndividualAmountRow).children('input').attr('readonly', true);
+                        $(selectedFeeIndividualAmountRow).children('input').val(hiddenValue);
+                    }
+                });
+                if (amountLeft != 0 && isRateBasedFee == "false") {
+                    var biggestClientInput = $('#selectedFeeIndividualAmounts\\[' + index + '\\]\\[' + biggestClientAmountIndex + '\\]');
+                    var biggestClientValue = biggestClientInput.val();
+                    var adjustedAmount = parseFloat(biggestClientValue) + parseFloat(amountLeft);
+                    adjustedAmount = adjustedAmount.toFixed(decimalPlaces);
+                    biggestClientInput.val(adjustedAmount);
                 }
-           });
+            }
+        }
     });
     
     $('#addFileButton').click(function(){

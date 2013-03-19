@@ -119,18 +119,18 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("56");
         verifyFees();
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "04-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "11-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "18-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "25-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "750.2");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "750.2");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "750.2");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "749.4");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(3, 5, "110");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(4, 5, "100");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(5, 5, "100");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(6, 5, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, "04-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, "11-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, "18-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, "25-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, "750.2");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, "750.2");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, "750.2");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, "749.4");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(3, "110");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(4, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(5, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(6, "100");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
         
         EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
@@ -148,7 +148,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     private void selectAdditionalFees() {
         selenium.select("selectedFeeId0", "label=loanWeeklyFee");
-        selenium.type("selectedFeeId0Amount", "100");
+        selenium.type("selectedFeeAmount[0]", "100");
     }
             
     private void verifyFirstInstallmentDateAndDisbursalDateOnReviewPage(){
@@ -208,26 +208,26 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPrincipalOriginal("1,500");
         loanAccountPage.verifyLoanTotalBalance("1,500");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "06-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "13-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "20-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "27-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(7, 1, "03-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(8, 1, "10-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(9, 1, "17-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(10, 1, "24-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(11, 1, "01-Jul-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(12, 1, "08-Jul-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(7, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(8, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(9, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(10, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(11, 3, "150");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, 3, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, "06-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, "13-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, "20-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, "27-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(7, "03-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(8, "10-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(9, "17-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(10, "24-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(11, "01-Jul-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(12, "08-Jul-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(7, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(8, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(9, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(10, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(11, "150");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, "150");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
         applicationDatabaseOperation.updateGLIM(0);
         applicationDatabaseOperation.updateLSIM(0);

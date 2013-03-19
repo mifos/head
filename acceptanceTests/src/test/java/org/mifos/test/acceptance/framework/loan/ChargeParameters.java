@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.util.List;
+
 public class ChargeParameters {
     public static final String MISC_FEES = "Misc Fees";
     public static final String MISC_PENALTY = "Misc Penalty";
@@ -38,6 +40,7 @@ public class ChargeParameters {
 
     private String type;
     private String amount;
+    private List<String> groupLoanIndividualAmounts;
 
     // this method is never(?) used. Get rid of it?
     public String getType() {
@@ -51,6 +54,12 @@ public class ChargeParameters {
     }
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+    public List<String> getGroupLoanIndividualAmounts() {
+        return groupLoanIndividualAmounts;
+    }
+    public void setGroupLoanIndividualAmounts(List<String> groupLoanIndividualAmounts) {
+        this.groupLoanIndividualAmounts = groupLoanIndividualAmounts;
     }
 
     /**

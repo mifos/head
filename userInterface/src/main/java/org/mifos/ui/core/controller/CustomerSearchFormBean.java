@@ -46,6 +46,12 @@ public class CustomerSearchFormBean implements Serializable {
     private Map<String, String> offices;
     
     private String officeName;
+        
+    private boolean clientSearch;
+    
+    private boolean groupSearch;
+    
+    private boolean centerSearch;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -77,7 +83,6 @@ public class CustomerSearchFormBean implements Serializable {
 	public void setOfficeId(Short officeId) {
 		this.officeId = officeId;
 	}	
-	
 	public Map<String, String> getOffices() {
         return offices;
     }
@@ -92,6 +97,31 @@ public class CustomerSearchFormBean implements Serializable {
 
     public void setOfficeName(String officeName) {
         this.officeName = officeName;
+    }
+
+    public boolean isClientSearch() {
+        return clientSearch;
+    }
+
+    public void setClientSearch(boolean clientSearch) {
+        this.clientSearch = clientSearch;
+    }
+
+    public boolean isGroupSearch() {
+        return groupSearch;
+    }
+
+    public void setGroupSearch(boolean groupSearch) {
+        this.groupSearch = groupSearch;
+    }
+    
+
+    public boolean isCenterSearch() {
+        return centerSearch;
+    }
+
+    public void setCenterSearch(boolean centerSearch) {
+        this.centerSearch = centerSearch;
     }
 
     /**
@@ -111,4 +141,5 @@ public class CustomerSearchFormBean implements Serializable {
         MessageContext messages = context.getMessageContext();
         validator.validate(this, messages);
     }
+
 }

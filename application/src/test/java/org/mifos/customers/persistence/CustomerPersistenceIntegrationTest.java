@@ -25,7 +25,10 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
@@ -110,6 +113,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     private SavingsBO groupSavingsAccount;
     private SavingsBO clientSavingsAccount;
     private SavingsOfferingBO savingsOffering;
+    private Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>() {{
+        put(CustomerLevel.CLIENT.getValue(), true);
+        put(CustomerLevel.GROUP.getValue(), true);
+        put(CustomerLevel.CENTER.getValue(), true);
+    }};
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -722,7 +730,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("3"), Short.valueOf("1"), Short
-                .valueOf("1"));
+                .valueOf("1"), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(2, queryResult.getSize());
         Assert.assertEquals(2, queryResult.get(0, 10).size());
@@ -733,7 +741,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("0"), Short.valueOf("1"), Short
-                .valueOf("1"));
+                .valueOf("1"), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(2, queryResult.getSize());
         Assert.assertEquals(2, queryResult.get(0, 10).size());
@@ -744,7 +752,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
-                .valueOf("1"), Short.valueOf("1"));
+                .valueOf("1"), Short.valueOf("1"), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -775,7 +783,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         IntegrationTestObjectMother.createClient(client, weeklyMeeting);
 
         QueryResult queryResult = new CustomerPersistence().search(clientGovernmentId, office.getOfficeId(), testUser
-                .getPersonnelId(), testUser.getOffice().getOfficeId());
+                .getPersonnelId(), testUser.getOffice().getOfficeId(), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -795,7 +803,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
-                .valueOf("1"), Short.valueOf("1"));
+                .valueOf("1"), Short.valueOf("1"), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         List results = queryResult.get(0, 10);
@@ -809,7 +817,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         getCustomer();
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search(groupAccount.getGlobalAccountNum(), Short
-                .valueOf("3"), Short.valueOf("1"), Short.valueOf("1"));
+                .valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -933,7 +941,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
-                .valueOf("1"), Short.valueOf("1"));
+                .valueOf("1"), Short.valueOf("1"), customerLevelIds);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         List results = queryResult.get(0, 10);

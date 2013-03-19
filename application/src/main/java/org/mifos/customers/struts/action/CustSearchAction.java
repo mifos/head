@@ -24,7 +24,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +47,7 @@ import org.mifos.application.servicefacade.DashboardServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
@@ -234,7 +237,11 @@ public class CustSearchAction extends SearchAction {
         if (searchString.equals("")) {
             throw new CustomerException(CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
         }
-        QueryResult customerSearchResult = new CustomerPersistence().search(searchString, officeId, userContext.getId(), userContext.getBranchId());
+        Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>();
+        customerLevelIds.put(CustomerLevel.CENTER.getValue(), actionForm.isCenterSearch());
+        customerLevelIds.put(CustomerLevel.GROUP.getValue(), actionForm.isGroupSearch());
+        customerLevelIds.put(CustomerLevel.CLIENT.getValue(), actionForm.isClientSearch());
+        QueryResult customerSearchResult = new CustomerPersistence().search(searchString, officeId, userContext.getId(), userContext.getBranchId(), customerLevelIds);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, customerSearchResult, request);
         return mapping.findForward(ActionForwards.mainSearch_success.toString());
 

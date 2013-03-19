@@ -24,8 +24,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -84,9 +86,14 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     private List<LoanRepaymentFutureInstallments> loanRepaymentFutureInstallments = new ArrayList<LoanRepaymentFutureInstallments>();
 
     private LoanAccountFormBean loanAccountFormBean;
+    
+    private String globalCustomerId;
+
+    // used in new group loan redo views
+    private Map<String, LoanScheduleFormBean> memberSchedules = new LinkedHashMap<String, LoanScheduleFormBean>();
 
     public LoanScheduleFormBean() {
-        // constructor
+
     }
 
     public String parseInstallment(int index) {
@@ -131,6 +138,18 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
         validateCalculateAndReviewLoanSchedule(context);
     }
 
+    public void validateCalculateAndReviewGroupLoanSchedule(ValidationContext context) {
+        for (LoanScheduleFormBean memberScheduleFormBean : memberSchedules.values()) {
+            memberScheduleFormBean.validateCalculateAndReviewLoanSchedule(context);
+        }
+    }
+    
+    public void validateReviewGroupLoanSchedule(ValidationContext context) {
+        for (LoanScheduleFormBean memberScheduleFormBean : memberSchedules.values()) {
+            memberScheduleFormBean.validateReviewLoanSchedule(context);
+        }
+    }
+    
     /**
      * validateXXXX is invoked on transition from state
      */
@@ -672,6 +691,22 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
 
     public void setApplicablePenalties(List<PenaltyDto> applicablePenalties) {
         this.applicablePenalties = applicablePenalties;
+    }
+
+    public String getGlobalCustomerId() {
+        return globalCustomerId;
+    }
+
+    public void setGlobalCustomerId(String globalCustomerId) {
+        this.globalCustomerId = globalCustomerId;
+    }
+
+    public Map<String, LoanScheduleFormBean> getMemberSchedules() {
+        return memberSchedules;
+    }
+
+    public void setMemberSchedules(Map<String, LoanScheduleFormBean> memberSchedules) {
+        this.memberSchedules = memberSchedules;
     }
     
 }

@@ -131,6 +131,9 @@ $(document).ready(function() {
         "fnServerParams": function ( aoData ) {
             aoData.push( { "name": "searchString", "value": $('input[name="searchString"]').val() } );
             aoData.push( { "name": "officeId", "value": $('select[name="officeId"] option:selected').val() } );
+            aoData.push( { "name": "clientSearch", "value": $('select[name="clientSearch"] option:selected').val() } );
+            aoData.push( { "name": "groupSearch", "value": $('select[name="groupSearch"] option:selected').val() } );
+            aoData.push( { "name": "centerSearch", "value": $('select[name="centerSearch"] option:selected').val() } );
         },
         "fnDrawCallback": function(){
         	$(".sorting_1").removeClass("sorting_1"); [#-- remove unnecessary class added by firefox  --]

@@ -38,6 +38,13 @@
 		$('select[name="officeId"]').change(function(){
 		    searchResultTable.fnFilter("");  
 		});
+        $('a[id="filters-toggler"]').click(function(){
+            $('div[id="search-filters"]').toggle();
+            $('span[class="showorhide"]').toggle();
+        });
+        $('select[id$=Search]').change(function(){
+            searchResultTable.fnFilter("");
+        });
 	});
 </script>
 <span id="page.id" title="MainSearchResults"></span>
@@ -55,12 +62,13 @@
 					[@spring.message "CustomerSearch.s" /]
 				</option>
 			[/@form.singleSelectWithNested]
-			<input type="submit" value="Search" class="buttn"/>
+			<input type="submit" value="Search" class="buttn"/><br/>
+            [#include "/searchFilters.ftl" /]
 		</form>
 	</div>
-	<div>
-		<img src="pages/framework/images/trans.gif" width="15" height="15">
-	</div>
+    <div>
+        <img src="pages/framework/images/trans.gif" width="15" height="15">
+    </div>
 	<div class="search-results">
 		<table id="mainCustomerSearchResultDataTable" class="datatable">
 			<thead>

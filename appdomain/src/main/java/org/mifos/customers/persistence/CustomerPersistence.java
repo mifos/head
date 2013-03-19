@@ -309,7 +309,7 @@ public class CustomerPersistence extends LegacyGenericDao {
     }
 
     public QueryResult search(final String searchString, final Short officeId, final Short userId,
-            final Short userOfficeId) throws PersistenceException {
+            final Short userOfficeId, final Map<Short, Boolean> customerLevelIds) throws PersistenceException {
 
         QueryResult queryResult = null;
 
@@ -323,7 +323,7 @@ public class CustomerPersistence extends LegacyGenericDao {
                     if (queryResult == null) {
                         queryResult = phoneNumberSearch(searchString, officeId, userId);
                         if (queryResult == null) {
-                            queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
+                            queryResult = mainSearch(searchString, officeId, userId, userOfficeId, customerLevelIds);
                         }
                     }
                 }
@@ -412,9 +412,12 @@ public class CustomerPersistence extends LegacyGenericDao {
     }
 
     private QueryResult mainSearch(final String searchString, final Short officeId, final Short userId,
-            final Short userOfficeId) throws PersistenceException, HibernateSearchException {
+            final Short userOfficeId, final Map<Short, Boolean> customerLevelIds) throws PersistenceException, HibernateSearchException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
+        for (CustomerLevel customerLevel : CustomerLevel.values()) {
+            paramList.add(typeNameValue("Short", customerLevel.toString() + "_SEARCH", customerLevelIds.get(customerLevel.getValue())));
+        }
         QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
         if (officeId.shortValue() != 0) {
@@ -463,7 +466,6 @@ public class CustomerPersistence extends LegacyGenericDao {
     private void setParams(final List<Param> paramList, final Short userId) throws PersistenceException {
         paramList.add(typeNameValue("Short", "USERID", userId));
         paramList.add(typeNameValue("Short", "LOID", PersonnelLevel.LOAN_OFFICER.getValue()));
-        paramList.add(typeNameValue("Short", "LEVELID", CustomerLevel.CLIENT.getValue()));
         paramList.add(typeNameValue("Short", "USERLEVEL_ID", getLegacyPersonnelDao().getPersonnel(userId)
                 .getLevelEnum().getValue()));
     }

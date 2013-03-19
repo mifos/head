@@ -26,7 +26,6 @@
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
 <span id="page.id" title="LoanCreationPrdOfferingSelect"></span>
-<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 [#if customerSearchFormBean.redoLoanAccount]

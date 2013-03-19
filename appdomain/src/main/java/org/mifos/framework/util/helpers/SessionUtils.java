@@ -284,6 +284,17 @@ public class SessionUtils {
         }
         warningMessages.add(key, new ActionMessage(key));
     }
+    
+    public static void addWarningMessage(HttpServletRequest request, ActionMessage actionMessage) throws PageExpiredException {
+        ActionMessages warningMessages = null;
+        if (request.getAttribute(MIFOS_WARNING_MESSAGES) == null) {
+            warningMessages = new ActionMessages();
+            request.setAttribute(MIFOS_WARNING_MESSAGES, warningMessages);
+        } else {
+            warningMessages = (ActionMessages) getAttribute(MIFOS_WARNING_MESSAGES, request);
+        }
+        warningMessages.add(actionMessage.getKey() ,actionMessage);
+    }
 
     public static void removeThenSetAttribute(String key, Serializable value, HttpServletRequest request) throws PageExpiredException {
         SessionUtils.removeAttribute(key, request);

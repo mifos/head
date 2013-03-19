@@ -122,7 +122,7 @@ explanation of the license and how it is applied.
 			<input type="hidden" name="method" value="load"/>
 			<input type="hidden" name='globalCustNum' value="${BusinessKey.customer.globalCustNum}"/>
 		</form>
-		<html-el:form method="post" action="applyChargeAction.do?method=update" onsubmit="fun_submit()">
+		<html-el:form method="post" action="applyChargeAction.do?method=update&input=${param.input}" onsubmit="fun_submit()">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="selectedChargeFormula" value="" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

@@ -33,12 +33,14 @@ import org.mifos.framework.util.helpers.Money;
 
 public class GlimLoanUpdater {
 
-    void updateIndividualLoan(final Date disbursementDate, final Short noOfInstallments, final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
+    void updateIndividualLoan(final Date disbursementDate, final Double interestRate, final Short noOfInstallments, final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
             throws AccountException {
         String loanAmount = loanAccountDetail.getLoanAmount();
         Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
+        individualLoan.setInterestRate(interestRate);
         individualLoan.updateLoan(disbursementDate, noOfInstallments, loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
                 .valueOf(loanAccountDetail.getBusinessActivity()) : null);
+        individualLoan.updateLoanSummary();
     }
 
     private boolean businessActivityIsEmpty(LoanAccountDetailsDto loanAccountDetail) {

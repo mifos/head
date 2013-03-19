@@ -52,10 +52,14 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
     }
 
     public RedoLoanDisbursalSchedulePreviewPage submitWithGLIMandLSIPAndNavigateToPreviewPage(RedoLoanDisbursalParameters params) {
+        return submitWithGLIMandLSIPAndNavigateToPreviewPage(params, false);
+    }
+    
+    public RedoLoanDisbursalSchedulePreviewPage submitWithGLIMandLSIPAndNavigateToPreviewPage(RedoLoanDisbursalParameters params, boolean isNewGlim) {
         typeData(params);
         typeGLIMData(params);
         submit();
-        return new RedoLoanDisbursalSchedulePreviewPage(selenium);
+        return new RedoLoanDisbursalSchedulePreviewPage(selenium, isNewGlim);
     }
 
     public RedoLoanDisbursalSchedulePreviewPage submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(RedoLoanDisbursalParameters params) {

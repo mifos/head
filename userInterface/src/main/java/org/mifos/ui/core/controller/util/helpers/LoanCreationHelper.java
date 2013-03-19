@@ -1,7 +1,9 @@
 package org.mifos.ui.core.controller.util.helpers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -71,6 +73,58 @@ public class LoanCreationHelper {
         }
 
         return accountFees;
+    }
+
+    public static Map<String, List<CreateAccountFeeDto>> translateToMemberAccountsFeeDtos(LoanAccountFormBean formBean) {
+        Map<String, List<CreateAccountFeeDto>> memberAccountsFees = new HashMap<String, List<CreateAccountFeeDto>>();
+        Number[] defaultFeeIds = formBean.getDefaultFeeId();
+        String[] memberGlobalIds = formBean.getClientGlobalId();
+        if (defaultFeeIds != null) {
+            int memberIndex = 0;
+            CreateAccountFeeDto accountFee = null;
+            for (String memberId : memberGlobalIds) {
+                if (formBean.getClientAmount()[memberIndex] != null) {
+                    List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+                    int feeIndex = 0;
+                    for (Number feeId : defaultFeeIds) {
+                        Boolean removeDefaultFeeSelected = formBean.getDefaultFeeSelected()[feeIndex];
+                        if (removeDefaultFeeSelected == null || !removeDefaultFeeSelected) {
+                            Number amount = formBean.getDefaultFeeIndividualAmounts()[feeIndex][memberIndex];
+                            accountFee = new CreateAccountFeeDto(feeId.intValue(), amount.toString());
+                            accountFees.add(accountFee);
+                        }
+                        feeIndex++;
+                    }
+                    memberAccountsFees.put(memberId, accountFees);
+                }
+                memberIndex++;
+            }
+        }
+        return memberAccountsFees;
+    }
+
+    public static Map<String, List<CreateAccountFeeDto>> translateToMemberAccountsAdditionalFeeDtos(LoanAccountFormBean formBean) {
+        Map<String, List<CreateAccountFeeDto>> memberAccountsFees = new HashMap<String, List<CreateAccountFeeDto>>();
+        CreateAccountFeeDto accountFee = null;
+        String[] memberGlobalIds = formBean.getClientGlobalId();
+        int memberIndex = 0;
+        for (String memberId : memberGlobalIds) {
+            if (formBean.getClientAmount()[memberIndex] != null) {
+                List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+                int feeIndex = 0;
+                for (Number feeId : formBean.getSelectedFeeId()) {
+                    if (feeId != null) {
+                        Number feeAmountOrRate = formBean.getSelectedFeeIndividualAmounts()[feeIndex][memberIndex];
+                        accountFee = new CreateAccountFeeDto(feeId.intValue(), feeAmountOrRate.toString());
+                        accountFees.add(accountFee);
+                    }
+                    feeIndex++;
+                }
+                memberAccountsFees.put(memberId, accountFees);
+            }
+            memberIndex++;
+        }
+        return memberAccountsFees;
     }
 
     public static List<CreateAccountPenaltyDto> translateToAccountPenaltyDtos(LoanAccountFormBean formBean) {

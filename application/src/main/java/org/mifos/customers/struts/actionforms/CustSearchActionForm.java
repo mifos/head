@@ -39,6 +39,10 @@ public class CustSearchActionForm extends BaseActionForm {
     private String perspective;
     
     private String selectedDateOption;
+        
+    private boolean clientSearch = true;
+    private boolean groupSearch = true;
+    private boolean centerSearch = true;
 
     public String getInput() {
         return input;
@@ -94,6 +98,30 @@ public class CustSearchActionForm extends BaseActionForm {
 
     public void setSelectedDateOption(String selectedDateOption) {
         this.selectedDateOption = selectedDateOption;
+    }
+
+    public boolean isClientSearch() {
+        return clientSearch;
+    }
+
+    public void setClientSearch(boolean clientSearch) {
+        this.clientSearch = clientSearch;
+    }
+
+    public boolean isGroupSearch() {
+        return groupSearch;
+    }
+
+    public void setGroupSearch(boolean groupSearch) {
+        this.groupSearch = groupSearch;
+    }
+
+    public boolean isCenterSearch() {
+        return centerSearch;
+    }
+
+    public void setCenterSearch(boolean centerSearch) {
+        this.centerSearch = centerSearch;
     }
  
 }

@@ -122,7 +122,7 @@ public class PenaltyTest extends UiTestCaseBase {
         
         ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
         
-        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, 6, penalty);
+        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, penalty);
         
         ApplyPaymentPage paymentPage = repaymentSchedulePage.navigateToApplyPaymentPage();
         
@@ -137,7 +137,7 @@ public class PenaltyTest extends UiTestCaseBase {
             .submitAndNavigateToLoanAccountDetailsPage().navigateToRepaymentSchedulePage();
         
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(3, 6, payment);
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(3, 7, payment);
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(3, 8, payment);
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(5, 6, diff);
         
         repaymentSchedulePage.verifyRunningBalanceTableRow(3, 3, diff);
@@ -146,7 +146,7 @@ public class PenaltyTest extends UiTestCaseBase {
         
         adjustmentPage.fillAdjustmentFieldsAndSubmit(payment).navigateToRepaymentSchedulePage();
         
-        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, 6, penalty);
+        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, penalty);
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
