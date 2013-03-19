@@ -289,109 +289,170 @@
 			roles_activity(activity_id, role_id) values (306, 1);
 
 		</sql>
-		<rollback>
-			<sql endDelimiter=";">
+        <rollback>
+            <sql endDelimiter=";">
 
-				DELETE FROM lookup_value WHERE
-				entity_id = 87
-				AND lookup_name
-				='Permissions-CanProcessAccountingTransactions';
+            delete from roles_activity where activity_id = 306 and
+            role_id = 1;
+            
+            delete from activity where activity_id = 306 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-AuditTransactions') and
+            description_lookup_id = (select
+            lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-AuditTransactions');
+            
+            delete from lookup_value_locale where locale_id = 1 and
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-AuditTransactions') and
+            lookup_value is null;
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-AuditTransactions';
+            
+            delete from roles_activity where activity_id = 305 and
+            role_id = 1;
+            
+            delete from activity where activity_id = 305 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-ApproveTransactions') and
+            description_lookup_id = (select
+            lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-ApproveTransactions');
+            
+            delete from lookup_value_locale where locale_id = 1 and             
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-ApproveTransactions') and
+            lookup_value is null;
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-ApproveTransactions';
+            
+            delete from roles_activity where activity_id = 304 and
+            role_id = 1;
+            
+            delete from activity where activity_id = 304 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-InterOfficeTransfers') and
+            description_lookup_id = (select
+            lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-InterOfficeTransfers');
+            
+            delete from lookup_value_locale where locale_id = 1 and             
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-InterOfficeTransfers') and
+            lookup_value is null;            
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-InterOfficeTransfers';
+            
+            delete from roles_activity where activity_id = 303 and
+            role_id = 1;
+            
+            delete from activity where activity_id = 303 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-ViewStageTransactions') and
+            description_lookup_id = (select
+            lookup_id
+            from lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-ViewStageTransactions');           
+            
+            delete from lookup_value_locale where locale_id = 1 and             
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-ViewStageTransactions') and
+            lookup_value is null;
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-ViewStageTransactions';
+            
+            delete from roles_activity where activity_id = 302 and
+            role_id = 1;  
+            
+            delete from activity where activity_id = 302 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-UploadXlSheet') and
+            description_lookup_id = (select
+            lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-UploadXlSheet');
 
+            delete from lookup_value_locale where locale_id = 1 and             
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-UploadXlSheet') and
+            lookup_value is null;
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-UploadXlSheet';
+            
+            delete from roles_activity where activity_id = 301 and
+            role_id = 1;
+            
+            delete from activity where activity_id = 301 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-JournalVoucherSave') and
+            description_lookup_id = (select
+            lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-JournalVoucherSave');
+            
+            delete from lookup_value_locale where locale_id = 1 and             
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-JournalVoucherSave') and
+            lookup_value is null;
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-JournalVoucherSave';
+            
+            delete from roles_activity where activity_id = 300 and
+            role_id = 1;
+            
+            delete from activity where activity_id = 300 and
+            parent_id = 113 and
+            activity_name_lookup_id = (select lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-GeneralLedgerSave') and
+            description_lookup_id = (select
+            lookup_id from
+            lookup_value where entity_id = 87 AND
+            lookup_name='Permissions-GeneralLedgerSave');
+            
+            delete from lookup_value_locale where locale_id = 1 and             
+            lookup_id = (select lookup_id from lookup_value where
+            lookup_name='Permissions-GeneralLedgerSave') and
+            lookup_value is null;
+            
+            delete from lookup_value where entity_id = 87 and
+            lookup_name = 'Permissions-GeneralLedgerSave';                        
+            
+            drop table if exists acc_process_update;
+            
+            alter table acc_glmaster drop column audit_comments;
+            
+            alter table acc_glmaster drop column audit;
+            
+            alter table acc_glmaster drop column member_id;
+            
+            alter table acc_glmaster drop column updated_date;
+            
+            alter table acc_glmaster drop column stage;
+            
+            </sql>
 
-				DELETE FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id
-				from
-				lookup_value WHERE lookup_name='Permissions-GeneralLedgerSave');
-
-				DELETE FROM roles_activity WHERE activity_id= 300;
-
-				DELETE FROM
-				activity WHERE activity_id = 300;
-
-				DELETE FROM lookup_value WHERE
-				entity_id = 87 AND lookup_name ='Permissions-GeneralLedgerSave';
-
-				DELETE FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id
-				from
-				lookup_value WHERE
-				lookup_name='Permissions-JournalVoucherSave');
-
-				DELETE FROM
-				roles_activity WHERE activity_id= 301;
-
-				DELETE FROM activity WHERE
-				activity_id = 301;
-
-				DELETE FROM lookup_value WHERE entity_id = 87 AND
-				lookup_name ='Permissions-JournalVoucherSave';
-
-
-				DELETE FROM
-				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
-				lookup_value WHERE lookup_name='Permissions-UploadXlSheet');
-
-				DELETE
-				FROM roles_activity WHERE activity_id= 302;
-
-				DELETE FROM activity
-				WHERE activity_id = 302;
-
-				DELETE FROM lookup_value WHERE entity_id =
-				87 AND lookup_name ='Permissions-UploadXlSheet';
-
-				DELETE FROM
-				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
-				lookup_value WHERE lookup_name='Permissions-ViewStageTransactions');
-
-				DELETE
-				FROM roles_activity WHERE activity_id= 303;
-
-				DELETE FROM activity
-				WHERE activity_id = 303;
-
-				DELETE FROM lookup_value WHERE entity_id =
-				87 AND lookup_name ='Permissions-ViewStageTransactions';
-
-				DELETE FROM
-				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
-				lookup_value WHERE lookup_name='Permissions-InterOfficeTransfers');
-
-				DELETE
-				FROM roles_activity WHERE activity_id= 304;
-
-				DELETE FROM activity
-				WHERE activity_id = 304;
-
-				DELETE FROM lookup_value WHERE entity_id =
-				87 AND lookup_name ='Permissions-InterOfficeTransfers';
-
-				DELETE FROM
-				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
-				lookup_value WHERE lookup_name='Permissions-ApproveTransactions');
-
-				DELETE
-				FROM roles_activity WHERE activity_id= 305;
-
-				DELETE FROM activity
-				WHERE activity_id = 305;
-
-				DELETE FROM lookup_value WHERE entity_id =
-				87 AND lookup_name ='Permissions-ApproveTransactions';
-
-				DELETE FROM
-				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
-				lookup_value WHERE lookup_name='Permissions-AuditTransactions');
-
-				DELETE
-				FROM roles_activity WHERE activity_id= 306;
-
-				DELETE FROM activity
-				WHERE activity_id = 306;
-
-				DELETE FROM lookup_value WHERE entity_id =
-				87 AND lookup_name ='Permissions-AuditTransactions';
-
-			</sql>
-
-		</rollback>
+        </rollback>
 	</changeSet>
 </databaseChangeLog>
