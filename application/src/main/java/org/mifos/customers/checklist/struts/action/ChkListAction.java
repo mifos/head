@@ -400,9 +400,33 @@ public class ChkListAction extends BaseAction {
         if (isCustomer) {
             Short levelId = getShortValue(masterTypeId);
             states = this.checkListServiceFacade.retrieveAllCustomerStates(levelId);
+            List<CustomerCheckBoxItemDto> customerCheckLists = filterCustomerCheckListsByLevel(
+                    checkListServiceFacade.retreiveAllCustomerCheckLists(), CustomerLevel.getLevel(levelId));
+
+            for (int i = states.size() - 1; i >= 0; i--) {
+                Short state = states.get(i).getStateId();
+
+                for (CustomerCheckBoxItemDto customer : customerCheckLists) {
+                    if (state.equals(customer.getCustomerStatusId())) {
+                        states.remove(i);
+                    }
+                }
+            }
         } else {
             Short prdTypeId = getShortValue(masterTypeId);
             states = this.checkListServiceFacade.retrieveAllAccountStates(prdTypeId);
+            List<AccountCheckBoxItemDto> accountCheckLists = filterAccountCheckListsByProductType(
+                    checkListServiceFacade.retreiveAllAccountCheckLists(), ProductType.fromInt((int) prdTypeId));
+
+            for (int i = states.size() - 1; i >= 0; i--) {
+                Short state = states.get(i).getStateId();
+
+                for (AccountCheckBoxItemDto account : accountCheckLists) {
+                    if (state.equals(account.getAccountStateId())) {
+                        states.remove(i);
+                    }
+                }
+            }
         }
 
         return states;

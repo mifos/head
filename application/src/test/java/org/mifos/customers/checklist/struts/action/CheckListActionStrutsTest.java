@@ -154,6 +154,50 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(5, ((List<CheckListStatesView>) SessionUtils.getAttribute(CheckListConstants.STATES, request))
                 .size());
     }
+    
+    @Test
+    public void testGetStatesDuplicateForCustomer() throws Exception {
+        CustomerCheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.GROUP.getValue(),
+                CustomerStatus.GROUP_ACTIVE.getValue(), (short) 1);
+        StaticHibernateUtil.flushSession();
+        setRequestPathInfo("/chkListAction");
+        addRequestParameter("method", "getStates");
+        addRequestParameter("masterTypeId", "2");
+        addRequestParameter("isCustomer", "true");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.load_success.toString());
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        List<CheckListStatesView> states = (List<CheckListStatesView>) SessionUtils.getAttribute(
+                CheckListConstants.STATES, request);
+
+        for (CheckListStatesView state : states) {
+            Assert.assertNotSame(state.getStateId(), checkList.getCustomerStatus().getId());
+        }
+    }
+
+    @Test
+    public void testGetStatesDuplicateForAccount() throws Exception {
+        AccountCheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
+                AccountState.LOAN_APPROVED, (short) 1);
+        StaticHibernateUtil.flushSession();
+        setRequestPathInfo("/chkListAction");
+        addRequestParameter("method", "getStates");
+        addRequestParameter("masterTypeId", "1");
+        addRequestParameter("isCustomer", "false");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.load_success.toString());
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+        List<CheckListStatesView> states = (List<CheckListStatesView>) SessionUtils.getAttribute(
+                CheckListConstants.STATES, request);
+
+        for (CheckListStatesView state : states) {
+            Assert.assertNotSame(state.getStateId(), checkList.getAccountStateEntity().getId());
+        }
+    }
 
     @Test
     public void testPreviewNoChecklistName() {
