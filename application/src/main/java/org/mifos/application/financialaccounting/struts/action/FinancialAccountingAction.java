@@ -1,3 +1,4 @@
+
 package org.mifos.application.financialaccounting.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +14,10 @@ import org.mifos.framework.struts.action.BaseAction;
 public class FinancialAccountingAction extends BaseAction {
 	 public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
 	            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
 	    	boolean flag= AccountingRules.getSimpleAccountingStatus();
 	    	request.getSession().setAttribute("accountingActivationStatus", flag);
+
 	        return mapping.findForward(ActionForwards.load_success.toString());
 	    }
 

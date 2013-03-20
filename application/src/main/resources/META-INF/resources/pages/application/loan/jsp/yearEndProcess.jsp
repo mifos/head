@@ -84,6 +84,7 @@ border-bottom : solid 1px #EAEBF4;
 
 							<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 									<tr>
+
 										<td align="left" class="headingorange">
 											&nbsp;
 											<c:choose>

@@ -74,6 +74,7 @@ public class MonthClosingServiceFacadeWebTier implements MonthClosingServiceFaca
     public void validateTransactionDate(Date trxnDate) {
         if (getMonthClosingDate() != null &&
                 getMonthClosingDate().compareTo(DateUtils.getDateWithoutTimeStamp(trxnDate)) >= 0) {
+
             throw new BusinessRuleException("errors.invalidTxndateMonthAlreadyClosed");
         }
     }
