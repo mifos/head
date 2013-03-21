@@ -78,6 +78,7 @@ public class ChkListAction extends BaseAction {
         ChkListActionForm chkListActionForm = (ChkListActionForm) form;
         List<String> details = chkListActionForm.getValidCheckListDetails();
         List<CheckListStatesView> states = retrieveStates(chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId());
+        deleteExistingStates(states, chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId(), (short)-1);
 
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
@@ -281,6 +282,8 @@ public class ChkListAction extends BaseAction {
         SessionUtils.setCollectionAttribute(CheckListConstants.CHECKLIST_MASTERDATA, masterData, request);
 
         List<CheckListStatesView> states = retrieveStates(chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId());
+        deleteExistingStates(states, chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId(),
+                Short.parseShort(chkListActionForm.getStateId()));
 
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
         List<String> details = chkListActionForm.getValidCheckListDetails();
@@ -392,6 +395,40 @@ public class ChkListAction extends BaseAction {
         }
         return accountCheckLists;
     }
+    
+    private void deleteExistingStates(List<CheckListStatesView> stateList, boolean isCustomer, String masterTypeId,
+            Short masterEditStateId) {
+
+        if (isCustomer) {
+            Short levelId = getShortValue(masterTypeId);
+            List<CustomerCheckBoxItemDto> customerCheckLists = filterCustomerCheckListsByLevel(
+                    checkListServiceFacade.retreiveAllCustomerCheckLists(), CustomerLevel.getLevel(levelId));
+
+            for (int i = stateList.size() - 1; i >= 0; i--) {
+                Short state = stateList.get(i).getStateId();
+
+                for (CustomerCheckBoxItemDto customer : customerCheckLists) {
+                    if (state.equals(customer.getCustomerStatusId()) && !state.equals(masterEditStateId)) {
+                        stateList.remove(i);
+                    }
+                }
+            }
+        } else {
+            Short prdTypeId = getShortValue(masterTypeId);
+            List<AccountCheckBoxItemDto> accountCheckLists = filterAccountCheckListsByProductType(
+                    checkListServiceFacade.retreiveAllAccountCheckLists(), ProductType.fromInt((int) prdTypeId));
+
+            for (int i = stateList.size() - 1; i >= 0; i--) {
+                Short state = stateList.get(i).getStateId();
+
+                for (AccountCheckBoxItemDto account : accountCheckLists) {
+                    if (state.equals(account.getAccountStateId()) && !state.equals(masterEditStateId)) {
+                        stateList.remove(i);
+                    }
+                }
+            }
+        }
+    }
 
     private List<CheckListStatesView> retrieveStates(boolean isCustomer, String masterTypeId) {
 
@@ -400,33 +437,9 @@ public class ChkListAction extends BaseAction {
         if (isCustomer) {
             Short levelId = getShortValue(masterTypeId);
             states = this.checkListServiceFacade.retrieveAllCustomerStates(levelId);
-            List<CustomerCheckBoxItemDto> customerCheckLists = filterCustomerCheckListsByLevel(
-                    checkListServiceFacade.retreiveAllCustomerCheckLists(), CustomerLevel.getLevel(levelId));
-
-            for (int i = states.size() - 1; i >= 0; i--) {
-                Short state = states.get(i).getStateId();
-
-                for (CustomerCheckBoxItemDto customer : customerCheckLists) {
-                    if (state.equals(customer.getCustomerStatusId())) {
-                        states.remove(i);
-                    }
-                }
-            }
         } else {
             Short prdTypeId = getShortValue(masterTypeId);
             states = this.checkListServiceFacade.retrieveAllAccountStates(prdTypeId);
-            List<AccountCheckBoxItemDto> accountCheckLists = filterAccountCheckListsByProductType(
-                    checkListServiceFacade.retreiveAllAccountCheckLists(), ProductType.fromInt((int) prdTypeId));
-
-            for (int i = states.size() - 1; i >= 0; i--) {
-                Short state = states.get(i).getStateId();
-
-                for (AccountCheckBoxItemDto account : accountCheckLists) {
-                    if (state.equals(account.getAccountStateId())) {
-                        states.remove(i);
-                    }
-                }
-            }
         }
 
         return states;
