@@ -47,9 +47,23 @@ public class LoanProductTestHelper {
     }
 
     public DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments,
-            int defaultLoanAmount, int defaultInterestRate, int interestType) {
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper
-                .getWeeklyLoanProductParameters();
+            int defaultLoanAmount, int defaultInterestRate, int interestType, int recurrenceTypeId) {
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = null;
+
+        switch (recurrenceTypeId) {
+        case 1:
+            formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+            break;
+        case 2:
+            formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+            break;
+        case 3:
+            formParameters = FormParametersHelper.getDailyLoanProductParameters();
+            break;
+        default:
+            break;
+        }
+        
         formParameters.setDefInstallments(String.valueOf(defInstallments));
         formParameters.setDefaultLoanAmount(String.valueOf(defaultLoanAmount));
         formParameters.setInterestTypes(interestType);
