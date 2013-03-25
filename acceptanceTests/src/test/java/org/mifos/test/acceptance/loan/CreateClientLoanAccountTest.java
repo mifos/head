@@ -84,6 +84,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     private LoanProductTestHelper loanProductTestHelper;
     private NavigationHelper navigationHelper;
     private FeeTestHelper feeTestHelper;
+    static final int WEEKLY_RECURRENCE_TYPE_ID = 1;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -717,7 +718,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
                 FeesCreatePage.SubmitFormParameters.LOAN_AMOUNT_INTEREST);
         SubmitFormParameters dbIrLoanProductParams = loanProductTestHelper.defineLoanProductParameters(
                 numberOfInstallments, loanAmount, interestRate,
-                DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
+                DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION, WEEKLY_RECURRENCE_TYPE_ID);
         dbIrLoanProductParams.setOfferingName("DbIrProduct5629");
         loanProductTestHelper.defineNewLoanProduct(dbIrLoanProductParams);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();

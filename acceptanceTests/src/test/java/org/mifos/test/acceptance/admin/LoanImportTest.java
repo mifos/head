@@ -1,5 +1,6 @@
 package org.mifos.test.acceptance.admin;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,8 @@ import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -33,6 +36,9 @@ public class LoanImportTest extends UiTestCaseBase {
     String productForClient="TestLoanProductForClient";
     String[] arrayOfErrors;
     private boolean valuesDefined=false;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    static final int WEEKLY_RECURRENCE_TYPE_ID = 1;
     
     @Override
     @BeforeMethod
@@ -50,13 +56,21 @@ public class LoanImportTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
         new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
+
+    @Test(enabled = true)
+    public void importLoanAccountsToClientTest() throws SQLException {
+        verifyImportLoanAccountsToClient(WEEKLY_RECURRENCE_TYPE_ID);
+        applicationDatabaseOperation.updateLSIM(1);
+        for (int i = 1; i < 4; i++) {
+            verifyImportLoanAccountsToClient(i);
+        }
+    }
     /**
      * MIFOS-5662: Add the possibility to import new Loans data.
      * Test loads basic xls spreadsheet and test for rows parsed with errors. Then submits successfully parsed rows.
      * Accounts are imported to client.
      */
-    @Test(enabled=true)
-    public void importLoanAccountsToClientTest(){
+    private void verifyImportLoanAccountsToClient(int loanRecurrenceTypeId){
         ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
         try {
         manageRolePage.enablePermission("8_7");
@@ -71,7 +85,7 @@ public class LoanImportTest extends UiTestCaseBase {
         String errorNumber="27";
         String testID="TID1";
         arrayOfErrors=buildArrayOfErrorsForImportLoanTest(testID);
-        SubmitFormParameters parameters=loanProductTestHelper.defineLoanProductParameters(10, 100, 1, 1);
+        SubmitFormParameters parameters=loanProductTestHelper.defineLoanProductParameters(10, 100, 1, 1, loanRecurrenceTypeId);
         parameters.setOfferingName(productForClient);
         parameters.setMinLoanAmount("5");
         parameters.setMaxLoanAmount("1000");

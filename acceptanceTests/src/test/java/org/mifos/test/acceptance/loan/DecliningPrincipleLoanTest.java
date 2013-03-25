@@ -64,6 +64,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     private final static String LOAN_CLOSED = "Closed- Obligation met";
     private final static String LOAN_ACTIVE_GOOD = "Active in Good Standing";
     private final static String LOAN_ACTIVE_BAD = "Active in Bad Standing";
+    static final int WEEKLY_RECURRENCE_TYPE_ID = 1;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @AfterMethod
@@ -93,7 +94,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void verifyDecliningPrincipleLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(3, 1000, 20, interestType);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(3, 1000, 20, interestType, WEEKLY_RECURRENCE_TYPE_ID);
         loanProductTestHelper.
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().

@@ -23,6 +23,7 @@ import org.mifos.application.importexport.xls.XlsSavingsAccountImporter;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.clientportfolio.loan.service.DailySchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
@@ -83,17 +84,27 @@ public class ImportLoansSavingsFacadeWebTier implements
             LoanCreationLoanDetailsDto lcldd=loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(
                     detail.getCustomerId(), detail.getPrdOfferingId(), false);
             RecurringSchedule recurringSchedule = null;
-            if (lcldd.isRepaymentIndependentOfMeetingEnabled()) {
-            	MeetingDto meetingDto = lcldd.getLoanOfferingMeetingDetail();
-            	if (meetingDto.getMeetingDetailsDto().getRecurrenceTypeId().equals(1)) {
-                    if (meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth().equals(0)) {
-                        recurringSchedule = new MonthlyOnDayOfMonthSchedule(meetingDto.getMeetingDetailsDto().getEvery(), meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
-                    } else {
-                        recurringSchedule = new MonthlyOnWeekOfMonthSchedule(meetingDto.getMeetingDetailsDto().getEvery(),meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth(), meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
-                    }
-                } else if (meetingDto.getMeetingDetailsDto().getRecurrenceTypeId().equals(2)) {
-                    recurringSchedule = new WeeklySchedule(meetingDto.getMeetingDetailsDto().getEvery(), meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+        	MeetingDto meetingDto = lcldd.getCustomerMeetingDetail();
+            int meetingEvery = (lcldd.isRepaymentIndependentOfMeetingEnabled()) ? lcldd.getLoanOfferingMeetingDetail()
+                    .getMeetingDetailsDto().getEvery() : meetingDto.getMeetingDetailsDto().getEvery();
+            int loanRecurrenceTypeId = (lcldd.isRepaymentIndependentOfMeetingEnabled()) ? lcldd
+                    .getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId() : meetingDto
+                    .getMeetingDetailsDto().getRecurrenceTypeId();
+
+            if (loanRecurrenceTypeId == 1) {
+                if (meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth().equals(0)) {
+                    recurringSchedule = new MonthlyOnDayOfMonthSchedule(meetingEvery, meetingDto.getMeetingDetailsDto()
+                            .getRecurrenceDetails().getDayOfWeek());
+                } else {
+                    recurringSchedule = new MonthlyOnWeekOfMonthSchedule(meetingEvery, meetingDto
+                            .getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth(), meetingDto
+                            .getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
                 }
+            } else if (loanRecurrenceTypeId == 2) {
+                recurringSchedule = new WeeklySchedule(meetingEvery, meetingDto.getMeetingDetailsDto()
+                        .getRecurrenceDetails().getDayOfWeek());
+            } else if (loanRecurrenceTypeId == 3) {
+                recurringSchedule = new DailySchedule(meetingEvery);
             }
             
             CreateLoanAccount cla=new CreateLoanAccount(detail.getCustomerId(), new Integer(detail.getPrdOfferingId()), 

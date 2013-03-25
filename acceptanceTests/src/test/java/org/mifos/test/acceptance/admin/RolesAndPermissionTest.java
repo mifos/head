@@ -57,6 +57,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     private final static String officeName = "test_office";
     private final static String clientName = "test client";
     private final static String userName = "test user";
+    static final int WEEKLY_RECURRENCE_TYPE_ID = 1;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -86,7 +87,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     public void adjustmentOfPostDatedTransactions() throws Exception {
         navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin").disablePermission("5_1_9").
                 verifyPermissionText("5_1_9", "Can adjust back dated transactions").submitAndGotoViewRolesPage();
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(5, 1000, 20, DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(5, 1000, 20, DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION, WEEKLY_RECURRENCE_TYPE_ID);
         loanProductTestHelper.
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().submit();
