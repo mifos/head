@@ -23,6 +23,8 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -80,6 +82,13 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         group = null;
         center = null;
         StaticHibernateUtil.flushAndClearSession();
+    }
+    
+    @Test
+    public void testDataWarehouseDatabaseName() throws Exception {
+        Pattern pattern = Pattern.compile(ETLReportDWHelper.DATA_WAREHOUSE_DB_NAME_PATTERN);
+        Matcher m = pattern.matcher("jdbc:mysql://localhost:3306/5970_mifos");
+        Assert.assertTrue(m.find());
     }
 
     @Test
