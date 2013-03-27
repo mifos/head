@@ -22,7 +22,8 @@ public class ETLReportDWHelper extends TaskHelper {
 
     private final String FILENAME = "DataWarehouseInitialLoad.kjb";
     private static final Logger LOGGER = Logger.getLogger(ETLReportDWHelper.class);
-
+    public static final String DATA_WAREHOUSE_DB_NAME_PATTERN = "(jdbc:mysql://)(.*)(:)([0-9]+)(/)([0-9a-zA-Z_]*)(?)(.*)";
+    
     @Override
     public void execute(final long timeInMillis) throws BatchJobException {
         new ApplicationContextHolder();
@@ -30,7 +31,7 @@ public class ETLReportDWHelper extends TaskHelper {
         ApplicationContext ach = ApplicationContextHolder.getApplicationContext();
         DriverManagerDataSource ds = (DriverManagerDataSource) ach.getBean("dataSource");
         DriverManagerDataSource dsDW = (DriverManagerDataSource) ach.getBean("dataSourcePentahoDW");
-        Pattern pat = Pattern.compile("(jdbc:mysql://)(.*)(:)([0-9]+)(/)([a-zA-Z]*)(?)(.*)");
+        Pattern pat = Pattern.compile(DATA_WAREHOUSE_DB_NAME_PATTERN);
         Matcher m = pat.matcher(dsDW.getUrl());
         String nameOfDataBase = null;
         if (m.find()) {
