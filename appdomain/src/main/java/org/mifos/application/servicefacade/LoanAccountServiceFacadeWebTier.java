@@ -34,10 +34,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,6 +76,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundCodeDto;
 import org.mifos.accounts.fund.servicefacade.FundDto;
+import org.mifos.accounts.loan.business.GuarantyEntity;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
@@ -108,6 +111,7 @@ import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -225,6 +229,7 @@ import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.AccountPenaltiesDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
+import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ExpectedPaymentDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
@@ -313,6 +318,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
+    
+    @Autowired
+    private GenericDao genericDao;
 
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
@@ -2685,7 +2693,127 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         }
     }
+    
+    public List<CustomerSearchResultDto> retrievePossibleGuarantors(CustomerSearchDto customerSearchDto, boolean isNewGLIMCreation, Integer clientId, Integer loanId) {
 
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
+
+            QueryResult customerForSavings = customerPersistence.searchGroupClient(customerSearchDto.getSearchTerm(), userContext.getId(), isNewGLIMCreation);
+
+            int position = (customerSearchDto.getPage()-1) * customerSearchDto.getPageSize();
+            List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());
+            int i=1;
+            for (AccountSearchResultsDto customerBO : pagedResults) {
+                if(CustomerLevel.getLevel(customerBO.getLevelId())==CustomerLevel.CLIENT && customerBO.getClientId() != clientId && isApplicableForGuaranty(customerBO, loanId)){
+                  CustomerSearchResultDto customer = new CustomerSearchResultDto();
+                  customer.setCustomerId(customerBO.getClientId());
+                  customer.setBranchName(customerBO.getOfficeName());
+                  customer.setGlobalId(customerBO.getGlobelNo());
+                  customer.setSearchIndex(i);
+
+                  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "--"));
+                  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "--"));
+                  customer.setClientName(customerBO.getClientName());
+
+                  pagedDetails.add(customer);
+                }
+                  i++;
+            }
+            return pagedDetails;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (HibernateSearchException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ConfigurationException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
+    private boolean isApplicableForGuaranty(AccountSearchResultsDto customerBO, Integer loanId) throws PersistenceException {
+        Integer guarantorId = customerBO.getClientId();
+        List<GuarantyEntity> guarantyEntities = legacyAccountDao.getGuarantyByGurantorId(guarantorId);
+        for(GuarantyEntity guarantyEntity : guarantyEntities){
+            if(guarantyEntity.getLoanId().equals(loanId)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void linkGuarantor(Integer guarantorId, Integer loanId){
+        CustomerBO customerBO = this.customerDao.findCustomerById(guarantorId);
+        if(customerBO == loanDao.findById(loanId).getCustomer()){
+            return;
+        }
+        transactionHelper.startTransaction();
+        GuarantyEntity guaranty = new GuarantyEntity();
+        guaranty.setGuarantorId(guarantorId);
+        guaranty.setLoanId(loanId);
+        guaranty.setState(true);
+        genericDao.getSession().save(guaranty);
+        try{
+            transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void disactiveGuarantiesByLoanId(Integer loanId) throws PersistenceException{
+        List<GuarantyEntity> guarantyEntities = legacyAccountDao.getGuarantyByLoanId(loanId);
+        if(guarantyEntities!=null){
+            for(GuarantyEntity guarantyEntity : guarantyEntities){
+                transactionHelper.startTransaction();
+                guarantyEntity.setState(false);
+                try{
+                    transactionHelper.commitTransaction();
+                } catch (Exception e) {
+                    transactionHelper.rollbackTransaction();
+                    }
+            }
+        }
+    }
+    public List<CustomerDto> handleGuaranties(LoanInformationDto loanInformationDto) throws PersistenceException{
+        Short accountTypeId =loanInformationDto.getAccountTypeId();
+        Short accountStateId= loanInformationDto.getAccountStateId();
+        Integer loanId = loanInformationDto.getAccountId();
+        if(accountStateId==6 || accountStateId==7 || accountStateId==8 || accountStateId==10) {
+            disactiveGuarantiesByLoanId(loanId);
+        }
+        if(accountTypeId== 1 || accountTypeId == 4 || (accountTypeId==5 && !loanInformationDto.isGroup())){
+            return getGuarantorsByLoanId(loanId);
+        } 
+        return null;
+    }
+    public List<LoanAccountDetailsDto>  retrieveGuarantyClientInformation(ClientInformationDto clientInformationDto) throws PersistenceException{
+        List<LoanAccountDetailsDto>   guarantyInfo = new ArrayList<LoanAccountDetailsDto>();
+        List <GuarantyEntity> guaranties= legacyAccountDao.getGuarantyByGurantorId(clientInformationDto.getClientDisplay().getCustomerId());
+        for(GuarantyEntity guaranty : guaranties){
+            if(guaranty.getState()){
+            LoanBO loan = loanDao.findById(guaranty.getLoanId());
+            LoanAccountDetailsDto loanAccountDetailsDto = new LoanAccountDetailsDto();
+            loanAccountDetailsDto.setLoanGlobalAccountNum(loan.getGlobalAccountNum());
+            loanAccountDetailsDto.setClientId(loan.getCustomer().getGlobalCustNum());
+            loanAccountDetailsDto.setClientName(loan.getCustomer().getDisplayName());
+            guarantyInfo.add(loanAccountDetailsDto);
+            }
+        }
+        return guarantyInfo;
+    }
+    public List<CustomerDto>getGuarantorsByLoanId(Integer loanId) throws PersistenceException{
+        List<CustomerDto> guarantors = new ArrayList<CustomerDto>();
+        List <GuarantyEntity> guaranties= legacyAccountDao.getGuarantyByLoanId(loanId);
+        for(GuarantyEntity guaranty : guaranties){
+            ClientBO guarantor = customerDao.findClientById(guaranty.getGuarantorId());
+            CustomerDto customerDto= new CustomerDto(guarantor.getCustomerId(),guarantor.getClientName().getDisplayName() ,guarantor.getGlobalCustNum(), null);
+            guarantors.add(customerDto);
+        }
+        return guarantors;
+    }
     @Override
     public Errors validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId) {
 
@@ -3157,7 +3285,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         return loanType;
     }
-    
+
     @Override
     public void makeEarlyGroupRepayment(RepayLoanInfoDto repayLoanInfoDto, Map<String, Double> memberNumWithAmount) {
        
@@ -3230,5 +3358,4 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     public void uploadFile(Integer accountId, InputStream in, UploadedFileDto uploadedFileDto) {
         loanFileService.create(accountId, in, uploadedFileDto);
     }
-
 }

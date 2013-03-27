@@ -1078,4 +1078,17 @@ public class LoanTestHelper {
         
         return applyPayment(accountID, paymentParams);
     }
+    public void applyGuarantyFromLoanAccountPage(String guarantorName, String globalCustNum){
+        selenium.click("loanaccountdetail.link.applyGuaranty");
+        selenium.waitForPageToLoad("30000");
+        selenium.type("cust_search_account.input.searchString", guarantorName);
+        selenium.click("cust_search_account.button.search");
+        selenium.waitForPageToLoad("30000");
+        selenium.type("css=label > input[type='text']", globalCustNum);
+        selenium.click("link="+guarantorName+":ID"+globalCustNum);
+        selenium.waitForPageToLoad("30000");
+        selenium.click("id=apply.guarantor.submit");
+        selenium.waitForPageToLoad("30000");
+        
+    }
 }

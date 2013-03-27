@@ -381,6 +381,17 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return new AccountChangeStatusPage(selenium);
     }
+    public AccountChangeStatusPage navigateToGuarantyPreviewPage() {
+        selenium.click("loanaccountdetail.link.applyGuaranty");
+        waitForPageToLoad();
+        selenium.type("cust_search_account.input.searchString", "Holiday TestClient");
+        waitForPageToLoad();
+        selenium.click("link=Holiday TestClient:ID0002-000000023");
+        waitForPageToLoad();
+        selenium.click("id=apply.guarantor.submit");
+        waitForPageToLoad();
+        return new AccountChangeStatusPage(selenium);
+    }
 
     public EditLoanAccountInformationPage navigateToEditAccountInformation() {
         selenium.click("loanaccountdetail.link.editAccountInformation");

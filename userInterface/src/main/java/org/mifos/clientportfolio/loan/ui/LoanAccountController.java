@@ -116,6 +116,23 @@ public class LoanAccountController {
         return new CustomerSearchResultsDto(searchDetails, pagedDetails);
     }
 
+	public CustomerSearchResultsDto searchPossibleGuarantors (CustomerSearchFormBean formBean, boolean isNewGLIMCreation, Integer clientId, Integer loanId) {
+	    //As above, same issues occur (@searchCustomers)
+        Integer searchCap = 1000;
+        CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), searchCap);
+        List<CustomerSearchResultDto> pagedDetails = this.loanAccountServiceFacade.retrievePossibleGuarantors(customerSearchDto, isNewGLIMCreation, clientId, loanId);
+        SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(),  1, 1, searchCap);
+        return new CustomerSearchResultsDto(searchDetails, pagedDetails);
+    }
+	
+	public void linkGuarantor (Integer guarantorId, Integer loanId){
+	    try{
+	    this.loanAccountServiceFacade.linkGuarantor(guarantorId, loanId);
+	    } catch (Exception e){
+	        throw new MifosRuntimeException();
+	    }
+	    
+	}
     public LoanCreationProductDetailsDto retrieveLoanProducts(int customerId, org.springframework.binding.message.MessageContext messageContext) {
         LoanCreationProductDetailsDto loanProductDetails = this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
         

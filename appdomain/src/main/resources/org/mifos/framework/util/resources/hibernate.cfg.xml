@@ -269,7 +269,9 @@
         <mapping class="org.mifos.framework.fileupload.domain.FileInfoEntity" />
         <mapping class="org.mifos.framework.fileupload.domain.ClientFileEntity" />
         <mapping class="org.mifos.framework.fileupload.domain.LoanFileEntity" />
-
+        
+        <mapping class="org.mifos.accounts.loan.business.GuarantyEntity" />
+        
     </session-factory>
 
 </hibernate-configuration>

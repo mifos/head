@@ -88,6 +88,9 @@ public interface NamedQueryConstants {
     String COUNT_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF = "loan.countWaitingForApprovalLoansLoansUnderLoanOfficer";
     String COUNT_BAD_STANDING_LOANS_UNDER_LOANOFF = "loan.countBadStandingLoansUnderLoanOfficer";
     
+    // for Guaranty
+    String FIND_GUARANTY_BY_GUARANTORID = "loan.findGuarantyByGuarantorId";
+    String FIND_GUARANTY_BY_LOANID = "loan.findGuarantyByLoanId";
     // for Savings accounts
     String RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER = "savings.retrieveTotalSavingsForCustomer";
 

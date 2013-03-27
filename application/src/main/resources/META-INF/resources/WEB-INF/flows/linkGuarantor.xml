@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="customerSearchFormBean" class="org.mifos.clientportfolio.loan.ui.CustomerSearchFormBean" />
+
+    <on-start>
+        <set name="flowScope.loanAccountNumber" value="requestParameters.globalAccountNum" type="string" />
+        <set name="flowScope.loanId" value="requestParameters.accountId" type="integer" />
+        <set name="flowScope.prdOfferingName" value="requestParameters.prdOfferingName" type="string" />
+        <evaluate expression="clientRESTController.getClientByNumber(requestParameters.globalCustNum)" result="flowScope.accOwnerDto"/>
+    </on-start>
+    
+    <view-state id="customerSearchStep" view="linkGuarantorSearch" model="customerSearchFormBean">
+        <transition on="searchTermEntered" to="selectGuarantorStep" validate="true">
+            <evaluate expression="loanAccountController.searchPossibleGuarantors(customerSearchFormBean,false, flowScope.accOwnerDto.clientDisplay.customerId, flowScope.loanId)"
+            result="flowScope.customerSearchResultsDto"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/> 
+    </view-state>
+    
+    <view-state id="selectGuarantorStep" view="linkGuarantorSelect" model="customerSearchFormBean">
+        <transition on="searchTermEntered" to="selectGuarantorStep" validate="true">
+            <evaluate expression="loanAccountController.searchPossibleGuarantors(customerSearchFormBean,false, flowScope.accOwnerDto.clientDisplay.customerId, flowScope.loanId)"
+            result="flowScope.customerSearchResultsDto"/>
+        </transition>
+        <transition on="guarantorSelected" to="handleSelectedGuarantor"/>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <action-state id="handleSelectedGuarantor">
+        <set name="flowScope.guarantorId" value="requestParameters.customerId" type="int" />
+        <transition to="previewGuarantor">
+            <evaluate expression="clientRESTController.getClientByNumber(requestParameters.globalCustNum)" result="flowScope.clientDto"/>
+        </transition>
+    </action-state>
+    
+    <view-state id="previewGuarantor" view="linkGuarantorPreview">
+        <transition on="submit" to="confirmation">
+            <evaluate expression="loanAccountController.linkGuarantor(flowScope.guarantorId, flowScope.loanId)"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <end-state id="confirmation" view="externalRedirect:contextRelative:/viewLoanAccountDetails.ftl?globalAccountNum=${flowScope.loanAccountNumber}"/>
+    <end-state id="cancel" view="externalRedirect:contextRelative:/viewLoanAccountDetails.ftl?globalAccountNum=${flowScope.loanAccountNumber}"/>
+</flow>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/>
+  <row totWidth="100" bottomLineRequired="true">
+  
+    <column label="Guarantor ID" value="globalCustNum" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
+    </column>
+    <column label="Guarantor Name" value="displayName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="30"/>
+    </column>
+    <column label="Guarantor details" value="show" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
+         <linkDetails action="viewClientDetails.ftl">
+            <actionParam name="method" value="get" valueType="text"/>
+            <actionParam name="globalCustNum" value="globalCustNum" valueType="method"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+         </linkDetails>
+    </column>
+    
+  </row>
+</tableInfo>

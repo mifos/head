@@ -523,6 +523,17 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 
+                    <table width="96%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" height="23" class="fontnormalbold">
+                                    <mifos:mifoslabel name="client.GuaranteeInfoHeading" bundle="ClientUIResources"></mifos:mifoslabel>
+                                </td></br>
+                            </tr>
+                   </table>
+                   <mifoscustom:mifostabletag source="guarantyClientInformation"scope="session"
+                   xmlFileName="GuarantyClientInformation.xml"moduleName="org/mifos/customers/client/util/resources"
+                   passLocale="true" randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}"/>
+                   
 					<!-- Account Info ends --> <!--- MFI Information Starts -->
 					<table width="50%" border="0" cellspacing="0" cellpadding="0">
 						<tr>

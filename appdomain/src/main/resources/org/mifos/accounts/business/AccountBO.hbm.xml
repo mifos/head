@@ -1185,4 +1185,14 @@ select coll.*,
         ]]>
     </query>
     
+    <query name="loan.findGuarantyByLoanId">
+        <![CDATA[from org.mifos.accounts.loan.business.GuarantyEntity guaranty
+            where guaranty.loanId =:loanId]]>
+    </query>
+    
+    <query name="loan.findGuarantyByGuarantorId">
+        <![CDATA[from org.mifos.accounts.loan.business.GuarantyEntity guaranty
+            where guaranty.guarantorId =:guarantorId]]>
+    </query>
+    
 </hibernate-mapping>

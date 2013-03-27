@@ -59,6 +59,7 @@ import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
+import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ExpectedPaymentDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
@@ -73,6 +74,7 @@ import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.dto.screen.UploadedFileDto;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.validations.Errors;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -276,4 +278,22 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     void uploadFile(Integer accountId, InputStream inputStream, UploadedFileDto fileMetadata);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void linkGuarantor(Integer guarantorId, Integer loanId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void disactiveGuarantiesByLoanId(Integer loanId) throws PersistenceException;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerDto>getGuarantorsByLoanId(Integer loanId) throws PersistenceException;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerDto> handleGuaranties(LoanInformationDto loanInformationDto) throws PersistenceException;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<LoanAccountDetailsDto> retrieveGuarantyClientInformation(ClientInformationDto clientInformationDto) throws PersistenceException;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerSearchResultDto> retrievePossibleGuarantors(CustomerSearchDto customerSearchDto, boolean isNewGLIMCreation, Integer clientId, Integer loanId);
 }

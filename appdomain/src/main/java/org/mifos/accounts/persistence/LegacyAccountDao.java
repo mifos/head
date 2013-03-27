@@ -53,6 +53,7 @@ import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.loan.business.GuarantyEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
@@ -527,6 +528,10 @@ public class LegacyAccountDao extends LegacyGenericDao {
     public void save(AccountOverpaymentEntity overpaymentEntity) {
         StaticHibernateUtil.getSessionTL().save(overpaymentEntity);
     }
+    
+    public void save(GuarantyEntity guarantyEntity) {
+        StaticHibernateUtil.getSessionTL().save(guarantyEntity);
+    }
 
     private List<Object[]> getListOfAccountIdsHavingSchedulesWithinAHoliday(final String queryName, final Holiday holiday)
             throws PersistenceException {
@@ -683,5 +688,18 @@ public class LegacyAccountDao extends LegacyGenericDao {
             throw new PersistenceException(ex);
         }
         
+    }
+    
+    public List<GuarantyEntity> getGuarantyByLoanId (Integer loanId) throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("loanId", loanId);
+        List<GuarantyEntity> asd = executeNamedQuery(NamedQueryConstants.FIND_GUARANTY_BY_LOANID, parameters);
+        return executeNamedQuery(NamedQueryConstants.FIND_GUARANTY_BY_LOANID, parameters);
+    }
+    
+    public List<GuarantyEntity> getGuarantyByGurantorId (Integer guarantorId) throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("guarantorId", guarantorId);
+        return executeNamedQuery(NamedQueryConstants.FIND_GUARANTY_BY_GUARANTORID, parameters);
     }
 }

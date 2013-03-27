@@ -302,6 +302,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             }
             throw e;
         }
+        request.getSession().setAttribute("guarantyInformation" , loanAccountServiceFacade.handleGuaranties(loanInformationDto));
 
         final String accountStateNameLocalised = ApplicationContextProvider.getBean(MessageLookup.class).lookup(loanInformationDto.getAccountStateName());
         SessionUtils.removeThenSetAttribute("accountStateNameLocalised", accountStateNameLocalised, request);
@@ -1250,6 +1251,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
             for (LoanBO member : loanDao.findByGlobalAccountNum(globalAccountNum).getMemberAccounts()) {
                 memberloanInformationDtos.add(this.loanAccountServiceFacade.retrieveLoanInformation(member.getGlobalAccountNum()));
+                request.getSession().setAttribute("guarantyInformation" , loanAccountServiceFacade.handleGuaranties(this.loanAccountServiceFacade.retrieveLoanInformation(member.getGlobalAccountNum())));
             }
         }
         catch (MifosRuntimeException e) {

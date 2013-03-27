@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/>
+  <row totWidth="100" bottomLineRequired="true">
+	<column label="Guaranty for client:" value="clientName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="30"/>
+	</column>
+    <column label="Client Id" value="clientID" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="30"/>
+    </column>
+    <column label="Loan account ID" value="loanGlobalAccountNum" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
+    </column>
+    <column label="Loan account details" value="show" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
+         <linkDetails action="viewLoanAccountDetails.ftl">
+            <actionParam name="globalAccountNum" value="loanGlobalAccountNum" valueType="method"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+         </linkDetails>
+    </column>
+  </row>
+</tableInfo>

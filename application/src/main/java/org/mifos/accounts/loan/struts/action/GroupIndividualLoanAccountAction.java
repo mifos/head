@@ -170,6 +170,7 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
             activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
         }
         SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, activities, request);
+        request.getSession().setAttribute("guarantyInformation" , loanAccountServiceFacade.handleGuaranties(loanInformationDto));
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
         request.setAttribute(CustomerConstants.SURVEY_COUNT, loanInformationDto.getActiveSurveys());
         request.setAttribute(AccountConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());

@@ -886,7 +886,35 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                         					
 					</table>
      
-     
+     				<c:if test="${loanInformationDto.accountTypeId== 1 || loanInformationDto.accountTypeId == 4 || 
+                        (loanInformationDto.accountTypeId==5 && !loanInformationDto.group)}">
+                        <table width="96%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="50%" height="23" class="fontnormalbold">
+                                    <mifos:mifoslabel name="client.GuaranteeInfoHeading" bundle="ClientUIResources"></mifos:mifoslabel>
+                                </td></br>
+                                <c:if test="${loanInformationDto.accountStateId==5 || loanInformationDto.accountStateId==9}">
+                                    <c:url value="linkGuarantor.ftl" var="applyGuarantyUrl">
+                                        <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}"/>
+                                        <c:param name="globalCustNum" value="${loanInformationDto.globalCustNum}"/>
+                                        <c:param name="accountId" value="${loanInformationDto.accountId}"/>
+                                        <c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}"/>
+                                        <c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}"/>
+                                        <c:param name="backPageUrl" value="${backPageUrl}" />
+                                    </c:url>
+                                    <td width="50%" align="right" class="fontnormal"> 
+                                        <html-el:link styleId="loanaccountdetail.link.applyGuaranty"href="${applyGuarantyUrl}">
+                                            <mifos:mifoslabel name="loan.applyGuarantorLink" bundle="loanUIResources"></mifos:mifoslabel>
+                                        </html-el:link>
+                                    </td>
+                               </c:if>
+                            </tr>
+                        </table>
+                        <mifoscustom:mifostabletag source="guarantyInformation"
+                        scope="session" xmlFileName="GuarantyInformation.xml"moduleName="org/mifos/accounts/loan/util/resources" 
+                        passLocale="true" randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}"/>
+                    </c:if>
+
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="66%" class="headingorange"><mifos:mifoslabel

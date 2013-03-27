@@ -633,7 +633,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         
         InformationOrderServiceFacade informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderServiceFacade.class);
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
-
+		request.getSession().setAttribute("guarantyClientInformation" , loanAccountServiceFacade.retrieveGuarantyClientInformation(clientInformationDto));
         QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
         List<QuestionGroupInstanceDetail> questions = new ArrayList<QuestionGroupInstanceDetail>();
         questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(clientInformationDto.getClientDisplay().getCustomerId(), "Create", "Client"));

@@ -668,4 +668,23 @@
        </rollback>
    </changeSet>
    
+   <changeSet id="MIFOS-5627" author="Krzysztof Kaczmarczyk" context="expansion">
+        <sql endDelimiter=";">
+            create table guaranty (
+                guaranty_id integer auto_increment not null,
+                guarantor_id integer not null,
+                loan_id integer not null,
+                state boolean not null,
+                primary key(guaranty_id),
+                foreign key(guarantor_id)
+                    references customer(customer_id),
+                foreign key(loan_id)
+                    references account(account_id)
+            ) engine=innodb character set utf8;
+        </sql>
+        <rollback>
+            drop table guaranty;
+        </rollback>
+    </changeSet>
+   
 </databaseChangeLog>

@@ -79,7 +79,8 @@ public class ViewLoanAccountDetailsController {
             activity.setUserPrefferedDate(DateFormatUtils.format(activity.getActionDate(), "dd/MM/yyyy", personnelServiceFacade.getUserPreferredLocale()));
         }
         request.getSession().setAttribute("recentAccountActivities", loanInformationDto.getRecentAccountActivity());
-
+        request.getSession().setAttribute("guarantyInformation" , loanAccountServiceFacade.handleGuaranties(loanInformationDto));
+            
         //for GLIM
         if ( configurationServiceFacade.isGlimEnabled() && loanInformationDto.isGroup()) {
             List<LoanAccountDetailsDto> loanAccountsDetails = loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);
