@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,7 +46,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -58,6 +58,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
@@ -104,12 +105,12 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.domain.InformationOrderService;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.core.MifosRuntimeException;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
 
@@ -616,14 +617,25 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             }
             throw e;
         }
-        SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
-
+        
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)
         ClientBO clientBO = (ClientBO) this.customerDao.findCustomerById(clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
         SessionUtils.setAttribute(ClientConstants.IS_PHOTO_FIELD_HIDDEN, FieldConfig.getInstance().isFieldHidden("Client.Photo"), request);
         setCurrentPageUrl(request, clientBO);
         setQuestionGroupInstances(request, clientBO);
+        
+        InformationOrderService informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderService.class);
+        SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
+
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        List<QuestionGroupInstanceDetail> questions = new ArrayList<QuestionGroupInstanceDetail>();
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(clientInformationDto.getClientDisplay().getCustomerId(), "Create", "Client"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(clientInformationDto.getClientDisplay().getCustomerId(), "View", "Client"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client"));
+        
+        SessionUtils.setCollectionAttribute("questionGroups", questions, request);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("Client"), request);
 
         return mapping.findForward(ActionForwards.get_success.toString());
     }
@@ -1100,7 +1112,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
     }
-
+    
     private Date trainedDate(ClientCustActionForm actionForm) throws InvalidDateException {
         return DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate());
     }

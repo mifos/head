@@ -262,6 +262,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionDetail questionDetail = sectionQuestionDetail.getQuestionDetail();
         SectionQuestion sectionQuestion = getSectionQuestion(questionDetail, section);
         sectionQuestion.setRequired(sectionQuestionDetail.isMandatory());
+        sectionQuestion.setShowOnPage(sectionQuestionDetail.isShowOnPage());
         sectionQuestion.setSequenceNumber(sectionQuestionDetail.getSequenceNumber());
         if (sectionQuestion.isNewSectionQuestion()) {
             sectionQuestion.setQuestion(mapToQuestion(questionDetail));
@@ -322,14 +323,14 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
             QuestionType type = mapToQuestionType(question.getAnswerTypeAsEnum());
             boolean required = sectionQuestion.isRequired();
             QuestionDetail questionDetail = mapToQuestionDetail(question, type);
-            sectionDetail.addQuestion(mapToSectionQuestionDetail(sectionQuestion, required, questionDetail));
+            sectionDetail.addQuestion(mapToSectionQuestionDetail(sectionQuestion, required, sectionQuestion.isShowOnPage(), questionDetail));
         }
         return sectionDetail;
     }
 
-    private SectionQuestionDetail mapToSectionQuestionDetail(SectionQuestion sectionQuestion, boolean required, QuestionDetail questionDetail) {
+    private SectionQuestionDetail mapToSectionQuestionDetail(SectionQuestion sectionQuestion, boolean required, boolean showOnPage, QuestionDetail questionDetail) {
         if (sectionQuestion.getSequenceNumber() != null) {
-            return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required, sectionQuestion.getSequenceNumber());
+            return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required, showOnPage, sectionQuestion.getSequenceNumber());
         }
         return new SectionQuestionDetail(sectionQuestion.getId(), questionDetail, required);
     }
@@ -500,6 +501,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         sectionQuestion.setSection(section);
         sectionQuestion.setSequenceNumber(questionDto.getOrder());
         sectionQuestion.setRequired(questionDto.isMandatory());
+        sectionQuestion.setShowOnPage(questionDto.isShowOnPage());
         sectionQuestion.setQuestion(mapToQuestion(questionDto));
         return sectionQuestion;
     }

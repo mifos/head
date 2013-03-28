@@ -20,9 +20,19 @@
 
 package org.mifos.platform.questionnaire.ui.controller;
 
+import static java.text.MessageFormat.format;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
@@ -32,26 +42,17 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
-import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.validations.ValidationException;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.security.access.AccessDeniedException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.LinkedHashMap;
-
-import static java.text.MessageFormat.format;
 
 @Controller
 @SuppressWarnings("PMD")

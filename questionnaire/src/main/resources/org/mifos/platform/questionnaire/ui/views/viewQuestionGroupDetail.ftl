@@ -20,6 +20,14 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
+<script type="text/javascript">
+    $(document).ready(function() {
+        var appliesTo = document.getElementById("questionGroup.appliesTo").innerHTML.toLowerCase();
+        if (appliesTo.indexOf("loan") < 0 && appliesTo.indexOf("client") < 0) {
+           $(".showOnPage").css("display", "none");
+        }
+    });
+</script>
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/questionnaire/js/viewQuestionGroupDetail.js"></script>
 <div class=" content">
@@ -64,6 +72,7 @@
                                 <thead>
                                  <tr>
                                      <th class="name" width="60%">[@spring.message "questionnaire.question.name"/]</th>
+                                     <th class="showOnPage">[@spring.message "questionnaire.question.showOnPage"/]</th>
                                      <th class="isMandatory" width="20%">[@spring.message "questionnaire.question.mandatory"/]</th>
                                      <th class="status" width="20%">[@spring.message "questionnaire.status"/]</th>
                                  </tr>
@@ -72,6 +81,13 @@
                                 [#list section.sectionQuestions as sectionQuestion]
                                      <tr>
                                          <td class="name" ><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.text}</a></td>
+                                         <td class="showOnPage" >
+                                             [#if sectionQuestion.showOnPage]
+                                                 [@spring.message "questionnaire.yes"/]
+                                             [#else]
+                                                 [@spring.message "questionnaire.no"/]
+                                             [/#if]
+                                         </td>
                                          <td class="isMandatory" >
                                              [#if sectionQuestion.mandatory]
                                                  [@spring.message "questionnaire.yes"/]

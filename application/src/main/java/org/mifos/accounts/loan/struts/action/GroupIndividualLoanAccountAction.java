@@ -64,6 +64,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.domain.InformationOrderService;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.UserContext;
 
@@ -71,7 +74,9 @@ import org.mifos.security.util.UserContext;
 public class GroupIndividualLoanAccountAction extends AccountAppAction {
     private final LoanBusinessService loanBusinessService;
     private final ConfigurationPersistence configurationPersistence;
-
+    
+    private InformationOrderService informationOrderServiceFacade;
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -80,18 +85,24 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
     public GroupIndividualLoanAccountAction() {
         this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(),
-                new ConfigurationPersistence(), new AccountBusinessService());
+                new ConfigurationPersistence(), new AccountBusinessService(),
+                ApplicationContextProvider.getBean(InformationOrderService.class),
+                ApplicationContextProvider.getBean(QuestionnaireServiceFacade.class));
     }
 
     public GroupIndividualLoanAccountAction(final ConfigurationBusinessService configService,
                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
                              final LoanPrdBusinessService loanPrdBusinessService,
                              final ConfigurationPersistence configurationPersistence,
-                             final AccountBusinessService accountBusinessService) {
+                             final AccountBusinessService accountBusinessService,
+                             InformationOrderService informationOrderServiceFacade,
+                             QuestionnaireServiceFacade questionnaireServiceFacade) {
         super(accountBusinessService);
 
         this.loanBusinessService = loanBusinessService;
         this.configurationPersistence = configurationPersistence;
+        this.informationOrderServiceFacade = informationOrderServiceFacade;
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -170,6 +181,16 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST,
                     legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);
         }
+
+        List<QuestionGroupInstanceDetail> questions = new ArrayList<QuestionGroupInstanceDetail>();
+
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Create", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Approve", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "View", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Disburse", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Close", "Loan"));
+        SessionUtils.setCollectionAttribute("questionGroups", questions, request);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("Loan"), request);
         
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);

@@ -17,5 +17,6 @@
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupInstance.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupResponse.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/ChoiceTagEntity.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/InformationOrder.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

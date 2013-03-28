@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+    <class name="org.mifos.platform.questionnaire.domain.InformationOrder" table="information_order" dynamic-update="true">
+        <id name="id" column="id" type="integer" access="field">
+            <generator class="native" />
+        </id>
+        <property name="name" column="name" access="field" update="false" />
+        <property name="additionalQuestionId" column="additional_question_id" access="field" update="false" />
+        <property name="page" column="page" access="field" update="false" />
+        <property name="order" column="order_" access="field" />
+    </class>
+    
+    <query name="InformationOrder.retrieveByAdditionalQuestionIdAndPage">
+        <![CDATA[select informationOrder from InformationOrder as informationOrder 
+        where informationOrder.additionalQuestionId = :ADDITIONAL_QUESTION_ID and informationOrder.page = :PAGE 
+        ORDER BY informationOrder.order ASC]]>
+    </query>
+    
+    <query name="InformationOrder.retrieveByPage">
+        <![CDATA[select informationOrder from InformationOrder as informationOrder 
+        where informationOrder.page = :PAGE ORDER BY informationOrder.order ASC]]>
+    </query>
+    
+</hibernate-mapping>

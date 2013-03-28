@@ -2,6 +2,39 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet id="MIFOS-5983" author="Lukasz Gasior" context="expansion">
+        <addColumn tableName="sections_questions">
+            <column name="show_on_page" type="boolean"  defaultValueBoolean="false" />
+        </addColumn>
+        <sql endDelimiter=";">
+            create table information_order (
+                id int auto_increment not null,
+                name varchar(255) not null,
+                additional_question_id int,
+                page varchar(255) not null,
+                order_ int not null,
+                primary key(id)
+            ) engine=innodb character set utf8;
+            
+            insert into information_order (name, page, order_) values
+                ("displayName", "Client", 0), ("dateOfBirth", "Client", 1), ("handicapped", "Client", 2),
+                ("phoneNumber", "Client", 3), ("address", "Client", 4), ("governmentId", "Client", 5),
+                ("fatherName", "Client", 6), ("ethnicity", "Client", 7), ("educationLevel", "Client", 8),
+                ("povertyStatus", "Client", 9), ("citizenship", "Client", 10), ("familyDetails", "Client", 11),
+                ("city", "Client", 12), ("state", "Client", 13),
+                
+                ("interestRateType", "Loan", 0), ("interestRate", "Loan", 1), ("interestDeductedAtDisbursement", "Loan", 2),
+                ("currency", "Loan", 3), ("frequencyOfInstalment", "Loan", 4), ("principalDueLastInstalment", "Loan", 5),
+                ("gracePeriodType", "Loan", 6), ("gracePeriodDuration", "Loan", 7), ("noOfInstalments", "Loan", 8),
+                ("sourceOfFund", "Loan", 9), ("newGlimAccounts", "Loan", 10), ("collateral", "Loan", 11),
+                ("externalId", "Loan", 12), ("adminDocs", "Loan", 13), ("reccuringFees", "Loan", 14),
+                ("oneTimeFees", "Loan", 15), ("reccuringPenalties", "Loan", 16), ("oneTimePenalties", "Loan", 17);
+        </sql>
+        <rollback>
+            <dropColumn tableName="sections_questions" columnName="show_on_page"/>
+            <sql endDelimiter=";">drop table information_order;</sql>
+        </rollback>
+    </changeSet>
     <changeSet id="MIFOS-5739" author="Pawel Reise" context="expansion">
         <sql endDelimiter=";">
             create table file_info (

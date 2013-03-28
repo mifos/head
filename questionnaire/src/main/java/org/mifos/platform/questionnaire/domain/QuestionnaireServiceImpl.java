@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
@@ -57,7 +58,7 @@ import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mifos.platform.validations.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@SuppressWarnings({ "PMD.ExcessiveParameterList", "PMD.ExcessiveParameterList" })
+@SuppressWarnings("PMD")
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
@@ -86,6 +87,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
+    
+    @Autowired
+    private InformationOrderService informationOrderService;
     
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
@@ -140,6 +144,38 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         generateNicknamesForQuestions(questionGroupDetail);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         questionGroupDao.create(questionGroup);
+        
+        List<EntityMaster> usedSources = new ArrayList<EntityMaster>();
+        for (Section section: questionGroup.getSections()) {
+        	for (SectionQuestion sectionQuestion: section.getQuestions()) {
+        		usedSources.clear();
+        		for (EventSourceEntity eventSourceEntity: questionGroup.getEventSources()) {
+
+        			if (!(eventSourceEntity.getSource().getEntityType().equals("Client")
+        					|| eventSourceEntity.getSource().getEntityType().equals("Loan"))) {
+        				continue;
+        			}
+        			
+        			InformationOrder informationOrder = 
+        					new InformationOrder(null, "additional", sectionQuestion.getId(), eventSourceEntity.getSource().getEntityType(), 999);        			
+        			
+        			if (!sectionQuestion.isShowOnPage()) {
+        				informationOrderService.removeAdditionalQuestionIfExists(informationOrder);
+        			}
+        			
+        			if (usedSources.contains(eventSourceEntity.getSource())) {
+        				continue;
+        			}
+        			
+        			if (sectionQuestion.isShowOnPage()) {
+        				informationOrderService.addAdditionalQuestionIfNotExists(informationOrder);
+        			}
+        			
+        			usedSources.add(eventSourceEntity.getSource());
+        		}
+        	}
+        }
+        
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
     }
 

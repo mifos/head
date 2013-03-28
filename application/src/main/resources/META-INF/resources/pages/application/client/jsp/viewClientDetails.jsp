@@ -28,6 +28,49 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<style type="text/css">
+
+    #changeOrder {
+        font-size: 11px;
+        color: #000166;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    
+   #personalInformation.changing #changeOrder {
+        font-size: 13px;
+        color: green;
+        font-weight: bold;
+    }
+    
+    .changeOrderArrows {
+        display: none;
+    }
+    
+    .changeOrderArrows img {
+        cursor: pointer;
+    }
+    
+    #personalInformation.changing .changeOrderArrows {
+        display: inline;
+    }
+    
+    #personalInformation.changing #personalInformationInner > tbody > tr {
+        cursor: pointer;
+    }
+    
+    #personalInformation.changing #personalInformationInner > tbody > tr:hover {
+        background-color: #FFFFA7;
+    }
+        
+    #personalInformationInner td {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    
+</style>
 
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
@@ -44,6 +87,65 @@ explanation of the license and how it is applied.
 
 </script>
 
+<sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
+
+    <script type="text/javascript">
+    
+    $(document).ready(function() {
+    
+    	$("#changeOrder").click(function() {
+    	    if ($("#personalInformation").hasClass("changing")) {
+    	    	
+    	    	$("#personalInformationInner > tbody").sortable('disable').enableSelection();
+    	    	
+    	    	var order = {};
+    	    	
+    	    	$('#personalInformationInner > tbody > tr').each(function() {
+    	    		order[$(this).attr("data-order-id")] = $('#personalInformationInner > tbody > tr').index(this);
+    	    	});
+    	    	
+    	    	$.ajax({
+    	    		 contentType: "application/json",
+    	    	        type: "POST",
+    	    	        url: "saveInformationOrder.ftl",
+    	    	        data: JSON.stringify(order),
+    	    	        dataType: "json"
+    	    	});
+    	    	
+    	    	$("#personalInformation").removeClass("changing");
+    	    	$(this).html("Change fields order");
+    	    } else {
+    	    	$("#personalInformation").addClass("changing");
+    	        $(this).html("Save changes");
+    	        
+    	        $("#personalInformationInner > tbody").sortable({
+    	            helper: function(e, ui) {
+    	                ui.children().each(function() {
+    	                    $(this).width($(this).width());
+    	                });
+    	                return ui;
+    	            }
+    	        }).disableSelection();
+    	        $("#personalInformationInner > tbody").sortable("enable");
+    	    }
+    	});
+    	
+    	$(".moveUp").click(function() {
+    	    var parentTr = $(this).parents("tr:first"); 
+    	    parentTr.insertBefore(parentTr.prev());
+    	});
+    	
+    	$(".moveDown").click(function() {
+    	    var parentTr = $(this).parents("tr:first"); 
+    	    parentTr.insertAfter(parentTr.next());
+    	});
+    
+    });
+    
+    </script>
+
+</sec:authorize>
+
 		<html-el:form action="clientCustAction.do">
 		<c:set value="${requestScope.currentPageUrl}" var="currentPageUrl"/>
 		<c:if test="${currentPageUrl == null}">
@@ -52,6 +154,10 @@ explanation of the license and how it is applied.
 		<!-- The new way to send data is using a data transfer object -->
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientInformationDto')}"
 			   var="clientInformationDto" />
+        <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroups')}"
+               var="questionGroups" />
+        <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personalInformationOrder')}"
+               var="personalInformationOrder" />
         <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'containsQGForCloseClient')}"
 			   var="containsQGForCloseClient" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -548,165 +654,240 @@ explanation of the license and how it is applied.
 								height="10"></td>
 						</tr>
 					</table>
-					<table width="96%" border="0" cellpadding="0" cellspacing="0">
+					<table id="personalInformation" width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td width="50%" height="23" class="headingorange"><mifos:mifoslabel
+							<td  height="23" class="headingorange"><mifos:mifoslabel
 								name="client.PersonalInformationHeading"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td width="50%" align="right" class="fontnormal"><html-el:link styleId="viewClientDetails.link.editPersonalInformation"
+								bundle="ClientUIResources"></mifos:mifoslabel>
+                            </td>
+                            <td align="right" class="fontnormal"><html-el:link styleId="viewClientDetails.link.editPersonalInformation"
 								action="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="client.EditPersonalInformationLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:link></td>
+							</html-el:link>
+                                <br />
+                                <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
+                                    <span id="changeOrder">Change fields order</span>
+                                </sec:authorize>
+                            </td>
 						</tr>
-						<tr>
-							<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
-								name="client.DateOfBirth" bundle="ClientUIResources"></mifos:mifoslabel></span>
-							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
-							<span id="viewClientDetails.text.dateOfBirth"><c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,clientInformationDto.clientDisplay.dateOfBirth)}" /></span>;
-							<c:out value="${clientInformationDto.clientDisplay.age}" /> <mifos:mifoslabel
-								name="client.YearsOld" bundle="ClientUIResources"></mifos:mifoslabel><br></td>
-						</tr>
-						<tr id="Client.GovernmentId">
-							<td class="fontnormal"><mifos:mifoslabel
-								name="${ConfigurationConstants.GOVERNMENT_ID}"
-								keyhm="Client.GovernmentId" isColonRequired="yes"
-								isManadatoryIndicationNotRequired="yes" /> <c:out
-								value="${clientInformationDto.clientDisplay.governmentId}" /><br>
-							</td>
-						</tr>
-						<c:if test="${!clientInformationDto.clientDisplay.areFamilyDetailsRequired}">
-						<tr>
-							<td colspan="2" class="fontnormal"><c:out value="${clientInformationDto.clientDisplay.maritalStatus}" />
-							<c:if test="${!empty clientInformationDto.clientDisplay.maritalStatus}">;</c:if>
-
-                                <c:if test="${!empty clientInformationDto.clientDisplay.spouseFatherValue &&
-                                !empty clientInformationDto.clientDisplay.spouseFatherName}">
-							<c:out value="${clientInformationDto.clientDisplay.spouseFatherValue}" />
-							<mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>
-							<span id="viewClientDetails.text.spouseFatherName"><c:out value="${clientInformationDto.clientDisplay.spouseFatherName}" /></span>
-                                    <c:if test="${!empty clientInformationDto.clientDisplay.numChildren}">;</c:if>
-                                </c:if>
-
-								<c:if test="${!empty clientInformationDto.clientDisplay.numChildren}">
-								<c:out
-									value="${clientInformationDto.clientDisplay.numChildren}" />
-								<mifos:mifoslabel name="client.Children"
-									bundle="ClientUIResources"></mifos:mifoslabel>
-							</c:if><br>
-							</td>
-						</tr>
-						</c:if>
-						<tr id="Client.Ethnicity">
-							<td class="fontnormal">
-							<mifos:mifoslabel name="${ConfigurationConstants.ETHNICITY}" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty clientInformationDto.clientDisplay.ethnicity}">
-								<c:out value="${clientInformationDto.clientDisplay.ethnicity}" />
-							</c:if>
-							<br>
-							</td>
-						</tr>
-						<tr id="Client.EducationLevel">
-							<td class="fontnormal">
-							<mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty clientInformationDto.clientDisplay.educationLevel}">
-								<c:out value="${clientInformationDto.clientDisplay.educationLevel}" />
-							</c:if>
-							<br>
-							</td>
-						</tr>
-						<tr id="Client.PovertyStatus">
-							<td class="fontnormal">
-							<mifos:mifoslabel name="client.PovertyStatus" bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty clientInformationDto.clientDisplay.povertyStatus}">
-								<c:out value="${clientInformationDto.clientDisplay.povertyStatus}" />
-							</c:if>
-							<br>
-							</td>
-						</tr>
-						<tr id="Client.Citizenship">
-							<td class="fontnormal">
-							<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-							<c:if test="${!empty clientInformationDto.clientDisplay.citizenship}">
-								<c:out value="${clientInformationDto.clientDisplay.citizenship}" />
-							</c:if>
-							<br>
-							</td>
-						</tr>
-						<tr id="Client.Handicapped">
-							<td class="fontnormal"><c:if
-								test="${!empty clientInformationDto.clientDisplay.handicapped}">
-								<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-								<span id="viewClientDetails.text.handicapped"><c:out value="${clientInformationDto.clientDisplay.handicapped}" /></span>
-							</c:if></td>
-						</tr>
-						<c:if
-							test="${not empty clientInformationDto.address.phoneNumber ||
-					    				  not empty clientInformationDto.address.displayAddress ||
-										  not empty clientInformationDto.address.city	 ||
-										  not empty clientInformationDto.address.state	 ||
-										  not empty clientInformationDto.address.country	 ||
-										  not empty clientInformationDto.address.zip }">
-							<tr id="Client.Address">
-								<td class="fontnormalbold"><br>
-								<mifos:mifoslabel name="client.Address"
-									bundle="ClientUIResources" keyhm="Client.Address"
-									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
-									class="fontnormal"><br>
-								</span> <c:if
-									test="${!empty clientInformationDto.address.displayAddress}">
-									<span class="fontnormal"> <c:out
-										value="${clientInformationDto.address.displayAddress}" /> </span>
-								</c:if></td>
-							</tr>
-							<tr id="Client.City">
-								<td class="fontnormal"><c:if
-									test="${!empty clientInformationDto.address.city}">
-									<span class="fontnormal"><c:out
-										value="${clientInformationDto.address.city}" />
-									</span>
-								</c:if></td>
-							</tr>
-							<tr id="Client.State">
-								<td class="fontnormal"><c:if
-									test="${!empty clientInformationDto.address.state}">
-									<span class="fontnormal"> <c:out
-										value="${clientInformationDto.address.state}" />
-									</span>
-								</c:if></td>
-							</tr>
-							<tr id="Client.Country">
-								<td class="fontnormal"><c:if
-									test="${!empty clientInformationDto.address.country}">
-									<span class="fontnormal"><c:out
-										value="${clientInformationDto.address.country}" />
-									</span>
-								</c:if></td>
-							</tr>
-							<tr id="Client.PostalCode">
-								<td class="fontnormal"><c:if
-									test="${!empty clientInformationDto.address.zip}">
-									<span class="fontnormal"><c:out
-										value="${clientInformationDto.address.zip}" />
-
-									</span>
-								</c:if></td>
-							</tr>
-							<tr id="Client.PhoneNumber">
-								<td class="fontnormal"><span class="fontnormal"> <c:set
-									var="phoneNumber"
-									value="${clientInformationDto.address.phoneNumber}" />
-								<c:if test="${!empty phoneNumber}">
-									<br>
-									<mifos:mifoslabel name="client.Telephone"
-										bundle="ClientUIResources" keyhm="Client.PhoneNumber"
-										isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
-									<c:out
-										value="${clientInformationDto.address.phoneNumber}" />
-								</c:if></span> <br>
-						</c:if>
-					</table>
+                        <tr width="100%">
+                            <td>
+                                <table width="100%" id="personalInformationInner" cellpadding="0" cellspacing="0" class="fontnormal" >
+                                <tbody>
+                                <c:forEach items="${personalInformationOrder}" var="personalInformation">
+                                        <c:set var="displayed" value="false" scope="request" />
+                                        <c:choose>
+                                            <c:when test="${personalInformation.name == 'displayName'}">
+                                                <tr data-order-id="<c:out value="${personalInformation.id}" />">
+                                                   <td>
+                                                        <mifos:mifoslabel name="client.Name" bundle="ClientUIResources" />
+                                                        <span id="viewClientDetails.text.displayName">
+                                                            <c:out value="${clientInformationDto.clientDisplay.displayName}" />
+                                                        </span>
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'dateOfBirth'}">
+                                                <tr data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                        <mifos:mifoslabel name="client.DateOfBirth" bundle="ClientUIResources" />
+                                                        <span id="viewClientDetails.text.dateOfBirth">
+                                                            <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,clientInformationDto.clientDisplay.dateOfBirth)}" />;
+                                                            <c:out value="${clientInformationDto.clientDisplay.age}" />
+                                                            <mifos:mifoslabel name="client.YearsOld" bundle="ClientUIResources" />
+                                                        </span>
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'additional'}">
+                                                <c:forEach items="${questionGroups}" var="questionGroup">
+                                                    <c:forEach items="${questionGroup.questionGroupDetail.sectionDetails}" var="sectionDetails">
+                                                            <c:forEach items="${sectionDetails.questions}" var="question">
+                                                                <c:if test="${question.showOnPage && question.id == personalInformation.additionalQuestionId}">
+                                                                    <tr data-order-id="<c:out value="${personalInformation.id}" />">
+                                                                        <td>
+                                                                            <c:out value="${question.text}" />: <c:out value="${question.value}" />
+                                                                        </td>
+                                                                        <c:set var="displayed" value="true" scope="request" />
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </c:forEach>
+                                                </c:forEach>          
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'governmentId'}">
+                                                <tr data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                        <mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" detachHidden="true" keyhm="Client.GovernmentId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
+                                                        <span id="viewClientDetails.text.governmentId">
+                                                            <c:out value="${clientInformationDto.clientDisplay.governmentId}" />
+                                                        </span>
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'familyDetails' && !clientInformationDto.clientDisplay.areFamilyDetailsRequired}">
+                                                <tr data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td><mifos:mifoslabel name="client.MaritalStatus" bundle="ClientUIResources"></mifos:mifoslabel>
+                                                      <c:out value="${clientInformationDto.clientDisplay.maritalStatus}" />
+                                                          <c:if test="${!empty clientInformationDto.clientDisplay.maritalStatus}">;</c:if>
+                              
+                                                              <c:if test="${!empty clientInformationDto.clientDisplay.spouseFatherValue &&
+                                                              !empty clientInformationDto.clientDisplay.spouseFatherName}">
+                                                          <c:out value="${clientInformationDto.clientDisplay.spouseFatherValue}" />
+                                                          <mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>
+                                                          <span id="viewClientDetails.text.spouseFatherName"><c:out value="${clientInformationDto.clientDisplay.spouseFatherName}" /></span>
+                                                                  <c:if test="${!empty clientInformationDto.clientDisplay.numChildren}">;</c:if>
+                                                              </c:if>
+                              
+                                                              <c:if test="${!empty clientInformationDto.clientDisplay.numChildren}">
+                                                              <c:out
+                                                                  value="${clientInformationDto.clientDisplay.numChildren}" />
+                                                              <mifos:mifoslabel name="client.Children"
+                                                                  bundle="ClientUIResources"></mifos:mifoslabel>
+                                                          </c:if>
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'ethnicity'}">
+                                                <tr id="Client.Ethnicity" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                      <mifos:mifoslabel name="${ConfigurationConstants.ETHNICITY}" detachHidden="true" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+                                                         <c:if test="${!empty clientInformationDto.clientDisplay.ethnicity}">
+                                                             <c:out value="${clientInformationDto.clientDisplay.ethnicity}" />
+                                                         </c:if>
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'educationLevel'}">
+                                                <tr id="Client.EducationLevel" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                     <mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" detachHidden="true" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/>
+                                                      <c:if test="${!empty clientInformationDto.clientDisplay.educationLevel}">
+                                                          <c:out value="${clientInformationDto.clientDisplay.educationLevel}" />
+                                                      </c:if>
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                             <c:when test="${personalInformation.name == 'povertyStatus'}">
+                                            
+                                                <tr id="Client.PovertyStatus" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                   <mifos:mifoslabel name="client.PovertyStatus" bundle="ClientUIResources" detachHidden="true" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"/>
+                                                        <c:out value="${clientInformationDto.clientDisplay.povertyStatus}" />
+                                                    </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                              <c:when test="${personalInformation.name == 'citizenship'}">
+                                                <tr id="Client.Citizenship" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                  <mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" detachHidden="true" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+                                                   <c:if test="${!empty clientInformationDto.clientDisplay.citizenship}">
+                                                       <c:out value="${clientInformationDto.clientDisplay.citizenship}" />
+                                                   </c:if>
+                                                   </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                             <c:when test="${personalInformation.name == 'handicapped' && !empty clientInformationDto.clientDisplay.handicapped}">
+                                                <tr id="Client.Handicapped" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                      <mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" detachHidden="true" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+                                                      <span id="viewClientDetails.text.handicapped"><c:out value="${clientInformationDto.clientDisplay.handicapped}" /></span>
+                                                  </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                             <c:when test="${personalInformation.name == 'address'}">
+                                                <tr id="Client.Address" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                        <table cellpadding="0" cellspacing="0" class="fontnormal"><tr><td>
+                                                       <span class="fontnormalbold">
+                                                 <mifos:mifoslabel name="client.Address"
+                                                      bundle="ClientUIResources" detachHidden="true" keyhm="Client.Address"
+                                                      isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> </span><span
+                                                      class="fontnormal"><br>
+                                                  </span> <c:if
+                                                      test="${!empty clientInformationDto.address.displayAddress}">
+                                                      <span class="fontnormal"> <c:out
+                                                          value="${clientInformationDto.address.displayAddress}" /> </span>
+                                                  </c:if></td></tr>
+                                                  <c:if test="${!empty clientInformationDto.address.city}">
+                                                  <tr id="Client.City" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                 <span class="fontnormal"><c:out
+                                                     value="${clientInformationDto.address.city}" />
+                                                 </span>
+                                                  </td>
+                                                  </tr>
+                                                  </c:if>
+                                                  <c:if test="${!empty clientInformationDto.address.state}">
+                                                  <tr id="Client.State" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                    <span class="fontnormal"> <c:out
+                                                        value="${clientInformationDto.address.state}" />
+                                                    </span>
+                                                  </td>
+                                                  </tr>
+                                                  </c:if>
+                                                  
+                                                   <c:if test="${!empty clientInformationDto.address.country}">
+                                                 <tr id="Client.Country" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                         <span class="fontnormal"><c:out
+                                                             value="${clientInformationDto.address.country}" />
+                                                         </span>
+                                                  </td>
+                                                  </tr>
+                                                  </c:if>
+                                                  
+                                                   <c:if test="${!empty clientInformationDto.address.zip}">
+                                                 <tr id="Client.PostalCode" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                         <span class="fontnormal"><c:out
+                                                             value="${clientInformationDto.address.zip}" />
+                     
+                                                         </span>
+                                                  </td>
+                                                  </tr>
+                                                  </c:if>
+                                                  
+                                                  </table>
+                                                  </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'phoneNumber'}">
+                                                <tr id="Client.PhoneNumber" data-order-id="<c:out value="${personalInformation.id}" />">
+                                                    <td>
+                                                      <span class="fontnormal"> <c:set
+                                                        var="phoneNumber"
+                                                        value="${clientInformationDto.address.phoneNumber}" />
+                                                    <c:if test="${!empty phoneNumber}">
+                                                        <mifos:mifoslabel name="client.Telephone"
+                                                            bundle="ClientUIResources" detachHidden="true" keyhm="Client.PhoneNumber"
+                                                            isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+                                                        <c:out
+                                                            value="${clientInformationDto.address.phoneNumber}" />
+                                                    </c:if></span>
+                                                  </td>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                        </c:choose>
+                                        <c:if test="${displayed}">
+                                            <td>
+                                               <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
+                                                   <span class="changeOrderArrows">
+                                                       <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                                                       <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+                                                   </span>
+                                               </sec:authorize>
+                                            </td>
+                                            </tr>
+                                        </c:if>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                   
 					<!-- Family Details -->
 					<c:if test="${clientInformationDto.clientDisplay.areFamilyDetailsRequired}">
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">

@@ -21,6 +21,11 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>detachHidden</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>keyhm</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>

@@ -33,8 +33,17 @@ public class SectionQuestion implements Serializable {
     private boolean required;
     private QuestionEntity question;
     private Section section;
+    private boolean showOnPage;
 
-    public int getId() {
+    public boolean isShowOnPage() {
+		return showOnPage;
+	}
+
+	public void setShowOnPage(boolean showOnPage) {
+		this.showOnPage = showOnPage;
+	}
+
+	public int getId() {
         return id;
     }
 

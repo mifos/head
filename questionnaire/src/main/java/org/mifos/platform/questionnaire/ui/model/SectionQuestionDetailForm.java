@@ -55,4 +55,12 @@ public class SectionQuestionDetailForm {
     public void setMandatory(boolean mandatory) {
         sectionQuestionDetail.setMandatory(mandatory);
     }
+    
+    public boolean isShowOnPage() {
+    	return sectionQuestionDetail.isShowOnPage();
+    }
+    
+    public void setShowOnPage(boolean showOnPage) {
+    	sectionQuestionDetail.setShowOnPage(showOnPage);
+    }
 }

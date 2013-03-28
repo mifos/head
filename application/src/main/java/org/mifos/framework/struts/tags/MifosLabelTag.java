@@ -71,8 +71,18 @@ public class MifosLabelTag extends BodyTagSupport {
     private String isColonRequired;
 
     private String isManadatoryIndicationNotRequired;
+    
+    private boolean detachHidden;
 
-    public String getIsManadatoryIndicationNotRequired() {
+    public boolean isDetachHidden() {
+		return detachHidden;
+	}
+
+	public void setDetachHidden(boolean detachHidden) {
+		this.detachHidden = detachHidden;
+	}
+
+	public String getIsManadatoryIndicationNotRequired() {
         return isManadatoryIndicationNotRequired;
     }
 
@@ -233,10 +243,14 @@ public class MifosLabelTag extends BodyTagSupport {
 
     protected void hideLabelColumn(XmlBuilder html) {
         html.startTag("script", "language", "javascript");
-        html.text("if(document.getElementById(\"" + getKeyhm() + "\")!=null){");
-        html.text("document.getElementById(\"" + getKeyhm() + "\")");
-        html.text(".style.display=\"none\";}");
-        html.endTag("script");
+        if (detachHidden) {
+        	html.text("$(document).ready(function() {$(\"#" + getKeyhm().replace(".", "\\\\.") + "\").remove();});");
+        } else {
+        	html.text("if(document.getElementById(\"" + getKeyhm() + "\")!=null){");
+        	html.text("document.getElementById(\"" + getKeyhm() + "\")");
+        	html.text(".style.display=\"none\";}");
+        }
+    	html.endTag("script");
     }
 
     protected String getLabelBundle() {

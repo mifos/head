@@ -47,6 +47,17 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="informationOrderDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.InformationOrderDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.InformationOrder</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="questionGroupInstanceDao" parent="abstractDao">
         <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao"/>
@@ -69,8 +80,9 @@
             </bean>
         </property>
     </bean>
-
+    
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.domain.QuestionnaireServiceImpl"/>
+    <bean name="informationOrderService" class="org.mifos.platform.questionnaire.domain.InformationOrderServiceImpl"/>
     <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>
     <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
     <bean name="questionGroupDefinitionParser" class="org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParserImpl"/>

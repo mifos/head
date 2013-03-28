@@ -46,7 +46,17 @@ public class QuestionDto implements Serializable {
     private boolean mandatory;
     private boolean active;
     private boolean editable;
-    @XStreamAsAttribute
+    private boolean showOnPage;
+    
+    public boolean isShowOnPage() {
+		return showOnPage;
+	}
+
+	public void setShowOnPage(boolean showOnPage) {
+		this.showOnPage = showOnPage;
+	}
+
+	@XStreamAsAttribute
     private Integer order;
 
     public QuestionDto() {

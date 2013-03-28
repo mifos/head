@@ -183,3 +183,12 @@ li.question_list_table {
 	width:10px;
 	height:10px;
 }
+
+.showOnPage {
+    text-align: center;
+    width: 230px;
+}
+
+.isMandatory {
+    text-align: center;
+}

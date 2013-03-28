@@ -22,6 +22,28 @@
 [#assign selectQuestions][@spring.message "questionnaire.selectQuestions"/][/#assign]
 [#assign active][@spring.message "questionnaire.active"/][/#assign]
 [#assign inActive][@spring.message "questionnaire.inactive"/][/#assign]
+<script type="text/javascript">
+
+    var updateShowOnPageColumn = function() {
+        var hideColumns = true;
+        $("#eventSourceIds option:selected").each(function() {
+            if ($(this).val().toLowerCase().indexOf("loan") >= 0 
+                    || $(this).val().toLowerCase().indexOf("client") >= 0) {
+                $(".showOnPage").css("display", "table-cell");
+                hideColumns = false;
+            }
+        });    
+        if (hideColumns) {
+            $(".showOnPage").css("display", "none");
+            $(".showOnPage input").attr('checked', false);
+        }
+    };
+    
+    $(document).ready(function() {
+        $("#eventSourceIds").change(updateShowOnPageColumn);
+        updateShowOnPageColumn();
+    });
+</script>
 <div class="content">
 <div class="allErrorsDiv">
     [@form.showAllErrors "questionGroupForm.*"/]
@@ -123,6 +145,7 @@
             <thead>
             <tr>
                 <th class="name" >[@spring.message "questionnaire.question.name"/]</th>
+                <th class="showOnPage orderCenter">[@spring.message "questionnaire.question.showOnPage"/]</th>
                 <th class="isMandatory orderCenter">[@spring.message "questionnaire.question.mandatory"/]</th>
                 <th class="remove orderCenter">[@spring.message "questionnaire.remove"/]</th>
                 <th class="order orderCenter">[@spring.message "questionnaire.question.order"/]</th>
@@ -132,6 +155,9 @@
             [#list section.sectionQuestions as sectionQuestion]
             <tr>
                 <td class="name">${sectionQuestion.text}</td>
+                <td align="right" valign="center" class="showOnPage">
+                    [@form.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].showOnPage", ""/]
+                </td>
                 <td align="center" valign="center" class="mandatory orderCenter">
                     [@form.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>

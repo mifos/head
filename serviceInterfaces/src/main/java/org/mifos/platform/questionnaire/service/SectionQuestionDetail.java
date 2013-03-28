@@ -39,8 +39,17 @@ public class SectionQuestionDetail implements Serializable {
     private QuestionDetail questionDetail;
     private String value;
     private Integer sequenceNumber;
+    private boolean showOnPage;
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
+    public boolean isShowOnPage() {
+		return showOnPage;
+	}
+
+	public void setShowOnPage(boolean showOnPage) {
+		this.showOnPage = showOnPage;
+	}
+
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     private List<SelectionDetail> selections = new ArrayList<SelectionDetail>();
 
     private int id;
@@ -57,9 +66,10 @@ public class SectionQuestionDetail implements Serializable {
         this(0, questionDetail, mandatory, value);
     }
 
-    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required, int sequenceNumber) {
+    public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required, boolean showOnPage, int sequenceNumber) {
         this(id, questionDetail, required, null);
         this.sequenceNumber = sequenceNumber;
+        this.showOnPage = showOnPage;
     }
 
     public SectionQuestionDetail(int id, QuestionDetail questionDetail, boolean required) {

@@ -47,7 +47,6 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -65,7 +64,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -137,6 +135,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.platform.questionnaire.domain.InformationOrderService;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
@@ -163,11 +162,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private QuestionGroupFilterForLoan questionGroupFilter;
     private QuestionnaireFlowAdapter createLoanQuestionnaire;
     private GroupLoanAccountServiceFacade groupLoanAccountServiceFacade;
+    private InformationOrderService informationOrderServiceFacade;
 
     public LoanAccountAction() {
         this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(),
-                new ConfigurationPersistence(), new AccountBusinessService(), ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class));
+                new ConfigurationPersistence(), new AccountBusinessService(), ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class),
+                ApplicationContextProvider.getBean(InformationOrderService.class));
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
@@ -175,7 +176,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                              final LoanPrdBusinessService loanPrdBusinessService,
                              final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService,
-                             final GroupLoanAccountServiceFacade groupLoanAccountServiceFacade) {
+                             final GroupLoanAccountServiceFacade groupLoanAccountServiceFacade,
+                             final InformationOrderService informationOrderServiceFacade) {
         super(accountBusinessService);
 
         this.configService = configService;
@@ -187,6 +189,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
         this.createLoanQuestionnaire = getCreateLoanQuestionnaire();
         this.groupLoanAccountServiceFacade = groupLoanAccountServiceFacade;
+        this.informationOrderServiceFacade = informationOrderServiceFacade;
     }
 
     QuestionnaireFlowAdapter getCreateLoanQuestionnaire() {
@@ -210,7 +213,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private LoanAccountAction(final ConfigurationBusinessService configService,
                               final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new ConfigurationPersistence(),
-                new AccountBusinessService(), null);
+                new AccountBusinessService(), null, ApplicationContextProvider.getBean(InformationOrderService.class));
     }
 
     private List<FundBO> getFunds(final LoanOfferingBO loanOffering) {
@@ -361,6 +364,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);
 
         }
+        
+        List<QuestionGroupInstanceDetail> questions = new ArrayList<QuestionGroupInstanceDetail>();
+
+        QuestionnaireServiceFacade questionnaireServiceFacade = ApplicationContextProvider.getBean(QuestionnaireServiceFacade.class);
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Create", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Approve", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "View", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Disburse", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Close", "Loan"));
+        SessionUtils.setCollectionAttribute("questionGroups", questions, request);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("Loan"), request);
         
         // John W - temporarily put back because needed in applychargeaction - update
         // keithW - and for recentAccountNotes
@@ -1285,6 +1299,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
         
+        //loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
+        
         List<LoanActivityDto> activities = loanInformationDto.getRecentAccountActivity();
         for (LoanActivityDto activity : activities) {
             activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
@@ -1308,6 +1324,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         }
         
+        List<QuestionGroupInstanceDetail> questions = new ArrayList<QuestionGroupInstanceDetail>();
+
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Create", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Approve", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "View", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Disburse", "Loan"));
+        questions.addAll(questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(loanInformationDto.getAccountId(), "Close", "Loan"));
+        SessionUtils.setCollectionAttribute("questionGroups", questions, request);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("Loan"), request);
+         
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         LoanAccountAction.setSessionAtributeForGLIM(request, loan);

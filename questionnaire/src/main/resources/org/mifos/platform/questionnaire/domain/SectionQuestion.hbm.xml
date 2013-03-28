@@ -8,6 +8,7 @@
             <generator class="native" />
         </id>
         <property name="required" column="is_required"/>
+        <property name="showOnPage" column="show_on_page" />
         <property name="sequenceNumber" column="sequence_number" access="field"/>
 
         <many-to-one name="section" column="section_id"
