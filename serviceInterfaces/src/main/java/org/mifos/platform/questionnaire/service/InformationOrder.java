@@ -1,4 +1,4 @@
-package org.mifos.platform.questionnaire.domain;
+package org.mifos.platform.questionnaire.service;
 
 import java.io.Serializable;
 

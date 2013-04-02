@@ -53,7 +53,7 @@
         <property name="target">
             <bean parent="abstractDaoTarget">
                 <constructor-arg>
-                    <value>org.mifos.platform.questionnaire.domain.InformationOrder</value>
+                    <value>org.mifos.platform.questionnaire.service.InformationOrder</value>
                 </constructor-arg>
             </bean>
         </property>

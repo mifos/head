@@ -65,6 +65,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.domain.InformationOrderService;
+import org.mifos.platform.questionnaire.service.InformationOrderServiceFacade;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
@@ -75,7 +76,7 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
     private final LoanBusinessService loanBusinessService;
     private final ConfigurationPersistence configurationPersistence;
     
-    private InformationOrderService informationOrderServiceFacade;
+    private InformationOrderServiceFacade informationOrderServiceFacade;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     public static final String CUSTOMER_ID = "customerId";
@@ -86,7 +87,7 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
         this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(),
                 new ConfigurationPersistence(), new AccountBusinessService(),
-                ApplicationContextProvider.getBean(InformationOrderService.class),
+                ApplicationContextProvider.getBean(InformationOrderServiceFacade.class),
                 ApplicationContextProvider.getBean(QuestionnaireServiceFacade.class));
     }
 
@@ -95,7 +96,7 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
                              final LoanPrdBusinessService loanPrdBusinessService,
                              final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService,
-                             InformationOrderService informationOrderServiceFacade,
+                             InformationOrderServiceFacade informationOrderServiceFacade,
                              QuestionnaireServiceFacade questionnaireServiceFacade) {
         super(accountBusinessService);
 

@@ -90,6 +90,8 @@
     <bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl" />
 
     <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
+    
+    <bean name="informationOrderServiceFacade" class="org.mifos.platform.questionnaire.service.InformationOrderServiceFacadeImpl"/>
 
     <bean name="installmentFormatValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl"/>
 

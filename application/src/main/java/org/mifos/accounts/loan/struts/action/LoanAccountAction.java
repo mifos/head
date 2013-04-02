@@ -136,6 +136,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.domain.InformationOrderService;
+import org.mifos.platform.questionnaire.service.InformationOrderServiceFacade;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
@@ -162,13 +163,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private QuestionGroupFilterForLoan questionGroupFilter;
     private QuestionnaireFlowAdapter createLoanQuestionnaire;
     private GroupLoanAccountServiceFacade groupLoanAccountServiceFacade;
-    private InformationOrderService informationOrderServiceFacade;
+    private InformationOrderServiceFacade informationOrderServiceFacade;
 
     public LoanAccountAction() {
         this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(),
                 new ConfigurationPersistence(), new AccountBusinessService(), ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class),
-                ApplicationContextProvider.getBean(InformationOrderService.class));
+                ApplicationContextProvider.getBean(InformationOrderServiceFacade.class));
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
@@ -177,7 +178,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                              final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService,
                              final GroupLoanAccountServiceFacade groupLoanAccountServiceFacade,
-                             final InformationOrderService informationOrderServiceFacade) {
+                             final InformationOrderServiceFacade informationOrderServiceFacade) {
         super(accountBusinessService);
 
         this.configService = configService;
@@ -213,7 +214,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private LoanAccountAction(final ConfigurationBusinessService configService,
                               final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new ConfigurationPersistence(),
-                new AccountBusinessService(), null, ApplicationContextProvider.getBean(InformationOrderService.class));
+                new AccountBusinessService(), null, ApplicationContextProvider.getBean(InformationOrderServiceFacade.class));
     }
 
     private List<FundBO> getFunds(final LoanOfferingBO loanOffering) {

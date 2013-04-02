@@ -2,6 +2,8 @@ package org.mifos.platform.questionnaire.domain;
 
 import java.util.List;
 
+import org.mifos.platform.questionnaire.service.InformationOrder;
+
 public interface InformationOrderService {
 
 	List<InformationOrder> getInformationOrder(String page);

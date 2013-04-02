@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mifos.platform.questionnaire.domain.InformationOrder;
-import org.mifos.platform.questionnaire.domain.InformationOrderService;
+import org.mifos.platform.questionnaire.service.InformationOrder;
+import org.mifos.platform.questionnaire.service.InformationOrderServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class InformationOrderController {
 	
 	@Autowired
-	private InformationOrderService informationOrderService;
+	private InformationOrderServiceFacade informationOrderServiceFacade;
 	
 	@RequestMapping(value = "/saveInformationOrder", method=RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -35,7 +35,7 @@ public class InformationOrderController {
 					null, null, null, entry.getValue());
 			informationOrderList.add(informationOrder);
 		}
-		informationOrderService.updateInformationOrder(informationOrderList);
+		informationOrderServiceFacade.updateInformationOrder(informationOrderList);
 	}
 
 }

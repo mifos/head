@@ -105,7 +105,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.domain.InformationOrderService;
+import org.mifos.platform.questionnaire.service.InformationOrderServiceFacade;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActivityMapper;
@@ -625,7 +625,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         setCurrentPageUrl(request, clientBO);
         setQuestionGroupInstances(request, clientBO);
         
-        InformationOrderService informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderService.class);
+        InformationOrderServiceFacade informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderServiceFacade.class);
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
 
         QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);

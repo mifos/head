@@ -3,9 +3,8 @@ package org.mifos.platform.questionnaire.domain;
 import java.util.List;
 
 import org.mifos.platform.questionnaire.persistence.InformationOrderDao;
+import org.mifos.platform.questionnaire.service.InformationOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 public class InformationOrderServiceImpl implements InformationOrderService {
 
@@ -17,13 +16,11 @@ public class InformationOrderServiceImpl implements InformationOrderService {
 		return informationOrderDao.retrieveByPage(page);
 	}
 
-	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public void updateInformationOrder(List<InformationOrder> informationOrder) {
 		informationOrderDao.saveOrUpdateAll(informationOrder);
 	}
 	
-	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public void removeAdditionalQuestionIfExists(InformationOrder informationOrder) {
 		List<InformationOrder> infOrder = 
@@ -35,7 +32,6 @@ public class InformationOrderServiceImpl implements InformationOrderService {
 		}
 	}
 
-	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public void addAdditionalQuestionIfNotExists(InformationOrder informationOrder) {
 		List<InformationOrder> infOrder = 

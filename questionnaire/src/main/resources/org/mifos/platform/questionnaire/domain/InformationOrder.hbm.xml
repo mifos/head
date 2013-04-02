@@ -5,7 +5,7 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.platform.questionnaire.domain.InformationOrder" table="information_order" dynamic-update="true">
+    <class name="org.mifos.platform.questionnaire.service.InformationOrder" table="information_order" dynamic-update="true">
         <id name="id" column="id" type="integer" access="field">
             <generator class="native" />
         </id>
