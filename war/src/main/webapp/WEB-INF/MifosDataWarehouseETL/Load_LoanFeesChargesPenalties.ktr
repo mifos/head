@@ -61,6 +61,8 @@
     </slaveservers>
     <clusterschemas>
     </clusterschemas>
+  <created_user/>
+  <created_date>2014&#47;08&#47;04 09:41:20.764</created_date>
   <modified_user>-</modified_user>
   <modified_date>2010&#47;08&#47;04 15:02:22.858</modified_date>
   </info>
@@ -68,13 +70,13 @@
   </notepads>
   <connection>
     <name>DestinationDB</name>
-    <server/>
+    <server>localhost</server>
     <type>MYSQL</type>
     <access>JNDI</access>
     <database>DestinationDB</database>
-    <port>1521</port>
-    <username/>
-    <password>Encrypted </password>
+    <port>3306</port>
+    <username>mifos</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce7dd794a0c9</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -84,7 +86,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>1521</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>N</attribute></attribute>
@@ -93,13 +95,13 @@
   </connection>
   <connection>
     <name>SourceDB</name>
-    <server/>
+    <server>localhost</server>
     <type>MYSQL</type>
     <access>JNDI</access>
     <database>SourceDB</database>
-    <port>1521</port>
-    <username/>
-    <password>Encrypted </password>
+    <port>3306</port>
+    <username>mifos</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce7dd794a0c9</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -109,7 +111,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>1521</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>N</attribute></attribute>
@@ -142,7 +144,7 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Read account_trxn for Loan Fees</from><to>Do Transaction Lookups</to><enabled>Y</enabled> </hop>  <hop> <from>Remove old amount Columns</from><to>Do Transaction Lookups</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Lookup Rescheduled Loan Account Entry</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Lookup Written Off Loan Account Entry</to><enabled>Y</enabled> </hop>  <hop> <from>Lookup Rescheduled Loan Account Entry</from><to>Create fact_loan_fees_and_charges</to><enabled>Y</enabled> </hop>  <hop> <from>Lookup Written Off Loan Account Entry</from><to>Create fact_loan_fees_and_charges</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Abort Repayments Transformation</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Link to Applicable Loan Entry</to><enabled>Y</enabled> </hop>  <hop> <from>Select Mapping Fields and Order Unspecified Fields by name</from><to>Determine Account Action Processing</to><enabled>Y</enabled> </hop>  <hop> <from>Link to Applicable Loan Entry</from><to>Create fact_loan_fees_and_charges</to><enabled>Y</enabled> </hop>  <hop> <from>Read account_trxn for Loan Misc. Charges and Misc. Penalties</from><to>Split misc fees and penalties</to><enabled>Y</enabled> </hop>  <hop> <from>Split misc fees and penalties</from><to>Remove old amount Columns</to><enabled>Y</enabled> </hop>  <hop> <from>Get Start and End Date Variables</from><to>Read account_trxn for Loan Misc. Charges and Misc. Penalties</to><enabled>Y</enabled> </hop>  <hop> <from>Get Start and End Date Variables</from><to>Read account_trxn for Loan Fees</to><enabled>Y</enabled> </hop>  <hop> <from>Do Transaction Lookups</from><to>Select Mapping Fields and Order Unspecified Fields by name</to><enabled>Y</enabled> </hop>  </order>
+  <hop> <from>Remove old amount Columns</from><to>Do Transaction Lookups</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Lookup Rescheduled Loan Account Entry</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Lookup Written Off Loan Account Entry</to><enabled>Y</enabled> </hop>  <hop> <from>Lookup Rescheduled Loan Account Entry</from><to>Create fact_loan_fees_and_charges</to><enabled>Y</enabled> </hop>  <hop> <from>Lookup Written Off Loan Account Entry</from><to>Create fact_loan_fees_and_charges</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Abort Repayments Transformation</to><enabled>Y</enabled> </hop>  <hop> <from>Determine Account Action Processing</from><to>Link to Applicable Loan Entry</to><enabled>Y</enabled> </hop>  <hop> <from>Select Mapping Fields and Order Unspecified Fields by name</from><to>Determine Account Action Processing</to><enabled>Y</enabled> </hop>  <hop> <from>Link to Applicable Loan Entry</from><to>Create fact_loan_fees_and_charges</to><enabled>Y</enabled> </hop>  <hop> <from>Read account_trxn for Loan Misc. Charges and Misc. Penalties</from><to>Split misc fees and penalties</to><enabled>Y</enabled> </hop>  <hop> <from>Split misc fees and penalties</from><to>Remove old amount Columns</to><enabled>Y</enabled> </hop>  <hop> <from>Get Start and End Date Variables</from><to>Read account_trxn for Loan Misc. Charges and Misc. Penalties</to><enabled>Y</enabled> </hop>  <hop> <from>Do Transaction Lookups</from><to>Select Mapping Fields and Order Unspecified Fields by name</to><enabled>Y</enabled> </hop>  <hop> <from>Get Start and End Date Variables</from><to>Add fees and penalties</to><enabled>Y</enabled> </hop>  <hop> <from>Add fees and penalties</from><to>Do Transaction Lookups</to><enabled>Y</enabled> </hop>  </order>
   <step>
     <name>Abort Repayments Transformation</name>
     <type>Abort</type>
@@ -158,8 +160,51 @@
       <always_log_rows>Y</always_log_rows>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>821</xloc>
-      <yloc>357</yloc>
+      <xloc>873</xloc>
+      <yloc>331</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Add fees and penalties</name>
+    <type>Mapping</type>
+    <description/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <specification_method>filename</specification_method>
+    <trans_object_id/>
+    <trans_name/>
+    <filename>${Internal.Transformation.Filename.Directory}&#47;sub_add_fees_penalties.ktr</filename>
+    <directory_path/>
+    <mappings>
+      <input>
+    <mapping>    <input_step/>
+    <output_step/>
+    <main_path>Y</main_path>
+    <rename_on_output>Y</rename_on_output>
+    <description/>
+    </mapping>      </input>
+      <output>
+    <mapping>    <input_step/>
+    <output_step/>
+    <main_path>Y</main_path>
+    <rename_on_output>N</rename_on_output>
+    <description/>
+    </mapping>      </output>
+          <parameters>    <inherit_all_vars>Y</inherit_all_vars>
+    </parameters>
+    </mappings>
+    <allow_multiple_input>N</allow_multiple_input>
+    <allow_multiple_output>N</allow_multiple_output>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>665</xloc>
+      <yloc>34</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -287,8 +332,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>112</xloc>
-      <yloc>541</yloc>
+      <xloc>160</xloc>
+      <yloc>524</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -320,8 +365,8 @@
 <target_step>Link to Applicable Loan Entry</target_step>
 </case></cases>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>596</xloc>
-      <yloc>356</yloc>
+      <xloc>648</xloc>
+      <yloc>330</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -345,24 +390,26 @@
       <input>
     <mapping>    <input_step/>
     <output_step/>
-    <main_path>N</main_path>
+    <main_path>Y</main_path>
     <rename_on_output>N</rename_on_output>
     <description/>
     </mapping>      </input>
       <output>
     <mapping>    <input_step/>
     <output_step/>
-    <main_path>N</main_path>
+    <main_path>Y</main_path>
     <rename_on_output>N</rename_on_output>
     <description/>
     </mapping>      </output>
           <parameters>    <inherit_all_vars>Y</inherit_all_vars>
     </parameters>
     </mappings>
+    <allow_multiple_input>N</allow_multiple_input>
+    <allow_multiple_output>N</allow_multiple_output>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>837</xloc>
-      <yloc>188</yloc>
+      <xloc>796</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -405,8 +452,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>477</xloc>
-      <yloc>15</yloc>
+      <xloc>441</xloc>
+      <yloc>34</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -444,10 +491,12 @@
           <parameters>    <inherit_all_vars>Y</inherit_all_vars>
     </parameters>
     </mappings>
+    <allow_multiple_input>N</allow_multiple_input>
+    <allow_multiple_output>N</allow_multiple_output>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>595</xloc>
-      <yloc>540</yloc>
+      <xloc>647</xloc>
+      <yloc>522</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -489,8 +538,8 @@ and loan_status = &apos;AccountState-ClosedRescheduled&apos;</sql>
     </parameter>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>112</xloc>
-      <yloc>359</yloc>
+      <xloc>164</xloc>
+      <yloc>333</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -532,52 +581,8 @@ and loan_status = &apos;AccountState-ClosedWrittenOff&apos;</sql>
     </parameter>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>340</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Read account_trxn for Loan Fees</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>SourceDB</connection>
-    <sql>select atxn.action_date, cast(ifnull(atxn.due_date, &apos;3001-01-01&apos;) as date) as due_date,
-date(atxn.created_date) created_date, atxn.account_action_id,
-atxn.account_trxn_id, ftxn.fee_trxn_detail_id, atxn.account_id as loan_account_id,  atxn.payment_id, atxn.installment_id, ap.payment_type_id,
-ftxn.fee_amount as amount, 1 as account_charge_type_id, af.fee_id
-from account_trxn atxn
-inner join fee_trxn_detail ftxn on atxn.account_trxn_id = ftxn.account_trxn_id
-inner join account_payment ap on ap.payment_id = atxn.payment_id
-left join account_fees af on af.account_fee_id = ftxn.account_fee_id
-where atxn.account_action_id in (1, 15, 20, 4)
-and ftxn.fee_amount &lt;&gt; 0
-and atxn.created_date &gt;= date(?) 
-and atxn.created_date &lt; date(?)
-&#47;* 
-1  - &apos;AccountAction-LoanRepayment&apos;
-15 - &apos;AccountAction-LoanWrittenOff&apos;
-20 - &apos;AccountAction-LoanRescheduled&apos;
-4 - &apos;AccountAction-Fee&apos;
-*&#47;
-
-</sql>
-    <limit>0</limit>
-    <lookup>Get Start and End Date Variables</lookup>
-    <execute_each_row>Y</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>626</xloc>
-      <yloc>88</yloc>
+      <xloc>392</xloc>
+      <yloc>438</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -618,8 +623,8 @@ and atxn.created_date &lt; date(?)
     <lazy_conversion_active>N</lazy_conversion_active>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>335</xloc>
-      <yloc>115</yloc>
+      <xloc>301</xloc>
+      <yloc>124</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -689,8 +694,8 @@ and atxn.created_date &lt; date(?)
       </field>        <select_unspecified>N</select_unspecified>
     </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>419</xloc>
-      <yloc>185</yloc>
+      <xloc>385</xloc>
+      <yloc>194</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -716,8 +721,8 @@ and atxn.created_date &lt; date(?)
       </field>        <select_unspecified>Y</select_unspecified>
     </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>592</xloc>
-      <yloc>268</yloc>
+      <xloc>797</xloc>
+      <yloc>262</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -755,10 +760,12 @@ and atxn.created_date &lt; date(?)
           <parameters>    <inherit_all_vars>Y</inherit_all_vars>
     </parameters>
     </mappings>
+    <allow_multiple_input>N</allow_multiple_input>
+    <allow_multiple_output>N</allow_multiple_output>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>231</xloc>
-      <yloc>185</yloc>
+      <xloc>197</xloc>
+      <yloc>194</yloc>
       <draw>Y</draw>
       </GUI>
     </step>

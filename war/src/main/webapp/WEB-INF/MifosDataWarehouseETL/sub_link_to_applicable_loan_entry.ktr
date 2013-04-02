@@ -61,6 +61,8 @@
     </slaveservers>
     <clusterschemas>
     </clusterschemas>
+  <created_user/>
+  <created_date>2014&#47;08&#47;04 13:52:15.039</created_date>
   <modified_user>-</modified_user>
   <modified_date>2010&#47;08&#47;04 15:02:22.858</modified_date>
   </info>
@@ -68,13 +70,13 @@
   </notepads>
   <connection>
     <name>DestinationDB</name>
-    <server/>
+    <server>localhost</server>
     <type>MYSQL</type>
     <access>JNDI</access>
     <database>DestinationDB</database>
-    <port>1521</port>
-    <username/>
-    <password>Encrypted </password>
+    <port>3306</port>
+    <username>mifos</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce7dd794a0c9</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -84,7 +86,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>1521</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>N</attribute></attribute>
