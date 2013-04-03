@@ -71,7 +71,7 @@ public class QuestionGroupDetailPage extends MifosPage {
         List<String> questions = new ArrayList<String>();
         int numQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
         for (int i = 1; i < numQuestions; i++) {
-            if("Yes".equals(selenium.getTable(format("sections.table.%s.%d.1", sectionName, i)).trim())){
+            if("Yes".equals(selenium.getTable(format("sections.table.%s.%d.2", sectionName, i)).trim())){
                 questions.add(selenium.getTable(format("sections.table.%s.%d.0", sectionName, i)).trim());
             }
         }

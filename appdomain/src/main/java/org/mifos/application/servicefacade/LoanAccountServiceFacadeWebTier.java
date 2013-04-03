@@ -1838,12 +1838,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
         }
         
-        Short minNoOfInstall = null, maxNoOfInstall = null;
-        if (loan.getMaxMinNoOfInstall() != null) {
-        	minNoOfInstall = loan.getMaxMinNoOfInstall().getMinNoOfInstall();
-        	minNoOfInstall = loan.getMaxMinNoOfInstall().getMaxNoOfInstall();
-        }
-        
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                      accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
                                      loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestType, interestTypeName,
@@ -1855,7 +1849,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                      loan.getLoanMeeting().getMeetingDetails().getRecurAfter(),
                                      loan.getLoanMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
                                      loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
-                                     minNoOfInstall, maxNoOfInstall,
+                                     loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), collateralTypeName, loan.getCollateralNote(),loan.getExternalId(),
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
