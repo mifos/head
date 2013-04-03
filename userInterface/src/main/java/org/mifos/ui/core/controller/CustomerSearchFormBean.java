@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageContext;
@@ -46,12 +47,8 @@ public class CustomerSearchFormBean implements Serializable {
     private Map<String, String> offices;
     
     private String officeName;
-        
-    private boolean clientSearch;
     
-    private boolean groupSearch;
-    
-    private boolean centerSearch;
+    private SearchFiltersDto filters;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -99,29 +96,12 @@ public class CustomerSearchFormBean implements Serializable {
         this.officeName = officeName;
     }
 
-    public boolean isClientSearch() {
-        return clientSearch;
+    public SearchFiltersDto getFilters() {
+        return filters;
     }
 
-    public void setClientSearch(boolean clientSearch) {
-        this.clientSearch = clientSearch;
-    }
-
-    public boolean isGroupSearch() {
-        return groupSearch;
-    }
-
-    public void setGroupSearch(boolean groupSearch) {
-        this.groupSearch = groupSearch;
-    }
-    
-
-    public boolean isCenterSearch() {
-        return centerSearch;
-    }
-
-    public void setCenterSearch(boolean centerSearch) {
-        this.centerSearch = centerSearch;
+    public void setFilters(SearchFiltersDto filters) {
+        this.filters = filters;
     }
 
     /**

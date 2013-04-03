@@ -82,6 +82,8 @@ public class LookUpEntity extends AbstractEntity {
     public static final int REPAYMENT_RULE = 91;
     public static final int INTEREST_TYPES = 37;
     public static final int FINANCIAL_ACTION = 76;
+    public static final int BUSINESS_ACTIVITY = 21;
+    public static final int CITIZENSHIP = 18;
 
     @Id
     @GeneratedValue

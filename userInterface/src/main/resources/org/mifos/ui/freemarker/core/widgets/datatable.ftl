@@ -131,9 +131,18 @@ $(document).ready(function() {
         "fnServerParams": function ( aoData ) {
             aoData.push( { "name": "searchString", "value": $('input[name="searchString"]').val() } );
             aoData.push( { "name": "officeId", "value": $('select[name="officeId"] option:selected').val() } );
-            aoData.push( { "name": "clientSearch", "value": $('select[name="clientSearch"] option:selected').val() } );
-            aoData.push( { "name": "groupSearch", "value": $('select[name="groupSearch"] option:selected').val() } );
-            aoData.push( { "name": "centerSearch", "value": $('select[name="centerSearch"] option:selected').val() } );
+            aoData.push( { "name": "filters.customerLevels['CLIENT']", "value": $('select[id="clientSearch"] option:selected').val() } );
+            aoData.push( { "name": "filters.customerLevels['GROUP']", "value": $('select[id="groupSearch"] option:selected').val() } );
+            aoData.push( { "name": "filters.customerLevels['CENTER']", "value": $('select[id="centerSearch"] option:selected').val() } );
+            aoData.push( { "name": "filters.customerStates['CLIENT']", "value": $('select[id="clientStatus"] option:selected').val() } );
+            aoData.push( { "name": "filters.customerStates['GROUP']", "value": $('select[id="groupStatus"] option:selected').val() } );
+            aoData.push( { "name": "filters.customerStates['CENTER']", "value": $('select[id="centerStatus"] option:selected').val() } );
+            aoData.push( { "name": "filters.gender", "value": $('select[name="filters.gender"] option:selected').val() } );
+            aoData.push( { "name": "filters.citizenship", "value": $('input[name="filters.citizenship"]').val() } );
+            aoData.push( { "name": "filters.ethnicity", "value": $('input[name="filters.ethnicity"]').val() } );
+            aoData.push( { "name": "filters.businessActivity", "value": $('input[name="filters.businessActivity"]').val() } );
+            aoData.push( { "name": "filters.creationDateRangeStart", "value": $('input[name="filters.creationDateRangeStart"]').val() } );
+            aoData.push( { "name": "filters.creationDateRangeEnd", "value": $('input[name="filters.creationDateRangeEnd"]').val() } );
         },
         "fnDrawCallback": function(){
         	$(".sorting_1").removeClass("sorting_1"); [#-- remove unnecessary class added by firefox  --]

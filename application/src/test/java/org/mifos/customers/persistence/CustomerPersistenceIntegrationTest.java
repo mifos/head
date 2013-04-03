@@ -87,6 +87,7 @@ import org.mifos.domain.builders.ClientBuilder;
 import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -113,17 +114,14 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     private SavingsBO groupSavingsAccount;
     private SavingsBO clientSavingsAccount;
     private SavingsOfferingBO savingsOffering;
-    private Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>() {{
-        put(CustomerLevel.CLIENT.getValue(), true);
-        put(CustomerLevel.GROUP.getValue(), true);
-        put(CustomerLevel.CENTER.getValue(), true);
-    }};
+    private SearchFiltersDto filters;
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
 
     @Before
     public void setUp() {
         enableCustomWorkingDays();
+        clearFilters();
     }
 
 
@@ -730,7 +728,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("3"), Short.valueOf("1"), Short
-                .valueOf("1"), customerLevelIds);
+                .valueOf("1"), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(2, queryResult.getSize());
         Assert.assertEquals(2, queryResult.get(0, 10).size());
@@ -741,7 +739,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("0"), Short.valueOf("1"), Short
-                .valueOf("1"), customerLevelIds);
+                .valueOf("1"), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(2, queryResult.getSize());
         Assert.assertEquals(2, queryResult.get(0, 10).size());
@@ -752,7 +750,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
-                .valueOf("1"), Short.valueOf("1"), customerLevelIds);
+                .valueOf("1"), Short.valueOf("1"), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -783,7 +781,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         IntegrationTestObjectMother.createClient(client, weeklyMeeting);
 
         QueryResult queryResult = new CustomerPersistence().search(clientGovernmentId, office.getOfficeId(), testUser
-                .getPersonnelId(), testUser.getOffice().getOfficeId(), customerLevelIds);
+                .getPersonnelId(), testUser.getOffice().getOfficeId(), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -803,7 +801,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
-                .valueOf("1"), Short.valueOf("1"), customerLevelIds);
+                .valueOf("1"), Short.valueOf("1"), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         List results = queryResult.get(0, 10);
@@ -817,11 +815,85 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         getCustomer();
         StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search(groupAccount.getGlobalAccountNum(), Short
-                .valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), customerLevelIds);
+                .valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
 
+    }
+
+    @Test
+    public void testSearchWithoutCenters() throws Exception {
+        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        StaticHibernateUtil.flushSession();
+        setCustomerSearch(CustomerLevel.CENTER, false);
+        QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("0"), Short.valueOf("1"), Short
+                .valueOf("1"), filters);
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
+    }
+
+    @Test
+    public void testSearchWithoutGroups() throws Exception {
+        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        StaticHibernateUtil.flushSession();
+        setCustomerSearch(CustomerLevel.GROUP, false);
+        QueryResult queryResult = new CustomerPersistence().search("%", Short.valueOf("0"), Short.valueOf("1"), Short
+                .valueOf("1"), filters);
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(2, queryResult.getSize());
+        Assert.assertEquals(2, queryResult.get(0, 10).size());
+    }
+
+    @Test
+    public void testSearchWithEthnicityExists() throws Exception {
+        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        StaticHibernateUtil.flushSession();
+        filters.setEthnicity("SC");
+        QueryResult queryResult = new CustomerPersistence().search("%", Short.valueOf("0"), Short.valueOf("1"), Short
+                .valueOf("1"), filters);
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(3, queryResult.getSize());
+        Assert.assertEquals(3, queryResult.get(0, 10).size());
+    }
+
+    @Test
+    public void testSearchWithEthnicityNotExists() throws Exception {
+        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        StaticHibernateUtil.flushSession();
+        filters.setEthnicity("wrongEthnicity");
+        QueryResult queryResult = new CustomerPersistence().search("%", Short.valueOf("0"), Short.valueOf("1"), Short
+                .valueOf("1"), filters);
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(2, queryResult.getSize());
+        Assert.assertEquals(2, queryResult.get(0, 10).size());
+    }
+
+    @Test
+    public void testSearchActiveClients() throws Exception {
+        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        StaticHibernateUtil.flushSession();
+        Integer activeStatus = CustomerStatus.CLIENT_ACTIVE.getValue().intValue();
+        filters.getCustomerStates().put(CustomerLevel.CLIENT.toString(), activeStatus);
+        QueryResult queryResult = new CustomerPersistence().search("Client", Short.valueOf("0"), Short.valueOf("1"), Short
+                .valueOf("1"), filters);
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
+    }
+
+    @Test
+    public void testSearchClosedClients() throws Exception {
+        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_CLOSED);
+        StaticHibernateUtil.flushSession();
+        Integer activeStatus = CustomerStatus.CLIENT_CLOSED.getValue().intValue();
+        filters.getCustomerStates().put(CustomerLevel.CLIENT.toString(), activeStatus);
+        QueryResult queryResult = new CustomerPersistence().search("Client", Short.valueOf("0"), Short.valueOf("1"), Short
+                .valueOf("1"), filters);
+        Assert.assertNotNull(queryResult);
+        Assert.assertEquals(1, queryResult.getSize());
+        Assert.assertEquals(1, queryResult.get(0, 10).size());
     }
 
     @Test
@@ -941,7 +1013,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
-                .valueOf("1"), Short.valueOf("1"), customerLevelIds);
+                .valueOf("1"), Short.valueOf("1"), filters);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         List results = queryResult.get(0, 10);
@@ -1179,5 +1251,23 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         return TestObjectFactory.createLoanAccount("42423141111", group, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
                 startDate, loanOffering);
 
+    }
+    
+    private void clearFilters() {
+        Map<String, Boolean> customerLevelIds = new HashMap<String, Boolean>() {{
+            put(CustomerLevel.CLIENT.toString(), true);
+            put(CustomerLevel.GROUP.toString(), true);
+            put(CustomerLevel.CENTER.toString(), true);
+        }};
+        Map<String, Integer> customerStates = new HashMap<String, Integer>() {{
+            put(CustomerLevel.CLIENT.toString(), 0);
+            put(CustomerLevel.GROUP.toString(), 0);
+            put(CustomerLevel.CENTER.toString(), 0);
+        }};
+        filters = new SearchFiltersDto(customerLevelIds, customerStates, "", "", "", "", 0, "");
+    }
+    
+    private void setCustomerSearch(CustomerLevel level, Boolean value) {
+        filters.getCustomerLevels().put(level.toString(), value);
     }
 }

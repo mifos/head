@@ -30,7 +30,11 @@ import javax.persistence.Table;
 
 @NamedQueries({
     @NamedQuery(name = "lookUpValueLocaleEntity.getByLocaleAndLookUpId",
-                query = "from LookUpValueLocaleEntity l where l.localeId=:aLocaleId and l.lookUpId=:aLookUpId")
+                query = "from LookUpValueLocaleEntity l where l.localeId=:aLocaleId and l.lookUpId=:aLookUpId"),
+    @NamedQuery(name = "lookUpValueLocaleEntity.getLookupIdsByValue",
+                query = "select lvl.lookUpId from LookUpValueLocaleEntity lvl where " +
+                        "lvl.lookUpId in (select lv.lookUpId from LookUpValueEntity lv where lv.lookUpEntity.entityId = :ENTITY_ID) " +
+                        "and lvl.lookUpValue like :LOOKUP_VALUE")
 })
 
 @Entity

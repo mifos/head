@@ -28,7 +28,6 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-    <script src="pages/application/customer/js/searchFilters.js"></script>
     <span id="page.id" title="ClientsAccounts"></span>	
 		<form action="searchResult.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -81,7 +80,6 @@ explanation of the license and how it is applied.
 										name="CustomerSearch.searchstring" /> </span></td>
 								</tr>
 							</table>
-
 							<table border="0" cellpadding="4" cellspacing="0">
 								<tr>
 									<td><input type="text" id="clients_accounts.input.search" name="searchString" maxlength="200" /></td>
@@ -96,8 +94,6 @@ explanation of the license and how it is applied.
 										</select>
 									</td>
 								</tr>
-                                <tiles:insert definition=".searchFilters" flush="false">
-                                </tiles:insert>
 								<tr>
 									<td>&nbsp;</td>
 									<td align="right" class="paddingleft05notop"><html-el:submit
@@ -106,6 +102,10 @@ explanation of the license and how it is applied.
 									</html-el:submit></td>
 								</tr>
 							</table>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tiles:insert definition=".searchFilters" flush="false">
+                                </tiles:insert>
+                            </table>
 							</td>
 							<td width="101" align="center" valign="top" class="headingorange">
 							<mifos:mifoslabel name="CustomerSearch.or" />&nbsp;</td>

@@ -835,4 +835,9 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         return this.customerDao.getSavingsDetailDto(clientId, userContext);
     }
+    
+    @Override
+    public List<ValueListElement> getClientGenders() {
+        return this.customerDao.retrieveGenders();
+    }
 }

@@ -75,6 +75,9 @@
         <one-to-one name="customerMeeting"
             class="org.mifos.customers.business.CustomerMeetingEntity" cascade="all"
             property-ref="customer" />
+        <one-to-one name="customerDetail"
+                class="org.mifos.customers.client.business.ClientDetailEntity"
+                cascade="all" />
 
         <set name="customFields" cascade="all" lazy="true" access="field">
             <key column="customer_id" update="false" />
@@ -143,9 +146,6 @@
             <property name="lastName" column="last_name" access="field" />
             <property name="secondLastName" column="second_last_name"
                 access="field" />
-            <one-to-one name="customerDetail"
-                class="org.mifos.customers.client.business.ClientDetailEntity"
-                cascade="all" />
             <one-to-one name="clientPerformanceHistory"
                 class="org.mifos.customers.client.business.ClientPerformanceHistoryEntity"
                 cascade="all" property-ref="client" />
@@ -813,17 +813,30 @@
                    left join pa.parentCustomer as papa
                    left join c.office as off
                    left join c.personnel as per
-                           left join c.nameDetailSet as cnd
+                   left join c.nameDetailSet as cnd
+                   left join c.customerDetail as cd
                    where 
                    ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and 
                    c.office.officeId=:OFFICEID and 
+                   (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
+                   (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
                    (
-                        (:CENTER_SEARCH = true and c.customerLevel.id = 3 and c.displayName like :SEARCH_STRING) or
-                        (:GROUP_SEARCH = true and c.customerLevel.id = 2 and c.displayName like :SEARCH_STRING) or
+                        (:CENTER_SEARCH = true and c.customerLevel.id = 3 
+                         and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end) 
+                         and c.displayName like :SEARCH_STRING) or
+                        (:GROUP_SEARCH = true and c.customerLevel.id = 2 
+                         and c.customerStatus.id = (case(:GROUP_STATUS) when 'all' then c.customerStatus.id else (:GROUP_STATUS) end) 
+                         and c.displayName like :SEARCH_STRING) or
                         (
                             :CLIENT_SEARCH = true and
-                            c.customerLevel.id = 1 and 
+                            c.customerLevel.id = 1
+                            and c.customerStatus.id = (case(:CLIENT_STATUS) when 'all' then c.customerStatus.id else (:CLIENT_STATUS) end) and
                             (
+                                ((:ETHNICITY_SEARCH = true and cd.ethnicity in (:ETHNICITY_IDS)) or (:ETHNICITY_SEARCH = false)) and
+                                ((:BUSINESS_ACTIVITY_SEARCH = true and cd.businessActivities in (:BUSINESS_ACTIVITY_IDS)) or (:BUSINESS_ACTIVITY_SEARCH = false)) and
+                                ((:CITIZENSHIP_SEARCH = true and cd.citizenship in (:CITIZENSHIP_IDS)) or (:CITIZENSHIP_SEARCH = false)) and
+                                ((:GENDER_SEARCH = true and cd.gender = :GENDER_ID) or (:GENDER_SEARCH = false)) and
+                                (
                                 c.firstName like :SEARCH_STRING
                                 or c.lastName like :SEARCH_STRING
                                 or c.secondLastName like :SEARCH_STRING
@@ -831,6 +844,7 @@
                                 or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
                                 or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
                                 or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                )
                             )
                         )
                    ) ]]>
@@ -842,17 +856,30 @@
                    left join pa.parentCustomer as papa
                    left join c.office as off
                    left join c.personnel as per
-                           left join c.nameDetailSet as cnd
+                   left join c.nameDetailSet as cnd
+                   left join c.customerDetail as cd
                    where 
                    ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and 
                    c.office.officeId=:OFFICEID and 
+                   (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
+                   (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
                    (
-                        (:CENTER_SEARCH = true and c.customerLevel.id = 3 and c.displayName like :SEARCH_STRING) or
-                        (:GROUP_SEARCH = true and c.customerLevel.id = 2 and c.displayName like :SEARCH_STRING) or
+                        (:CENTER_SEARCH = true and c.customerLevel.id = 3  
+                         and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end)
+                         and c.displayName like :SEARCH_STRING) or
+                        (:GROUP_SEARCH = true and c.customerLevel.id = 2
+                         and c.customerStatus.id = (case(:GROUP_STATUS) when 'all' then c.customerStatus.id else (:GROUP_STATUS) end)
+                         and c.displayName like :SEARCH_STRING) or
                         (
-                            :CLIENT_SEARCH = true and
+                            :CLIENT_SEARCH = true 
+                            and c.customerStatus.id = (case(:CLIENT_STATUS) when 'all' then c.customerStatus.id else (:CLIENT_STATUS) end) and
                             c.customerLevel.id = 1 and 
                             (
+                                ((:ETHNICITY_SEARCH = true and cd.ethnicity in (:ETHNICITY_IDS)) or (:ETHNICITY_SEARCH = false)) and
+                                ((:BUSINESS_ACTIVITY_SEARCH = true and cd.businessActivities in (:BUSINESS_ACTIVITY_IDS)) or (:BUSINESS_ACTIVITY_SEARCH = false)) and
+                                ((:CITIZENSHIP_SEARCH = true and cd.citizenship in (:CITIZENSHIP_IDS)) or (:CITIZENSHIP_SEARCH = false)) and
+                                ((:GENDER_SEARCH = true and cd.gender = :GENDER_ID) or (:GENDER_SEARCH = false)) and
+                                (
                                 c.firstName like :SEARCH_STRING
                                 or c.lastName like :SEARCH_STRING
                                 or c.secondLastName like :SEARCH_STRING
@@ -860,6 +887,7 @@
                                 or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
                                 or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
                                 or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                )
                             )
                         )
                    )
@@ -873,16 +901,29 @@
                     left join c.office as off
                     left join c.personnel as per
                     left join c.nameDetailSet as cnd
+                    left join c.customerDetail as cd
                     where (
                             ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
-                            and (off.searchId like :OFFICE_SEARCH_ID) and 
-                            (
-                                (:CENTER_SEARCH = true and c.customerLevel.id = 3 and c.displayName like :SEARCH_STRING) or
-                                (:GROUP_SEARCH = true and c.customerLevel.id = 2 and c.displayName like :SEARCH_STRING) or
+                            and (off.searchId like :OFFICE_SEARCH_ID) and   
+                               (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
+                               (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
+                               (
+                                (:CENTER_SEARCH = true and c.customerLevel.id = 3 
+                                 and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end) 
+                                 and c.displayName like :SEARCH_STRING) or
+                                (:GROUP_SEARCH = true and c.customerLevel.id = 2 
+                                 and c.customerStatus.id = (case(:GROUP_STATUS) when 'all' then c.customerStatus.id else (:GROUP_STATUS) end) 
+                                 and c.displayName like :SEARCH_STRING) or
                                 (
                                     :CLIENT_SEARCH = true and
-                                    c.customerLevel.id = 1 and 
-                                    (
+                                    c.customerLevel.id = 1
+                                    and c.customerStatus.id = (case(:CLIENT_STATUS) when 'all' then c.customerStatus.id else (:CLIENT_STATUS) end) and
+                                    (    
+                                        ((:ETHNICITY_SEARCH = true and cd.ethnicity in (:ETHNICITY_IDS)) or (:ETHNICITY_SEARCH = false)) and
+                                        ((:BUSINESS_ACTIVITY_SEARCH = true and cd.businessActivities in (:BUSINESS_ACTIVITY_IDS)) or (:BUSINESS_ACTIVITY_SEARCH = false)) and
+                                        ((:CITIZENSHIP_SEARCH = true and cd.citizenship in (:CITIZENSHIP_IDS)) or (:CITIZENSHIP_SEARCH = false)) and
+                                        ((:GENDER_SEARCH = true and cd.gender = :GENDER_ID) or (:GENDER_SEARCH = false)) and
+                                        (
                                         c.firstName like :SEARCH_STRING
                                         or c.lastName like :SEARCH_STRING
                                         or c.secondLastName like :SEARCH_STRING
@@ -890,6 +931,7 @@
                                         or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
                                         or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
                                         or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                        )
                                     )
                                 )
                            )
@@ -902,27 +944,41 @@
                     left join c.parentCustomer as pa left join pa.parentCustomer as papa
                     left join c.office as off
                     left join c.personnel as per
-                            left join c.nameDetailSet as cnd
+                    left join c.nameDetailSet as cnd
+                    left join c.customerDetail as cd
                     where (
                             ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
-                            and (off.searchId like :OFFICE_SEARCH_ID) and 
+                            and (off.searchId like :OFFICE_SEARCH_ID) and
+                               (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
+                               (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
+                           (
+                                (:CENTER_SEARCH = true and c.customerLevel.id = 3 
+                                 and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end) 
+                                 and c.displayName like :SEARCH_STRING) or
+                                (:GROUP_SEARCH = true and c.customerLevel.id = 2
+                                 and c.customerStatus.id = (case(:GROUP_STATUS) when 'all' then c.customerStatus.id else (:GROUP_STATUS) end) 
+                                 and c.displayName like :SEARCH_STRING) or
                                 (
-                                    (:CENTER_SEARCH = true and c.customerLevel.id = 3 and c.displayName like :SEARCH_STRING) or
-                                    (:GROUP_SEARCH = true and c.customerLevel.id = 2 and c.displayName like :SEARCH_STRING) or
+                                    :CLIENT_SEARCH = true and
+                                    c.customerLevel.id = 1
+                                    and c.customerStatus.id = (case(:CLIENT_STATUS) when 'all' then c.customerStatus.id else (:CLIENT_STATUS) end) and
                                     (
-                                        :CLIENT_SEARCH = true and
-                                        c.customerLevel.id = 1 and 
+                                        ((:ETHNICITY_SEARCH = true and cd.ethnicity in (:ETHNICITY_IDS)) or (:ETHNICITY_SEARCH = false)) and
+                                        ((:BUSINESS_ACTIVITY_SEARCH = true and cd.businessActivities in (:BUSINESS_ACTIVITY_IDS)) or (:BUSINESS_ACTIVITY_SEARCH = false)) and
+                                        ((:CITIZENSHIP_SEARCH = true and cd.citizenship in (:CITIZENSHIP_IDS)) or (:CITIZENSHIP_SEARCH = false)) and
+                                        ((:GENDER_SEARCH = true and cd.gender = :GENDER_ID) or (:GENDER_SEARCH = false)) and
                                         (
-                                            c.firstName like :SEARCH_STRING
-                                            or c.lastName like :SEARCH_STRING
-                                            or c.secondLastName like :SEARCH_STRING
-                                            or c.displayName like :SEARCH_STRING
-                                            or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
-                                            or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
-                                            or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                        c.firstName like :SEARCH_STRING
+                                        or c.lastName like :SEARCH_STRING
+                                        or c.secondLastName like :SEARCH_STRING
+                                        or c.displayName like :SEARCH_STRING
+                                        or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                        or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                        or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
                                         )
                                     )
-                               )
+                                )
+                           )
                            )
                     ]]>
     </query>

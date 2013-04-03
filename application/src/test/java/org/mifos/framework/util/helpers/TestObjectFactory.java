@@ -445,7 +445,7 @@ public class TestObjectFactory {
                                         final CustomerBO parentCustomer, final List<FeeDto> fees, final String governmentId, final Date dateOfBirth,
                                         final Address address) {
 
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(132, 1, 1, 1, 1, 1, Short
                 .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
         ClientNameDetailDto clientNameDetailDto = clientNameView(NameType.CLIENT, customerName);
         ClientNameDetailDto spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);

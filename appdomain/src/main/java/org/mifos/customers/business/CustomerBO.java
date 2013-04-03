@@ -52,6 +52,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientDetailEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -108,6 +109,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private Set<CustomerPositionEntity> customerPositions;
     private CustomerAddressDetailEntity customerAddressDetail;
     private Set<CustomerNoteEntity> customerNotes;
+    private ClientDetailEntity customerDetail;
 
     //business attributes
     private CustomerBO parentCustomer;
@@ -452,6 +454,14 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public Set<CustomerNoteEntity> getCustomerNotes() {
         return customerNotes;
+    }
+
+    public ClientDetailEntity getCustomerDetail() {
+        return customerDetail;
+    }
+
+    public void setCustomerDetail(ClientDetailEntity customerDetail) {
+        this.customerDetail = customerDetail;
     }
 
     public PersonnelBO getCustomerFormedByPersonnel() {

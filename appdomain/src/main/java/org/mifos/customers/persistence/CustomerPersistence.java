@@ -24,6 +24,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -55,6 +58,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.CurrencyMismatchException;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
@@ -82,6 +86,7 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.LoanDetailDto;
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -309,7 +314,7 @@ public class CustomerPersistence extends LegacyGenericDao {
     }
 
     public QueryResult search(final String searchString, final Short officeId, final Short userId,
-            final Short userOfficeId, final Map<Short, Boolean> customerLevelIds) throws PersistenceException {
+            final Short userOfficeId, final SearchFiltersDto filters) throws PersistenceException {
 
         QueryResult queryResult = null;
 
@@ -323,7 +328,7 @@ public class CustomerPersistence extends LegacyGenericDao {
                     if (queryResult == null) {
                         queryResult = phoneNumberSearch(searchString, officeId, userId);
                         if (queryResult == null) {
-                            queryResult = mainSearch(searchString, officeId, userId, userOfficeId, customerLevelIds);
+                            queryResult = mainSearch(searchString, officeId, userId, userOfficeId, filters);
                         }
                     }
                 }
@@ -412,12 +417,9 @@ public class CustomerPersistence extends LegacyGenericDao {
     }
 
     private QueryResult mainSearch(final String searchString, final Short officeId, final Short userId,
-            final Short userOfficeId, final Map<Short, Boolean> customerLevelIds) throws PersistenceException, HibernateSearchException {
+            final Short userOfficeId, final SearchFiltersDto filters) throws PersistenceException, HibernateSearchException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
-        for (CustomerLevel customerLevel : CustomerLevel.values()) {
-            paramList.add(typeNameValue("Short", customerLevel.toString() + "_SEARCH", customerLevelIds.get(customerLevel.getValue())));
-        }
         QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
         if (officeId.shortValue() != 0) {
@@ -458,6 +460,7 @@ public class CustomerPersistence extends LegacyGenericDao {
             paramList.add(typeNameValue("String", "SEARCH_STRING3", ""));
         }
         setParams(paramList, userId);
+        setSearchFilters(paramList, filters);
         queryResult.setQueryInputs(queryInputs);
         return queryResult;
 
@@ -468,6 +471,92 @@ public class CustomerPersistence extends LegacyGenericDao {
         paramList.add(typeNameValue("Short", "LOID", PersonnelLevel.LOAN_OFFICER.getValue()));
         paramList.add(typeNameValue("Short", "USERLEVEL_ID", getLegacyPersonnelDao().getPersonnel(userId)
                 .getLevelEnum().getValue()));
+    }
+    
+    private void setSearchFilters(final List<Param> paramList, final SearchFiltersDto filters) throws PersistenceException {
+        Map<String, Boolean> customerLevelIds = filters.getCustomerLevels();
+        Map<String, Integer> customerStates = filters.getCustomerStates();
+        for (CustomerLevel customerLevel : CustomerLevel.values()) {
+            if (customerLevelIds != null) {
+                paramList.add(typeNameValue("Boolean", customerLevel.toString() + "_SEARCH", customerLevelIds.get(customerLevel.toString())));
+            } else {
+                paramList.add(typeNameValue("Boolean", customerLevel.toString() + "_SEARCH", true));
+            }
+            if (customerStates != null) {
+                paramList.add(typeNameValue("Short", customerLevel.toString() + "_STATUS", customerStates.get(customerLevel.toString())));
+            } else {
+                paramList.add(typeNameValue("Short", customerLevel.toString() + "_STATUS", "all"));
+            }
+        }
+        
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            if (filters.getCreationDateRangeStart() != null && !filters.getCreationDateRangeStart().equals("")) {
+                paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_START",
+                simpleDateFormat.parse(filters.getCreationDateRangeStart())));
+            } else {
+                paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_START", null));
+            }
+            if (filters.getCreationDateRangeEnd() != null && !filters.getCreationDateRangeEnd().equals("")) {
+                paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_END",
+                simpleDateFormat.parse(filters.getCreationDateRangeEnd())));
+            } else {
+                paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_END", null));
+            }
+        } catch (ParseException e) {
+            throw new MifosRuntimeException(e);
+        }
+        
+        if (filters.getGender() != null && filters.getGender() != 0) {
+            paramList.add(typeNameValue("Boolean", "GENDER_SEARCH", true));
+            paramList.add(typeNameValue("Short", "GENDER_ID", filters.getGender().shortValue()));
+        } else {
+            paramList.add(typeNameValue("Boolean", "GENDER_SEARCH", false));
+            paramList.add(typeNameValue("Short", "GENDER_ID", null));
+        }
+        
+        if (filters.getEthnicity() != null && !filters.getEthnicity().equals("")) {
+            List<Integer> ethnicityIds = getLookupIdsByValue(filters.getEthnicity(), LookUpEntity.ETHNICITY);
+            if (ethnicityIds.size() == 0) {
+                ethnicityIds.add(-1);
+            }
+            paramList.add(typeNameValue("Boolean", "ETHNICITY_SEARCH", true));
+            paramList.add(typeNameValue("List", "ETHNICITY_IDS", ethnicityIds));
+        } else {
+            paramList.add(typeNameValue("Boolean", "ETHNICITY_SEARCH", false));
+            paramList.add(typeNameValue("List", "ETHNICITY_IDS", null));
+        }
+        
+        if (filters.getBusinessActivity() != null && !filters.getBusinessActivity().equals("")) {
+            List<Integer> businessActivityIds = getLookupIdsByValue(filters.getBusinessActivity(), LookUpEntity.BUSINESS_ACTIVITY);
+            if (businessActivityIds.size() == 0) {
+                businessActivityIds.add(-1);
+            }
+            paramList.add(typeNameValue("Boolean", "BUSINESS_ACTIVITY_SEARCH", true));
+            paramList.add(typeNameValue("List", "BUSINESS_ACTIVITY_IDS", businessActivityIds));
+        } else {
+            paramList.add(typeNameValue("Boolean", "BUSINESS_ACTIVITY_SEARCH", false));
+            paramList.add(typeNameValue("List", "BUSINESS_ACTIVITY_IDS", null));
+        }
+        
+        if (filters.getCitizenship() != null && !filters.getCitizenship().equals("")) {
+            List<Integer> citizenshipIds = getLookupIdsByValue(filters.getCitizenship(), LookUpEntity.CITIZENSHIP);
+            if (citizenshipIds.size() == 0) {
+                citizenshipIds.add(-1);
+            }
+            paramList.add(typeNameValue("Boolean", "CITIZENSHIP_SEARCH", true));
+            paramList.add(typeNameValue("List", "CITIZENSHIP_IDS", citizenshipIds));
+        } else {
+            paramList.add(typeNameValue("Boolean", "CITIZENSHIP_SEARCH", false));
+            paramList.add(typeNameValue("List", "CITIZENSHIP_IDS", null));
+        }
+    }
+    
+    private List<Integer> getLookupIdsByValue(final String lookupValue, final Integer entityId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LOOKUP_VALUE", "%" + lookupValue + "%");
+        queryParameters.put("ENTITY_ID", entityId.shortValue());
+        return executeNamedQuery("lookUpValueLocaleEntity.getLookupIdsByValue", queryParameters);
     }
 
     private String[] getAliasNames() {

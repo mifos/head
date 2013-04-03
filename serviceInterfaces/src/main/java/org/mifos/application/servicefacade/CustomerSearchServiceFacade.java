@@ -21,10 +21,16 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.dto.screen.CustomerHierarchyDto;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.dto.screen.SearchFiltersDto;
+import org.mifos.framework.exceptions.PersistenceException;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface CustomerSearchServiceFacade {
 
-    CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize, Map<Short, Boolean> customerLevelIds);
+    CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize, SearchFiltersDto filters);
 
+    Map<String, ArrayList<CustomerStatusDetailDto>> getAvailibleCustomerStates() throws PersistenceException;
 }

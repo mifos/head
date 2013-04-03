@@ -43,6 +43,7 @@ import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.CustomerSearchServiceFacade;
 import org.mifos.application.servicefacade.DashboardServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.calendar.CalendarUtils;
@@ -67,6 +68,9 @@ import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.DashboardDto;
 import org.mifos.dto.domain.GroupDescriptionDto;
 import org.mifos.dto.domain.UserDetailDto;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.Constants;
@@ -78,9 +82,11 @@ import org.mifos.security.util.UserContext;
 public class CustSearchAction extends SearchAction {
 
     private DashboardServiceFacade dashboardServiceFacade; 
+    private CustomerSearchServiceFacade customerSearchServiceFacade;
     
     public CustSearchAction() {
         dashboardServiceFacade = ApplicationContextProvider.getBean(DashboardServiceFacade.class);
+        customerSearchServiceFacade = ApplicationContextProvider.getBean(CustomerSearchServiceFacade.class);
     }
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -112,6 +118,14 @@ public class CustSearchAction extends SearchAction {
         SessionUtils.setAttribute("isCenterHierarchyExists", isCenterHierarchyExist, request);
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName, request);
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
+        
+        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        SessionUtils.setMapAttribute("availibleCustomerStates", customerStates, request);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        SessionUtils.setCollectionAttribute("availibleClientGenders", availibleClientGenders, request);
+        
         return mapping.findForward(CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS);
     }
 
@@ -143,6 +157,13 @@ public class CustSearchAction extends SearchAction {
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName, request);
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
+        
+        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        SessionUtils.setMapAttribute("availibleCustomerStates", customerStates, request);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        SessionUtils.setCollectionAttribute("availibleClientGenders", availibleClientGenders, request);
 
         return mapping.findForward(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS);
     }
@@ -178,6 +199,13 @@ public class CustSearchAction extends SearchAction {
         DashboardDto dashboardDto = dashboardServiceFacade.getDashboardDto();
         SessionUtils.setAttribute("dashboard", dashboardDto, request);
         
+        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        SessionUtils.setMapAttribute("availibleCustomerStates", customerStates, request);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        SessionUtils.setCollectionAttribute("availibleClientGenders", availibleClientGenders, request);
+        
         return mapping.findForward(CustomerConstants.GETHOMEPAGE_SUCCESS);
     }
 
@@ -205,6 +233,13 @@ public class CustSearchAction extends SearchAction {
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
         forward = loadMasterData(userContext.getId(), request, actionForm);
+        
+        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        SessionUtils.setMapAttribute("availibleCustomerStates", customerStates, request);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        SessionUtils.setCollectionAttribute("availibleClientGenders", availibleClientGenders, request);
    
         return mapping.findForward(forward);
     }
@@ -237,11 +272,12 @@ public class CustSearchAction extends SearchAction {
         if (searchString.equals("")) {
             throw new CustomerException(CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
         }
-        Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>();
-        customerLevelIds.put(CustomerLevel.CENTER.getValue(), actionForm.isCenterSearch());
-        customerLevelIds.put(CustomerLevel.GROUP.getValue(), actionForm.isGroupSearch());
-        customerLevelIds.put(CustomerLevel.CLIENT.getValue(), actionForm.isClientSearch());
-        QueryResult customerSearchResult = new CustomerPersistence().search(searchString, officeId, userContext.getId(), userContext.getBranchId(), customerLevelIds);
+        
+        if (actionForm.getFilters() == null) {
+            actionForm.setFilters(new SearchFiltersDto());
+        }
+
+        QueryResult customerSearchResult = new CustomerPersistence().search(searchString, officeId, userContext.getId(), userContext.getBranchId(), actionForm.getFilters());
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, customerSearchResult, request);
         return mapping.findForward(ActionForwards.mainSearch_success.toString());
 

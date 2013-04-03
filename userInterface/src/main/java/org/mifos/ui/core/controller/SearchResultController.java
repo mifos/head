@@ -19,6 +19,7 @@
  */
 package org.mifos.ui.core.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
+import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.CustomerSearchServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.CustomerHierarchyDto;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.MifosUser;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,21 +57,6 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("customerSearch")
 public class SearchResultController {
     private static final int PAGE_SIZE = 10;
-    
-    private enum CustomerLevel {
-
-        CLIENT(Short.valueOf("1")), GROUP(Short.valueOf("2")), CENTER(Short.valueOf("3"));
-
-        private final Short value;
-
-        private CustomerLevel(final Short value) {
-            this.value = value;
-        }
-
-        public Short getValue() {
-            return value;
-        }
-    }
 
     @Autowired
     private CustomerSearchServiceFacade customerSearchServiceFacade;
@@ -77,8 +67,11 @@ public class SearchResultController {
     @Autowired
     private ConfigurationServiceFacade configurationServiceFacade;
 
+    @Autowired
+    private ClientServiceFacade clientServiceFacade;
+
     private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
-    
+
     @ModelAttribute("customerSearch")
     public CustomerSearchFormBean populateForm() {
         return new CustomerSearchFormBean();
@@ -86,7 +79,7 @@ public class SearchResultController {
 
     @RequestMapping(value = "/legacySearchResult", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView legacyShowSearchResults(HttpServletRequest request,
-            @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) {
+            @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) throws PersistenceException {
     	ModelAndView modelAndView = new ModelAndView();
         sitePreferenceHelper.resolveSiteType(modelAndView, "legacySearchResult", request);
         
@@ -99,6 +92,16 @@ public class SearchResultController {
             officesMap.put(officeDto.getId().toString(), officeDto.getName());
         }
         customerSearchFormBean.setOffices(officesMap);
+        
+        boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
+        modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+        
+        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        modelAndView.addObject("availibleCustomerStates", customerStates);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        modelAndView.addObject("availibleClientGenders", availibleClientGenders);
 
         if (result.hasErrors()) {
             return modelAndView;
@@ -110,14 +113,9 @@ public class SearchResultController {
         }
 
         modelAndView.addObject("customerSearch", customerSearchFormBean);
-        
-        Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>();
-        customerLevelIds.put(CustomerLevel.CENTER.getValue(), customerSearchFormBean.isCenterSearch());
-        customerLevelIds.put(CustomerLevel.GROUP.getValue(), customerSearchFormBean.isGroupSearch());
-        customerLevelIds.put(CustomerLevel.CLIENT.getValue(), customerSearchFormBean.isClientSearch());
 
         customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
-                customerSearchFormBean.getOfficeId(), currentPage * PAGE_SIZE, PAGE_SIZE, customerLevelIds);
+                customerSearchFormBean.getOfficeId(), currentPage * PAGE_SIZE, PAGE_SIZE, customerSearchFormBean.getFilters());
 
         boolean prevPageAvailable = false;
         if (currentPage > 0) {
@@ -141,7 +139,7 @@ public class SearchResultController {
     
     @RequestMapping(value = "/searchResult", method = { RequestMethod.POST, RequestMethod.GET } )
     public ModelAndView showSearchResults(HttpServletRequest request, @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, 
-    		BindingResult result){
+    		BindingResult result) throws PersistenceException{
     	ModelAndView modelAndView = new ModelAndView();
         sitePreferenceHelper.resolveSiteType(modelAndView, "searchResult", request);
         
@@ -160,6 +158,16 @@ public class SearchResultController {
         customerSearchFormBean.setOffices(officesMap);
         
 		modelAndView.addObject("customerSearch", customerSearchFormBean);
+		
+        boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
+        modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+        
+        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        modelAndView.addObject("availibleCustomerStates", customerStates);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        modelAndView.addObject("availibleClientGenders", availibleClientGenders);
 	
     	if (result.hasErrors()) {
     		return modelAndView;
@@ -167,40 +175,37 @@ public class SearchResultController {
 		
     	CustomerHierarchyDto customerHierarchyDto = new CustomerHierarchyDto();
     	
-        Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>();
-        customerLevelIds.put(CustomerLevel.CENTER.getValue(), customerSearchFormBean.isCenterSearch());
-        customerLevelIds.put(CustomerLevel.GROUP.getValue(), customerSearchFormBean.isGroupSearch());
-        customerLevelIds.put(CustomerLevel.CLIENT.getValue(), customerSearchFormBean.isClientSearch());
-    	
     	if ( customerSearchFormBean.getSearchString() != null && !customerSearchFormBean.getSearchString().isEmpty() ){
     		customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
-                    customerSearchFormBean.getOfficeId(), 0, 10, customerLevelIds);
+                    customerSearchFormBean.getOfficeId(), 0, 10, customerSearchFormBean.getFilters());
     	}
     	
     	modelAndView.addObject("customerHierarchy", customerHierarchyDto);
     	modelAndView.addObject("startIndex", 0);
-    	
-    	boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
-        modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
     	
     	return modelAndView;
     }
     
     @RequestMapping(value = "/searchResultAjaxData", method = RequestMethod.GET )
     public ModelAndView getSearchResultAjaxData(HttpServletResponse response, @ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean, 
-    		@RequestParam(required=false) String sEcho, @RequestParam Integer iDisplayStart, @RequestParam Integer iDisplayLength){
+    		@RequestParam(required=false) String sEcho, @RequestParam Integer iDisplayStart, @RequestParam Integer iDisplayLength) throws PersistenceException{
     	ModelAndView modelAndView = new ModelAndView("searchResultAjaxData");
     	
     	CustomerHierarchyDto customerHierarchyDto = new CustomerHierarchyDto();    
     	
-        Map<Short, Boolean> customerLevelIds = new HashMap<Short, Boolean>();
-        customerLevelIds.put(CustomerLevel.CENTER.getValue(), customerSearchFormBean.isCenterSearch());
-        customerLevelIds.put(CustomerLevel.GROUP.getValue(), customerSearchFormBean.isGroupSearch());
-        customerLevelIds.put(CustomerLevel.CLIENT.getValue(), customerSearchFormBean.isClientSearch());
+    	boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
+    	modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+    	
+    	HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+        modelAndView.addObject("availibleCustomerStates", customerStates);
+        
+        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+        modelAndView.addObject("availibleClientGenders", availibleClientGenders);
     	
     	if ( customerSearchFormBean.getSearchString() != null && !customerSearchFormBean.getSearchString().isEmpty() ){
     		customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
-                    customerSearchFormBean.getOfficeId(), iDisplayStart, iDisplayLength, customerLevelIds);
+                    customerSearchFormBean.getOfficeId(), iDisplayStart, iDisplayLength, customerSearchFormBean.getFilters());
     	}
     	
     	if ( sEcho != null ){
@@ -209,9 +214,6 @@ public class SearchResultController {
     	modelAndView.addObject("customerHierarchy", customerHierarchyDto);
     	modelAndView.addObject("iDisplayStart", iDisplayStart);
     	modelAndView.addObject("iDisplayLength", iDisplayLength);
-    	
-    	boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
-        modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
     	
     	return modelAndView;
     }

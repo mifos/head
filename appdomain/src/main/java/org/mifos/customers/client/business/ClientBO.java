@@ -92,7 +92,6 @@ public class ClientBO extends CustomerBO {
     //business meta data
     private Date dateOfBirth;
     private String governmentId;
-    private ClientDetailEntity customerDetail;
     private String firstName;
     private String lastName;
     private String secondLastName;
@@ -219,7 +218,7 @@ public class ClientBO extends CustomerBO {
 
         if (clientDetailEntity != null) {
             clientDetailEntity.setClient(this);
-            this.customerDetail = clientDetailEntity;
+            this.setCustomerDetail(clientDetailEntity);
         }
 
         if (isActive()) {
@@ -301,7 +300,7 @@ public class ClientBO extends CustomerBO {
         if (spouseNameDetailView != null) {
             this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
         }
-        this.customerDetail = new ClientDetailEntity(this, clientPersonalDetailDto);
+        this.setCustomerDetail(new ClientDetailEntity(this, clientPersonalDetailDto));
         createAssociatedOfferings(offeringsSelected);
 
         if (parentCustomer != null) {
@@ -364,14 +363,6 @@ public class ClientBO extends CustomerBO {
         this.governmentId = governmentId;
     }
 
-    public ClientDetailEntity getCustomerDetail() {
-        return customerDetail;
-    }
-
-    public void setCustomerDetail(final ClientDetailEntity customerDetail) {
-        this.customerDetail = customerDetail;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -397,7 +388,7 @@ public class ClientBO extends CustomerBO {
     }
 
     public Double getPovertyLikelihoodPercent() {
-        return this.customerDetail.getPovertyLikelihoodPercent();
+        return this.getCustomerDetail().getPovertyLikelihoodPercent();
     }
 
     /**
@@ -408,7 +399,7 @@ public class ClientBO extends CustomerBO {
      * The method is included here in order to test hibernate mappings through customerDetail.
      */
     public void setPovertyLikelihoodPercent(final Double pct) {
-        this.customerDetail.setPovertyLikelihoodPercent(pct);
+        this.getCustomerDetail().setPovertyLikelihoodPercent(pct);
     }
 
     public Set<ClientInitialSavingsOfferingEntity> getOfferingsAssociatedInCreate() {
@@ -747,7 +738,7 @@ public class ClientBO extends CustomerBO {
     }
 
     public void updateClientDetails(final ClientPersonalDetailDto clientPersonalDetailDto) {
-        customerDetail.updateClientDetails(clientPersonalDetailDto);
+        this.getCustomerDetail().updateClientDetails(clientPersonalDetailDto);
     }
 
     public void createAssociatedOfferings(final List<SavingsOfferingBO> offeringsSelected) {
@@ -1032,7 +1023,7 @@ public class ClientBO extends CustomerBO {
 
     public ClientDetailDto toClientDetailDto(boolean isFamilyDetailsRequired) {
 
-        ClientPersonalDetailDto customerDetailView = this.customerDetail.toDto();
+        ClientPersonalDetailDto customerDetailView = this.getCustomerDetail().toDto();
 
         String dateOfBirthAsString = "";
         if (this.dateOfBirth != null) {

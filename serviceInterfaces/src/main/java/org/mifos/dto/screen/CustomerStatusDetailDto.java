@@ -22,12 +22,24 @@ package org.mifos.dto.screen;
 
 public class CustomerStatusDetailDto {
 
+    private final String id;
     private final String statusName;
     private final String flagName;
 
     public CustomerStatusDetailDto(String statusName, String flagName) {
+        this.id = "";
         this.statusName = statusName;
         this.flagName = flagName;
+    }
+    
+    public CustomerStatusDetailDto(String id, String statusName, String flagName) {
+        this.id = id;
+        this.statusName = statusName;
+        this.flagName = flagName;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getStatusName() {

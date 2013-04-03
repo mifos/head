@@ -38,13 +38,6 @@
 		$('select[name="officeId"]').change(function(){
 		    searchResultTable.fnFilter("");  
 		});
-        $('a[id="filters-toggler"]').click(function(){
-            $('div[id="search-filters"]').toggle();
-            $('span[class="showorhide"]').toggle();
-        });
-        $('select[id$=Search]').change(function(){
-            searchResultTable.fnFilter("");
-        });
 	});
 </script>
 <span id="page.id" title="MainSearchResults"></span>

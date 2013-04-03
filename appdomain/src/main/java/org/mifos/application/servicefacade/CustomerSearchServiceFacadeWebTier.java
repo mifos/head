@@ -1,5 +1,7 @@
 package org.mifos.application.servicefacade;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerSearchDto;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -17,9 +20,11 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.screen.CenterSearchResultDto;
 import org.mifos.dto.screen.ClientSearchResultDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.mifos.dto.screen.GroupSearchResultDto;
 import org.mifos.dto.screen.LoanAccountSearchResultDto;
 import org.mifos.dto.screen.SavingsAccountSearchResultDto;
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -47,7 +52,7 @@ public class CustomerSearchServiceFacadeWebTier implements
 	OfficeDao officeDao;
 	
 	@Override
-	public CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize, Map<Short, Boolean> customerLevelIds){
+	public CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize, SearchFiltersDto filters){
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
 
@@ -67,7 +72,7 @@ public class CustomerSearchServiceFacadeWebTier implements
         List<CustomerSearchDto> resultList = null;
         
         try {
-            searchResult = new CustomerPersistence().search(normalisedSearchString, officeId, userContext.getId(), userContext.getBranchId(), customerLevelIds);
+            searchResult = new CustomerPersistence().search(normalisedSearchString, officeId, userContext.getId(), userContext.getBranchId(), filters);
         } catch ( PersistenceException e ) {
             throw new MifosRuntimeException(e);
         }
@@ -286,6 +291,22 @@ public class CustomerSearchServiceFacadeWebTier implements
         }
         
 		return customerHierarchyDto;
+	}
+	
+	@Override
+	public Map<String, ArrayList<CustomerStatusDetailDto>> getAvailibleCustomerStates() throws PersistenceException {
+	    HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+        for (CustomerLevel customerLevel : CustomerLevel.values()) {
+            List<CustomerStatusEntity> states = new CustomerPersistence().retrieveAllCustomerStatusList(customerLevel.getValue());
+            ArrayList<CustomerStatusDetailDto> statesDtos = new ArrayList<CustomerStatusDetailDto>();
+            for (CustomerStatusEntity customerStatusEntity : states) {
+                CustomerStatusDetailDto customerStatusDetailDto = 
+                        new CustomerStatusDetailDto(customerStatusEntity.getId().toString(), customerStatusEntity.getName(), null);
+                statesDtos.add(customerStatusDetailDto);
+            }
+            customerStates.put(customerLevel.toString(), statesDtos);
+        }
+        return customerStates;
 	}
 
 }

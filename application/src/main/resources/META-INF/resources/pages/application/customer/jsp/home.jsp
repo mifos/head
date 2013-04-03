@@ -28,7 +28,6 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".homePage">
 	<tiles:put name="body" type="string">
-	<script src="pages/application/customer/js/searchFilters.js"></script>
 	<span id="page.id" title="Home"></span>
 		<form action="searchResult.ftl">
 			
@@ -117,21 +116,15 @@ explanation of the license and how it is applied.
 													<html-el:hidden property="officeId" value="0"/> 
 													</c:otherwise>
 													</c:choose>												
+                                                    <html-el:submit styleId="home.button.search" property="searchButton" styleClass="buttn">
+                                                        <mifos:mifoslabel name="CustomerSearch.search"/>
+                                                    </html-el:submit>
 												</td>
 											</tr>
                                             <tiles:insert definition=".searchFilters" flush="false">
                                             </tiles:insert>
 													<c:set var="recordLoanOfficerId" value="0"/>
-													<c:set var="recordOfficeId" value="0"/>
-												
-											<tr class="fontnormal8pt">
-												<td width="88%">
-												<br/>
-													<html-el:submit styleId="home.button.search" property="searchButton" styleClass="buttn">
-														<mifos:mifoslabel name="CustomerSearch.search"/>
-													</html-el:submit>
-												</td>
-											</tr>											
+													<c:set var="recordOfficeId" value="0"/>										
 										</table>
 									</td>
 								</tr>

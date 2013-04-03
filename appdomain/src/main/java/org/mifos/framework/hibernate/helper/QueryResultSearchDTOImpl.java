@@ -130,7 +130,11 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
         if (paramList != null) {
             for (int i = 0; i < paramList.size(); i++) {
                 if (paramList.get(i) != null) {
-                    query.setParameter(paramList.get(i).getName(), paramList.get(i).getValue());
+                    if (paramList.get(i).getValue() instanceof List) {
+                        query.setParameterList(paramList.get(i).getName(), (List) paramList.get(i).getValue());
+                    } else {
+                        query.setParameter(paramList.get(i).getName(), paramList.get(i).getValue());
+                    }
                 }
             }
         }

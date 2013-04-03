@@ -21,7 +21,9 @@
 package org.mifos.customers.struts.actionforms;
 
 import java.util.Date;
+import java.util.Map;
 
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class CustSearchActionForm extends BaseActionForm {
@@ -39,10 +41,8 @@ public class CustSearchActionForm extends BaseActionForm {
     private String perspective;
     
     private String selectedDateOption;
-        
-    private boolean clientSearch = true;
-    private boolean groupSearch = true;
-    private boolean centerSearch = true;
+    
+    private SearchFiltersDto filters;
 
     public String getInput() {
         return input;
@@ -100,28 +100,12 @@ public class CustSearchActionForm extends BaseActionForm {
         this.selectedDateOption = selectedDateOption;
     }
 
-    public boolean isClientSearch() {
-        return clientSearch;
+    public SearchFiltersDto getFilters() {
+        return filters;
     }
 
-    public void setClientSearch(boolean clientSearch) {
-        this.clientSearch = clientSearch;
+    public void setFilters(SearchFiltersDto filters) {
+        this.filters = filters;
     }
 
-    public boolean isGroupSearch() {
-        return groupSearch;
-    }
-
-    public void setGroupSearch(boolean groupSearch) {
-        this.groupSearch = groupSearch;
-    }
-
-    public boolean isCenterSearch() {
-        return centerSearch;
-    }
-
-    public void setCenterSearch(boolean centerSearch) {
-        this.centerSearch = centerSearch;
-    }
- 
 }
