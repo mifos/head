@@ -132,7 +132,7 @@ public class LoanImportTest extends UiTestCaseBase {
                     "Error in row 19, Column 9: Invalid date: 1998-11-20",
                     "--> The disbursement date is invalid. Disbursement date must be on or after todays date.",
                     "--> The disbursement date is invalid. It cannot be before the customers activation date 26-Jan-2009.",
-                    "--> The disbursement date is invalid. It cannot be before the product start date 22-Jun-2012.",
+                    "--> The disbursement date is invalid. It cannot be before the product start date",
                     "--> The disbursement date is invalid. It must fall on a valid customer meeting schedule.",
                     "Error in row 20, Column 10: Missing grace period",
                     "Error in row 21, Column 10: Grace period for repayments must be less than number of loan installments.",
