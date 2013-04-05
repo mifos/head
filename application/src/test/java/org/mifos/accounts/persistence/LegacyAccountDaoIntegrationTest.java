@@ -159,6 +159,8 @@ public class LegacyAccountDaoIntegrationTest extends AccountIntegrationTestCase 
                 + "        <GLAccount code=\"11200\" name=\"Bank Balances\">"
                 + "          <GLAccount code=\"11201\" name=\"Bank Account 1\"/>"
                 + "          <GLAccount code=\"11202\" name=\"Bank Account 2\"/>" + "        </GLAccount>"
+                + "        <GLAccount code=\"11300\" name=\"Transfers\">"
+                + "          <GLAccount code=\"11301\" name=\"Inter Office Transfers\"/>" + "        </GLAccount>"
                 + "      </GLAccount>" + "      <GLAccount code=\"13000\" name=\"Loan Portfolio\">"
                 + "        <GLAccount code=\"13100\" name=\"Loans and Advances\">"
                 + "          <GLAccount code=\"13101\" name=\"Loans to clients\"/>"

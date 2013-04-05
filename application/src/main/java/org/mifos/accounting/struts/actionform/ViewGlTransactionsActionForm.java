@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ViewGlTransactionsActionForm extends BaseActionForm {
-    private static final Logger logger = LoggerFactory.getLogger(GeneralLedgerActionForm.class);
+    private static final Logger logger = LoggerFactory.getLogger(MultipleGeneralLedgerActionForm.class);
 
     private String toTrxnDate; 
     private String fromTrxnDate;

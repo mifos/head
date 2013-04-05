@@ -24,19 +24,26 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.accounting.business.CoaBranchBO;
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlMasterBO;
+import org.mifos.dto.domain.CoaNamesDto;
+import org.mifos.dto.domain.DynamicOfficeDto;
 import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.GlDetailDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
+import org.mifos.dto.domain.RolesActivityDto;
 import org.mifos.dto.domain.RowCount;
+import org.mifos.dto.domain.ViewStageTransactionsDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public interface AccountingDao {
 
 	public List<GLCodeDto> findMainAccountCashGlCodes();
+	public List<RolesActivityDto> findrolesActivity(int activityid);
 
 	public List<GlBalancesBO> findExistedGlBalacesBOs(Integer officeLevelId,
 			String officeId, String glCodeValue,Integer financialYearId);
@@ -84,4 +91,57 @@ public interface AccountingDao {
 	
 	public List<GlBalancesBO> getYearEndGlBalancesBOs(String querystring,int oldFinancialYearId );
 	
+	List<RowCount> findTotalNumberOfStageRecords();
+
+	public void updateStage(int transactionNo, int stage);
+
+	public List<ViewStageTransactionsDto> findStagedAccountingTransactionOnId(
+			int transactionNo);
+
+	public List<GlDetailDto> findChequeDetails(int transactionNo);
+
+	public List<GLCodeDto> findAuditGlCodes();
+
+	public List<ViewStageTransactionsDto> findStageAccountingTransactions(
+			Date date1, Date date2, int iPageNo, int noOfRecordsPerPage);
+	public List<RowCount> findTotalNumberOfStageRecords(Date date1, Date date2);
+	public void addComments(String transactionId, String audit,
+			String auditComments);
+
+	List<ViewStageTransactionsDto> findStageAccountingTransactions(
+			String stage, int startRecord, int numberOfRecords);
+	//inter office
+	public List<GLCodeDto> findInterBankDebitAccounts();
+
+	public List<OfficeGlobalDto> findCustomersWithGlobalNum(
+			Short customerLevelId, String officeId);
+
+	public List<OfficeGlobalDto> findOfficesWithGlobalNum(Short officeLevelId,
+			String officeId);
+
+	//process operational
+
+	public List<DynamicOfficeDto> getListOfOffices(String officeId,
+			String officeLevelId);
+
+	public String findLastProcessingUpdatedDate(String string, String globalOfficeNumber);
+
+	public List<MisProcessingTransactionsDto> processMisPostings(Date lastProcessDate,
+			String officeId);
+	public void updateLastProcessUpdatedDate(Date lastProcessDate, String globalOfficeNumber);
+
+	//coa mapping
+
+	public List<GLCodeDto> findCoaBranchAccountHeadGlCodes();
+	public List<CoaNamesDto> findCoaNames(String globalofficenum);
+	public List<GLCodeDto> findRemainingCoaNames(String globalofficenum);
+	public int deletegGlobalNumCoaNames(String deletecoaname);
+	public List<GLCodeDto> findCoaBranchNames(String coaname);
+	public List<CoaNamesDto> findCoaNamesWithGlcodeValues(String coaname);
+	public boolean savingCoaBranchTransaction(CoaBranchBO CoaBranchBO);
+
+	//consolidated
+
+	List<ViewStageTransactionsDto> findConsolidatedAccountingTransactions(String branchoffice);
+
 }

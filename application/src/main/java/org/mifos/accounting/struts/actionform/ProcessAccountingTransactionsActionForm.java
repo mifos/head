@@ -41,13 +41,41 @@ import org.slf4j.LoggerFactory;
 
 public class ProcessAccountingTransactionsActionForm extends BaseActionForm {
 	private static final Logger logger = LoggerFactory
-			.getLogger(GeneralLedgerActionForm.class);
+			.getLogger(MultipleGeneralLedgerActionForm.class);
 
 	private String processTillDate;
 	private String groupBy;
 	private String lastProcessDateDD;
 	private String lastProcessDateMM;
 	private String lastProcessDateYY;
+
+	private String officeLevelId;
+	private String office;
+	private String officeHierarchy;
+
+	public String getOfficeLevelId() {
+		return officeLevelId;
+	}
+
+	public String getOffice() {
+		return office;
+	}
+
+	public String getOfficeHierarchy() {
+		return officeHierarchy;
+	}
+
+	public void setOfficeLevelId(String officeLevelId) {
+		this.officeLevelId = officeLevelId;
+	}
+
+	public void setOffice(String office) {
+		this.office = office;
+	}
+
+	public void setOfficeHierarchy(String officeHierarchy) {
+		this.officeHierarchy = officeHierarchy;
+	}
 
 	public String getGroupBy() {
 		return groupBy;
