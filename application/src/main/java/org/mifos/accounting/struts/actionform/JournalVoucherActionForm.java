@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 public class JournalVoucherActionForm extends BaseActionForm {
 	private static final Logger logger = LoggerFactory
-			.getLogger(GeneralLedgerActionForm.class);
+			.getLogger(MultipleGeneralLedgerActionForm.class);
 
 	private String voucherDate;
 	private String voucherId;
@@ -54,6 +54,15 @@ public class JournalVoucherActionForm extends BaseActionForm {
 	private String creditAccountHead;
 	private String amount;
 	private String voucherNotes;
+	private String officeLevelId;
+
+	public String getOfficeLevelId() {
+		return officeLevelId;
+	}
+
+	public void setOfficeLevelId(String officeLevelId) {
+		this.officeLevelId = officeLevelId;
+	}
 
 	public String getVoucherId() {
 		return voucherId;

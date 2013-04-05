@@ -143,5 +143,479 @@
            </sql>
        </rollback>
    </changeSet>
+    <changeSet id="MIFOSFINANACC" author="Hugo Technologies"
+		context="expansion">
+		<sql endDelimiter=";">
+
+			alter table acc_glmaster add stage INT default
+			0;
+
+			alter table acc_glmaster add updated_date timestamp default
+			current_timestamp;
+
+			alter table acc_glmaster add member_id varchar(20)
+			default null;
+
+			alter table acc_glmaster add audit varchar(10) default
+			'no';
+
+			alter table acc_glmaster add audit_comments varchar(225);
+
+			create table acc_process_update(pud_id smallint(10) PRIMARY KEY AUTO_INCREMENT,branch_globaloffice_num varchar(100),last_update_date date);
+
+			create table `coa_branch` (`coa_id` integer not null auto_increment,
+            `glcode_value` varchar(50) default null,
+            `global_office_num` varchar(50) default null,
+             `coa_name` varchar(42) default null,
+             PRIMARY KEY (`coa_id`)
+               );
+			   insert  into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-SingleGeneralLedgerSave');
+
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-SingleGeneralLedgerSave'), NULL);
+
+
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(302,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-SingleGeneralLedgerSave'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-SingleGeneralLedgerSave'));
+
+
+			insert into
+			roles_activity(activity_id, role_id) values (302, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-JournalVoucherSave');
+
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-JournalVoucherSave'), NULL);
+
+
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(303,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-JournalVoucherSave'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-JournalVoucherSave'));
+
+
+			insert into
+			roles_activity(activity_id, role_id) values (303, 1);
+
+
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-ViewStageTransactions');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-ViewStageTransactions'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(304,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-ViewStageTransactions'),
+			(select
+			lookup_id
+			from lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-ViewStageTransactions'));
+			insert into
+			roles_activity(activity_id, role_id) values (304, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-InterOfficeTransfers');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-InterOfficeTransfers'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(305,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-InterOfficeTransfers'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-InterOfficeTransfers'));
+			insert into
+			roles_activity(activity_id, role_id) values (305, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-ApproveTransactions');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-ApproveTransactions'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(306,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-ApproveTransactions'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-ApproveTransactions'));
+			insert into
+			roles_activity(activity_id, role_id) values (306, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-AuditTransactions');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-AuditTransactions'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(307,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-AuditTransactions'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-AuditTransactions'));
+			insert into
+			roles_activity(activity_id, role_id) values (307, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-CoaBranchMapping');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-CoaBranchMapping'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(308,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CoaBranchMapping'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CoaBranchMapping'));
+			insert into
+			roles_activity(activity_id, role_id) values (308, 1);
+
+
+                         insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-BranchVoucherEntry');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-BranchVoucherEntry'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(309,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-BranchVoucherEntry'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-BranchVoucherEntry'));
+			insert into
+			roles_activity(activity_id, role_id) values (309, 1);
+
+                         insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-ConsolidatedTransaction');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-ConsolidatedTransaction'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(310,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-ConsolidatedTransaction'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-ConsolidatedTransaction'));
+			insert into
+			roles_activity(activity_id, role_id) values (310, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-MultipleGeneralLedgerAction');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-MultipleGeneralLedgerAction'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(311,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-MultipleGeneralLedgerAction'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-MultipleGeneralLedgerAction'));
+			insert into
+			roles_activity(activity_id, role_id) values (311, 1);
+
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-MultipleGeneralLedgerActionSave');
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-MultipleGeneralLedgerActionSave'), NULL);
+			insert into
+			activity(activity_id,
+			parent_id,activity_name_lookup_id,description_lookup_id) values
+			(312,
+			113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-MultipleGeneralLedgerActionSave'),
+			(select
+			lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-MultipleGeneralLedgerActionSave'));
+			insert into
+			roles_activity(activity_id, role_id) values (312, 1);
+
+			</sql>
+		<rollback>
+			<sql endDelimiter=";">
+
+           Drop table  acc_process_update;
+           Drop  table  coa_branch;
+           
+				DELETE FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id
+				from
+				lookup_value WHERE lookup_name='Permissions-SingleGeneralLedgerSave');
+
+				DELETE FROM roles_activity WHERE activity_id= 302;
+
+				DELETE FROM
+				activity WHERE activity_id = 302;
+
+				DELETE FROM lookup_value WHERE
+				entity_id = 87 AND lookup_name ='Permissions-SingleGeneralLedgerSave';
+
+				DELETE FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id
+				from
+				lookup_value WHERE
+				lookup_name='Permissions-JournalVoucherSave');
+
+				DELETE FROM
+				roles_activity WHERE activity_id= 303;
+
+				DELETE FROM activity WHERE
+				activity_id = 303;
+
+				DELETE FROM lookup_value WHERE entity_id = 87 AND
+				lookup_name ='Permissions-JournalVoucherSave';
+
+
+
+
+				DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-ViewStageTransactions');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 304;
+
+				DELETE FROM activity
+				WHERE activity_id = 304;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-ViewStageTransactions';
+
+				DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-InterOfficeTransfers');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 305;
+
+				DELETE FROM activity
+				WHERE activity_id = 305;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-InterOfficeTransfers';
+
+				DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-ApproveTransactions');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 306;
+
+				DELETE FROM activity
+				WHERE activity_id = 306;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-ApproveTransactions';
+
+				DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-AuditTransactions');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 307;
+
+				DELETE FROM activity
+				WHERE activity_id = 307;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-AuditTransactions';
+
+				 DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-CoaBranchMapping');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 308;
+
+				DELETE FROM activity
+				WHERE activity_id = 308;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-CoaBranchMapping';
+
+
+                            DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-BranchVoucherEntry');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 309;
+
+				DELETE FROM activity
+				WHERE activity_id = 309;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-BranchVoucherEntry';
+
+
+
+                           DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-ConsolidatedTransaction');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 310;
+
+				DELETE FROM activity
+				WHERE activity_id = 310;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-ConsolidatedTransaction';
+
+				 DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-MultipleGeneralLedgerAction');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 311;
+
+				DELETE FROM activity
+				WHERE activity_id = 311;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-MultipleGeneralLedgerAction';
+
+
+                                 DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value WHERE lookup_name='Permissions-MultipleGeneralLedgerActionSave');
+
+				DELETE
+				FROM roles_activity WHERE activity_id= 312;
+
+				DELETE FROM activity
+				WHERE activity_id = 312;
+
+				DELETE FROM lookup_value WHERE entity_id =
+				87 AND lookup_name ='Permissions-MultipleGeneralLedgerActionSave';
+
+			 </sql>
+       </rollback>
+   </changeSet>
    
 </databaseChangeLog>

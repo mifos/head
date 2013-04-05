@@ -22,6 +22,7 @@ package org.mifos.application.util.helpers;
 
 public enum ActionForwards {
     load_success,
+    submit_success,
     load_failure,
     preview_success,
     preview_failure,

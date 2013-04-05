@@ -235,7 +235,6 @@ public class DbUnitDataImportExport {
                     "jdbc:mysql://localhost/" + databaseName, user, password);
             IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
             connection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
-            System.out.println("dumping data to: " + fileName + " ...");
 
             // sequenced data should not be necessary when foreign key constraints
             // are turned off on the connection...
@@ -247,14 +246,14 @@ public class DbUnitDataImportExport {
                 jdbcConnection.close();
             }
         }
-        System.out.println("done");
+
 
     }
 
     private void loadDataFromFile(String fileName) throws DatabaseUnitException, SQLException, IOException, ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
         Connection jdbcConnection = null;
-        System.out.println("reading data from: " + fileName + " ...");
+
         boolean enableColumnSensing = true;
         IDataSet dataSet = new FlatXmlDataSet(new File(fileName),false,enableColumnSensing);
         try {
@@ -269,7 +268,7 @@ public class DbUnitDataImportExport {
                 jdbcConnection.close();
             }
         }
-        System.out.println("done");
+
     }
 
     private static void showHelp(Options options) {

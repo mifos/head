@@ -675,7 +675,7 @@
 			((SELECT
 			MAX(lv.lookup_id)+1 FROM
 			lookup_value lv), 87,
-			'Permissions-Generalledger');
+			'Permissions-SingleGeneralledger');
 			insert into lookup_value(lookup_id,
 			entity_id, lookup_name) values ((SELECT
 			MAX(lv.lookup_id)+1 FROM
@@ -706,7 +706,7 @@
 			lookup_value_locale(locale_id, lookup_id, lookup_value) values
 			(1,
 			(select lookup_id from lookup_value where
-			lookup_name='Permissions-Generalledger'), NULL);
+			lookup_name='Permissions-SingleGeneralledger'), NULL);
 			insert into
 			lookup_value_locale(locale_id, lookup_id, lookup_value) values
 			(1,
@@ -741,10 +741,10 @@
 			(295, 113,
 			(select lookup_id from
 			lookup_value where entity_id = 87 AND
-			lookup_name='Permissions-Generalledger'),
+			lookup_name='Permissions-SingleGeneralledger'),
 			(select lookup_id from
 			lookup_value where entity_id = 87 AND
-			lookup_name='Permissions-Generalledger'));
+			lookup_name='Permissions-SingleGeneralledger'));
 
 			insert into
 			activity(activity_id, parent_id, activity_name_lookup_id,
@@ -860,7 +860,7 @@
 				DELETE FROM
 				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
 				lookup_value
-				WHERE lookup_name='Permissions-Generalledger');
+				WHERE lookup_name='Permissions-SingleGeneralledger');
 				
 				DELETE
 				FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
@@ -887,7 +887,7 @@
 
 				DELETE
 				FROM lookup_value WHERE entity_id = 87 AND lookup_name =
-				'Permissions-Generalledger';
+				'Permissions-SingleGeneralledger';
 				
 				DELETE FROM lookup_value WHERE entity_id
 				= 87 AND lookup_name =
