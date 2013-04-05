@@ -33,9 +33,24 @@ public class GlDetailBO {
    private Date chequeDate;
    private String bankName;
    private String bankBranch;
+   private String transactionNarration;
 
-   public GlDetailBO(String subAccount,BigDecimal transactionAmount,String amountAction,
+
+public GlDetailBO(String subAccount,BigDecimal transactionAmount,String amountAction,
+		   String chequeNo,Date chequeDate,String bankName,String bankBranch,String transactionnotes){
+	   this.subAccount=subAccount;
+	   this.transactionAmount=transactionAmount;
+	   this.amountAction=amountAction;
+	   this.chequeNo=chequeNo;
+	   this.chequeDate=chequeDate;
+	   this.bankName=bankName;
+	   this.bankBranch=bankBranch;
+	   this.transactionNarration=transactionnotes;
+     }
+
+   public GlDetailBO(int transactionId, String subAccount,BigDecimal transactionAmount,String amountAction,
 		   String chequeNo,Date chequeDate,String bankName,String bankBranch){
+	   this.transactionId = transactionId;
 	   this.subAccount=subAccount;
 	   this.transactionAmount=transactionAmount;
 	   this.amountAction=amountAction;
@@ -45,6 +60,13 @@ public class GlDetailBO {
 	   this.bankBranch=bankBranch;
      }
 
+
+   public String getTransactionNarration() {
+		return transactionNarration;
+	}
+	public void setTransactionNarration(String transactionNarration) {
+		this.transactionNarration = transactionNarration;
+	}
 public int getTransactionMasterId() {
 	return transactionMasterId;
 }

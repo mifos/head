@@ -42,9 +42,9 @@ import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GeneralLedgerActionForm extends BaseActionForm {
+public class SingleGeneralLedgerActionForm extends BaseActionForm {
 	private static final Logger logger = LoggerFactory
-			.getLogger(GeneralLedgerActionForm.class);
+			.getLogger(SingleGeneralLedgerActionForm.class);
 
 	private String trxnDate;
 	private String trxnId;
@@ -55,13 +55,23 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 	private String accountHead;
 	private String amount;
 	private String notes;
-	//
 	private String chequeNo;
 	private String chequeDateDD;
 	private String chequeDateMM;
 	private String chequeDateYY;
 	private String bankName;
 	private String bankBranch;
+	private String memberId;
+
+	private String officeLevelId;
+
+	public String getOfficeLevelId() {
+		return officeLevelId;
+	}
+
+	public void setOfficeLevelId(String officeLevelId) {
+		this.officeLevelId = officeLevelId;
+	}
 
 	public String getChequeNo() {
 		return chequeNo;
@@ -130,7 +140,13 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 	public String getMainAccount() {
 		return mainAccount;
 	}
+	public String getMemberId() {
+		return memberId;
+	}
 
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
 	public void setMainAccount(String mainAccount) {
 		this.mainAccount = mainAccount;
 	}
@@ -233,6 +249,7 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 			this.bankName = null;
 			this.bankBranch = null;
 			this.notes = null;
+			this.memberId=null;
 		}
 
 	}
@@ -366,6 +383,7 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 							main_Account));
 		}
 
+
 		if (accountHead == null || "".equals(accountHead.trim())) {
 			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
 					new ActionMessage(
@@ -377,6 +395,13 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
 					new ActionMessage(
 							SimpleAccountingConstants.MANDATORYFIELDS, Amount));
+		}
+		//memberId == null || "".equals(memberId.trim())||
+
+		if (memberId.length()!=10&& memberId.length()>0) {
+			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
+					new ActionMessage(
+							SimpleAccountingConstants.ENTER_GRETERTHAN, memberId));
 		}
 
 		if (StringUtils.isNotBlank(getAmount())) {
@@ -403,7 +428,7 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 			errors = chequeDateValidate(errors, locale);
 		return errors;
 	}
-	
+
 	protected DoubleConversionResult validateAmount(String amountString,
 			MifosCurrency currency, String fieldPropertyKey,
 			ActionErrors errors, String installmentNo) {
