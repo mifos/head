@@ -596,6 +596,8 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
+                update penalty set limit_min = 2147483647 where limit_min > 2147483647;
+                update penalty set limit_max = 2147483647 where limit_max > 2147483647;
                 ALTER TABLE penalty CHANGE COLUMN limit_min limit_min INT NOT NULL;
                 ALTER TABLE penalty CHANGE COLUMN limit_max limit_max INT NOT NULL;
             </sql>
