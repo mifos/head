@@ -114,7 +114,7 @@ public class SimpleAccountingRestController {
 		glDetailBOList.add(new GlDetailBO(subAccount,
 				new BigDecimal(transactionAmount),
 				amountActionList.get(1), chequeNo, DateUtils
-						.getDate(chequeDate), bankName, bankBranch));
+						.getDate(chequeDate), bankName, bankBranch,null));
 		return glDetailBOList;
 	}
 	

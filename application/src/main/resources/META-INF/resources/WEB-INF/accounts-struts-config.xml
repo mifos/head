@@ -44,8 +44,10 @@
                    type="org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"/>
         <form-bean name="reverseloandisbactionform"
                    type="org.mifos.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"/>
-        <form-bean name="generalledgeractionform"
-			type="org.mifos.accounting.struts.actionform.GeneralLedgerActionForm" />
+        <form-bean name="multiplegeneralledgeractionform"
+			type="org.mifos.accounting.struts.actionform.MultipleGeneralLedgerActionForm" />
+			<form-bean name="singlegeneralledgeractionform"
+			type="org.mifos.accounting.struts.actionform.SingleGeneralLedgerActionForm" />
 		<form-bean name="journalvoucheractionform"
 			type="org.mifos.accounting.struts.actionform.JournalVoucherActionForm" />
 		<form-bean name="viewgltransactionsactionform"
@@ -54,6 +56,17 @@
 			type="org.mifos.accounting.struts.actionform.OpenBalanceActionForm" />
 		<form-bean name="processaccountingtransactionsactionform"
 			type="org.mifos.accounting.struts.actionform.ProcessAccountingTransactionsActionForm" />
+			<form-bean name="viewtransactionstageactionform"
+			type="org.mifos.accounting.struts.actionform.ViewStageTransactionActionForm" />
+			<form-bean name="interofficetransferactionform"
+			type="org.mifos.accounting.struts.actionform.InterOfficeTransferActionForm" />
+
+			<form-bean name="coabranchmappingform"
+			type="org.mifos.accounting.struts.actionform.CoaBranchMappingActionForm" />
+			<form-bean name="voucherbranchmappingform"
+			type="org.mifos.accounting.struts.actionform.VoucherBranchMappingActionForm" />
+			<form-bean name="consolidatedtransactionactionform"
+			type="org.mifos.accounting.struts.actionform.ConsolidatedTransactionActionForm" />
     </form-beans>
 
     <action-mappings>
@@ -304,21 +317,39 @@
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
         </action>
         
-        <!-- Simple Accounting Action classes  -->
-        <action path="/generalledgeraction"
-			type="org.mifos.accounting.struts.action.GeneralLedgerAction" name="generalledgeractionform"
+        <action path="/singlegeneralledgeraction"
+			type="org.mifos.accounting.struts.action.SingleGeneralLedgerAction" name="singlegeneralledgeractionform"
 			parameter="method" validate="true"
-			input="/pages/application/loan/jsp/generalLedgerTransaction.jsp"
+			input="/pages/application/loan/jsp/singleGeneralLedgerTransaction.jsp"
 			scope="session">
 			<forward name="load_success"
-				path="/pages/application/loan/jsp/generalLedgerTransaction.jsp" />
+				path="/pages/application/loan/jsp/singleGeneralLedgerTransaction.jsp" />
 			<forward name="preview_success"
-				path="/pages/application/loan/jsp/generalLedgerTransactionStatus.jsp" />
-			<forward name="submit_success" path="/generalledgeraction.do?method=load" />
+				path="/pages/application/loan/jsp/singleGeneralLedgerTransactionStatus.jsp" />
+			<forward name="submit_success" path="/singlegeneralledgeraction.do?method=load" />
 			<forward name="previous_success"
-				path="/pages/application/loan/jsp/generalLedgerTransaction.jsp" />
-		  <!-- <forward name="cancel_success" path="/AdminAction.do?method=load" />   -->
-		 <forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" /> 
+				path="/pages/application/loan/jsp/singleGeneralLedgerTransaction.jsp" />
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load"
+				/> -->
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+
+        <!-- Simple Accounting Action classes  -->
+        <action path="/multiplegeneralledgeraction"
+			type="org.mifos.accounting.struts.action.MultipleGeneralLedgerAction" name="multiplegeneralledgeractionform"
+			parameter="method" validate="true"
+			input="/pages/application/loan/jsp/multipleGeneralLedgerTransaction.jsp"
+			scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/multipleGeneralLedgerTransaction.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/multipleGeneralLedgerTransactionStatus.jsp" />
+			<forward name="submit_success" path="/multiplegeneralledgeraction.do?method=load" />
+			<forward name="previous_success"
+				path="/pages/application/loan/jsp/editMultipleGeneralLedgerTransaction.jsp" />
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load"
+				/> -->
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
 		</action>
 		<action path="/journalvoucheraction"
 			type="org.mifos.accounting.struts.action.JournalVoucherAction" name="journalvoucheractionform"
@@ -384,6 +415,130 @@
 				path="/pages/application/loan/jsp/yearEndProcess.jsp" />
 		</action>
 		
+		<action path="/viewstagetransactionsaction"
+			type="org.mifos.accounting.struts.action.ViewStageTransactionAction"
+			name="viewtransactionstageactionform" parameter="method"
+			input="/pages/application/loan/jsp/generalLedgerStageTransaction.jsp"
+			scope="session">
+
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/viewStageTransactions.jsp" />
+
+			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+			<forward name="approve_success" path="/viewstagetransactionsaction.do?method=load" />
+			<forward name="edit_success"
+				path="/pages/application/loan/jsp/editStageTransactions.jsp" />
+			<forward name="previous_success"
+				path="/pages/application/loan/jsp/generalLedgerStageTransaction.jsp" />
+			<forward name="load_stage_success"
+				path="/pages/application/loan/jsp/generalLedgerStageTransaction.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/editStageTransactions.jsp" />
+			<forward name="submit_success" path="/viewstagetransactionsaction.do?method=load" />
+		</action>
+		<!-- Approve Stage Transactions -->
+		<action path="/approvetransactionsaction"
+			type="org.mifos.accounting.struts.action.ApproveTransactions" name="viewtransactionstageactionform"
+			parameter="method" scope="session">
+			<forward name="approve_success"
+				path="/pages/application/loan/jsp/ApproveTransactions.jsp" />
+			<forward name="submit_success" path="/viewstagetransactionsaction.do?method=load" />
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+		<!-- End of Approve Stage Transactions -->
+
+		<action path="/audittransactionsaction"
+			type="org.mifos.accounting.struts.action.AuditTransactionAction"
+			name="viewtransactionstageactionform" parameter="method"
+			input="/pages/application/loan/jsp/AuditDatePicker.jsp" scope="session">
+
+			<forward name="pickDate_success"
+				path="/pages/application/loan/jsp/AuditDatePicker.jsp" />
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/AuditGLTransactions.jsp" />
+			<forward name="audit_success"
+				path="/pages/application/loan/jsp/AuditTransactions.jsp" />
+				<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
+			<forward name="submit_success" path="/audittransactionsaction.do?method=load" />
+		</action>
+
+		<!-- Inter office transfer -->
+
+		<action path="/interofficetransferaction"
+			type="org.mifos.accounting.struts.action.InterOfficeTransferAction"
+			name="interofficetransferactionform" parameter="method" validate="true"
+			input="/pages/application/loan/jsp/interOfficeTransfer.jsp" scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/interOfficeTransfer.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/interOfficeTransferStatus.jsp" />
+			<forward name="previous_success"
+				path="/pages/application/loan/jsp/interOfficeTransfer.jsp" />
+			<forward name="submit_success" path="/interofficetransferaction.do?method=load" />
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+
+		<!-- end of Inter office transfer -->
+
+		<!-- gramina kuta -->
+
+		<action path="/coaBranchMappingAction"
+			type="org.mifos.accounting.struts.action.CoaBranchMappingAction"
+			name="coabranchmappingform"
+			parameter="method"
+			validate="true"
+			input="/pages/application/loan/jsp/coaBranchMapping.jsp"
+			scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/coaBranchMapping.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/voucherCoaBranchMapping.jsp" />
+				<forward name="submit_success"
+				path="/coaBranchMappingAction.do?method=load" />
+				<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+		<action path="/voucherBranchMappingAction"
+			type="org.mifos.accounting.struts.action.VoucherBranchMappingAction"
+			name="voucherbranchmappingform"
+			parameter="method"
+			validate="true"
+			input="/pages/application/loan/jsp/voucherCoaBranchMapping.jsp"
+			scope="session">
+			<!-- <forward name="load_success"
+				path="/pages/application/loan/jsp/voucher.jsp" /> -->
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/voucherCoaBranchMapping.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/voucherCoaBranchMappingStatus.jsp" />
+				<forward name="previous_success"
+				path="/pages/application/loan/jsp/editvoucherCoaBranchMapping.jsp" />
+				<forward name="submit_success"
+				path="/voucherBranchMappingAction.do?method=load" />
+				<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+
+
+		<action path="/consolidatedTransactionAction"
+			type="org.mifos.accounting.struts.action.ConsolidatedTransactionAction"
+			name="consolidatedtransactionactionform"
+			parameter="method"
+			validate="true"
+			input="/pages/application/loan/jsp/consolidatedtransactionAction.jsp"
+			scope="session">
+			<!-- <forward name="load_success"
+				path="/pages/application/loan/jsp/voucher.jsp" /> -->
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/consolidatedtransactionAction.jsp" />
+				<forward name="Approve_success" path="/consolidatedTransactionAction.do?method=submit" />
+				<forward name="submit_success" path="/consolidatedTransactionAction.do?method=load" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/voucherCoaBranchMapping.jsp" />
+				<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+
+
+
 		<!-- Group Loan -->
        <action path="/groupIndividualLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupIndividualLoanAccountAction"
                 name="loanAccountActionForm" parameter="method"

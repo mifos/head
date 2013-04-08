@@ -68,8 +68,8 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testGetSubCategoryCOABOs() throws FinancialException {
-        String[] SUB_CATEGORY_NAMES = { "Petty Cash Accounts", "Bank Balances" };
-        String[] SUB_CATEGORY_GLCODES = { "11100", "11200" };
+        String[] SUB_CATEGORY_NAMES = { "Petty Cash Accounts", "Bank Balances", "Transfers" };
+        String[] SUB_CATEGORY_GLCODES = { "11100", "11200", "11300"};
 
         String cashBankBalanceGlCode = "11000";
         COABO coa = ChartOfAccountsCache.get(cashBankBalanceGlCode);

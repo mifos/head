@@ -79,7 +79,7 @@ border-bottom : solid 1px #EAEBF4;
 function fnSubmit(form, buttonSubmit) {
 	buttonSubmit.disabled=true;
 	form.method.value="submit";
-	form.action="generalledgeraction.do";
+	form.action="voucherBranchMappingAction.do";
 	form.submit();
 }
 
@@ -91,7 +91,7 @@ function fnCancel(form) {
 
 function fnEditTransaction(form) {
 	form.method.value="previous";
-	form.action="generalledgeraction.do";
+	form.action="voucherBranchMappingAction.do";
 	form.submit();
 }
 
@@ -100,7 +100,7 @@ function fnEditTransaction(form) {
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.SimpleAccountingUIResources"/>
 
-<html-el:form action="/generalledgeraction.do">
+<html-el:form action="/voucherBranchMappingAction.do">
 
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -122,7 +122,7 @@ function fnEditTransaction(form) {
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												
+
 												<mifos:mifoslabel name="simpleAccounting.review" />
 
 											</td>
@@ -147,90 +147,54 @@ function fnEditTransaction(form) {
 			                   <mifos:mifoslabel name="simpleAccounting.trxnDate" mandatory="yes" isColonRequired="Yes"/>
 			                </th>
 			                <td align="left">
-			                    ${GeneralLedgerActionForm.trxnDate}
+			                    ${VoucherBranchMappingActionForm.transactiondate}
 			                </td>
 
 					</tr>
 					<tr class="fontnormal">
-						<th align="right"><mifos:mifoslabel name="simpleAccounting.officeHeirarchy" mandatory="yes" isColonRequired="Yes"/></th>
+						<th align="right"><mifos:mifoslabel name="simpleAccounting.empty"    /></th>
 						<td align="left">
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==1}"> 
-						 <mifos:mifoslabel name="simpleAccounting.headOffice" />
-						</c:if>
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==2}"> 
-						 <mifos:mifoslabel name="simpleAccounting.regionalOffice" />
-						</c:if>
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==3}"> 
-						 <mifos:mifoslabel name="simpleAccounting.divisionalOffice" />
-						</c:if>
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==4}"> 
-						 <mifos:mifoslabel name="simpleAccounting.areaOffice" />
-						</c:if>
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==5}"> 
-						 <mifos:mifoslabel name="simpleAccounting.branchOffice" />
-						</c:if>
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==6}"> 
-						 <mifos:mifoslabel name="simpleAccounting.center" />
-						</c:if>
-						<c:if test="${GeneralLedgerActionForm.officeHierarchy==7}"> 
-						 <mifos:mifoslabel name="simpleAccounting.group" />
-						</c:if>
-					  
+
 					   </td>
 					   <th align="right"><mifos:mifoslabel name="simpleAccounting.office" mandatory="yes" isColonRequired="Yes"/></th>
 					   <td align="left">
-				     <c:forEach items="${sessionScope.OfficesOnHierarchy}" var="office">
-						 	<c:if test="${office.globalOfficeNum==GeneralLedgerActionForm.office}"> 
-				                          ${office.displayName}
-							</c:if>  
+				    <c:forEach items="${sessionScope.OfficesOnHierarchy}" var="offices">
+							<c:if test="${offices.globalOfficeNum==VoucherBranchMappingActionForm.branch}">
+				                          ${offices.displayName}
+							</c:if>
 					 </c:forEach>
-				      
+
 					</td>
 			 </tr>
+
 
 			<tr class="fontnormal">
 			     <th width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.trxnType" mandatory="yes" isColonRequired="Yes"/></th>
 							<td width="25%" align="left">
-								<c:if test="${GeneralLedgerActionForm.trxnType=='CR'}"> 
+								<c:if test="${VoucherBranchMappingActionForm.transactiontype=='CR'}">
 								  <mifos:mifoslabel name="simpleAccounting.cashReceipt" />
 								</c:if>
-						                <c:if test="${GeneralLedgerActionForm.trxnType=='CP'}"> 
+						                <c:if test="${VoucherBranchMappingActionForm.transactiontype=='CP'}">
 								  <mifos:mifoslabel name="simpleAccounting.cashPayment" />
 								</c:if>
-						                <c:if test="${GeneralLedgerActionForm.trxnType=='BR'}"> 
+						                <c:if test="${VoucherBranchMappingActionForm.transactiontype=='BR'}">
 								  <mifos:mifoslabel name="simpleAccounting.bankReceipt" />
 								</c:if>
-						                <c:if test="${GeneralLedgerActionForm.trxnType=='BP'}"> 
+						                <c:if test="${VoucherBranchMappingActionForm.transactiontype=='BP'}">
 								  <mifos:mifoslabel name="simpleAccounting.bankPayment" />
 								</c:if>
 							</td>
 			 <th width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.mainAccount" mandatory="yes" isColonRequired="Yes"/></th>
 					<td width="25%" align="left">
 				  <c:forEach items="${sessionScope.MainAccountGlCodes}" var="mainaccount">
-						 	<c:if test="${mainaccount.glcode==GeneralLedgerActionForm.mainAccount}"> 
+							<c:if test="${mainaccount.glcode==VoucherBranchMappingActionForm.mainAccount}">
 				                          ${mainaccount.glname}
-							</c:if>  
+							</c:if>
 				  </c:forEach>
 				    </td>
 			</tr>
 
-			<tr class="fontnormal">
 
-			<th align="right"><mifos:mifoslabel name="simpleAccounting.accountHead" mandatory="yes" isColonRequired="Yes"/></th>
-				<td align="left">
-					 <c:forEach items="${sessionScope.AccountHeadGlCodes}" var="accountHead">
-						 	<c:if test="${accountHead.glcode==GeneralLedgerActionForm.accountHead}"> 
-				                          ${accountHead.glname}
-							</c:if>  
-					 </c:forEach>
-					
-				</td>
-
-				<th align="right"><mifos:mifoslabel name="simpleAccounting.amount" mandatory="yes" isColonRequired="Yes"/></th>
-				<td align="left">
-					<fmt:formatNumber value="${GeneralLedgerActionForm.amount}"/>
-				</td>
-			</tr>
 		  <tr class="fontnormal">
 			<td align="center" colspan="4">
 				<div id="bankDetailsId">
@@ -239,21 +203,21 @@ function fnEditTransaction(form) {
 				    <tr class="fontnormal">
 				      <th align="center"><mifos:mifoslabel name="simpleAccounting.chequeNo" mandatory="no" isColonRequired="Yes"/></th>
 					<td align="left">
-					${GeneralLedgerActionForm.chequeNo}
+					${VoucherBranchMappingActionForm.chequeNo}
 				<th align="center"><mifos:mifoslabel name="simpleAccounting.chequeDate" mandatory="no" isColonRequired="Yes"/></th>
 					<td align="left">
-						${GeneralLedgerActionForm.chequeDate}
+						${VoucherBranchMappingActionForm.chequeDate}
 					</td>
 			 </tr>
 
 				<tr class="fontnormal">
 			      <th align="center"><mifos:mifoslabel name="simpleAccounting.bankName" mandatory="no" isColonRequired="Yes"/></td>
 					<td align="left">
-						${GeneralLedgerActionForm.bankName}
+						${VoucherBranchMappingActionForm.bankName}
 					</td>
 			 <th align="center"><mifos:mifoslabel name="simpleAccounting.bankBranch" mandatory="no" isColonRequired="Yes"/></th>
 				 <td align="left">
-					${GeneralLedgerActionForm.bankBranch}
+					${VoucherBranchMappingActionForm.bankBranch}
 				</td>
 			</tr>
 			  </table>
@@ -262,16 +226,66 @@ function fnEditTransaction(form) {
 			</td>
 			</tr>
 
-		<tr class="fontnormal">
-		   <th align="right" colspan="1"><mifos:mifoslabel name="simpleAccounting.trxnNotes" mandatory="yes" isColonRequired="Yes"/></th>
-		 <td align="left">
-		   ${GeneralLedgerActionForm.notes}
-         </td>
-		</tr>
+				  <table width="100%" border="0" cellpadding="2" cellspacing="0" class="burlywoodborder">
+
+				   <table cellpadding="1" cellspacing="1" border="1">
+            <tr class="fontnormal" >
+                <th>
+                   S.NO
+                </th>
+                <th>
+                    COA Description
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Transaction Notes
+                </th>
+            </tr>
+             <c:forEach items="${sessionScope.coaNamesList}" var="accountHead">
+
+                <tr class="fontnormal">
+                    <td>
+                        <html-el:text property="sno" name="voucherbranchmappingform" styleClass="separatedNumber"  styleId="simpleaccounting.input.sno" readonly="true" value="${accountHead.sno}"/>
+                    </td>
+                    <td>
+                        <html-el:text property="coaname" name="voucherbranchmappingform" styleClass="separatedNumber" styleId="simpleaccounting.input.coaname" readonly="true" value="${accountHead.coaName}"/>
+                    </td>
+                    <td>
+                        <html-el:text property="amount" name="voucherbranchmappingform" styleClass="separatedNumber" value="${accountHead.amounts}" readonly="true" styleId="${accountHead.sno}" onchange="javascript:addNumbers('${accountHead.sno}')"/>
+                    </td>
+                    <td>
+                        <html-el:text property="transactionnotes" name="voucherbranchmappingform" styleClass="separatedNumber" value="${accountHead.trannotes}" styleId="simpleaccounting.input.transactionnotes" />
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+
+           </c:forEach>
+             <tr class="fontnormal">
+                <th>
+                  Total
+                </th>
+                <th>
+
+         =
+                </th>
+                <th>
+                     <html-el:text  property="total" styleId="answer"  name="voucherbranchmappingform" value='${VoucherBranchMappingActionForm.total}'/>
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </table>
+
+		     </table>
 		<tr class="fontnormal">
 		 <td align="left" colspan='2'>
-		   	 <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEditTransaction(this.form)">
-					<mifos:mifoslabel name="simpleAccounting.editTransaction" />                   		
+			 <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEditTransaction(this.form)">
+					<mifos:mifoslabel name="simpleAccounting.editTransaction" />
 			 </html-el:button>
          </td>
 		</tr>
