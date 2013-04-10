@@ -136,7 +136,25 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
             var parentTr = $(this).parents("tr:first"); 
             parentTr.insertAfter(parentTr.next());
         });
-    
+        
+        $("select.loanAccountAdminDocOutputType").change(function() {
+        	var url = $(this).next("a#loanaccountdetail\\.link\\.viewAdminReport").attr("href");
+        	var paramNameStr = "outputTypeId=";
+        	var outputTypeParamIndex = url.indexOf(paramNameStr) + paramNameStr.length;
+        	var outputTypeParamOldValue = url.substr(outputTypeParamIndex, outputTypeParamIndex + 1);
+        	var outputTypeParamNewValue = $(this).val();
+        	url = url.replace(paramNameStr + outputTypeParamOldValue, paramNameStr + outputTypeParamNewValue);
+        	
+        	$(this).next("a#loanaccountdetail\\.link\\.viewAdminReport").attr("href", url);
+        	
+        	// HTML, as seen in PentahoOutputType.java
+        	if (outputTypeParamNewValue == 3) {
+        		$(this).next("a#loanaccountdetail\\.link\\.viewAdminReport").attr("target", "_blank");
+        	}
+        	else {
+        		$(this).next("a#loanaccountdetail\\.link\\.viewAdminReport").removeAttr("target");
+        	}
+        });
     });
     
     </script>
@@ -707,9 +725,19 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                                                     <c:if test="${adminDocMixed.adminDocumentID.admindocId==adminDoc.admindocId}">
                                                                         <c:if test="${adminDocMixed.accountStateID.id==loanInformationDto.accountStateId}">
                                                                         <span class="fontnormal"> 
-                                                              <html-el:link styleId="loanaccountdetail.link.viewAdminReport"
-                                                                href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${loanInformationDto.globalAccountNum}">
-                                                                 <c:out value="${adminDoc.adminDocumentName}" />
+                                                              <label for="adminDocOutputType_${adminDoc.admindocId}">${adminDoc.adminDocumentName}</label>
+                                                              <select id="adminDocOutputType_${adminDoc.admindocId}" class="adminDocOutputType">
+                                                                <option value="0" selected="selected">PDF</option>
+                                                                <option value="1">XLS</option>
+                                                                <option value="2">RTF</option>
+                                                                <option value="3">HTML</option>
+                                                                <option value="4">XML</option>
+                                                                <option value="5">CSV</option>
+                                                              </select>
+                                                              
+                                                              <html-el:link styleClass="adminDocOutputTypeLink" styleId="loanaccountdetail.link.viewAdminReport"
+                                                                href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${loanInformationDto.globalAccountNum}&outputTypeId=0">
+                                                                 <c:out value="Download" />
                                                               </html-el:link>
                                                                         </span>
                                                                         <br>
@@ -721,6 +749,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                                                                                 
                                           
                                             <br />
+                                           <script type="text/javascript" src="pages/application/admindocument/js/adminDocument.js"></script>
+                                           <script type="text/javascript">syncAdminDocumentLinkWithComboBox("adminDocOutputType", "adminDocOutputTypeLink");</script>
                                            <c:set var="displayed" value="true" scope="request" />
                                              <%
                                             }

@@ -264,16 +264,28 @@ explanation of the license and how it is applied.
 									 <span class="fontnormalbold"> 
 									<mifos:mifoslabel
 								name="reports.administrativedocuments" /> 
-								<br></span>	
+								<br></span>
 									<c:forEach var="adminDoc" items="${adminDoc}">
 										<span class="fontnormal"> 
-									  		<html-el:link styleId="loanaccountdetail.link.viewAdminReport"
-												href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}">
-										 		<c:out value="${adminDoc.adminDocumentName}" />
+                                            <label for="adminDocOutputType_${adminDoc.admindocId}">${adminDoc.adminDocumentName}</label>
+                                            <select id="adminDocOutputType_${adminDoc.admindocId}" class="adminDocOutputType">
+                                              <option value="0" selected="selected">PDF</option>
+                                              <option value="1">XLS</option>
+                                              <option value="2">RTF</option>
+                                              <option value="3">HTML</option>
+                                              <option value="4">XML</option>
+                                              <option value="5">CSV</option>
+                                            </select>
+                                            
+									  		<html-el:link styleClass="adminDocOutputTypeLink" styleId="loanaccountdetail.link.viewAdminReport"
+												href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}&outputTypeId=0">
+										 		<c:out value="Download" />
 								      		</html-el:link>
 								  		</span>
 										<br>
 					                </c:forEach>
+                                    <script type="text/javascript" src="pages/application/admindocument/js/adminDocument.js"></script>
+                                    <script type="text/javascript">syncAdminDocumentLinkWithComboBox("adminDocOutputType", "adminDocOutputTypeLink");</script>
 					                <br>
 					                </td>
 					            </tr>
