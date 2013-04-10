@@ -51,13 +51,14 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminDocumentController {
 
     private final static String LEGACY_BIRT_ADMIN_DOCUMENT_LOAD_PATH = "reportsUserParamsAction.do?method=loadAdminReport&admindocId=%s&globalAccountNum=%s";
+    private final static Integer PENTAHO_OUTPUT_TYPE_HTML_ID = 3;
     
     @Autowired
     private PentahoReportsServiceFacade pentahoReportsService;
     
     @RequestMapping(value = "/executeAdminDocument.ftl", method = RequestMethod.GET)
     public ModelAndView executeAdminDocument(final HttpServletRequest request, HttpServletResponse response,
-            @RequestParam Integer adminDocumentId, @RequestParam String entityId) throws IOException{
+            @RequestParam Integer adminDocumentId, @RequestParam String entityId, @RequestParam Integer outputTypeId) throws IOException{
         ModelAndView mav = null;
         String fileName = pentahoReportsService.getAdminReportFileName(adminDocumentId);
         
@@ -70,9 +71,11 @@ public class AdminDocumentController {
             entityIdParameter.setValue(entityId);
             params.put("entity_id", entityIdParameter);
             
-            PentahoReport report = pentahoReportsService.getAdminReport(adminDocumentId, params);
+            PentahoReport report = pentahoReportsService.getAdminReport(adminDocumentId, outputTypeId, params);
             
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
+            if (!outputTypeId.equals(PENTAHO_OUTPUT_TYPE_HTML_ID)) {
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
+            }
             response.setContentType(report.getContentType());
             response.setContentLength(report.getContentSize());
 

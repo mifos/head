@@ -11,6 +11,10 @@ a:visited{
 a:hover {
 	text-decoration:none;
 }
+label {
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 9pt;
+}
 
 .bglightblue{
 	background-color:#D7DEEE;

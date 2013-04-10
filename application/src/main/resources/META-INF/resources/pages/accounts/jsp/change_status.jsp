@@ -238,9 +238,19 @@ explanation of the license and how it is applied.
 						<c:forEach var="adminDoc" items="${adminDoc}">
 							<tr>
 								<td>
-								<html-el:link styleId="loanaccountdetail.link.viewAdminReport"
-									href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}">
-									<c:out value="${adminDoc.adminDocumentName}" />
+                                <label for="adminDocOutputType_${adminDoc.admindocId}">${adminDoc.adminDocumentName}</label>
+                                <select id="adminDocOutputType_${adminDoc.admindocId}" class="adminDocOutputType">
+                                  <option value="0" selected="selected">PDF</option>
+                                  <option value="1">XLS</option>
+                                  <option value="2">RTF</option>
+                                  <option value="3">HTML</option>
+                                  <option value="4">XML</option>
+                                  <option value="5">CSV</option>
+                                </select>
+                                
+								<html-el:link styleClass="adminDocOutputTypeLink" styleId="loanaccountdetail.link.viewAdminReport"
+									href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}&outputTypeId=0">
+									<c:out value="Download" />
 								</html-el:link>	  	
 								</td>
 							</tr>	
@@ -254,6 +264,8 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.editStatusActionForm.globalAccountNum}" />
             <html-el:hidden property="allowBackDatedApprovals" />
 		</html-el:form>
+        <script type="text/javascript" src="pages/application/admindocument/js/adminDocument.js"></script>
+        <script type="text/javascript">syncAdminDocumentLinkWithComboBox("adminDocOutputType", "adminDocOutputTypeLink");</script>
 		<script language="javascript">
 				if(editStatusActionForm.newStatusId.length != undefined){
 					for(j=0;j<editStatusActionForm.newStatusId.length;j++){ 

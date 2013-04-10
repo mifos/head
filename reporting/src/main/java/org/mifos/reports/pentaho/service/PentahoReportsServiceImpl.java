@@ -172,7 +172,7 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     }
 
     @Override
-    public PentahoReport getAdminReport(Integer adminReportId, Map<String, AbstractPentahoParameter> params) {
+    public PentahoReport getAdminReport(Integer adminReportId, Integer outputTypeId, Map<String, AbstractPentahoParameter> params) {
         ByteArrayOutputStream baos = null;
         try{
             // load report definition
@@ -206,11 +206,32 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
             
             if (errors.isEmpty()) {
                 baos = new ByteArrayOutputStream();
-                PdfReportUtil.createPDF(report, baos);
+                PentahoOutputType outputType = PentahoOutputType.findById(outputTypeId);
+
+                switch (outputType) {
+                case XLS:
+                    ExcelReportUtil.createXLS(report, baos);
+                    break;
+                case RTF:
+                    RTFReportUtil.createRTF(report, baos);
+                    break;
+                case HTML:
+                    HtmlReportUtil.createStreamHTML(report, baos);
+                    break;
+                case CSV:
+                    CSVReportUtil.createCSV(report, baos, "UTF-8");
+                    break;
+                case XML:
+                    XmlTableReportUtil.createFlowXML(report, baos);
+                    break;
+                default: // PDF
+                    PdfReportUtil.createPDF(report, baos);
+                    break;
+                }
+
+                result.setContentType(outputType.getContentType());
+                result.setFileExtension(outputType.getFileExtension());
                 
-                result.setContentType(PentahoOutputType.PDF.getContentType());
-                result.setFileExtension(PentahoOutputType.PDF.getFileExtension());
-    
                 result.setName(reportName);
                 result.setContent(baos.toByteArray());
             }
