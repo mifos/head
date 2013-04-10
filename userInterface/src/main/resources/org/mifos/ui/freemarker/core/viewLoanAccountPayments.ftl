@@ -86,9 +86,18 @@
 					<td>
 					[#if loanAccountPayment.adminDocuments??]
 						[#list loanAccountPayment.adminDocuments as adminDocument]
-							<a href="executeAdminDocument.ftl?adminDocumentId=${adminDocument.id?c}&entityId=${loanAccountPayment.paymentId?c}">
-							${adminDocument.name}
-							</a>&nbsp
+							<label for="adminDocOutputType_${loanAccountPayment.paymentId?c}">${adminDocument.name}</label>
+							<select id="adminDocOutputType_${loanAccountPayment.paymentId?c}" class="adminDocOutputType">
+                              <option value="0" selected="selected">PDF</option>
+                              <option value="1">XLS</option>
+                              <option value="2">RTF</option>
+                              <option value="3">HTML</option>
+                              <option value="4">XML</option>
+                              <option value="5">CSV</option>
+                            </select>
+							<a class="adminDocOutputTypeLink" href="executeAdminDocument.ftl?adminDocumentId=${adminDocument.id?c}&entityId=${loanAccountPayment.paymentId?c}&outputTypeId=0">
+							Download
+							</a>&nbsp    
 						[/#list]
 					[/#if]
 					</td>
@@ -102,5 +111,7 @@
     [#elseif loanType == 0]
         [@form.returnToPage  "groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${RequestParameters.globalAccountNum}" "button.back" "loanaccountpayments.button.back"/]
     [/#if]
+    <script type="text/javascript" src="pages/application/admindocument/js/adminDocument.js"></script>
+    <script type="text/javascript">syncAdminDocumentLinkWithComboBox("adminDocOutputType", "adminDocOutputTypeLink");</script>
 </div>
 [/@clientLeftPane]

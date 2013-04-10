@@ -34,7 +34,16 @@
 			[#list loanAccountPayment.adminDocuments as adminDocument]
 				<tr>
 					<td>
-						<a href="executeAdminDocument.ftl?adminDocumentId=${adminDocument.id?c}&entityId=${loanAccountPayment.paymentId?c}">
+					    <label for="adminDocOutputType_${loanAccountPayment.paymentId?c}">${adminDocument.name}</label>
+                        <select id="adminDocOutputType_${loanAccountPayment.paymentId?c}" class="adminDocOutputType">
+                          <option value="0" selected="selected">PDF</option>
+                          <option value="1">XLS</option>
+                          <option value="2">RTF</option>
+                          <option value="3">HTML</option>
+                          <option value="4">XML</option>
+                          <option value="5">CSV</option>
+                        </select>
+						<a class="adminDocOutputTypeLink"  href="executeAdminDocument.ftl?adminDocumentId=${adminDocument.id?c}&entityId=${loanAccountPayment.paymentId?c}&outputTypeId=0">
 						${adminDocument.name}
 						</a>
 					</td>
@@ -43,6 +52,8 @@
 		[/#if]
 		
 	</table>
+	<script type="text/javascript" src="pages/application/admindocument/js/adminDocument.js"></script>
+    <script type="text/javascript">syncAdminDocumentLinkWithComboBox("adminDocOutputType", "adminDocOutputTypeLink");</script>
 	[@form.returnToPage  "viewLoanAccountDetails.ftl?globalAccountNum=${globalAccountNum}" "printReceipt.returnToLoanAccount" "printpaymentreceipt.button.back"/]
 </div>
 [/@clientLeftPane]
