@@ -2,6 +2,7 @@ package org.mifos.ui.core.controller;
 
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,7 @@ public class ChangePasswordValidator extends SpringBeanAutowiringSupport impleme
         
         String oldPasswordLabel = messageSource.getMessage("login.oldpassword", null, locale);
         String newPasswordLabel = messageSource.getMessage("login.newpassword", null, locale);
-        String confirmNewPasswordLabel = messageSource.getMessage("login.confirmpassword", null, locale);
-		
+        
 		if(formBean.getOldPassword().isEmpty()){
 			errors.reject("errors.mandatory", new String[]{oldPasswordLabel},null );
 		}else{
@@ -54,21 +54,19 @@ public class ChangePasswordValidator extends SpringBeanAutowiringSupport impleme
 			}
 		}
 		
-		if(formBean.getNewPassword().isEmpty()){
+		if(StringUtils.isNotBlank(formBean.getNewPassword())) {
+				
+			loginServiceFacade.validatePassword(formBean.getNewPassword(), errors);
+	        
+	        if (!formBean.getNewPassword().equals(formBean.getNewPasswordConfirmed())) {
+	        	errors.reject("errors.newconfpassword");
+	        }
+	        
+		} else {
 			errors.reject("errors.mandatory", new String[]{newPasswordLabel}, null);
-		}else if(formBean.getNewPassword().length()<6){
-			errors.reject("errors.minimumlength", new String[]{newPasswordLabel, "6"},null);
-		}else if(formBean.getNewPassword().length()>20){
-			errors.reject("errors.maximumlength", new String[]{newPasswordLabel, "20"},null);
 		}
 		
-		if(formBean.getNewPasswordConfirmed().isEmpty()){
-			errors.reject("errors.mandatory", new String[]{confirmNewPasswordLabel},null);
-		}else if(formBean.getNewPasswordConfirmed().length()<6){
-			errors.reject("errors.minimumlength", new String[]{confirmNewPasswordLabel, "6"},null);
-		}else if(formBean.getNewPasswordConfirmed().length()>20){
-			errors.reject("errors.maximumlength", new String[]{confirmNewPasswordLabel, "20"},null);
-		}
+		
 	}
 
 }

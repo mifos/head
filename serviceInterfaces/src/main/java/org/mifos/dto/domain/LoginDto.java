@@ -25,11 +25,13 @@ public class LoginDto {
     private final Short userId;
     private final Short officeId;
     private final boolean passwordChanged;
-
-    public LoginDto(Short userId, Short officeId, boolean isPasswordChanged) {
+    private final boolean passwordExpired;
+    
+    public LoginDto(Short userId, Short officeId, boolean isPasswordChanged, boolean isPasswordExpired) {
         this.userId = userId;
         this.officeId = officeId;
         this.passwordChanged = isPasswordChanged;
+        this.passwordExpired = isPasswordExpired;
     }
 
     public Short getUserId() {
@@ -42,5 +44,9 @@ public class LoginDto {
 
     public boolean isPasswordChanged() {
         return this.passwordChanged;
+    }
+    
+    public boolean isPasswordExpired() {
+    	return this.passwordExpired;
     }
 }

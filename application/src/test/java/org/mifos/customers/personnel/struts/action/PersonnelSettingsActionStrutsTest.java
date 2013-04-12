@@ -22,6 +22,7 @@ package org.mifos.customers.personnel.struts.action;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -417,7 +418,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         Date date = new Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", getRoles(), customFieldDto, new Name("XYZ", null, null, "ABC"), "111111", date,
-                Integer.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
+                Integer.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId(), new Date(), new HashSet());
         IntegrationTestObjectMother.createPersonnel(personnel);
         return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
     }

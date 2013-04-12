@@ -39,6 +39,7 @@
         <!-- M2 style objects for personnel-->
 
         <mapping resource="org/mifos/customers/personnel/business/PersonnelBO.hbm.xml" />
+        <mapping resource="org/mifos/customers/personnel/business/PersonnelUsedPasswordEntity.hbm.xml" />
         <mapping resource="org/mifos/customers/personnel/business/PersonnelDetailsEntity.hbm.xml" />
         <mapping resource="org/mifos/customers/personnel/business/PersonnelLevelEntity.hbm.xml" />
         <mapping resource="org/mifos/customers/personnel/business/PersonnelMovementEntity.hbm.xml" />

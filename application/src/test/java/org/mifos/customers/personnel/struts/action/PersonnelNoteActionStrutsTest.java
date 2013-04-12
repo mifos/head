@@ -251,7 +251,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         Date date = new Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
-                        .valueOf("1"), date, date, address, userContext.getId());
+                        .valueOf("1"), date, date, address, userContext.getId(), null, null);
         IntegrationTestObjectMother.createPersonnel(personnel);
         personnel = IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);

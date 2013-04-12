@@ -20,10 +20,13 @@
 
 package org.mifos.customers.personnel.business.service;
 
+import java.util.Date;
+
 import org.mifos.customers.personnel.business.PersonnelBO;
 
 public interface PersonnelService {
 
     void changePassword(PersonnelBO user, String newPassword);
+    void changePasswordExpirationDate(PersonnelBO user, Date passwordExpirationDate);
 
 }

@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.PasswordRules;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -121,6 +123,10 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
     private List<CustomFieldDto> customFields;
 
     private List<QuestionGroupDetail> questionGroups;
+    
+    private String passwordExpirationDateDD;
+    private String passwordExpirationDateMM;
+    private String passwordExpirationDateYY;
 
     public PersonActionForm() {
         super();
@@ -130,8 +136,51 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         personnelRoles = null;
 
     }
+    
+	public String getPasswordExpirationDateDD() {
+		return passwordExpirationDateDD;
+	}
+	
+	public String getPasswordExpirationDate() {
+		if (!StringUtils.isNotBlank(passwordExpirationDateDD) || !StringUtils.isNotBlank(passwordExpirationDateMM)
+				|| !StringUtils.isNotBlank(passwordExpirationDateYY)) {
+			return null;
+		} else {
+			String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
+            return passwordExpirationDateDD + dateSeparator + passwordExpirationDateMM + dateSeparator + passwordExpirationDateYY;
+        }
+	}
+	
+	public void setPasswordExpirationDate(String s) throws InvalidDateException {
+        Calendar cal = new GregorianCalendar();
+        java.sql.Date dob = DateUtils.getDateAsSentFromBrowser(s);
+        cal.setTime(dob);
+        passwordExpirationDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+        passwordExpirationDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+        passwordExpirationDateYY = Integer.toString(cal.get(Calendar.YEAR));
+    }
 
-    @Override
+	public void setPasswordExpirationDateDD(String passwordExpirationDateDD) {
+		this.passwordExpirationDateDD = passwordExpirationDateDD;
+	}
+
+	public String getPasswordExpirationDateMM() {
+		return passwordExpirationDateMM;
+	}
+
+	public void setPasswordExpirationDateMM(String passwordExpirationDateMM) {
+		this.passwordExpirationDateMM = passwordExpirationDateMM;
+	}
+
+	public String getPasswordExpirationDateYY() {
+		return passwordExpirationDateYY;
+	}
+
+	public void setPasswordExpirationDateYY(String passwordExpirationDateYY) {
+		this.passwordExpirationDateYY = passwordExpirationDateYY;
+	}
+
+	@Override
     public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
         this.questionGroups = questionGroups;
     }
@@ -517,19 +566,30 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
                 && (StringUtils.isBlank(userPassword) || StringUtils.isBlank(passwordRepeat))) {
             errors.add(PersonnelConstants.PASSWORD, new ActionMessage(PersonnelConstants.VALID_PASSWORD, password));
         }
-        if (input.equals(PersonnelConstants.CREATE_USER) && (StringUtils.isNotBlank(userPassword))) {
-            if (userPassword.length() < 6) {
+        if ((input.equals(PersonnelConstants.MANAGE_USER) || input.equals(PersonnelConstants.CREATE_USER)) && (StringUtils.isNotBlank(userPassword))) {
+            
+        	if (userPassword.length() < PasswordRules.getMinPasswordLength()) {
                 errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
-                        PersonnelConstants.ERROR_PASSWORD_LENGTH));
+                        PersonnelConstants.ERROR_PASSWORD_LENGTH, PasswordRules.getMinPasswordLength()));
             }
+            
+            if (PasswordRules.isMustContainDigit() && !userPassword.matches(".*\\d.*")) {
+                errors.add(PersonnelConstants.ERROR_PASSWORD_DIGIT, new ActionMessage(
+                        PersonnelConstants.ERROR_PASSWORD_DIGIT));
+            }
+
+            if (PasswordRules.isMustContainSpecial() && StringUtils.isAlphanumeric(userPassword)) {
+                errors.add(PersonnelConstants.ERROR_PASSWORD_SPECIAL, new ActionMessage(
+                        PersonnelConstants.ERROR_PASSWORD_SPECIAL));
+            }
+            
+            if (PasswordRules.isMustContainBothCaseLetters() && !userPassword.matches(".*[a-z]*[A-Z].*")) { //contains at least one upper and lower case letter?
+                errors.add(PersonnelConstants.ERROR_PASSWORD_BOTH_CASE, new ActionMessage(
+                        PersonnelConstants.ERROR_PASSWORD_BOTH_CASE));
+            }
+
         }
 
-        if (input.equals(PersonnelConstants.MANAGE_USER)) {
-            if (userPassword.length() > 0 && userPassword.length() < 6) {
-                errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
-                        PersonnelConstants.ERROR_PASSWORD_LENGTH));
-            }
-        }
 
         return errors;
     }

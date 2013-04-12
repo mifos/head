@@ -23,6 +23,7 @@ package org.mifos.ui.core.controller;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +46,7 @@ import org.springframework.binding.validation.ValidationContext;
 import org.springframework.format.annotation.NumberFormat;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"NP_UNWRITTEN_FIELD", "SE_NO_SERIALVERSIONID"}, justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
 public class UserFormBean implements Serializable {
 
     // office
@@ -138,6 +139,18 @@ public class UserFormBean implements Serializable {
     private String userHierarchyName = "";
     private List<PersonnelNoteDto> recentNotes = new ArrayList<PersonnelNoteDto>();
 
+    @Min(value=1)
+    @Max(value=31)
+    @NotNull
+    private Integer passwordExpirationDateDay;
+    @Min(value=1)
+    @Max(value=12)
+    @NotNull
+    private Integer passwordExpirationDateMonth;
+    @NumberFormat(pattern="####")
+    @NotNull
+    private Integer passwordExpirationDateYear;
+    
     @Autowired
     private transient MifosBeanValidator validator;
 
@@ -152,7 +165,7 @@ public class UserFormBean implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="REC_CATCH_EXCEPTION", justification="should be the exception thrown by jodatime but not sure what it is right now.")
     public void validateEnterUserDetailsStep(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
-
+        
         validator.validate(this, messages);
 
         try {
@@ -458,7 +471,19 @@ public class UserFormBean implements Serializable {
         return this.mfiJoiningDateMonth;
     }
 
-    public void setMfiJoiningDateMonth(Number mfiJoiningDateMonth) {
+    public void setPasswordExpirationDateDay(Integer passwordExpirationDateDay) {
+		this.passwordExpirationDateDay = passwordExpirationDateDay;
+	}
+
+	public void setPasswordExpirationDateMonth(Integer passwordExpirationDateMonth) {
+		this.passwordExpirationDateMonth = passwordExpirationDateMonth;
+	}
+
+	public void setPasswordExpirationDateYear(Integer passwordExpirationDateYear) {
+		this.passwordExpirationDateYear = passwordExpirationDateYear;
+	}
+
+	public void setMfiJoiningDateMonth(Number mfiJoiningDateMonth) {
         this.mfiJoiningDateMonth = mfiJoiningDateMonth;
     }
 
@@ -602,6 +627,10 @@ public class UserFormBean implements Serializable {
         return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.mfiJoiningDate);
     }
 
+    public Date getPasswordExpirationDate() {
+    	return new Date(passwordExpirationDateDay, passwordExpirationDateMonth, passwordExpirationDateYear);
+    }
+    
     public DateTime getMfiJoiningDateAsDateTime() {
         return this.mfiJoiningDate;
     }

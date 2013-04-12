@@ -41,6 +41,10 @@ public class MifosAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         if (!loginActivity.isPasswordChanged()) {
             targetUrl = "/changePassword.ftl?username=" + request.getAttribute("username");
         }
+        
+        if (loginActivity.isPasswordExpired()) {
+            targetUrl = "/changePassword.ftl?expired=true&username=" + request.getAttribute("username");	
+        }
 
         return targetUrl;
     }

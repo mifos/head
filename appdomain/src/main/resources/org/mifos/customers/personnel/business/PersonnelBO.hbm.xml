@@ -47,6 +47,8 @@
         <property name="createdBy" column="created_by" type="short" />
         <property name="createdDate" column="created_date" type="date"
             access="field" />
+        <property name="passwordExpirationDate" column="password_expiration_date" type="date"
+            access="field" />
         <property name="updatedBy" column="updated_by" type="short" />
         <property name="updatedDate" column="updated_date" type="date" />
         <property name="lastLogin" column="last_login" type="date"
@@ -72,6 +74,11 @@
             <key column="personnel_id" update="false" />
             <one-to-many
                 class="org.mifos.customers.personnel.business.PersonnelMovementEntity" />
+        </set>
+        <set name="personnelUsedPasswords" cascade="save-update, delete" lazy="false" order-by="date_changed">
+            <key column="personnel_id" update="false" />
+            <one-to-many
+                class="org.mifos.customers.personnel.business.PersonnelUsedPasswordEntity" />
         </set>
         <set name="personnelNotes" cascade="all" inverse="true"
             table="personnel_notes" lazy="true" order-by="COMMENT_ID desc"

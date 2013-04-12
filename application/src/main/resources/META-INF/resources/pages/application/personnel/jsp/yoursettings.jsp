@@ -166,6 +166,9 @@ explanation of the license and how it is applied.
 	</a>
     </td>
   </tr>
+  <tr>
+    <td class="fontnormal"><mifos:mifoslabel name="Personnel.PasswordExpirationDate"/> <c:out value="${Personnel.passwordExpirationDate}"/> </td>
+  </tr>
 </table><br>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>

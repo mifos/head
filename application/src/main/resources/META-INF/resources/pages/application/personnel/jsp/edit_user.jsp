@@ -394,6 +394,14 @@ explanation of the license and how it is applied.
                	<html-el:password styleId="edit_user.input.passwordRepeat" property="passwordRepeat" style="width:136px;" redisplay="false"/>
               </td>
           </tr>
+          <tr class="fontnormal">
+                <td align="right">
+                <mifos:mifoslabel name="Personnel.PasswordExpirationDate"  bundle="PersonnelUIResources"></mifos:mifoslabel>
+                </td>
+                <td>
+                    <date:datetag renderstyle="simple" property="passwordExpirationDate" />
+                </td>
+              </tr>
         </table>
 		<br />
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

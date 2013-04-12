@@ -176,6 +176,10 @@ public interface PersonnelConstants {
     String ERROR_DOB = "error.dob";
     String ERROR_MFIDATE = "error.mfidate";
     String ERROR_PASSWORD_LENGTH = "error.passwordLength";
+    String ERROR_PASSWORD_DIGIT = "error.passwordDigit";
+    String ERROR_PASSWORD_SPECIAL = "error.passwordSpecial";
+    String ERROR_PASSWORD_BOTH_CASE = "error.passwordBothCase";
+    
     String ERROR_CUSTOMfIELD = "error.customfield";
     String ERROR_CUSTOMDATEFIELD = "error.customdatefield";
     String ERROR_STATUS = "errors.status";

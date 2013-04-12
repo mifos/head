@@ -20,18 +20,23 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
-import org.mifos.config.Localization;
+import org.mifos.config.PasswordRules;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelService;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.dto.domain.LoginDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -45,10 +50,7 @@ import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-/**
- *
- */
+import org.springframework.validation.Errors;
 public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
     private final PersonnelService personnelService;
@@ -110,7 +112,9 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
             this.personnelDao.save(user);
             this.transactionHelper.commitTransaction();
 
-            return new LoginDto(user.getPersonnelId(), user.getOffice().getOfficeId(), user.isPasswordChanged());
+            boolean isPasswordExpired = new LocalDate(user.getPasswordExpirationDate()).isBefore(new LocalDate());
+            
+            return new LoginDto(user.getPersonnelId(), user.getOffice().getOfficeId(), user.isPasswordChanged(), isPasswordExpired);
         } catch (ApplicationException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
@@ -125,8 +129,14 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(changePasswordRequest.getUsername());
-
         this.personnelService.changePassword(user, changePasswordRequest.getNewPassword());
+        Date newExpirationDate = null;
+        
+        if (user.getPasswordExpirationDate() != null) {
+	        newExpirationDate = new LocalDateTime().plusDays(PasswordRules.getPasswordExpirationDatePrelongation()).toDateTime().toDate();
+        }
+ 
+        personnelService.changePasswordExpirationDate(user, newExpirationDate);
     }
 
     @Override
@@ -134,27 +144,19 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
         MifosUser appUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(appUser);
-
+        
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
         boolean passwordIsAlreadyChanged = user.isPasswordChanged();
-
-        user.updateDetails(userContext);
-        try {
-            this.transactionHelper.startTransaction();
-            this.transactionHelper.beginAuditLoggingFor(user);
-            user.updatePassword(oldPassword, newPassword);
-            this.personnelDao.save(user);
-            this.transactionHelper.commitTransaction();
-        } catch (ApplicationException e) {
-            this.transactionHelper.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
-        } catch (Exception e) {
-            this.transactionHelper.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            this.transactionHelper.closeSession();
+        this.personnelService.changePassword(user, newPassword);
+        
+        Date newExpirationDate = null;
+        
+        if (user.getPasswordExpirationDate() != null) {
+	        newExpirationDate = new LocalDateTime().plusDays(PasswordRules.getPasswordExpirationDatePrelongation()).toDateTime().toDate();
         }
-
+        
+        personnelService.changePasswordExpirationDate(user, newExpirationDate);
+        
         return passwordIsAlreadyChanged;
     }
 
@@ -165,5 +167,24 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 		} catch (PersonnelException e) {
 			return false;
 		}
+	}
+
+	@Override
+	public void validatePassword(String password, Errors errors) {
+		if (password.length() < PasswordRules.getMinPasswordLength()) {
+            errors.reject(PersonnelConstants.ERROR_PASSWORD_LENGTH, new Integer[]{PasswordRules.getMinPasswordLength()}, "Password should have the minimum length of " + PasswordRules.getMinPasswordLength() + " characters.");
+        }
+
+        if (PasswordRules.isMustContainDigit() && !password.matches(".*\\d.*")) {
+            errors.reject(PersonnelConstants.ERROR_PASSWORD_DIGIT);
+        }
+
+        if (PasswordRules.isMustContainSpecial() && StringUtils.isAlphanumeric(password)) {
+            errors.reject(PersonnelConstants.ERROR_PASSWORD_SPECIAL);
+        }
+        
+        if (PasswordRules.isMustContainBothCaseLetters() && !password.matches(".*[a-z]*[A-Z].*")) { //contains at least one upper and lower case letter?
+            errors.reject(PersonnelConstants.ERROR_PASSWORD_BOTH_CASE);
+        }
 	}
 }

@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
@@ -49,7 +48,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
@@ -58,8 +56,9 @@ import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.business.service.PersonnelService;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -112,6 +111,9 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     @Autowired
     private LegacyPersonnelDao legacyPersonnelDao;
+    
+    @Autowired
+    private PersonnelService personelService;
 
     @Autowired
     public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao, LegacyRolesPermissionsDao rolesPermissionsPersistence) {
@@ -255,7 +257,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), personnel.getGlobalPersonnelNum(), displayName, status, locked,
                 personnelDetails, emailId, languageName, preferredLocale.intValue(), level.getId(), office.getOfficeId().intValue(), office
-                        .getOfficeName(), title, personnelRoles, personnelId, userName, customFields, personnelNotes);
+                        .getOfficeName(), title, personnelRoles, personnelId, userName, customFields, personnelNotes, personnel.getPasswordExpirationDate());
     }
 
     @Override
@@ -289,7 +291,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                             .getCustomFields(), name, personnel.getGovernmentIdNumber(),
                     personnel.getDob().toDate(), personnel.getMaritalStatus(), personnel.getGender(), personnel
                             .getDateOfJoiningMFI().toDate(), personnel.getDateOfJoiningBranch().toDate(), address,
-                    Integer.valueOf(user.getUserId()).shortValue());
+                    Integer.valueOf(user.getUserId()).shortValue(), personnel.getPasswordExpirationDate(), null); //TODO null?
 
             transactionHelper.startTransaction();
             this.personnelDao.save(newPersonnel);
@@ -338,7 +340,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     @Override
     public UserDetailDto updatePersonnel(CreateOrUpdatePersonnelInformation personnel) {
-
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
 
@@ -373,21 +374,26 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                     PersonnelLevelEntity.class, userHierarchyLevel.getValue());
 
             Short preferredLocaleId = personnel.getPreferredLocale();
-
-
+            
             transactionHelper.startTransaction();
             transactionHelper.beginAuditLoggingFor(userForUpdate);
 
             userForUpdate.updateUserDetails(personnel.getFirstName(), personnel.getMiddleName(), personnel
                     .getSecondLastName(), personnel.getLastName(), personnel.getEmailId(), personnel.getGender(),
                     personnel.getMaritalStatus(), preferredLocaleId, personnelStatus, address, personnel.getTitle(),
-                    personnelLevel, selectedRoles, personnel.getPassword(), newOffice);
+                    personnelLevel, selectedRoles, newOffice);
             userForUpdate.getPersonnelDetails().setDob(personnel.getDob().toDate());
-
+            userForUpdate.setPasswordExpirationDate(personnel.getPasswordExpirationDate());
+            if (!StringUtils.isEmpty(personnel.getPassword())) {
+            	this.personelService.changePassword(userForUpdate, personnel.getPassword());
+            }
             this.personnelDao.save(userForUpdate);
             transactionHelper.commitTransaction();
 
             return userForUpdate.toDto();
+        } catch (BusinessRuleException e) {
+        	transactionHelper.rollbackTransaction();
+        	throw e;
         } catch (PersistenceException e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);

@@ -22,6 +22,7 @@ package org.mifos.customers.struts.action;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -134,7 +135,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         PersonnelBO personnelBO = TestObjectFactory.createPersonnel(PersonnelLevel.NON_LOAN_OFFICER, officeBO, Integer
                 .valueOf("1"), Short.valueOf("1"), "1234", "raj", null, null, null, new Name("abe", null, null, null),
-                null, new Date(), null, Integer.valueOf("1"), null, null, null);
+                null, new Date(), null, Integer.valueOf("1"), null, null, null, new Date(), new HashSet());
         userContext.setId(personnelBO.getPersonnelId());
         addActionAndMethod(Methods.loadMainSearch.toString());
         actionPerform();

@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.dto.domain.LoginDto;
+import org.springframework.validation.Errors;
 
 public interface NewLoginServiceFacade {
 
@@ -32,5 +33,7 @@ public interface NewLoginServiceFacade {
     boolean updatePassword(String username, String oldPassword, String newPassword);
     
     boolean checkOldPassword(String username, String oldPassword);
+    
+    void validatePassword(String password, Errors errors);
 
 }

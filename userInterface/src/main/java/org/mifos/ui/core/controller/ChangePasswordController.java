@@ -20,13 +20,17 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.dto.domain.ChangePasswordRequest;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Controller
 @RequestMapping("/changePassword")
@@ -49,6 +54,9 @@ public class ChangePasswordController {
     @Autowired
     private NewLoginServiceFacade loginServiceFacade;
 
+    @Autowired
+    private MessageSource messageSource;
+    
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
     public ChangePasswordFormBean showFirstTimeUserChangePasswordForm(@RequestParam(value = "username", required = true) String username) {
@@ -69,7 +77,7 @@ public class ChangePasswordController {
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("formBean") @Valid ChangePasswordFormBean formBean,
                                     BindingResult result,
-                                    SessionStatus status) {
+                                    SessionStatus status, HttpServletRequest request) {
 
         String viewName = HOME_PAGE;
 
@@ -79,9 +87,15 @@ public class ChangePasswordController {
         } else if (result.hasErrors()) {
             viewName = "changePassword";
         } else {
-            ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(formBean.getUsername(), formBean.getOldPassword(), formBean.getNewPassword());
-            loginServiceFacade.changePassword(changePasswordRequest);
-            status.setComplete();
+        	try {
+        		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(formBean.getUsername(), formBean.getOldPassword(), formBean.getNewPassword());
+        		loginServiceFacade.changePassword(changePasswordRequest);
+        		status.setComplete();
+        	} catch (BusinessRuleException e) {
+        		ObjectError error = new ObjectError("passwordUsed", messageSource.getMessage("error.passwordAlreadyUsedException", null, RequestContextUtils.getLocale(request)));
+        		result.addError(error);
+        		viewName = "changePassword";
+        	}
         }
 
         return viewName;

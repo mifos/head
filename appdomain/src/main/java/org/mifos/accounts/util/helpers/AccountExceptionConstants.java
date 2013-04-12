@@ -25,6 +25,7 @@ package org.mifos.accounts.util.helpers;
  */
 public interface AccountExceptionConstants {
     String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";
+    String PASSWORD_USED_EXCEPTION = "error.passwordAlreadyUsedException";
     String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
     String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
     String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";

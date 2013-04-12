@@ -289,6 +289,15 @@ explanation of the license and how it is applied.
 		<span class="fontnormal">
 		<c:out value="${BusinessKey.userName}"/> 
 		</span><br>
+        <mifos:mifoslabel name="Personnel.PasswordExpirationDate"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
+        <span class="fontnormal">
+        <c:if test="${empty BusinessKey.passwordExpirationDate}">
+            <mifos:mifoslabel name="Personnel.PasswordExpirationIndefinite" bundle="PersonnelUIResources"/>
+        </c:if>
+        <c:if test="${not empty BusinessKey.passwordExpirationDate}">
+            <c:out value="${BusinessKey.passwordExpirationDate}" />
+        </c:if> 
+        </span><br>
       <br>
 	<span class="fontnormal">
       <br>

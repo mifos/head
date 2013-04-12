@@ -22,7 +22,6 @@ package org.mifos.customers.personnel.struts.action;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -42,7 +41,6 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
-import org.mifos.application.admin.system.PersonnelInfo;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -153,7 +151,6 @@ public class PersonAction extends SearchAction {
         }
         personActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         personActionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser());
-
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -289,7 +286,8 @@ public class PersonAction extends SearchAction {
                 personActionForm.getCustomFields(), personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getLastName(),
                 personActionForm.getSecondLastName(), personActionForm.getGovernmentIdNumber(), new DateTime(dob),
                 getIntegerValue(personActionForm.getMaritalStatus()), getIntegerValue(personActionForm.getGender()), new DateTime(dateOfJoiningMFI),
-                new DateTimeService().getCurrentDateTime(), addressDto, personnelStatus.getValue());
+                new DateTimeService().getCurrentDateTime(), addressDto, personnelStatus.getValue(), 
+                personActionForm.getPasswordExpirationDate() != null ? new Date(personActionForm.getPasswordExpirationDate()) : null);
 
         return perosonnelInfo;
     }
@@ -389,6 +387,9 @@ public class PersonAction extends SearchAction {
         if (personnel.getPreferredLocale() != null) {
             actionform.setPreferredLocale(personnel.getPreferredLocale());
         }
+        if (personnel.getPasswordExpirationDate() != null) {
+        	actionform.setPasswordExpirationDate(DateUtils.makeDateAsSentFromBrowser(personnel.getPasswordExpirationDate()));
+        }
         List<RoleBO> selectList = new ArrayList<RoleBO>();
         for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
             selectList.add(personnelRole.getRole());
@@ -439,12 +440,13 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        PersonActionForm actionForm = (PersonActionForm) form;
-
+       
+    	PersonActionForm actionForm = (PersonActionForm) form;
+     
         try {
             CreateOrUpdatePersonnelInformation perosonnelInfo = translateFormToCreatePersonnelInformationDto(request, actionForm);
             UserDetailDto userDetails = this.personnelServiceFacade.updatePersonnel(perosonnelInfo);
-
+            
             String globalPersonnelNum = userDetails.getSystemId();
             Name name = new Name(actionForm.getFirstName(), actionForm.getMiddleName(), actionForm.getSecondLastName(), actionForm.getLastName());
             request.setAttribute("displayName", name.getDisplayName());

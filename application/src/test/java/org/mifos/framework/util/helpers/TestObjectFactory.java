@@ -152,6 +152,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelUsedPasswordEntity;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -1720,10 +1721,11 @@ public class TestObjectFactory {
                                               final Short preferredLocale, final String password, final String userName, final String emailId,
                                               final List<RoleBO> personnelRoles, final List<CustomFieldDto> customFields, final Name name,
                                               final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender,
-                                              final Date dateOfJoiningMFI, final Date dateOfJoiningBranch, final Address address) throws Exception {
+                                              final Date dateOfJoiningMFI, final Date dateOfJoiningBranch, final Address address, Date passwordExpirationDate,
+                                              Set<PersonnelUsedPasswordEntity> usedPasswords) throws Exception {
         PersonnelBO personnelBO = new PersonnelBO(level, office, title, preferredLocale, password, userName, emailId,
                 personnelRoles, customFields, name, governmentIdNumber, dob, maritalStatus, gender, dateOfJoiningMFI,
-                dateOfJoiningBranch, address, Short.valueOf("1"));
+                dateOfJoiningBranch, address, Short.valueOf("1"), passwordExpirationDate, usedPasswords);
 
         IntegrationTestObjectMother.createPersonnel(personnelBO);
         return IntegrationTestObjectMother.findPersonnelById(personnelBO.getPersonnelId());

@@ -21,6 +21,8 @@
 package org.mifos.framework.components.taggenerator;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -190,7 +192,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         java.util.Date date = new java.util.Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"),
-                Integer.valueOf("1"), date, date, address, userContext.getId());
+                Integer.valueOf("1"), date, date, address, userContext.getId(), new Date(), new HashSet());
 
         IntegrationTestObjectMother.createPersonnel(personnel);
         return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());

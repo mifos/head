@@ -235,7 +235,16 @@ explanation of the license and how it is applied.
 						<span class="fontnormal"> <mifos:mifoslabel
 							name="Personnel.UserName" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						<c:out value="${personnelInformationDto.userName}" /> </span><br>
-						<br>
+                        <span class="fontnormal"> <mifos:mifoslabel
+                            name="Personnel.PasswordExpirationDate" bundle="PersonnelUIResources" />
+                            <c:if test="${empty personnelInformationDto.passwordExpirationDate}">
+                            <mifos:mifoslabel
+                            name="Personnel.PasswordExpirationIndefinite" bundle="PersonnelUIResources"/>
+                            </c:if>
+                            <c:if test="${not empty personnelInformationDto.passwordExpirationDate}">
+                        <c:out value="${personnelInformationDto.passwordExpirationDate}" />
+                        </c:if> </span><br>
+                        <br>
 						<span class="fontnormal">
 						<c:set var="questionnaireFor" scope="session" value="${personnelInformationDto.displayName}"/>
                         <c:remove var="urlMap" />

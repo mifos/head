@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
-import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -68,6 +67,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.LocaleSetting;
 import org.mifos.config.Localization;
+import org.mifos.config.PasswordRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.UserLocale;
 import org.mifos.config.business.Configuration;
@@ -99,9 +99,6 @@ import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -535,6 +532,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         // Check ClientRules configuration in db and config file(s)
         // for errors. Also caches ClientRules values.
         ClientRules.init();
+        
+        PasswordRules.init();
         // Check ProcessFlowRules configuration in db and config
         // file(s) for errors.
         ProcessFlowRules.init();

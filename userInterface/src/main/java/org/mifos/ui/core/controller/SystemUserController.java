@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,6 +197,7 @@ public class SystemUserController {
         DateTime dateOfBirth = userFormBean.getDateOfBirthAsDateTime();
         DateTime mfiJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
         DateTime branchJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
+        Date passwordExpirationDate = userFormBean.getPasswordExpirationDate();
 
         String email = userFormBean.getEmail();
 
@@ -240,7 +242,7 @@ public class SystemUserController {
 
         CreateOrUpdatePersonnelInformation personnel = new CreateOrUpdatePersonnelInformation(userFormBean.getUserId(), personnelLevelId, officeId, title, preferredLocale,
                 password, username, email, roles, customFields, firstName, middleName, lastName, secondLastName,
-                governmentIdNumber, dateOfBirth, maritalStatus, gender, mfiJoiningDate, branchJoiningDate, address, personnelStatusId);
+                governmentIdNumber, dateOfBirth, maritalStatus, gender, mfiJoiningDate, branchJoiningDate, address, personnelStatusId, passwordExpirationDate);
         return personnel;
     }
 

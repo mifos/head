@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -287,7 +288,7 @@ public class LegacyPersonnelDaoIntegrationTest extends MifosIntegrationTestCase 
         Date date = new Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
-                        .valueOf("1"), date, date, address, createdBy);
+                        .valueOf("1"), date, date, address, createdBy, new Date(), new HashSet());
         IntegrationTestObjectMother.createPersonnel(personnel);
         return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
     }

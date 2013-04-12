@@ -36,6 +36,9 @@
                 <!-- <div id="formsection">-->
                 <form method="post" action="changePassword.ftl" id="changepassword.form">
                     <div class=" orangeheading">[@spring.message "changePassword.changePassword"/]</div>
+                    [#if RequestParameters.expired??]
+                        <p>[@spring.message "changePassword.passwordExpired"/]</p>
+                    [/#if]
                     <p>[@spring.message "changePassword.enterCurrentPasswordAndThenChooseYourNewPasswordClickSubmitWhenYouAreDone"/]</p>
 
                     <div class="error">

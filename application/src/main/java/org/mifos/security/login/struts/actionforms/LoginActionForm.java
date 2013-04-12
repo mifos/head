@@ -22,10 +22,13 @@ package org.mifos.security.login.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.PasswordRules;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.security.login.util.helpers.LoginConstants;
 
@@ -96,6 +99,21 @@ public class LoginActionForm extends BaseActionForm {
                 if (newPassword.equals(oldPassword)) {
                     errors.add(LoginConstants.SAME_OLD_AND_NEW_PASSWORD, new ActionMessage(
                             LoginConstants.SAME_OLD_AND_NEW_PASSWORD));
+                }
+                if (newPassword.length() < PasswordRules.getMinPasswordLength()) {
+                    errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(PersonnelConstants.ERROR_PASSWORD_LENGTH, new Integer[]{PasswordRules.getMinPasswordLength()}));
+                }
+
+                if (PasswordRules.isMustContainDigit() && !newPassword.matches(".*\\d.*")) {
+                    errors.add(PersonnelConstants.ERROR_PASSWORD_DIGIT, new ActionMessage(PersonnelConstants.ERROR_PASSWORD_DIGIT));
+                }
+
+                if (PasswordRules.isMustContainSpecial() && StringUtils.isAlphanumeric(newPassword)) {
+                    errors.add(PersonnelConstants.ERROR_PASSWORD_SPECIAL, new ActionMessage(PersonnelConstants.ERROR_PASSWORD_SPECIAL));
+                }
+                
+                if (PasswordRules.isMustContainBothCaseLetters() && !newPassword.matches(".*[a-z]*[A-Z].*")) { //contains at least one upper and lower case letter?
+                    errors.add(PersonnelConstants.ERROR_PASSWORD_BOTH_CASE, new ActionMessage(PersonnelConstants.ERROR_PASSWORD_BOTH_CASE));
                 }
             }
         }

@@ -89,11 +89,13 @@ public class PersonnelBO extends AbstractBusinessObject {
     private Short preferredLocale;
     private Short sitePreference;
     private byte[] encryptedPassword;
-
+    private Date passwordExpirationDate;
+    private Set<PersonnelUsedPasswordEntity> personnelUsedPasswords;
+    
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
             final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldDto> customFields, final Name name,
             final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender, final Date dateOfJoiningMFI,
-            final Date dateOfJoiningBranch, final Address address, final Short createdBy) {
+            final Date dateOfJoiningBranch, final Address address, final Short createdBy, Date passwordExpirationDate, Set<PersonnelUsedPasswordEntity> personnelUsedPasswords) {
         super();
         setCreateDetails(createdBy, new DateTime().toDate());
         this.displayName = name.getDisplayName();
@@ -122,9 +124,28 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.noOfTries = 0;
         this.encryptedPassword = getEncryptedPassword(password);
         this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
+        this.passwordExpirationDate = passwordExpirationDate;
+        this.personnelUsedPasswords = personnelUsedPasswords;
     }
 
-    /**
+    public Date getPasswordExpirationDate() {
+		return passwordExpirationDate;
+	}
+
+	public void setPasswordExpirationDate(Date passwordExpirationDate) {
+		this.passwordExpirationDate = passwordExpirationDate;
+	}
+
+	public Set<PersonnelUsedPasswordEntity> getPersonnelUsedPasswords() {
+		return personnelUsedPasswords;
+	}
+
+	public void setPersonnelUsedPasswords(
+			Set<PersonnelUsedPasswordEntity> personnelUsedPasswords) {
+		this.personnelUsedPasswords = personnelUsedPasswords;
+	}
+
+	/**
      * default constructor for hibernate
      */
     @Deprecated
@@ -556,7 +577,7 @@ public class PersonnelBO extends AbstractBusinessObject {
             String email, Integer gender, Integer maritalStatus,
             Short preferredLocaleId, PersonnelStatusEntity personnelStatus,
             Address address, Integer title, PersonnelLevelEntity personnelLevel, List<RoleBO> roles,
-            String password, OfficeBO newOffice) {
+            OfficeBO newOffice) {
 
         this.emailId = email;
         this.personnelDetails.updateNameDetails(firstName, middleName, secondLastName, lastName);
@@ -577,11 +598,6 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.preferredLocale = preferredLocaleId;
         this.status = personnelStatus;
         this.level = personnelLevel;
-
-        // fix me, use encrpytion service outside of pojo?
-        if (StringUtils.isNotBlank(password)) {
-            this.encryptedPassword = getEncryptedPassword(password);
-        }
 
         updatePersonnelRoles(roles);
     }

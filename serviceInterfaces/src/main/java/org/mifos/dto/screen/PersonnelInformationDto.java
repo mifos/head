@@ -23,6 +23,7 @@ package org.mifos.dto.screen;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
@@ -52,12 +53,13 @@ public class PersonnelInformationDto implements Serializable {
     private final String userName;
     private final Set<CustomFieldDto> customFields;
     private final Set<PersonnelNoteDto> personnelNotes;
+    private final Date passwordExpirationDate;
 
     public PersonnelInformationDto(Integer id, String globalPersonnelNum, String displayName, ListElement status, Boolean locked,
                                    PersonnelDetailsDto personnelDetails, String emailId, String preferredLocaleLanguageName,
                                    Integer preferredLanguageId, Short levelId, Integer officeId, String officeName, Integer title, Set<ListElement> personnelRoles,
                                    Short personnelId, String userName, Set<CustomFieldDto> customFields,
-                                   Set<PersonnelNoteDto> personnelNotes) {
+                                   Set<PersonnelNoteDto> personnelNotes, Date passwordExpirationDate) {
         this.id = id;
         this.globalPersonnelNum = globalPersonnelNum;
         this.displayName = displayName;
@@ -76,9 +78,14 @@ public class PersonnelInformationDto implements Serializable {
         this.userName = userName;
         this.customFields = customFields;
         this.personnelNotes = personnelNotes;
+        this.passwordExpirationDate = passwordExpirationDate == null ? null : new Date(passwordExpirationDate.getTime());	
     }
+    
+    public Date getPasswordExpirationDate() {
+		return passwordExpirationDate == null ? null : new Date(passwordExpirationDate.getTime());
+	}
 
-    public String getGlobalPersonnelNum() {
+	public String getGlobalPersonnelNum() {
         return globalPersonnelNum;
     }
 

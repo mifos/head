@@ -22,6 +22,7 @@ package org.mifos.customers.personnel.business.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -123,7 +124,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         Date date = new Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, new Name("XYZ", null, null, null), "111111", date, Integer
-                        .valueOf("1"), Integer.valueOf("1"), date, date, address, PersonnelConstants.SYSTEM_USER);
+                        .valueOf("1"), Integer.valueOf("1"), date, date, address, PersonnelConstants.SYSTEM_USER, new Date(), new HashSet());
         IntegrationTestObjectMother.createPersonnel(personnel);
         return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
     }

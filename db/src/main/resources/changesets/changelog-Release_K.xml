@@ -2,6 +2,27 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet id="MIFOS-5985" author="Lukasz Gasior" context="expansion">
+        <validCheckSum>3:3fb349d1d12d0fcf8d5fee9bff9b76d5</validCheckSum>
+        <addColumn tableName="personnel">
+            <column name="password_expiration_date" type="date" />
+        </addColumn>
+        <sql endDelimiter=";">
+            create table personnel_used_password (
+                id int auto_increment NOT NULL,
+                personnel_id smallint(6) NOT NULL,
+                password tinyblob not null,
+                date_changed DATETIME not null,
+                primary key(id),
+                foreign key(personnel_id) 
+                    references personnel(personnel_id)
+            ) engine=innodb character set utf8;
+        </sql>
+        <rollback>
+            <dropColumn tableName="personnel" columnName="password_expiration_date" />
+            <sql endDelimiter=";">drop table personnel_used_password;</sql>
+        </rollback>
+    </changeSet>
     <changeSet id="MIFOS-5983" author="Lukasz Gasior" context="expansion">
         <addColumn tableName="sections_questions">
             <column name="show_on_page" type="boolean"  defaultValueBoolean="false" />
