@@ -818,8 +818,8 @@
                    where 
                    ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and 
                    c.office.officeId=:OFFICEID and 
-                   (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
-                   (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
+                   ((:CREATED_DATE_RANGE_START_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_START) or (:CREATED_DATE_RANGE_START_SEARCH = false)) and
+                   ((:CREATED_DATE_RANGE_END_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_END) or (:CREATED_DATE_RANGE_END_SEARCH = false)) and
                    (
                         (:CENTER_SEARCH = true and c.customerLevel.id = 3 
                          and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end) 
@@ -861,8 +861,8 @@
                    where 
                    ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and 
                    c.office.officeId=:OFFICEID and 
-                   (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
-                   (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
+                   ((:CREATED_DATE_RANGE_START_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_START) or (:CREATED_DATE_RANGE_START_SEARCH = false)) and
+                   ((:CREATED_DATE_RANGE_END_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_END) or (:CREATED_DATE_RANGE_END_SEARCH = false)) and
                    (
                         (:CENTER_SEARCH = true and c.customerLevel.id = 3  
                          and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end)
@@ -905,8 +905,8 @@
                     where (
                             ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
                             and (off.searchId like :OFFICE_SEARCH_ID) and   
-                               (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
-                               (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
+                           ((:CREATED_DATE_RANGE_START_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_START) or (:CREATED_DATE_RANGE_START_SEARCH = false)) and
+                           ((:CREATED_DATE_RANGE_END_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_END) or (:CREATED_DATE_RANGE_END_SEARCH = false)) and
                                (
                                 (:CENTER_SEARCH = true and c.customerLevel.id = 3 
                                  and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end) 
@@ -949,8 +949,8 @@
                     where (
                             ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
                             and (off.searchId like :OFFICE_SEARCH_ID) and
-                               (c.createdDate >= (case when :CREATED_DATE_RANGE_START is null then c.createdDate else date(:CREATED_DATE_RANGE_START) end)) and
-                               (c.createdDate <= (case when :CREATED_DATE_RANGE_END is null then c.createdDate else date(:CREATED_DATE_RANGE_END) end)) and
+                           ((:CREATED_DATE_RANGE_START_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_START) or (:CREATED_DATE_RANGE_START_SEARCH = false)) and
+                           ((:CREATED_DATE_RANGE_END_SEARCH = true and c.createdDate >= :CREATED_DATE_RANGE_END) or (:CREATED_DATE_RANGE_END_SEARCH = false)) and
                            (
                                 (:CENTER_SEARCH = true and c.customerLevel.id = 3 
                                  and c.customerStatus.id = (case(:CENTER_STATUS) when 'all' then c.customerStatus.id else (:CENTER_STATUS) end) 

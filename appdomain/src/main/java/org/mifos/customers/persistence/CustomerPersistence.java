@@ -492,15 +492,19 @@ public class CustomerPersistence extends LegacyGenericDao {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             if (filters.getCreationDateRangeStart() != null && !filters.getCreationDateRangeStart().equals("")) {
+                paramList.add(typeNameValue("Boolean", "CREATED_DATE_RANGE_START_SEARCH", true));
                 paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_START",
                 simpleDateFormat.parse(filters.getCreationDateRangeStart())));
             } else {
+                paramList.add(typeNameValue("Boolean", "CREATED_DATE_RANGE_START_SEARCH", false));
                 paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_START", null));
             }
             if (filters.getCreationDateRangeEnd() != null && !filters.getCreationDateRangeEnd().equals("")) {
+                paramList.add(typeNameValue("Boolean", "CREATED_DATE_RANGE_END_SEARCH", true));
                 paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_END",
                 simpleDateFormat.parse(filters.getCreationDateRangeEnd())));
             } else {
+                paramList.add(typeNameValue("Boolean", "CREATED_DATE_RANGE_END_SEARCH", false));
                 paramList.add(typeNameValue("Date", "CREATED_DATE_RANGE_END", null));
             }
         } catch (ParseException e) {
