@@ -30,6 +30,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -65,6 +66,8 @@ public class XlsLoansAccountImporter implements MessageSourceAware {
     private LoanProductDao loanProductDao;
     private CustomerDao customerDao;
     private Locale locale;
+    @Autowired
+    ConfigurationPersistence configurationPersistence;
     /**
      * If true it means we are trying to edit existing account
      */
@@ -578,8 +581,9 @@ public class XlsLoansAccountImporter implements MessageSourceAware {
             throw new XlsParsingException(getCellError(XlsMessageConstants.PRODUCT_NOT_FOUND, row, currentCell, params));
         }
         // check if installments date is synchronized with meetings
-        boolean meetingOk = foundProduct.getLoanOfferingMeeting().getMeeting()
-                .hasSameRecurrenceAs(customerBO.getCustomerMeetingValue());
+        boolean meetingOk = (foundProduct.getLoanOfferingMeeting().getMeeting()
+                .hasSameRecurrenceAs(customerBO.getCustomerMeetingValue()) || configurationPersistence
+                .isRepaymentIndepOfMeetingEnabled());
         if (!meetingOk) {
             throw new XlsParsingException(getCellError(XlsMessageConstants.DIFFERENT_MEETING_FREQUENCY, row, currentCell, null));
         }

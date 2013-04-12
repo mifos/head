@@ -1,7 +1,7 @@
 package org.mifos.test.acceptance.admin;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -47,9 +47,6 @@ public class LoanImportTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         adminTestHelper = new AdminTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
-        targetTime=new DateTime(2012, 6, 22, 12, 0, 0, 0); //changing date so dates in xls spreadsheet will be appropriate
-        DateTimeUpdaterRemoteTestingService dtUpdate=new DateTimeUpdaterRemoteTestingService(selenium);
-        dtUpdate.setDateTime(targetTime);
     }
     @AfterMethod
     public void logOut() {
@@ -58,19 +55,25 @@ public class LoanImportTest extends UiTestCaseBase {
     }
 
     @Test(enabled = true)
-    public void importLoanAccountsToClientTest() throws SQLException {
-        verifyImportLoanAccountsToClient(WEEKLY_RECURRENCE_TYPE_ID);
-        applicationDatabaseOperation.updateLSIM(1);
-        for (int i = 1; i < 4; i++) {
-            verifyImportLoanAccountsToClient(i);
-        }
+    public void importLoanAccountsToClientTest() throws Exception {
+        
+        verifyImportLoanAccountsToClient(WEEKLY_RECURRENCE_TYPE_ID, false, new int[] {});
+        verifyImportLoanAccountsToClient(1, true, new int[] { 20 });
+        verifyImportLoanAccountsToClient(2, true, new int[] { 20 });
+        verifyImportLoanAccountsToClient(3, true, new int[] { 20 });
     }
     /**
      * MIFOS-5662: Add the possibility to import new Loans data.
      * Test loads basic xls spreadsheet and test for rows parsed with errors. Then submits successfully parsed rows.
      * Accounts are imported to client.
      */
-    private void verifyImportLoanAccountsToClient(int loanRecurrenceTypeId){
+    private void verifyImportLoanAccountsToClient(int loanRecurrenceTypeId, boolean enableLSIM, int[] skipErrorLineIndices) throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_dbunit.xml", dataSource, selenium);
+        targetTime=new DateTime(2012, 6, 22, 12, 0, 0, 0); //changing date so dates in xls spreadsheet will be appropriate
+        DateTimeUpdaterRemoteTestingService dtUpdate=new DateTimeUpdaterRemoteTestingService(selenium);
+        dtUpdate.setDateTime(targetTime);
+        applicationDatabaseOperation.updateLSIM((enableLSIM) ? 1 : 0);
+        
         ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
         try {
         manageRolePage.enablePermission("8_7");
@@ -82,9 +85,9 @@ public class LoanImportTest extends UiTestCaseBase {
             valuesDefined=defineValuesForProducts();
         }
         String succesNumber="1";
-        String errorNumber="27";
+        String errorNumber= Integer.toString(27 - skipErrorLineIndices.length);
         String testID="TID1";
-        arrayOfErrors=buildArrayOfErrorsForImportLoanTest(testID);
+        arrayOfErrors=buildArrayOfErrorsForImportLoanTest(testID, skipErrorLineIndices);
         SubmitFormParameters parameters=loanProductTestHelper.defineLoanProductParameters(10, 100, 1, 1, loanRecurrenceTypeId);
         parameters.setOfferingName(productForClient);
         parameters.setMinLoanAmount("5");
@@ -107,10 +110,11 @@ public class LoanImportTest extends UiTestCaseBase {
         ImportLoansSaveSummaryPage summaryPage= reviewPage.saveSuccessfullRows();
         summaryPage.verifySuccesString(succesNumber);
         summaryPage.verifyErrorStroing(errorNumber);
+        valuesDefined = false;
     }
     
-    private String[] buildArrayOfErrorsForImportLoanTest(String testID) {
-        String[] result;
+    private String[] buildArrayOfErrorsForImportLoanTest(String testID, int[] skipErrorLineIndices) {
+        String[] result = new String[] {};
         String tid1="TID1";
         if(testID.equals(tid1)){
             String[] arrayString={"Error in row 3, Column 2: Customer with global id 2 not found",
@@ -141,7 +145,13 @@ public class LoanImportTest extends UiTestCaseBase {
                     "Error in row 24, Column 12: Unknown loan purpose: UnknownLoanPurpose",
                     "Error in row 25, Column 13: Unknown collateral type: TestCollTypeNotKnown"
             };
-            result= arrayString;
+            
+            ArrayList<String> updatedErrorList = new ArrayList<String>(Arrays.asList(arrayString));
+            for (int i : skipErrorLineIndices) {
+                updatedErrorList.remove(i);
+            }
+            
+            updatedErrorList.toArray(result);
         }else{
             result= (String[]) new ArrayList<String>().toArray();
         }
