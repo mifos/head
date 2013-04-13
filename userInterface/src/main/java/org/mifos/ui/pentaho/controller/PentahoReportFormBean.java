@@ -32,6 +32,7 @@ import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.reports.pentaho.params.PentahoInputParameter;
 import org.mifos.reports.pentaho.params.PentahoSingleSelectParameter;
 
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"RV_RETURN_VALUE_IGNORED_BAD_PRACTICE", "SE_BAD_FIELD"})
 public class PentahoReportFormBean implements Serializable {
 
     private static final long serialVersionUID = 1460298190140336560L;

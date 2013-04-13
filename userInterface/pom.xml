@@ -32,6 +32,10 @@
             <artifactId>markdownj</artifactId>
             <version>0.3.0-1.0.2b4</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
 
         <!-- from parent pom -->
         <dependency>

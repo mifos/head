@@ -493,6 +493,17 @@ explanation of the license and how it is applied.
                      <td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
                   </tr>
                 </table>
+                <br>
+                <span class="headingorange"><mifos:mifoslabel name="admin.ManageMifosView" /></span><br />
+                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%">
+                        <html-el:link styleId="admin.link.uploadNewLogo" href="uploadNewLogo.ftl"><mifos:mifoslabel name="admin.uploadNewLogo" />
+                        </html-el:link></td>
+                  </tr>
+                </table>
+                
 			</td>
 			</tr>
 			</table>

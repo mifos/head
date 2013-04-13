@@ -31,7 +31,7 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_NO_SERIALVERSIONID", justification = "required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = {"SE_BAD_FIELD", "SE_NO_SERIALVERSIONID"}, justification = "required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
 /**
  * @deprecated by CreateSavingsAccountFormBean
  */

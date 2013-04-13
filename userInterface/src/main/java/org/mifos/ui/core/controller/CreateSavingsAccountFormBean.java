@@ -47,7 +47,7 @@ import java.util.Map;
  * An object to hold information collected in create savings account process.
  */
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "SE_BAD_FIELD"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CreateSavingsAccountFormBean implements Serializable {
 
     // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount

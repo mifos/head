@@ -46,7 +46,7 @@ import org.springframework.binding.validation.ValidationContext;
 import org.springframework.format.annotation.NumberFormat;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"NP_UNWRITTEN_FIELD", "SE_NO_SERIALVERSIONID"}, justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"RV_RETURN_VALUE_IGNORED_BAD_PRACTICE", "SE_BAD_FIELD", "NP_UNWRITTEN_FIELD", "SE_NO_SERIALVERSIONID"}, justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
 public class UserFormBean implements Serializable {
 
     // office
