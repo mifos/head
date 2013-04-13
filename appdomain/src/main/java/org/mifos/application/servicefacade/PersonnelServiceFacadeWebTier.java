@@ -291,8 +291,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                             .getCustomFields(), name, personnel.getGovernmentIdNumber(),
                     personnel.getDob().toDate(), personnel.getMaritalStatus(), personnel.getGender(), personnel
                             .getDateOfJoiningMFI().toDate(), personnel.getDateOfJoiningBranch().toDate(), address,
-                    Integer.valueOf(user.getUserId()).shortValue(), personnel.getPasswordExpirationDate(), null); //TODO null?
-
+                    Integer.valueOf(user.getUserId()).shortValue(), personnel.getPasswordExpirationDate(), null);
             transactionHelper.startTransaction();
             this.personnelDao.save(newPersonnel);
             transactionHelper.flushSession();
@@ -385,7 +384,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             userForUpdate.getPersonnelDetails().setDob(personnel.getDob().toDate());
             userForUpdate.setPasswordExpirationDate(personnel.getPasswordExpirationDate());
             if (!StringUtils.isEmpty(personnel.getPassword())) {
-            	this.personelService.changePassword(userForUpdate, personnel.getPassword());
+            	this.personelService.changePassword(userForUpdate, personnel.getPassword(), false);
             }
             this.personnelDao.save(userForUpdate);
             transactionHelper.commitTransaction();

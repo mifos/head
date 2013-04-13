@@ -129,7 +129,7 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(changePasswordRequest.getUsername());
-        this.personnelService.changePassword(user, changePasswordRequest.getNewPassword());
+        this.personnelService.changePassword(user, changePasswordRequest.getNewPassword(), true);
         Date newExpirationDate = null;
         
         if (user.getPasswordExpirationDate() != null) {
@@ -147,7 +147,7 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
         
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
         boolean passwordIsAlreadyChanged = user.isPasswordChanged();
-        this.personnelService.changePassword(user, newPassword);
+        this.personnelService.changePassword(user, newPassword, true);
         
         Date newExpirationDate = null;
         

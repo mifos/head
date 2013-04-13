@@ -26,7 +26,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 
 public interface PersonnelService {
 
-    void changePassword(PersonnelBO user, String newPassword);
+    void changePassword(PersonnelBO user, String newPassword, boolean setPasswordChanged);
     void changePasswordExpirationDate(PersonnelBO user, Date passwordExpirationDate);
 
 }

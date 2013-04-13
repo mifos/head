@@ -48,7 +48,7 @@ public class PersonnelServiceImpl implements PersonnelService {
     }
 
     @Override
-    public void changePassword(PersonnelBO user, String newPassword) {
+    public void changePassword(PersonnelBO user, String newPassword, boolean setPasswordChanged) {
 
         UserContext userContext = new UserContext();
         userContext.setId(user.getPersonnelId());
@@ -78,7 +78,7 @@ public class PersonnelServiceImpl implements PersonnelService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(user);
 
-            user.changePasswordTo(newPassword, user.getPersonnelId());
+            user.changePasswordTo(newPassword, user.getPersonnelId(), setPasswordChanged);
             this.personnelDao.save(user);
 
             hibernateTransactionHelper.commitTransaction();

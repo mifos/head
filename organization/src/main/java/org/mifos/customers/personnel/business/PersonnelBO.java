@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
@@ -492,10 +491,12 @@ public class PersonnelBO extends AbstractBusinessObject {
         return Short.valueOf("1");
     }
 
-    public void changePasswordTo(String newPassword, final Short changedByUserId) {
+    public void changePasswordTo(String newPassword, final Short changedByUserId, boolean setPasswordChnged) {
         byte[] encryptedPassword = getEncryptedPassword(newPassword);
         this.setEncryptedPassword(encryptedPassword);
-        this.setPasswordChanged(passwordChangedShortValue());
+        if (setPasswordChnged) {
+        	this.setPasswordChanged(passwordChangedShortValue());
+        }
         if (this.getLastLogin() == null) {
             this.setLastLogin(new DateTime().toDate());
         }
