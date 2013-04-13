@@ -56,6 +56,23 @@
             <sql endDelimiter=";">drop table information_order;</sql>
         </rollback>
     </changeSet>
+        <changeSet id="MIFOS-5983_2" author="Lukasz Gasior" context="expansion">
+        <sql endDelimiter=";">
+            insert into information_order (name, additional_question_id, page, order_) values
+                ("salutation", null, "CreateClient", 1), ("firstName", null, "CreateClient", 2), ("middleName", null, "CreateClient", 3),
+                ("lastName", null, "CreateClient", 4), ("secondLastName", null, "CreateClient", 5), ("governmentId", null, "CreateClient", 6),
+                ("dateOfBirth", null, "CreateClient", 7), ("gender", null, "CreateClient", 8), ("maritalStatus", null, "CreateClient", 9),
+                ("numberOfChildren", null, "CreateClient", 10), ("citizenship", null, "CreateClient", 11), ("ethnicity", null, "CreateClient", 12),
+                ("educationLevel", null, "CreateClient", 13), ("businessActivity", null, "CreateClient", 14), ("povertyStatus", null, "CreateClient", 15),
+                ("handicapped", null, "CreateClient", 16), ("photo", null, "CreateClient", 17), ("spouseDetails", null, "CreateClient", 18),
+                ("addressHeading", null, "CreateClient", 19), ("address1", null, "CreateClient", 20), ("address2", null, "CreateClient", 21), 
+                ("address3", null, "CreateClient", 22), ("city", null, "CreateClient", 23), ("state", null, "CreateClient", 24), 
+                ("country", null, "CreateClient", 25), ("postalCode", null, "CreateClient", 26), ("telephone", null, "CreateClient", 27);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">delete from information_order where page = "CreateClient";</sql>
+        </rollback>
+    </changeSet>
     <changeSet id="MIFOS-5739" author="Pawel Reise" context="expansion">
         <sql endDelimiter=";">
             create table file_info (

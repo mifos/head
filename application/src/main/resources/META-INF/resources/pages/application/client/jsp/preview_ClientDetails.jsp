@@ -211,185 +211,208 @@ explanation of the license and how it is applied.
 										bundle="ClientUIResources"></mifos:mifoslabel></td>
 								</tr>
 								<%-- Personal Information --%>
-								<tr>
+								<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personalInformationOrder')}" var="personalInformationOrder" />     
+                                <tr>
 									<td class="fontnormalbold">
 									<c:if test = "${sessionScope.clientCustActionForm.picture != null &&  sessionScope.clientCustActionForm.picture.fileName != ''}" >
 									 	 <img src="clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
 								    </c:if>
 									</td></tr>
-									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Name"
-										bundle="ClientUIResources"></mifos:mifoslabel> <span
-										class="fontnormal">
-										<c:forEach var="salutation" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}">
-											<c:if test = "${salutation.id == sessionScope.clientCustActionForm.clientName.salutation}">
-												<c:out value="${salutation.name}"/>
-											</c:if>
-										</c:forEach>
-										<c:out	value="${sessionScope.clientCustActionForm.clientName.displayName}" /> <br>
-									</span></td></tr>
-									<tr id="Client.GovernmentId"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.GOVERNMENT_ID}" keyhm="Client.GovernmentId" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
-									<span class="fontnormal"><c:out
-										value="${sessionScope.clientCustActionForm.governmentId}" /> <br>
-									</span></td></tr>
-									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.DateOfBirth"
-										bundle="ClientUIResources"></mifos:mifoslabel> <span
-										class="fontnormal"><c:out
-										value="${sessionScope.clientCustActionForm.dateOfBirth}" />
-									<br>
-									</span></td></tr>
-									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Age"
-										bundle="ClientUIResources"></mifos:mifoslabel> <span
-										class="fontnormal"><c:out
-										value="${sessionScope.clientCustActionForm.age}" /> <br>
-									</span></td></tr>
-									<tr><td class="fontnormalbold"> <mifos:mifoslabel name="client.Gender"
-										bundle="ClientUIResources"></mifos:mifoslabel> <span
-										class="fontnormal">
-										<c:forEach var="gender" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
-											<c:if test = "${gender.id == sessionScope.clientCustActionForm.clientDetailView.gender}">
-												<c:out value="${gender.name}"/>
-											</c:if>
-										</c:forEach> <br>
-									</span></td></tr>
-									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.MaritalStatus"
-										bundle="ClientUIResources"></mifos:mifoslabel> <span
-										class="fontnormal">
-										<c:forEach var="maritalStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}">
-											<c:if test = "${maritalStatus.id == sessionScope.clientCustActionForm.clientDetailView.maritalStatus}">
-												<c:out value="${maritalStatus.name}"/>
-											</c:if>
-										</c:forEach>
-									<br>
-									</span></td></tr>
-									<tr><td class="fontnormalbold">
-									 <c:choose>
-										<c:when test="${sessionScope.clientCustActionForm.spouseName.nameType == 1}">
-											<span class="fontnormalbold"><mifos:mifoslabel
-												name="client.SpouseLabel" bundle="ClientUIResources"></mifos:mifoslabel></span>
-										</c:when>
-										<c:otherwise>
-											<span class="fontnormalbold"><mifos:mifoslabel
-												name="client.FatherLabel" bundle="ClientUIResources"></mifos:mifoslabel></span>
-										</c:otherwise>
-									</c:choose> <span class="fontnormal"> <c:out
-										value="${sessionScope.clientCustActionForm.spouseName.displayName}" />
-									<br>
-									</span></td></tr>
-									<tr><td class="fontnormalbold"><mifos:mifoslabel
-										name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel>
-									<span class="fontnormal"> <c:out
-										value="${sessionScope.clientCustActionForm.clientDetailView.numChildren}" />
-									</span> <%-- Citizenship --%></td></tr>
-									<tr id="Client.Citizenship"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal">
-										 <c:forEach var="citizenship" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}">
-											<c:if test = "${citizenship.id == sessionScope.clientCustActionForm.clientDetailView.citizenship}">
-												<c:out value="${citizenship.name}"/>
-											</c:if>
-										</c:forEach><br>
-									</span> <%-- Ethnicity --%></td></tr>
-									<tr id="Client.Ethnicity"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.ETHNICITY}" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal">
-										<c:forEach var="ethnicity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}">
-											<c:if test = "${ethnicity.id == sessionScope.clientCustActionForm.clientDetailView.ethnicity}">
-												<c:out value="${ethnicity.name}"/>
-											</c:if>
-										</c:forEach><br>
-									</span></td></tr>
-									<tr id="Client.EducationLevel"><td class="fontnormalbold">
-									<mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal">
-										<c:forEach var="educationLevel" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}">
-											<c:if test = "${educationLevel.id == sessionScope.clientCustActionForm.clientDetailView.educationLevel}">
-												<c:out value="${educationLevel.name}"/>
-											</c:if>
-										</c:forEach><br>
-									</span></td></tr>
-									<tr id="Client.BusinessActivities"><td class="fontnormalbold"><mifos:mifoslabel name="client.BusinessActivities"
-										bundle="ClientUIResources" keyhm="Client.BusinessActivities" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
-										class="fontnormal">
-										<c:forEach var="businessActivities" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}">
-											<c:if test = "${businessActivities.id == sessionScope.clientCustActionForm.clientDetailView.businessActivities}">
-												<c:out value="${businessActivities.name}"/>
-											</c:if>
-										</c:forEach><br>
-									</span></td></tr>
-									<tr id="Client.PovertyStatus"><td class="fontnormalbold"><mifos:mifoslabel name="client.PovertyStatus"
-										bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
-										class="fontnormal">
-										<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}">
-											<c:if test = "${povertyStatus.id == sessionScope.clientCustActionForm.clientDetailView.povertyStatus}">
-												<c:out value="${povertyStatus.name}"/>
-											</c:if>
-										</c:forEach><br>
-									</span></td></tr>
-									<tr id="Client.Handicapped"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal">
-										<c:forEach var="handicapped" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}">
-											<c:if test = "${handicapped.id == sessionScope.clientCustActionForm.clientDetailView.handicapped}">
-												<c:out value="${handicapped.name}"/>
-											</c:if>
-										</c:forEach><br>
-									</span> </td></tr>
-									<tr id="Client.Address"><td class="fontnormalbold"><br>
-									<mifos:mifoslabel name="client.Address" bundle="ClientUIResources" keyhm="Client.Address" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+                                    <c:forEach items="${personalInformationOrder}" var="personalInformation">
+                                        <c:choose>
+                                            <c:when test="${personalInformation.name == 'firstName'}">
+                                                <tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Name"
+                                        bundle="ClientUIResources"></mifos:mifoslabel> <span
+                                        class="fontnormal">
+                                        <c:forEach var="salutation" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}">
+                                            <c:if test = "${salutation.id == sessionScope.clientCustActionForm.clientName.salutation}">
+                                                <c:out value="${salutation.name}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:out  value="${sessionScope.clientCustActionForm.clientName.displayName}" /> <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'governmentId'}">
+                                            <tr id="Client.GovernmentId"><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="${ConfigurationConstants.GOVERNMENT_ID}" keyhm="Client.GovernmentId" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+                                    <span class="fontnormal"><c:out
+                                        value="${sessionScope.clientCustActionForm.governmentId}" /> <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'dateOfBirth'}">
+                                            <tr><td class="fontnormalbold"><mifos:mifoslabel name="client.DateOfBirth"
+                                        bundle="ClientUIResources"></mifos:mifoslabel> <span
+                                        class="fontnormal"><c:out
+                                        value="${sessionScope.clientCustActionForm.dateOfBirth}" />
+                                    <br>
+                                    </span></td></tr>
+                                    <tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Age"
+                                        bundle="ClientUIResources"></mifos:mifoslabel> <span
+                                        class="fontnormal"><c:out
+                                        value="${sessionScope.clientCustActionForm.age}" /> <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'gender'}">
+                                            <tr><td class="fontnormalbold"> <mifos:mifoslabel name="client.Gender"
+                                        bundle="ClientUIResources"></mifos:mifoslabel> <span
+                                        class="fontnormal">
+                                        <c:forEach var="gender" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
+                                            <c:if test = "${gender.id == sessionScope.clientCustActionForm.clientDetailView.gender}">
+                                                <c:out value="${gender.name}"/>
+                                            </c:if>
+                                        </c:forEach> <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'spouseName'}">
+                                                <tr><td class="fontnormalbold">
+                                     <c:choose>
+                                        <c:when test="${sessionScope.clientCustActionForm.spouseName.nameType == 1}">
+                                            <span class="fontnormalbold"><mifos:mifoslabel
+                                                name="client.SpouseLabel" bundle="ClientUIResources"></mifos:mifoslabel></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="fontnormalbold"><mifos:mifoslabel
+                                                name="client.FatherLabel" bundle="ClientUIResources"></mifos:mifoslabel></span>
+                                        </c:otherwise>
+                                    </c:choose> <span class="fontnormal"> <c:out
+                                        value="${sessionScope.clientCustActionForm.spouseName.displayName}" />
+                                    <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'maritalStatus'}">
+                                                <tr><td class="fontnormalbold"><mifos:mifoslabel name="client.MaritalStatus"
+                                        bundle="ClientUIResources"></mifos:mifoslabel> <span
+                                        class="fontnormal">
+                                        <c:forEach var="maritalStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}">
+                                            <c:if test = "${maritalStatus.id == sessionScope.clientCustActionForm.clientDetailView.maritalStatus}">
+                                                <c:out value="${maritalStatus.name}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'numberOfChildren'}">
+                                            <tr><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel>
+                                    <span class="fontnormal"> <c:out
+                                        value="${sessionScope.clientCustActionForm.clientDetailView.numChildren}" />
+                                    </span> <%-- Citizenship --%></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'citizenship'}">
+                                                <tr id="Client.Citizenship"><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
+                                        class="fontnormal">
+                                         <c:forEach var="citizenship" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}">
+                                            <c:if test = "${citizenship.id == sessionScope.clientCustActionForm.clientDetailView.citizenship}">
+                                                <c:out value="${citizenship.name}"/>
+                                            </c:if>
+                                        </c:forEach><br>
+                                    </span> <%-- Ethnicity --%></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'ethnicity'}">
+                                            <tr id="Client.Ethnicity"><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="${ConfigurationConstants.ETHNICITY}" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
+                                        class="fontnormal">
+                                        <c:forEach var="ethnicity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}">
+                                            <c:if test = "${ethnicity.id == sessionScope.clientCustActionForm.clientDetailView.ethnicity}">
+                                                <c:out value="${ethnicity.name}"/>
+                                            </c:if>
+                                        </c:forEach><br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'educationLevel'}">
+                                            <tr id="Client.EducationLevel"><td class="fontnormalbold">
+                                    <mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/> <span
+                                        class="fontnormal">
+                                        <c:forEach var="educationLevel" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}">
+                                            <c:if test = "${educationLevel.id == sessionScope.clientCustActionForm.clientDetailView.educationLevel}">
+                                                <c:out value="${educationLevel.name}"/>
+                                            </c:if>
+                                        </c:forEach><br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'businessActivity'}">
+                                            <tr id="Client.BusinessActivities"><td class="fontnormalbold"><mifos:mifoslabel name="client.BusinessActivities"
+                                        bundle="ClientUIResources" keyhm="Client.BusinessActivities" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
+                                        class="fontnormal">
+                                        <c:forEach var="businessActivities" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}">
+                                            <c:if test = "${businessActivities.id == sessionScope.clientCustActionForm.clientDetailView.businessActivities}">
+                                                <c:out value="${businessActivities.name}"/>
+                                            </c:if>
+                                        </c:forEach><br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'povertyStatus'}">
+                                            <tr id="Client.PovertyStatus"><td class="fontnormalbold"><mifos:mifoslabel name="client.PovertyStatus"
+                                        bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
+                                        class="fontnormal">
+                                        <c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}">
+                                            <c:if test = "${povertyStatus.id == sessionScope.clientCustActionForm.clientDetailView.povertyStatus}">
+                                                <c:out value="${povertyStatus.name}"/>
+                                            </c:if>
+                                        </c:forEach><br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'handicapped'}">
+                                            <tr id="Client.Handicapped"><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
+                                        class="fontnormal">
+                                        <c:forEach var="handicapped" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}">
+                                            <c:if test = "${handicapped.id == sessionScope.clientCustActionForm.clientDetailView.handicapped}">
+                                                <c:out value="${handicapped.name}"/>
+                                            </c:if>
+                                        </c:forEach><br>
+                                    </span> </td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'addressHeading'}">
+                                            <tr id="Client.Address"><td class="fontnormalbold"><br>
+                                    <mifos:mifoslabel name="client.Address" bundle="ClientUIResources" keyhm="Client.Address" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 
-									<span class="fontnormal"><br>
-									</span> <span class="fontnormal"> <c:out
-										value="${sessionScope.clientCustActionForm.address.displayAddress}" /><br>
-									</span></td></tr>
-									<tr id="Client.City"><td class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CITY}" keyhm="Client.City" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-									<span class="fontnormal"> <c:out
-										value="${sessionScope.clientCustActionForm.address.city}" />
-									<br>
-									</span></td></tr>
-									<tr id="Client.State"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.STATE}" keyhm="Client.State" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/><span
-										class="fontnormal"> <c:out
-										value="${sessionScope.clientCustActionForm.address.state}" />
-									<br>
-									</span></td></tr>
-									<tr id="Client.Country"><td class="fontnormalbold"><mifos:mifoslabel name="client.Country"
-										bundle="ClientUIResources" keyhm="Client.Country" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
-										class="fontnormal"> <c:out
-										value="${sessionScope.clientCustActionForm.address.country}" /><br>
-									</span></td></tr>
-									<tr id="Client.PostalCode"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.POSTAL_CODE}" keyhm="Client.PostalCode" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
-									<span class="fontnormal"><c:out
-										value="${sessionScope.clientCustActionForm.address.zip}" />
-									<br>
-									</span> </td></tr>
-									<tr id="Client.PhoneNumber"><td class="fontnormalbold"><br><mifos:mifoslabel name="client.Telephone"
-										bundle="ClientUIResources" keyhm="Client.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
-										class="fontnormal"><c:out
-										value="${sessionScope.clientCustActionForm.address.phoneNumber}" />
-									</span><br>
-
-									<!--CustomField addition --> <span class="fontnormal">
-									
-									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-										<tr><td height="23" class="fontnormalbold"><br><mifos:mifoslabel
-											name="client.AdditionalInformationHeading"
-											bundle="ClientUIResources"></mifos:mifoslabel><span></span> <span
-											class="fontnormal"><br>
-										</span>
-										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-											 <c:forEach var="customField" items="${sessionScope.clientCustActionForm.customFields}">
-												<c:if test="${cf.fieldId==customField.fieldId}">
-													<mifos:mifoslabel name="${cf.lookUpEntityType}" bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
-										         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
-												</c:if>
-											</c:forEach>
-				    				  	</c:forEach>
-									</c:if>
-									<br>
-									</span> </td></tr>
-									
+                                    <span class="fontnormal"><br>
+                                    </span> <span class="fontnormal"> <c:out
+                                        value="${sessionScope.clientCustActionForm.address.displayAddress}" /><br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'city'}">
+                                            <tr id="Client.City"><td class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CITY}" keyhm="Client.City" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+                                    <span class="fontnormal"> <c:out
+                                        value="${sessionScope.clientCustActionForm.address.city}" />
+                                    <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'state'}">
+                                            <tr id="Client.State"><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="${ConfigurationConstants.STATE}" keyhm="Client.State" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/><span
+                                        class="fontnormal"> <c:out
+                                        value="${sessionScope.clientCustActionForm.address.state}" />
+                                    <br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'country'}">
+                                            <tr id="Client.Country"><td class="fontnormalbold"><mifos:mifoslabel name="client.Country"
+                                        bundle="ClientUIResources" keyhm="Client.Country" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
+                                        class="fontnormal"> <c:out
+                                        value="${sessionScope.clientCustActionForm.address.country}" /><br>
+                                    </span></td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'postalCode'}">
+                                            <tr id="Client.PostalCode"><td class="fontnormalbold"><mifos:mifoslabel
+                                        name="${ConfigurationConstants.POSTAL_CODE}" keyhm="Client.PostalCode" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+                                    <span class="fontnormal"><c:out
+                                        value="${sessionScope.clientCustActionForm.address.zip}" />
+                                    <br>
+                                    </span> </td></tr>
+                                            </c:when>
+                                            <c:when test="${personalInformation.name == 'telephone'}">
+                                                <tr id="Client.PhoneNumber"><td class="fontnormalbold"><br><mifos:mifoslabel name="client.Telephone"
+                                        bundle="ClientUIResources" keyhm="Client.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
+                                        class="fontnormal"><c:out
+                                        value="${sessionScope.clientCustActionForm.address.phoneNumber}" />
+                                    </span></td></tr>
+                                            </c:when>
+                                        </c:choose>
+                                    </c:forEach>        
+									<tr><td><br /></td></tr>
                                     <tr><td class="fontnormal">
                                        <b><mifos:mifoslabel
                                             name="client.Attachements"

@@ -191,6 +191,9 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
 
+        InformationOrderServiceFacade informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderServiceFacade.class);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("CreateClient"), request);
+        
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
@@ -343,6 +346,9 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Short groupFlag = actionForm.getGroupFlagValue();
         String parentGroupId = actionForm.getParentGroupId();
         ClientFormCreationDto clientFormCreationDto = this.clientServiceFacade.retrieveClientFormCreationData(groupFlag, officeId, parentGroupId);
+        
+        InformationOrderServiceFacade informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderServiceFacade.class);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("CreateClient"), request);
         
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             UserContext userContext = getUserContext(request);
