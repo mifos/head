@@ -30,16 +30,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounting.struts.actionform.GeneralLedgerActionForm;
 import org.mifos.accounting.struts.actionform.JournalVoucherActionForm;
 import org.mifos.application.accounting.business.GlDetailBO;
 import org.mifos.application.accounting.business.GlMasterBO;
 import org.mifos.application.servicefacade.AccountingServiceFacade;
 import org.mifos.application.servicefacade.AccountingServiceFacadeWebTier;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.dto.domain.DynamicOfficeDto;
 import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
+import org.mifos.dto.domain.OfficeHierarchy;
+import org.mifos.dto.domain.OfficesList;
+import org.mifos.dto.domain.RolesActivityDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,13 +59,20 @@ public class JournalVoucherAction extends BaseAction {
 			HttpServletRequest request,
 			@SuppressWarnings("unused") HttpServletResponse response)
 			throws Exception {
+
 		JournalVoucherActionForm actionForm = (JournalVoucherActionForm) form;
 		List<GLCodeDto> accountingDtos = null;
-
+		List<RolesActivityDto> rolesactivitydto=null;
 		accountingDtos = accountingServiceFacade.loadDebitAccounts();
-
 		java.util.Date voucherDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		actionForm.setVoucherDate(voucherDate);
+		rolesactivitydto=accountingServiceFacade.jvloadRolesActivity();
+		UserContext context = getUserContext(request);
+		actionForm.setOfficeLevelId(String.valueOf(context.getOfficeLevelId()));
+		List listOfOfficeHierarchyObject = getOfficeLevels(actionForm);
+		boolean journalVoucherSave=rolesactivitydto.isEmpty();
+		storingSession(request, "listOfOffices", listOfOfficeHierarchyObject);
+		storingSession(request, "jvsave", journalVoucherSave);
 		storingSession(request, "DebitAccountGlCodes", accountingDtos);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -70,22 +83,48 @@ public class JournalVoucherAction extends BaseAction {
 			throws Exception {
 
 		JournalVoucherActionForm actionForm = (JournalVoucherActionForm) form;
-		List<OfficeGlobalDto> officeDetailsDtos = null;
+	
+
+		UserContext userContext = getUserContext(request);
+
+
+		//List<OfficeGlobalDto> officeDetailsDtos = null;
+		List<OfficeGlobalDto> dynamicOfficeDetailsDtos = null;
+		List<OfficesList> offices = new ArrayList<OfficesList>();
+		// list of offices for a single parent office
+		List<DynamicOfficeDto> listOfOffices = null;
+
+		
+
+		listOfOffices = accountingServiceFacade.getOfficeDetails(String.valueOf(userContext.getBranchId()),String.valueOf(userContext.getOfficeLevelId()));
+		OfficesList officesList = null;
+		for(DynamicOfficeDto officeDto :listOfOffices){
+
 		if (actionForm.getOfficeHierarchy().equals("")) {
-			officeDetailsDtos = null;
-		} else if (actionForm.getOfficeHierarchy().equals("6")) {
-			officeDetailsDtos = accountingServiceFacade
-					.loadCustomerForLevel(new Short("3"));
-		} else if (actionForm.getOfficeHierarchy().equals("7")) {
-			officeDetailsDtos = accountingServiceFacade
-					.loadCustomerForLevel(new Short("2"));
+			offices = null;
+		// to recognise center and group
+		} else if (actionForm.getOfficeHierarchy().equals("6") || actionForm.getOfficeHierarchy().equals("7") ) {
+
+			if(actionForm.getOfficeHierarchy().equals(String.valueOf(officeDto.getOfficeLevelId()))){
+				officesList = new OfficesList(officeDto.getCustomerId(), officeDto.getDisplayName(), officeDto.getCustomerLevelId(), officeDto.getGlobalCustomerNumber());
+				offices.add(officesList);
+			}
+
 		} else {
-			officeDetailsDtos = accountingServiceFacade
-					.loadOfficesForLevel(Short.valueOf(actionForm
-							.getOfficeHierarchy()));
+	
+				if(actionForm.getOfficeHierarchy().equals(String.valueOf(officeDto.getOfficeLevelId()))){
+
+					officesList = new OfficesList(officeDto.getOfficeId(), officeDto.getDisplayName(), officeDto.getOfficeLevelId(), officeDto.getGlobalOfficeNumber());
+					offices.add(officesList);
+				}
+
+			}
+
 		}
 
-		storingSession(request, "JVOfficesOnHierarchy", officeDetailsDtos);
+//		storingSession(request, "OfficesOnHierarchy", officeDetailsDtos);
+		storingSession(request, "DynamicOfficesOnHierarchy", offices);
+
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -107,6 +146,7 @@ public class JournalVoucherAction extends BaseAction {
 			throws Exception {
 		JournalVoucherActionForm actionForm = (JournalVoucherActionForm) form;
 		storingSession(request, "JournalVoucherActionForm", actionForm);
+		monthClosingServiceFacade.validateTransactionDate(DateUtils.getDate(actionForm.getVoucherDate()));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
@@ -130,13 +170,33 @@ public class JournalVoucherAction extends BaseAction {
 			@SuppressWarnings("unused") HttpServletResponse response)
 			throws Exception {
 		JournalVoucherActionForm actionForm = (JournalVoucherActionForm) form;
+		int stage=1;
+		insertionSaveAndStage(actionForm,request,stage);
+		return mapping.findForward("submit_success");
+	}
+
+	public ActionForward saveStageSubmit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request,
+			@SuppressWarnings("unused") HttpServletResponse response)
+			throws Exception {
+
+		JournalVoucherActionForm actionForm = (JournalVoucherActionForm) form;
+
+		int stage=0;
+		//
+		insertionSaveAndStage(actionForm,request,stage);
+		return mapping.findForward("submit_success");
+	}
+
+
+	public void insertionSaveAndStage(JournalVoucherActionForm actionForm,HttpServletRequest request,int stage)
+    {
 		List<String> amountActionList = getAmountAction(actionForm);
 		List<GlDetailBO> glDetailBOList = getGlDetailBOList(actionForm,
 				amountActionList);
 		//
 		GlMasterBO glMasterBO = new GlMasterBO();
-		glMasterBO.setTransactionDate(DateUtils.getDate(actionForm
-				.getVoucherDate()));
+		glMasterBO.setTransactionDate(DateUtils.getDate(actionForm.getVoucherDate()));
 		glMasterBO.setTransactionType(actionForm.getTrxnType());
 		glMasterBO.setFromOfficeLevel(new Integer(actionForm
 				.getOfficeHierarchy()));
@@ -150,19 +210,24 @@ public class JournalVoucherAction extends BaseAction {
 		glMasterBO.setTransactionNarration(actionForm.getVoucherNotes());
 		glMasterBO.setGlDetailBOList(glDetailBOList);
 		glMasterBO.setStatus("");
+		glMasterBO.setStage(stage);
 		glMasterBO.setTransactionBy(0);
 		glMasterBO.setCreatedBy(getUserContext(request).getId());
 		glMasterBO.setCreatedDate(DateUtils.getCurrentDateWithoutTimeStamp());
-		accountingServiceFacade.savingAccountingTransactions(glMasterBO);
-		return mapping.findForward("submit_success");
-	}
+		if(stage==0)
+		{
+			accountingServiceFacade.savingStageAccountingTransactions(glMasterBO);
+		}else{
+		accountingServiceFacade.savingAccountingTransactions(glMasterBO);}
+    }
+
 
 	List<GlDetailBO> getGlDetailBOList(JournalVoucherActionForm actionForm,
 			List<String> amountActionList) {
 		List<GlDetailBO> glDetailBOList = new ArrayList<GlDetailBO>();
 		glDetailBOList.add(new GlDetailBO(actionForm.getCreditAccountHead(),
 				new BigDecimal(actionForm.getAmount()),
-				amountActionList.get(1), null, null, null, null));
+				amountActionList.get(1), null, null, null, null,actionForm.getVoucherNotes()));
 		return glDetailBOList;
 
 	}
@@ -179,6 +244,94 @@ public class JournalVoucherAction extends BaseAction {
 	public void storingSession(HttpServletRequest httpServletRequest, String s,
 			Object o) {
 		httpServletRequest.getSession().setAttribute(s, o);
+	}
+
+public List getOfficeLevels(JournalVoucherActionForm actionForm){
+
+		List listOfOffices = new ArrayList();
+		OfficeHierarchy officeHierarchy = null;
+
+		 switch (Integer.parseInt(actionForm.getOfficeLevelId())){
+		  case 1:
+
+			    officeHierarchy = new OfficeHierarchy("1","Head Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("2","Regional Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("3","Divisional Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("4","Area Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("5","Branch Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("6","Center");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("7","Group");
+			    listOfOffices.add(officeHierarchy);
+
+				System.out.println(listOfOffices.size());
+		 break;
+		  case 2:
+
+			    officeHierarchy = new OfficeHierarchy("2","Regional Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("3","Divisional Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("4","Area Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("5","Branch Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("6","Center");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("7","Group");
+			    listOfOffices.add(officeHierarchy);
+
+			    System.out.println(listOfOffices.size());
+		  break;
+		  case 3:
+
+			    officeHierarchy = new OfficeHierarchy("3","Divisional Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("4","Area Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("5","Branch Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("6","Center");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("7","Group");
+			    listOfOffices.add(officeHierarchy);
+
+		  break;
+		  case 4:
+
+
+			    officeHierarchy = new OfficeHierarchy("4","Area Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("5","Branch Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("6","Center");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("7","Group");
+			    listOfOffices.add(officeHierarchy);
+
+			    System.out.println(listOfOffices.size());
+		  break;
+
+		  case 5:
+			    officeHierarchy = new OfficeHierarchy("5","Branch Office");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("6","Center");
+			    listOfOffices.add(officeHierarchy);
+			    officeHierarchy = new OfficeHierarchy("7","Group");
+			    listOfOffices.add(officeHierarchy);
+
+			    System.out.println(listOfOffices.size());
+	      break;
+
+
+		  }
+
+		return listOfOffices;
 	}
 
 }

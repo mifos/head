@@ -149,12 +149,13 @@
         
           <!-- Mapping files for Chart Of Accounts -->
         <mapping resource="org/mifos/application/accounting/business/GlMasterBO.hbm.xml"/>
+        <mapping resource="org/mifos/application/accounting/business/CoaBranchBO.hbm.xml"/>
         <mapping resource="org/mifos/application/accounting/business/GlDetailBO.hbm.xml"/>
         <mapping
             resource="org/mifos/application/accounting/business/ChartOfAccountsForMifos.hbm.xml" />
         <mapping resource="org/mifos/application/accounting/business/GlBalancesBO.hbm.xml"/>
         <mapping resource="org/mifos/application/accounting/business/FinancialYearBO.hbm.xml"/>
-
+        <mapping resource="org/mifos/application/accounting/business/ProcessUpdateBO.hbm.xml"/>
         <!-- Mapping files for Master Data -->
         <mapping class="org.mifos.application.master.business.MifosCurrency" />
         <mapping class="org.mifos.application.master.business.LookUpLabelEntity" />

@@ -16,6 +16,7 @@
     <!--  -->
     <property name="bankName" type="string" column="bank_name"></property>
     <property name="bankBranch" type="string" column="bank_branch"></property>
+    <property name="transactionNarration" type="string" column="transaction_narration"></property>
     <!--  -->
   </class>
 </hibernate-mapping>

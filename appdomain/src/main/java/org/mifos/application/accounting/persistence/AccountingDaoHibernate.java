@@ -21,21 +21,30 @@
 package org.mifos.application.accounting.persistence;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.mifos.application.accounting.business.CoaBranchBO;
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlMasterBO;
+import org.mifos.application.accounting.business.ProcessUpdateBo;
 import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.CoaNamesDto;
+import org.mifos.dto.domain.DynamicOfficeDto;
 import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.GlDetailDto;
+import org.mifos.dto.domain.GlobalOfficeNumDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
+import org.mifos.dto.domain.RolesActivityDto;
 import org.mifos.dto.domain.RowCount;
+import org.mifos.dto.domain.ViewStageTransactionsDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
@@ -56,15 +65,42 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	public List<GlBalancesBO> findExistedGlBalacesBOs(Integer officeLevelId,
-			String officeId, String glCodeValue,Integer financialYearId) {
+			String officeId, String glCodeValue, Integer financialYearId) {
 		List<GlBalancesBO> balancesBOs = null;
 		Query query = createdNamedQuery("getExistedGlBalancesBO");
 		query.setInteger("OFFICE_LEVEL", officeLevelId);
 		query.setString("OFFICE_ID", officeId);
 		query.setString("GLCODEVALUE", glCodeValue);
-		query.setInteger("FINANCIALYEARID",financialYearId );
+		query.setInteger("FINANCIALYEARID", financialYearId);
 		balancesBOs = query.list();
 		return balancesBOs;
+	}
+
+	public List<RolesActivityDto> findrolesActivity(int activityid) {
+		final Map<String, Integer> queryparameters = new HashMap<String, Integer>();
+		queryparameters.put("ACTIVITYID", activityid);
+		final List<RolesActivityDto> rolesactivity = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.RolesActivityId", queryparameters,
+				RolesActivityDto.class);
+		return rolesactivity;
+	}
+
+	public List<GLCodeDto> findMainAccountHeadGlCodes(String glname) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("GLNAME", glname);
+		final List<GLCodeDto> glcodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.mainaccountheadglcodes",
+				queryparameters, GLCodeDto.class);
+		return glcodes;
+	}
+
+	public List<GlobalOfficeNumDto> findGlobalDiplayNumandname(String officename) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("OFFICENAME", officename);
+		final List<GlobalOfficeNumDto> glnum = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.globalnum", queryparameters,
+				GlobalOfficeNumDto.class);
+		return glnum;
 	}
 
 	@Override
@@ -108,6 +144,29 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
+	public List<GLCodeDto> findCoaBranchAccountHeadGlCodes() {
+		final Map<String, Object> queryparametersempty = new HashMap<String, Object>();
+
+		final List<GLCodeDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.coaBranchAccountHeadGlCodes",queryparametersempty,
+				GLCodeDto.class);
+		return accountHeadGlCodes;
+	}
+	@Override
+	public List<DynamicOfficeDto> getListOfOffices(String officeId,
+			String officeLevelId) {
+
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("OFFICE_ID", officeId);
+		queryparameters.put("OFFICE_LEVEL_ID", officeLevelId);
+		final List<DynamicOfficeDto> listOfOffices = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.getListOfOffices", queryparameters,
+				DynamicOfficeDto.class);
+		return listOfOffices;
+
+	}
+
+	@Override
 	public boolean savingGeneralLedgerTransaction(GlMasterBO glMasterBO) {
 		boolean result = false;
 		try {
@@ -123,7 +182,7 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 
 	@Override
 	public FinancialYearBO savingFinancialYearBO(FinancialYearBO financialYearBO) {
-		FinancialYearBO bo=null;
+		FinancialYearBO bo = null;
 		try {
 			bo = (FinancialYearBO) save(financialYearBO);
 		} catch (Exception e) {
@@ -151,13 +210,15 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		return getPersistentObject(clazz, persistentObjectId);
 	}
 
+
 	@Override
 	public List<GlBalancesBO> getResultantGlBalancesBO(GlBalancesBO glBalancesBO) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
 		queryparameters.put("OFFICEID", glBalancesBO.getOfficeId());
 		queryparameters.put("OFFICELEVEL", glBalancesBO.getOfficeLevel());
 		queryparameters.put("COAID", glBalancesBO.getGlCodeValue());
-		queryparameters.put("FINANCIALYEARID", glBalancesBO.getFinancialYearBO().getFinancialYearId());
+		queryparameters.put("FINANCIALYEARID", glBalancesBO
+				.getFinancialYearBO().getFinancialYearId());
 		final List<GlBalancesBO> glBalancesBOs = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.GetExistedOpenBalance",
 				queryparameters, GlBalancesBO.class);
@@ -165,7 +226,8 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
-	public List<GlBalancesBO> getYearEndGlBalancesBOs(String querystring,int oldFinancialYearId) {
+	public List<GlBalancesBO> getYearEndGlBalancesBOs(String querystring,
+			int oldFinancialYearId) {
 		List<GlBalancesBO> balancesBOs = null;
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
 		queryparameters.put("FINANCIALYEARID", oldFinancialYearId);
@@ -183,7 +245,82 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 				OfficeGlobalDto.class);
 		return accountHeadGlCodes;
 	}
+	@Override
+	public List<CoaNamesDto> findCoaNames(String globalofficenum) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("GLOBAL_OFFICE_NUM",  globalofficenum);
+		final List<CoaNamesDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.coa_Branch", queryparameters,
+				CoaNamesDto.class);
+		return accountHeadGlCodes;
+	}
 
+	@Override
+	public List<GLCodeDto> findRemainingCoaNames(String globalofficenum) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("GLOBAL_OFFICE_NUM_WITH_COA_NAME",  globalofficenum);
+		final List<GLCodeDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.globalOfficeNumWithCoaName", queryparameters,
+				GLCodeDto.class);
+		return accountHeadGlCodes;
+	}
+	@Override
+	public int deletegGlobalNumCoaNames(String deletecoaname) {
+
+		final int accountHeadGlCodes = deleteNamedQueryWithResultTransformer(deletecoaname);
+		return accountHeadGlCodes;
+	}
+
+	@Override
+	public List<GLCodeDto> findCoaBranchNames(String coaname) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("GLOBAL_OFFICE_NUM",  coaname);
+		final List<GLCodeDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.coa_Branch", queryparameters,
+				GLCodeDto.class);
+		return accountHeadGlCodes;
+	}
+
+	@Override
+	public String findLastProcessingUpdatedDate(String namedQueryString,
+			String globalOfficeNumber) {
+		String lastProcessingDate = null;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Query query = createdNamedQuery(namedQueryString);
+		query.setString("GLOBAL_OFFICE_NUMBER", globalOfficeNumber);
+		List<ProcessUpdateBo> list = query.list();
+		
+		if(list.size()==0){
+			Query q = createdNamedQuery("getConfigurationKeyValueByKey");
+			q.setString("KEY", "MisProcessing");
+			List<ConfigurationKeyValue> value = q.list();
+			if (value.size() > 0) {
+				ConfigurationKeyValue configurationKeyValue = value.get(0);
+				lastProcessingDate = configurationKeyValue.getValue();
+				
+			}
+
+		}
+		else if (list.size() > 0 && !"".equals(list.get(0).getLastUpdateDate())) {
+			ProcessUpdateBo processUpdateBo = list.get(0);
+			if (processUpdateBo.getLastUpdateDate() != null) {
+				lastProcessingDate = simpleDateFormat.format(processUpdateBo.getLastUpdateDate());
+			}
+			
+		}
+
+		return lastProcessingDate;
+	}
+
+	@Override
+	public List<CoaNamesDto> findCoaNamesWithGlcodeValues(String coaname) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("COA_NAME",  coaname);
+		final List<CoaNamesDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.coa_Name", queryparameters,
+				CoaNamesDto.class);
+		return accountHeadGlCodes;
+	}
 	@Override
 	public List<OfficeGlobalDto> findCustomersWithGlobalNum(Short levelId) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
@@ -261,6 +398,18 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		}
 		return lastProcessingDate;
 	}
+	@Override
+	public List<MisProcessingTransactionsDto> processMisPostings(
+			Date lastProcessDate, String officeId) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("LAST_PROCESSING_DATE", lastProcessDate);
+		queryparameters.put("GLOBAL_OFFICE_NUMBER", officeId);
+		final List<MisProcessingTransactionsDto> misProcessingTransactionDtosList = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.ProcessAccountingList",
+				queryparameters, MisProcessingTransactionsDto.class);
+
+		return misProcessingTransactionDtosList;
+	}
 
 	@Override
 	public List<MisProcessingTransactionsDto> processMisPostings(
@@ -270,13 +419,36 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		final List<MisProcessingTransactionsDto> misProcessingTransactionDtosList = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.ProcessAccountingList",
 				queryparameters, MisProcessingTransactionsDto.class);
-		//
-
-		//
 
 		return misProcessingTransactionDtosList;
 	}
 
+	@Override
+	public void updateLastProcessUpdatedDate(Date lastProcessDate,
+			String globalOfficeNumber) {
+		Query q = createdNamedQuery("getLastProcessUpdateDate");
+		q.setString("GLOBAL_OFFICE_NUMBER", globalOfficeNumber);
+		List<ProcessUpdateBo> list = q.list();
+		if (list.size() > 0) {
+			ProcessUpdateBo processUpdateBo = list.get(0);
+			processUpdateBo.setLastUpdateDate(lastProcessDate);
+			try {
+				createOrUpdate(processUpdateBo);
+			} catch (PersistenceException e) {
+				throw new MifosRuntimeException(e);
+			}
+		} else {
+			try {
+				ProcessUpdateBo processUpdateBo = new ProcessUpdateBo();
+				processUpdateBo.setGlobalOfficeNumber(globalOfficeNumber);
+				processUpdateBo.setLastUpdateDate(lastProcessDate);
+				save(processUpdateBo);
+			} catch (PersistenceException e) {
+				throw new MifosRuntimeException(e);
+			}
+		}
+
+	}
 	public void updateLastProcessDate(Date lastProcessDate) {
 		Query q = createdNamedQuery("getConfigurationKeyValueByKey");
 		q.setString("KEY", "MisProcessing");
@@ -292,4 +464,204 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		}
 	}
 
+	// Hugo Technologies view stage transaction DtoHibernate
+	@Override
+	public List<ViewStageTransactionsDto> findStageAccountingTransactions(
+			String stage, int startRecord, int numberOfRecords) {
+
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("START_RECORD", startRecord);
+		queryparameters.put("NUMBER_OF_RECORDS", numberOfRecords);
+		final List<ViewStageTransactionsDto> viewStageAccountingTransactions = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.ViewStageTransactions",
+				queryparameters, ViewStageTransactionsDto.class);
+		return viewStageAccountingTransactions;
+	}
+
+	@Override
+	public List<RowCount> findTotalNumberOfStageRecords() {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		final List<RowCount> rowCountList = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.TotalNumberOfStageRecords",
+				queryparameters, RowCount.class);
+		return rowCountList;
+	}
+
+	// Hugo Technologies approve stage transaction
+	@Override
+	public void updateStage(int transactionNO, int stage) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		GlMasterBO glMasterBo = null;
+		queryparameters.put("STAGE", stage);
+		queryparameters.put("TRANSACTION_NO", transactionNO);
+
+		try {
+			executeNamedQueryForUpdate(
+					"ChartOfAccountsForMifos.updateStageTransactions",
+					queryparameters);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	// Hugo Technologies Edit staged transaction
+	@Override
+	public List<ViewStageTransactionsDto> findStagedAccountingTransactionOnId(
+			int transactionNO) {
+
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("TRANSACTION_NO", transactionNO);
+		final List<ViewStageTransactionsDto> viewStageAccountingTransactions = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.EditStageTransactions",
+				queryparameters, ViewStageTransactionsDto.class);
+		return viewStageAccountingTransactions;
+	}
+
+	// Hugo Technologies Inter Office Transfer
+	@Override
+	public List<GLCodeDto> findInterBankDebitAccounts() {
+
+		final Map<String, Object> emptyqueryparameters = new HashMap<String, Object>();
+		final List<GLCodeDto> interOfficeGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.CashAndBank", emptyqueryparameters,
+				GLCodeDto.class);
+		return interOfficeGlCodes;
+	}
+
+	@Override
+	public List<GLCodeDto> findAuditGlCodes() {
+		final Map<String, Object> emptyqueryparameters = new HashMap<String, Object>();
+		final List<GLCodeDto> auditGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.AuditGlCodes", emptyqueryparameters,
+				GLCodeDto.class);
+		return auditGlCodes;
+	}
+
+	@Override
+	public List<OfficeGlobalDto> findCustomersWithGlobalNum(Short levelId,
+			String officeId) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("CUSTOMER_LEVEL_ID", levelId);
+		queryparameters.put("OFFICE_ID", officeId);
+		final List<OfficeGlobalDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.customerExcludeOfficeId",
+				queryparameters, OfficeGlobalDto.class);
+		return accountHeadGlCodes;
+	}
+
+	@Override
+	public List<OfficeGlobalDto> findOfficesWithGlobalNum(Short officeLevelId,
+			String officeId) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("OFFICE_LEVEL_ID", officeLevelId);
+		queryparameters.put("OFFICE_ID", officeId);
+		final List<OfficeGlobalDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.officeExcludeOfficeId",
+				queryparameters, OfficeGlobalDto.class);
+		return accountHeadGlCodes;
+	}
+
+	@Override
+	public void addComments(String transactionId, String audit,
+			String auditComments) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("TRANSACTION_NO", transactionId);
+		queryparameters.put("AUDIT", audit);
+		queryparameters.put("AUDIT_COMMENTS", auditComments);
+
+		try {
+			executeNamedQueryForUpdate(
+					"ChartOfAccountsForMifos.auditTransactions",
+					queryparameters);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<GlDetailDto> findChequeDetails(int transactionNo) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("TRANSACTION_NO", transactionNo);
+		final List<GlDetailDto> glDetailDto = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.chequeDetails", queryparameters,
+				GlDetailDto.class);
+
+		return glDetailDto;
+	}
+
+	@Override
+	public List<ViewStageTransactionsDto> findStageAccountingTransactions(
+			Date date1, Date date2, int startRecord, int numberOfRecords) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("FROM_DATE", date1);
+		queryparameters.put("TO_DATE", date2);
+		queryparameters.put("START_RECORD", startRecord);
+		queryparameters.put("NUMBER_OF_RECORDS", numberOfRecords);
+		final List<ViewStageTransactionsDto> viewStageAccountingTransactions = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.ViewAuditTransactions",
+				queryparameters, ViewStageTransactionsDto.class);
+		return viewStageAccountingTransactions;
+	}
+
+	@Override
+	public List<RowCount> findTotalNumberOfStageRecords(Date date1, Date date2) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("FROM_DATE", date1);
+		queryparameters.put("TO_DATE", date2);
+		final List<RowCount> rowCountList = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.TotalNumberOfAuditRecords",
+				queryparameters, RowCount.class);
+		return rowCountList;
+	}
+
+	@Override
+	public List<OfficeGlobalDto> findDynamicCustomersWithGlobalNum(
+			String officeId, String officLevelId) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("CUSTOMER_LEVEL_ID", officeId);
+		queryparameters.put("CUSTOMER_LEVEL_ID", officeId);
+		final List<OfficeGlobalDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.customer", queryparameters,
+				OfficeGlobalDto.class);
+		return accountHeadGlCodes;
+	}
+
+	@Override
+	public boolean savingCoaBranchTransaction(CoaBranchBO coaBranchBO) {
+	boolean result = false;
+			try {
+				CoaBranchBO  o = (CoaBranchBO) save(coaBranchBO);
+				if (o.getCoaid() > 0)
+					result = true;
+	 
+			} catch (Exception e) {
+				throw new MifosRuntimeException(e);
+			}
+			return result;
+		}
+
+	/*@Override
+	public List<ViewStageTransactionsDto> findConsolidatedAccountingTransactions(
+			String branchoffice, int startRecord, int numberOfRecords) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("BRANCH_OFFICE", branchoffice);
+		queryparameters.put("START_RECORD", startRecord);
+		queryparameters.put("NUMBER_OF_RECORDS", numberOfRecords);
+		final List<ViewStageTransactionsDto> viewStageAccountingTransactions = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.ViewConsolidatedTransactions",
+				queryparameters, ViewStageTransactionsDto.class);
+		return viewStageAccountingTransactions;
+	}*/
+	@Override
+	public List<ViewStageTransactionsDto> findConsolidatedAccountingTransactions(
+			String branchoffice) {
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("BRANCH_OFFICE", branchoffice);
+		final List<ViewStageTransactionsDto> viewStageAccountingTransactions = executeNamedQueryWithResultTransformer(
+				"ChartOfAccountsForMifos.ViewConsolidatedTransactions",
+				queryparameters, ViewStageTransactionsDto.class);
+		return viewStageAccountingTransactions;
+	}
 }

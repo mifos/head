@@ -25,13 +25,43 @@ import java.io.Serializable;
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class GLCodeDto implements Serializable {
-
+	private int sno;
     private Short glcodeId;
     private String glcode;
     private String glname;
-    
+    private String coaName;
+    private String trannotes;
+    private String amounts;
+    private String accountHead;
 
-    public String getGlname() {
+	public String getAmounts() {
+		return amounts;
+	}
+	public void setAmounts(String amounts) {
+		this.amounts = amounts;
+	}
+
+
+	public String getAccountHead() {
+		return accountHead;
+	}
+	public void setAccountHead(String accountHead) {
+		this.accountHead = accountHead;
+	}
+	public String getTrannotes() {
+		return trannotes;
+	}
+	public void setTrannotes(String trannotes) {
+		this.trannotes = trannotes;
+	}
+	public String getCoaName() {
+		return coaName;
+	}
+	public void setCoaName(String coaName) {
+		this.coaName = coaName;
+	}
+
+	public String getGlname() {
 		return glname;
 	}
 	public void setGlname(String glname) {
@@ -49,4 +79,10 @@ public class GLCodeDto implements Serializable {
     public void setGlcode(String glcode) {
         this.glcode = glcode;
     }
+    public int getSno() {
+		return sno;
+	}
+	public void setSno(int sno) {
+		this.sno = sno;
+	}
 }

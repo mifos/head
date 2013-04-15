@@ -55,13 +55,58 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 	private String accountHead;
 	private String amount;
 	private String notes;
-	//
 	private String chequeNo;
 	private String chequeDateDD;
 	private String chequeDateMM;
 	private String chequeDateYY;
 	private String bankName;
 	private String bankBranch;
+	private String memberId;
+	private String accountHead1[];
+	private String amount1[];
+	private String notes1[];
+	private String total;
+	private String officeLevelId;
+
+	public String getOfficeLevelId() {
+		return officeLevelId;
+	}
+
+	public void setOfficeLevelId(String officeLevelId) {
+		this.officeLevelId = officeLevelId;
+	}
+
+	public String[] getAccountHead1() {
+		return accountHead1;
+	}
+
+	public String[] getAmount1() {
+		return amount1;
+	}
+
+	public String[] getNotes1() {
+		return notes1;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setAccountHead1(String[] accountHead1) {
+		this.accountHead1 = accountHead1;
+	}
+
+	public void setAmount1(String[] amount1) {
+		this.amount1 = amount1;
+	}
+
+	public void setNotes1(String[] notes1) {
+		this.notes1 = notes1;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
 
 	public String getChequeNo() {
 		return chequeNo;
@@ -130,7 +175,13 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 	public String getMainAccount() {
 		return mainAccount;
 	}
+	public String getMemberId() {
+		return memberId;
+	}
 
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
 	public void setMainAccount(String mainAccount) {
 		this.mainAccount = mainAccount;
 	}
@@ -233,6 +284,7 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 			this.bankName = null;
 			this.bankBranch = null;
 			this.notes = null;
+			this.memberId=null;
 		}
 
 	}
@@ -247,6 +299,7 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 
 		if (request.getParameter(SimpleAccountingConstants.METHOD)
 				.equalsIgnoreCase(SimpleAccountingConstants.PREVIEW)) {
+
 			return mandatoryCheck(getUserContext(request));
 		}
 		return errors;
@@ -366,17 +419,48 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 							main_Account));
 		}
 
-		if (accountHead == null || "".equals(accountHead.trim())) {
+
+		/*if (accountHead == null || "".equals(accountHead.trim())) {
 			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
 					new ActionMessage(
 							SimpleAccountingConstants.MANDATORYFIELDS,
 							subAccount));
-		}
+		}*/
+		        String [] amounts123=getAmount1();
+				String [] accountHead123=getAccountHead1();
+				String [] notes123=getNotes1();
+				for(int i=0;i<amounts123.length;i++)
+				{
+					int amoun=Integer.parseInt(amounts123[i]);
+				//String accounthead=accountHead123[i];
+					if(amoun==0)
+					{
+						errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
+								new ActionMessage(
+										SimpleAccountingConstants.MANDATORYFIELDS, Amount));
+					}
+					
+					if(accountHead123[i].isEmpty())
+					{
+						errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
+								new ActionMessage(
+										SimpleAccountingConstants.MANDATORYFIELDS,
+										subAccount));
+					}
+					
+					
+				}
 
-		if (amount == null || "".equals(amount.trim())) {
+		/*if (amount == null || "".equals(amount.trim())) {
 			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
 					new ActionMessage(
 							SimpleAccountingConstants.MANDATORYFIELDS, Amount));
+		}*/
+		//memberId == null || "".equals(memberId.trim())||
+		if (memberId.length()!=10&& memberId.length()>0) {
+			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
+					new ActionMessage(
+							SimpleAccountingConstants.ENTER_GRETERTHAN, memberId));
 		}
 
 		if (StringUtils.isNotBlank(getAmount())) {
@@ -392,11 +476,11 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 			}
 		}
 
-		if (notes == null || "".equals(notes.trim())) {
+		/*if (notes == null || "".equals(notes.trim())) {
 			errors.add(SimpleAccountingConstants.MANDATORYFIELDS,
 					new ActionMessage(
 							SimpleAccountingConstants.MANDATORYFIELDS, Notes));
-		}
+		}*/
 
 		if (getChequeDate() != null && !getChequeDate().equals("")
 				&& !DateUtils.isValidDate(getChequeDate()))

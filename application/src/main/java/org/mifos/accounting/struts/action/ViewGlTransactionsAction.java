@@ -87,6 +87,8 @@ public class ViewGlTransactionsAction extends BaseAction {
 				.getAccountingTransactions(
 						DateUtils.getDate(actionForm.getToTrxnDate()),DateUtils.getDate(actionForm.getFromTrxnDate()), iPageNo,
 						noOfRecordsPerPage);
+
+		monthClosingServiceFacade.validateTransactionDate(DateUtils.getDate(actionForm.getToTrxnDate()));
 		storingSession(request, "ViewTransactionsDtos", viewTransactionsDtos);
 
 		// // this will count total number of rows

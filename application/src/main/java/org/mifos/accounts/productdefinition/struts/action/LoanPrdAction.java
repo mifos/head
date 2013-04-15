@@ -533,6 +533,7 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feesSelected, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDPENALTYSELECTEDLIST, penaltiesSelected, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, fundsSelected, request);
+        SessionUtils.setCollectionAttribute("king", fundsSelected, request);
         logger.debug("loadSelectedFeesAndFunds method of Loan Product Action called ");
     }
 

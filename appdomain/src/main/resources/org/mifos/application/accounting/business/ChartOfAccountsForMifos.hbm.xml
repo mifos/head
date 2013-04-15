@@ -26,6 +26,33 @@
 
         ]]>
 	</sql-query>
+	<sql-query name="ChartOfAccountsForMifos.mainaccountheadglcodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+            select gc.glcode_value as glcode,c.coa_name  as glname from coa c,gl_code gc where gc.glcode_id=c.glcode_id and c.coa_name=:GLNAME
+
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.globalnum">
+		<return-scalar column="globalofficenum" type="string" />
+		<return-scalar column="displayname" type="string" />
+        <![CDATA[
+            SELECT o.global_office_num as globalofficenum,o.display_name as displayname from office o where o.display_name=:OFFICENAME
+
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.RolesActivityId">
+		<return-scalar column="activityid" type="int" />
+		<return-scalar column="roleid" type="int" />
+        <![CDATA[
+
+                   select rc.activity_id as activityid ,rc.role_id as roleid from roles_activity rc where rc.activity_id=:ACTIVITYID
+        ]]>
+	</sql-query>
+
 
 	<sql-query name="ChartOfAccountsForMifos.AccountHeadGlCodes">
 		<return-scalar column="glcode" type="string" />
@@ -38,6 +65,19 @@
 			      LEFT JOIN coa coo ON coo.coa_id = c.coa_id
 			      LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id
      		WHERE c.parent_coaid is not null and gll.glcode_value <> :Gl_Code ;
+
+
+        ]]>
+	</sql-query>
+	<sql-query name="ChartOfAccountsForMifos.coaBranchAccountHeadGlCodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+         Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
+   and glcode_value not in (Select lookup_name from lookup_value where entity_id in
+   (Select entity_id from lookup_entity where entity_name='Cash'));
+
+
 
 
         ]]>
@@ -66,13 +106,16 @@
 		<return-scalar column="glDebit" type="string" />
 		<return-scalar column="glCredit" type="string" />
 		<return-scalar column="amount" type="big_decimal" />
+
         <![CDATA[
-Select 5 as officeLevel,a.global_office_num as globalOfficeNum,a.posted_date as postedDate,a.voucherdate
+
+        Select  a.Office_level as officeLevel,a.global_office_num as globalOfficeNum,a.posted_date as postedDate,a.voucherdate
  as voucherDate ,a.vouchertype as voucherType,a.glcode as glDebit,b.glcode as glCredit,a.debit as amount
-from 
+from
 (
 Select  fintrxn.debit_credit_flag,fintrxn.account_trxn_id,5 Office_level,o.global_office_num,o.display_name as "branchname",
-fintrxn.posted_date,fintrxn.action_date as "voucherdate",
+fintrxn.posted_date,fintrxn.action_date as "voucherdate",fintrxn.fin_action_id,
+
 (CASE fintrxn.fin_action_id
 WHEN 1 then /*PRINCIPALPOSTING*/
     (CASE atrxn.account_action_id
@@ -145,11 +188,16 @@ inner join account_trxn atrxn on atrxn.account_trxn_id = fintrxn.account_trxn_id
 inner join account a on a.account_id = atrxn.account_id
 inner join office o on o.office_id = a.office_id
 where fintrxn.posted_date between :LAST_PROCESSING_DATE and :LAST_PROCESSING_DATE
+and global_office_num = :GLOBAL_OFFICE_NUMBER
+and fintrxn.debit_credit_flag=0
+
+
 group by fin_action_id,branchname, voucherdate, vouchertype, glcode, glname
 order by branchname, voucherdate, vouchertype, glcode, glname ) a,
 (
 Select  fintrxn.debit_credit_flag,fintrxn.account_trxn_id,5 Office_level,o.global_office_num,o.display_name as "branchname",
-fintrxn.posted_date,fintrxn.action_date as "voucherdate",
+fintrxn.posted_date,fintrxn.action_date as "voucherdate",fintrxn.fin_action_id,
+
 (CASE fintrxn.fin_action_id
 WHEN 1 then /*PRINCIPALPOSTING*/
     (CASE atrxn.account_action_id
@@ -222,11 +270,20 @@ inner join account_trxn atrxn on atrxn.account_trxn_id = fintrxn.account_trxn_id
 inner join account a on a.account_id = atrxn.account_id
 inner join office o on o.office_id = a.office_id
 where fintrxn.posted_date between :LAST_PROCESSING_DATE and :LAST_PROCESSING_DATE
+  and global_office_num = :GLOBAL_OFFICE_NUMBER
+  and fintrxn.debit_credit_flag=1
+
+
 group by fin_action_id,branchname, voucherdate, vouchertype, glcode, glname
 order by branchname, voucherdate, vouchertype, glcode, glname ) b
-where a.account_trxn_id=b.account_trxn_id 
-and a.debit_credit_flag=0 and b.debit_credit_flag=1
- ]]></sql-query>
+where a.account_trxn_id=b.account_trxn_id
+
+and a.fin_action_id=b.fin_action_id
+and a.debit_credit_flag=0
+and b.debit_credit_flag=1
+
+         ]]>
+	</sql-query>
 	<sql-query name="ChartOfAccountsForMifos.CreditAccountGlCodes">
 		<return-scalar column="glcode" type="string" />
 		<return-scalar column="glname" type="string" />
@@ -240,18 +297,359 @@ and a.debit_credit_flag=0 and b.debit_credit_flag=1
       WHERE c.parent_coaid is not null and gll.glcode_value <> :Gl_Code order by 1;
         ]]>
 	</sql-query>
-	
+
 	<sql-query name="ChartOfAccountsForMifos.TotalGlCodes">
 		<return-scalar column="glcode" type="string" />
 		<return-scalar column="glname" type="string" />
         <![CDATA[
-     SELECT gll.glcode_value as glcode, coo.coa_name as glname
-			FROM coahierarchy c
-			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
-			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
-			      LEFT JOIN coa coo ON coo.coa_id = c.coa_id
-			      LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id
-      WHERE c.parent_coaid is not null order by 1;
+
+select x.glcode_value as glcode,x.coa_name as glname  from (SELECT
+  *
+FROM
+    (SELECT
+          gll.glcode_value
+        FROM
+          coahierarchy c
+          LEFT JOIN coa co
+            ON co.coa_id = c.parent_coaid
+          LEFT JOIN gl_code gl
+            ON gl.glcode_id = co.glcode_id
+          LEFT JOIN coa coo
+            ON coo.coa_id = c.coa_id
+          LEFT JOIN gl_code gll
+            ON gll.glcode_id = coo.glcode_id
+        WHERE
+          gl.glcode_value in (10000,20000)
+
+        UNION
+        SELECT
+          gll.glcode_value
+        FROM
+          coahierarchy c
+          LEFT JOIN coa co
+            ON co.coa_id = c.parent_coaid
+          LEFT JOIN gl_code gl
+            ON gl.glcode_id = co.glcode_id
+          LEFT JOIN coa coo
+            ON coo.coa_id = c.coa_id
+          LEFT JOIN gl_code gll
+            ON gll.glcode_id = coo.glcode_id
+        WHERE
+          gl.glcode_value IN (SELECT
+                                gll.glcode_value
+                              FROM
+                                coahierarchy c
+                                LEFT JOIN coa co
+                                  ON co.coa_id = c.parent_coaid
+                                LEFT JOIN gl_code gl
+                                  ON gl.glcode_id = co.glcode_id
+                                LEFT JOIN coa coo
+                                  ON coo.coa_id = c.coa_id
+                                LEFT JOIN gl_code gll
+                                  ON gll.glcode_id = coo.glcode_id
+                              WHERE
+                                gl.glcode_value in (10000,20000))
+
+        UNION
+        SELECT
+          gll.glcode_value
+        FROM
+          coahierarchy c
+          LEFT JOIN coa co
+            ON co.coa_id = c.parent_coaid
+          LEFT JOIN gl_code gl
+            ON gl.glcode_id = co.glcode_id
+          LEFT JOIN coa coo
+            ON coo.coa_id = c.coa_id
+          LEFT JOIN gl_code gll
+            ON gll.glcode_id = coo.glcode_id
+        WHERE
+          gl.glcode_value IN
+            (SELECT
+               gll.glcode_value
+             FROM
+               coahierarchy c
+               LEFT JOIN coa co
+                 ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                 ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                 ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                 ON gll.glcode_id = coo.glcode_id
+             WHERE
+               gl.glcode_value IN (SELECT
+                                     gll.glcode_value
+                                   FROM
+                                     coahierarchy c
+                                     LEFT JOIN coa co
+                                       ON co.coa_id =
+                                            c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                       ON gl.glcode_id =
+                                            co.glcode_id
+                                     LEFT JOIN coa coo
+                                       ON coo.coa_id =
+                                            c.coa_id
+                                     LEFT JOIN gl_code gll
+                                       ON gll.glcode_id =
+                                            coo.glcode_id
+                                   WHERE
+                                     gl.glcode_value  in (10000,20000)))
+
+        UNION
+        SELECT
+          gll.glcode_value
+        FROM
+          coahierarchy c
+          LEFT JOIN coa co
+            ON co.coa_id = c.parent_coaid
+          LEFT JOIN gl_code gl
+            ON gl.glcode_id = co.glcode_id
+          LEFT JOIN coa coo
+            ON coo.coa_id = c.coa_id
+          LEFT JOIN gl_code gll
+            ON gll.glcode_id = coo.glcode_id
+        WHERE
+          gl.glcode_value IN
+            (SELECT
+               gll.glcode_value
+             FROM
+               coahierarchy c
+               LEFT JOIN coa co
+                 ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                 ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                 ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                 ON gll.glcode_id = coo.glcode_id
+             WHERE
+               gl.glcode_value IN
+                 (SELECT
+                    gll.glcode_value
+                  FROM
+                    coahierarchy c
+                    LEFT JOIN coa co
+                      ON co.coa_id =
+                           c.parent_coaid
+                    LEFT JOIN gl_code gl
+                      ON gl.glcode_id =
+                           co.glcode_id
+                    LEFT JOIN coa coo
+                      ON coo.coa_id =
+                           c.coa_id
+                    LEFT JOIN gl_code gll
+                      ON gll.glcode_id =
+                           coo.glcode_id
+                  WHERE
+                    gl.glcode_value IN (SELECT
+                                          gll.glcode_value
+                                        FROM
+                                          coahierarchy c
+                                          LEFT JOIN coa co
+                                            ON co.coa_id =
+                                                 c.parent_coaid
+                                          LEFT JOIN gl_code gl
+                                            ON gl.glcode_id =
+                                                 co.glcode_id
+                                          LEFT JOIN coa coo
+                                            ON coo.coa_id =
+                                                 c.coa_id
+                                          LEFT JOIN gl_code gll
+                                            ON gll.glcode_id =
+                                                 coo.glcode_id
+                                        WHERE
+                                          gl.glcode_value in (10000,20000))))
+
+        UNION
+        SELECT
+          gll.glcode_value
+        FROM
+          coahierarchy c
+          LEFT JOIN coa co
+            ON co.coa_id = c.parent_coaid
+          LEFT JOIN gl_code gl
+            ON gl.glcode_id = co.glcode_id
+          LEFT JOIN coa coo
+            ON coo.coa_id = c.coa_id
+          LEFT JOIN gl_code gll
+            ON gll.glcode_id = coo.glcode_id
+        WHERE
+          gl.glcode_value IN
+            (SELECT
+               gll.glcode_value
+             FROM
+               coahierarchy c
+               LEFT JOIN coa co
+                 ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                 ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                 ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                 ON gll.glcode_id = coo.glcode_id
+             WHERE
+               gl.glcode_value IN
+                 (SELECT
+                    gll.glcode_value
+                  FROM
+                    coahierarchy c
+                    LEFT JOIN coa co
+                      ON co.coa_id =
+                           c.parent_coaid
+                    LEFT JOIN gl_code gl
+                      ON gl.glcode_id =
+                           co.glcode_id
+                    LEFT JOIN coa coo
+                      ON coo.coa_id =
+                           c.coa_id
+                    LEFT JOIN gl_code gll
+                      ON gll.glcode_id =
+                           coo.glcode_id
+                  WHERE
+                    gl.glcode_value IN
+                      (SELECT
+                         gll.glcode_value
+                       FROM
+                         coahierarchy c
+                         LEFT JOIN coa co
+                           ON co.coa_id =
+                                c.parent_coaid
+                         LEFT JOIN gl_code gl
+                           ON gl.glcode_id =
+                                co.glcode_id
+                         LEFT JOIN coa coo
+                           ON coo.coa_id =
+                                c.coa_id
+                         LEFT JOIN gl_code gll
+                           ON gll.glcode_id =
+                                coo.glcode_id
+                       WHERE
+                         gl.glcode_value IN (SELECT
+                                               gll.glcode_value
+                                             FROM
+                                               coahierarchy c
+                                               LEFT JOIN coa co
+                                                 ON co.coa_id = c.parent_coaid
+                                               LEFT JOIN gl_code gl
+                                                 ON gl.glcode_id = co.glcode_id
+                                               LEFT JOIN coa coo
+                                                 ON coo.coa_id = c.coa_id
+                                               LEFT JOIN gl_code gll
+                                                 ON gll.glcode_id =
+                                                      coo.glcode_id
+                                             WHERE
+                                               gl.glcode_value  in (10000,20000)))))
+
+        UNION
+        SELECT
+          gll.glcode_value
+        FROM
+          coahierarchy c
+          LEFT JOIN coa co
+            ON co.coa_id = c.parent_coaid
+          LEFT JOIN gl_code gl
+            ON gl.glcode_id = co.glcode_id
+          LEFT JOIN coa coo
+            ON coo.coa_id = c.coa_id
+          LEFT JOIN gl_code gll
+            ON gll.glcode_id = coo.glcode_id
+        WHERE
+          gl.glcode_value IN
+            (SELECT
+               gll.glcode_value
+             FROM
+               coahierarchy c
+               LEFT JOIN coa co
+                 ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                 ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                 ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                 ON gll.glcode_id = coo.glcode_id
+             WHERE
+               gl.glcode_value IN
+                 (SELECT
+                    gll.glcode_value
+                  FROM
+                    coahierarchy c
+                    LEFT JOIN coa co
+                      ON co.coa_id =
+                           c.parent_coaid
+                    LEFT JOIN gl_code gl
+                      ON gl.glcode_id =
+                           co.glcode_id
+                    LEFT JOIN coa coo
+                      ON coo.coa_id =
+                           c.coa_id
+                    LEFT JOIN gl_code gll
+                      ON gll.glcode_id =
+                           coo.glcode_id
+                  WHERE
+                    gl.glcode_value IN
+                      (SELECT
+                         gll.glcode_value
+                       FROM
+                         coahierarchy c
+                         LEFT JOIN coa co
+                           ON co.coa_id =
+                                c.parent_coaid
+                         LEFT JOIN gl_code gl
+                           ON gl.glcode_id =
+                                co.glcode_id
+                         LEFT JOIN coa coo
+                           ON coo.coa_id =
+                                c.coa_id
+                         LEFT JOIN gl_code gll
+                           ON gll.glcode_id =
+                                coo.glcode_id
+                       WHERE
+                         gl.glcode_value IN
+                           (SELECT
+                              gll.glcode_value
+                            FROM
+                              coahierarchy c
+                              LEFT JOIN coa co
+                                ON co.coa_id = c.parent_coaid
+                              LEFT JOIN gl_code gl
+                                ON gl.glcode_id = co.glcode_id
+                              LEFT JOIN coa coo
+                                ON coo.coa_id = c.coa_id
+                              LEFT JOIN gl_code gll
+                                ON gll.glcode_id =
+                                     coo.glcode_id
+                            WHERE
+                              gl.glcode_value IN (SELECT
+                                                    gll.glcode_value
+                                                  FROM
+                                                    coahierarchy c
+                                                    LEFT JOIN coa co
+                                                      ON co.coa_id =
+                                                           c.parent_coaid
+                                                    LEFT JOIN gl_code gl
+                                                      ON gl.glcode_id =
+                                                           co.glcode_id
+                                                    LEFT JOIN coa coo
+                                                      ON coo.coa_id = c.coa_id
+                                                    LEFT JOIN gl_code gll
+                                                      ON gll.glcode_id =
+                                                           coo.glcode_id
+                                                  WHERE
+                                                    gl.glcode_value  in (10000,20000))))))) glc
+
+                                                        LEFT JOIN
+                                                        (SELECT
+                                                           c.coa_name,
+                                                           gl.glcode_value glcvalue
+                                                         FROM
+                                                           coa c,
+                                                           gl_code gl
+                                                         WHERE
+                                                           c.glcode_id = gl.glcode_id) gln
+                                                      ON glc.glcode_value = gln.glcvalue)x
+
         ]]>
 
 	</sql-query>
@@ -273,6 +671,54 @@ and a.debit_credit_flag=0 and b.debit_credit_flag=1
             select o.global_office_num as globalOfficeNum, o.display_name as displayName
 			from office o
 			where o.office_level_id= :OFFICE_LEVEL_ID
+        ]]>
+	</sql-query>
+	<sql-query name="ChartOfAccountsForMifos.coa_Branch">
+
+	<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+
+        select distinct cb.coa_name as glname, gc.glcode_value as glcode from coa_branch cb join gl_code gc on cb.glcode_value = gc.glcode_value where cb.global_office_num=:GLOBAL_OFFICE_NUM
+
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.globalOfficeNumWithCoaName">
+	<return-scalar column="glcode" type="string" />
+	<return-scalar column="glcodeId" type="short" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+
+    SELECT c.coa_name AS glname, gc.glcode_value as glcode, c.glcode_id AS glcodeId
+  FROM coa c
+  join gl_code gc ON c.glcode_id = gc.glcode_id
+ WHERE c.coa_name NOT IN
+          (SELECT DISTINCT c.coa_name
+             FROM    coa c
+                  JOIN
+                     coa_branch cb
+                  ON c.coa_name = cb.coa_name
+            WHERE cb.global_office_num = :GLOBAL_OFFICE_NUM_WITH_COA_NAME)
+
+
+        ]]>
+	</sql-query>
+	<sql-query name="ChartOfAccountsForMifos.globalOfficeNumDelete">
+        <![CDATA[
+       delete  from coa_branch co where co.global_office_num =:GLOBAL_OFFICE_NUM_DELETE
+
+
+        ]]>
+	</sql-query>
+
+
+	<sql-query name="ChartOfAccountsForMifos.coa_Name">
+		<return-scalar column="coaName" type="string" />
+		<return-scalar column="glcodeValue" type="string" />
+        <![CDATA[
+        select gll.glcode_value as glcodeValue, c.coa_name as coaName from gl_code gll join coa c on c.glcode_id=gll.glcode_id where c.coa_name=:COA_NAME
+
         ]]>
 	</sql-query>
 	<sql-query name="ChartOfAccountsForMifos.ViewTransactions">
@@ -319,6 +765,7 @@ select m.transaction_master_id as transactionNo, transaction_date as transaction
 		          from office o ) c
 			where m.transaction_master_id=d.transaction_master_id
 			  and m.from_office_id=c.global_num
+			  and m.stage = 1
 			  and m.transaction_date between :FROM_TRANSACTION_DATE and :TO_TRANSACTION_DATE
 			  Order by m.transaction_master_id
 			  LIMIT :START_RECORD , :NUMBER_OF_RECORDS
@@ -349,6 +796,7 @@ select m.transaction_master_id as transactionNo, transaction_date as transaction
 		          from office o ) c
 			where m.transaction_master_id=d.transaction_master_id
 			  and m.from_office_id=c.global_num
+			  and m.stage = 1
 			  and m.transaction_date between :FROM_TRANSACTION_DATE and :TO_TRANSACTION_DATE
 			  Order by m.transaction_master_id
         ]]>
@@ -374,7 +822,7 @@ from acc_glbalances ag
 where ag.office_id= :OFFICEID AND ag.office_level= :OFFICELEVEL AND ag.glcode_value= :COAID AND ag.financialyear_id= :FINANCIALYEARID
 		]]>
 	</sql-query>
-	
+
 	<sql-query name="ChartOfAccountsForMifos.YearEndProcessLiabilities">
 		<return-scalar column="officeLevel" type="integer" />
 		<return-scalar column="officeId" type="string" />
@@ -663,7 +1111,7 @@ where ag.office_id= :OFFICEID AND ag.office_level= :OFFICELEVEL AND ag.glcode_va
                                                                          (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY'))))))) liabilities);
         ]]>
 	</sql-query>
-	
+
 	<sql-query name="ChartOfAccountsForMifos.YearEndProcessAssets">
 		<return-scalar column="officeLevel" type="integer" />
 		<return-scalar column="officeId" type="string" />
@@ -953,6 +1401,814 @@ where ag.office_id= :OFFICEID AND ag.office_level= :OFFICELEVEL AND ag.glcode_va
 );
         ]]>
 	</sql-query>
+
+	<!-- view stage transactions -->
+
+	<sql-query name="ChartOfAccountsForMifos.ViewStageTransactions">
+		<return-scalar column="transactionNo" type="int" />
+		<return-scalar column="transactionDate" type="date" />
+		<return-scalar column="transactionType" type="string" />
+		<return-scalar column="officeLevel" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="mainAccount" type="string" />
+		<return-scalar column="amountAction" type="string" />
+		<return-scalar column="subAccount" type="string" />
+		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="narration" type="string" />
+		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="audit" type="string" />
+        <![CDATA[
+SELECT m.transaction_master_id AS transactionNo,
+       transaction_date AS transactionDate,
+       CASE transaction_type
+          WHEN 'CP' THEN 'Cash Payment'
+          WHEN 'CR' THEN 'Cash Receipt'
+          WHEN 'BR' THEN 'Bank Receipt'
+          WHEN 'BP' THEN 'Bank Payment'
+          WHEN 'JV' THEN 'Journal Voucher'
+          ELSE 'unknown'
+       END AS transactionType,
+       c.officelevel AS officeLevel,
+       display_name AS displayName,
+       (SELECT coa_name FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = m.main_account) AS mainaccount,
+       m.amount_action AS amountaction,
+       (SELECT coa_name FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = d.sub_account) AS subaccount,
+       d.transaction_amount AS transactionAmount,
+       m.transaction_narration AS narration,
+       m.stage,
+       d.transaction_id AS transactionID,
+       m.audit as audit
+  FROM acc_glmaster m,acc_gldetail d,
+       (SELECT global_cust_num global_num,
+               CASE customer_level_id
+                  WHEN 2 THEN 'Group'
+                  WHEN 3 THEN 'Center'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM customer c
+        WHERE customer_level_id IN (2, 3)
+        UNION ALL
+        SELECT global_office_num global_num,
+               CASE office_level_id
+                  WHEN 1 THEN 'Head Office'
+                  WHEN 2 THEN 'Regional Office'
+                  WHEN 3 THEN 'Divisional Office'
+                  WHEN 4 THEN 'Area Office'
+                  WHEN 5 THEN 'Branch Office'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM office o) c
+ WHERE     m.transaction_master_id = d.transaction_master_id
+       AND m.from_office_id = c.global_num
+       and m.stage=0
+       ORDER BY m.transaction_master_id
+       LIMIT :START_RECORD , :NUMBER_OF_RECORDS
+        ]]>
+	</sql-query>
 	
+	<sql-query name="ChartOfAccountsForMifos.ViewConsolidatedTransactions">
+		<return-scalar column="transactionNo" type="int" />
+		<return-scalar column="transactionDate" type="date" />
+		<return-scalar column="transactionType" type="string" />
+		<return-scalar column="officeLevel" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="mainAccount" type="string" />
+		<return-scalar column="amountAction" type="string" />
+		<return-scalar column="subAccount" type="string" />
+		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="narration" type="string" />
+		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="audit" type="string" />
+        <![CDATA[
+SELECT m.transaction_master_id AS transactionNo,
+       transaction_date AS transactionDate,
+       CASE transaction_type
+          WHEN 'CP' THEN 'Cash Payment'
+          WHEN 'CR' THEN 'Cash Receipt'
+          WHEN 'BR' THEN 'Bank Receipt'
+          WHEN 'BP' THEN 'Bank Payment'
+          WHEN 'JV' THEN 'Journal Voucher'
+          ELSE 'unknown'
+       END AS transactionType,
+       c.officelevel AS officeLevel,
+       display_name AS displayName,
+       (SELECT coa_name FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = m.main_account) AS mainaccount,
+       m.amount_action AS amountaction,
+       (SELECT coa_name FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = d.sub_account) AS subaccount,
+       d.transaction_amount AS transactionAmount,
+       m.transaction_narration AS narration,
+       m.stage,
+       d.transaction_id AS transactionID,
+       m.audit as audit
+  FROM acc_glmaster m,acc_gldetail d,
+       (SELECT global_cust_num global_num,
+               CASE customer_level_id
+                  WHEN 2 THEN 'Group'
+                  WHEN 3 THEN 'Center'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM customer c
+        WHERE customer_level_id IN (2, 3)
+        UNION ALL
+        SELECT global_office_num global_num,
+               CASE office_level_id
+                  WHEN 1 THEN 'Head Office'
+                  WHEN 2 THEN 'Regional Office'
+                  WHEN 3 THEN 'Divisional Office'
+                  WHEN 4 THEN 'Area Office'
+                  WHEN 5 THEN 'Branch Office'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM office o) c
+ WHERE     m.transaction_master_id = d.transaction_master_id
+       AND m.from_office_id = c.global_num
+       and m.stage=0 and m.from_office_id=:BRANCH_OFFICE
+       ORDER BY m.transaction_master_id
+      
+        ]]>
+	</sql-query>
+
+	<!-- end of stage transaction -->
+	<!-- Number of stage records -->
+	<sql-query name="ChartOfAccountsForMifos.TotalNumberOfStageRecords">
+		<return-scalar column="totalNumberOfRecords" type="int" />
+        <![CDATA[
+		select count(*) as totalNumberOfRecords
+
+                    from acc_glmaster m,acc_gldetail d,(
+                   select global_cust_num global_num,
+                          case customer_level_id when 2 then 'Group'
+                                                 When 3 then 'Center'
+                                                 Else 'None' end as officelevel
+                         ,display_name
+                   from customer c
+                   where customer_level_id in (2,3)
+
+                    union all
+                  select global_office_num global_num,
+                          case office_level_id when 1 then 'Head Office'
+                                               When 2 then 'Regional Office'
+                                   When 3 then 'Divisional Office'
+                                   When 4 then 'Area Office'
+                                   When 5 then 'Branch Office'
+                               Else 'None' end as officelevel
+                          ,display_name
+                  from office o ) c
+            where m.transaction_master_id=d.transaction_master_id
+              and m.from_office_id=c.global_num
+        and m.stage=0
+              Order by m.transaction_master_id
+        ]]>
+	</sql-query>
+
+	<!-- End of Number of Stage Records -->
+
+	<!-- Hugo Technologies Edit stage Transaction -->
+	<sql-query name="ChartOfAccountsForMifos.EditStageTransactions">
+		<return-scalar column="transactionNo" type="int" />
+		<return-scalar column="transactionDate" type="date" />
+		<return-scalar column="transactionType" type="string" />
+		<return-scalar column="officeLevel" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="mainAccount" type="string" />
+		<return-scalar column="amountAction" type="string" />
+		<return-scalar column="subAccount" type="string" />
+		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="narration" type="string" />
+		<return-scalar column="fromOfficeId" type="string" />
+		<return-scalar column="transactionID" type="int" />
+
+        <![CDATA[
+			SELECT m.transaction_master_id AS transactionNo,
+       transaction_date AS transactionDate,
+       from_office_id AS fromOfficeId,
+       CASE transaction_type
+          WHEN 'CP' THEN 'Cash Payment'
+          WHEN 'CR' THEN 'Cash Receipt'
+          WHEN 'BR' THEN 'Bank Receipt'
+          WHEN 'BP' THEN 'Bank Payment'
+          WHEN 'JV' THEN 'Journal Voucher'
+          ELSE 'unknown'
+       END AS transactionType,
+       c.officelevel AS officeLevel,
+       display_name AS displayName,
+       (SELECT b.glcode_value FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = m.main_account) AS mainaccount,
+       m.amount_action AS amountaction,
+       (SELECT b.glcode_value FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = d.sub_account) AS subaccount,
+       m.transaction_amount AS transactionAmount,
+       m.transaction_narration AS narration,
+       m.stage,
+       d.transaction_id As transactionId
+  FROM acc_glmaster m,acc_gldetail d,
+       (SELECT global_cust_num global_num,
+               CASE customer_level_id
+                  WHEN 2 THEN 'Group'
+                  WHEN 3 THEN 'Center'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM customer c
+        WHERE customer_level_id IN (2, 3)
+        UNION ALL
+        SELECT global_office_num global_num,
+               CASE office_level_id
+                  WHEN 1 THEN 'Head Office'
+                  WHEN 2 THEN 'Regional Office'
+                  WHEN 3 THEN 'Divisional Office'
+                  WHEN 4 THEN 'Area Office'
+                  WHEN 5 THEN 'Branch Office'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM office o) c
+ WHERE     m.transaction_master_id = d.transaction_master_id
+       AND m.from_office_id = c.global_num
+       and m.transaction_master_id = :TRANSACTION_NO
+       ORDER BY m.transaction_master_id
+        ]]>
+	</sql-query>
+
+	<!-- Hugo Technologies update Stage transaction -->
+
+	<sql-query name="ChartOfAccountsForMifos.CashAndBank">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+            Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
+			and glcode_value in (Select lookup_name from lookup_value where entity_id in
+			(Select entity_id from lookup_entity where entity_name='Cash'))
+			union
+			Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
+			and glcode_value in (Select lookup_name from lookup_value where entity_id in
+			(Select entity_id from lookup_entity where entity_name='Bank'));
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.AuditGlCodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+				SELECT gll.glcode_value as glcode, coo.coa_name as glname
+	FROM coahierarchy c
+	LEFT JOIN coa co ON co.coa_id = c.parent_coaid
+	LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
+	LEFT JOIN coa coo ON coo.coa_id = c.coa_id
+	LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id order by 1;
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.updateStageTransactions">
+		<![CDATA[
+		  update acc_glmaster set stage = :STAGE where transaction_master_id = :TRANSACTION_NO
+		]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.customerExcludeOfficeId">
+		<return-scalar column="globalOfficeNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+        <![CDATA[
+            select c.global_cust_num as globalOfficeNum, c.display_name as displayName
+            from customer c
+            where c.customer_level_id= :CUSTOMER_LEVEL_ID
+            and c.global_cust_num <> :OFFICE_ID
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.officeExcludeOfficeId">
+		<return-scalar column="globalOfficeNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+        <![CDATA[
+			select o.global_office_num as globalOfficeNum, o.display_name as displayName
+			from office o
+			where o.office_level_id= :OFFICE_LEVEL_ID
+			and o.global_office_num <> :OFFICE_ID
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.auditTransactions">
+	<![CDATA[
+		  update acc_glmaster set audit = :AUDIT,audit_comments = :AUDIT_COMMENTS where transaction_master_id = :TRANSACTION_NO
+		]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.chequeDetails">
+		<return-scalar column="transactionNo" type="int" />
+		<return-scalar column="chequeNo" type="string" />
+		<return-scalar column="chequeDate" type="date" />
+		<return-scalar column="bankName" type="string" />
+		<return-scalar column="bankBranch" type="string" />
+
+        <![CDATA[
+			SELECT
+			d.transaction_master_id as transactionNo,
+			d.cheque_no as chequeNo,
+			d.cheque_date as chequeDate ,
+			d.bank_name as bankName,
+			d.bank_branch as bankBranch
+							 FROM acc_gldetail as d
+							 where transaction_master_id = :TRANSACTION_NO
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.ViewAuditTransactions">
+		<return-scalar column="transactionNo" type="int" />
+		<return-scalar column="transactionDate" type="date" />
+		<return-scalar column="transactionType" type="string" />
+		<return-scalar column="officeLevel" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="mainAccount" type="string" />
+		<return-scalar column="amountAction" type="string" />
+		<return-scalar column="subAccount" type="string" />
+		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="narration" type="string" />
+		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="audit" type="string" />
+
+        <![CDATA[
+SELECT m.transaction_master_id AS transactionNo,
+       transaction_date AS transactionDate,
+       CASE transaction_type
+          WHEN 'CP' THEN 'Cash Payment'
+          WHEN 'CR' THEN 'Cash Receipt'
+          WHEN 'BR' THEN 'Bank Receipt'
+          WHEN 'BP' THEN 'Bank Payment'
+          WHEN 'JV' THEN 'Journal Voucher'
+          ELSE 'unknown'
+       END AS transactionType,
+       c.officelevel AS officeLevel,
+       display_name AS displayName,
+       (SELECT coa_name FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = m.main_account) AS mainaccount,
+       m.amount_action AS amountaction,
+       (SELECT coa_name FROM coa a, gl_code b WHERE a.glcode_id = b.glcode_id AND glcode_value = d.sub_account) AS subaccount,
+       m.transaction_amount AS transactionAmount,
+       m.transaction_narration AS narration,
+       m.stage,
+       d.transaction_id AS transactionID,
+       m.audit as audit
+  FROM acc_glmaster m,acc_gldetail d,
+       (SELECT global_cust_num global_num,
+               CASE customer_level_id
+                  WHEN 2 THEN 'Group'
+                  WHEN 3 THEN 'Center'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM customer c
+        WHERE customer_level_id IN (2, 3)
+        UNION ALL
+        SELECT global_office_num global_num,
+               CASE office_level_id
+                  WHEN 1 THEN 'Head Office'
+                  WHEN 2 THEN 'Regional Office'
+                  WHEN 3 THEN 'Divisional Office'
+                  WHEN 4 THEN 'Area Office'
+                  WHEN 5 THEN 'Branch Office'
+                  ELSE 'None'
+               END AS officelevel,
+               display_name
+          FROM office o) c
+ WHERE     m.transaction_master_id = d.transaction_master_id
+       AND m.from_office_id = c.global_num
+       and m.stage=1
+       and m.transaction_date between :FROM_DATE and :TO_DATE
+       ORDER BY m.transaction_master_id
+
+       LIMIT :START_RECORD , :NUMBER_OF_RECORDS
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.TotalNumberOfAuditRecords">
+		<return-scalar column="totalNumberOfRecords" type="int" />
+        <![CDATA[
+		select count(*) as totalNumberOfRecords
+
+                    from acc_glmaster m,acc_gldetail d,(
+                   select global_cust_num global_num,
+                          case customer_level_id when 2 then 'Group'
+                                                 When 3 then 'Center'
+                                                 Else 'None' end as officelevel
+                         ,display_name
+                   from customer c
+                   where customer_level_id in (2,3)
+
+                    union all
+                  select global_office_num global_num,
+                          case office_level_id when 1 then 'Head Office'
+                                               When 2 then 'Regional Office'
+                                   When 3 then 'Divisional Office'
+                                   When 4 then 'Area Office'
+                                   When 5 then 'Branch Office'
+                               Else 'None' end as officelevel
+                          ,display_name
+                  from office o ) c
+            where m.transaction_master_id=d.transaction_master_id
+              and m.from_office_id=c.global_num
+        and m.stage=1
+        and m.transaction_date between :FROM_DATE and :TO_DATE
+              Order by m.transaction_master_id
+        ]]>
+	</sql-query>
+
+	
+
+<sql-query name="ChartOfAccountsForMifos.getListOfOffices">
+
+		<return-scalar column="officeId" type="int" />
+		<return-scalar column="customerId" type="int" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="officeLevelId" type="int" />
+		<return-scalar column="globalOfficeNumber" type="string" />
+		<return-scalar column="globalCustomerNumber" type="string" />
+
+        <![CDATA[
+
+--  groups query
+
+select '0' as officeId,customer_id as customerId,display_name as displayName,
+-- '0' as office_level_id,
+case customer_level_id
+when '2' then '7'
+else '0'
+end as officeLevelId,customer_level_id as customerLevelId,'0' as globalOfficeNumber,global_cust_num as globalCustomerNumber from customer where parent_customer_id in(
+
+select  customer_id from customer where customer_level_id=3 and branch_id in(select office_id from(( -- bo
+ SELECT
+
+  case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+
+ FROM
+   office
+ WHERE
+   parent_office_id IN
+     ( -- ao
+      SELECT
+        office_id
+      FROM
+        office
+      WHERE
+        parent_office_id IN
+          ( -- do
+           SELECT
+             office_id
+           FROM
+             office
+           WHERE
+             parent_office_id IN
+               ( -- ro
+                SELECT
+                  office_id
+                FROM
+                  office
+                WHERE
+                  parent_office_id IN ( -- ho
+                                       SELECT
+                                         office_id
+                                       FROM
+                                         office
+                                       WHERE
+                                         office_level_id = :OFFICE_LEVEL_ID AND
+                                         office_id = :OFFICE_ID)))))
+UNION
+( -- areas query
+ SELECT
+   case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+ FROM
+   office
+ WHERE
+   parent_office_id IN
+     ( -- do
+      SELECT
+        office_id
+      FROM
+        office
+      WHERE
+        parent_office_id IN ( -- ro
+                             SELECT
+                               office_id
+                             FROM
+                               office
+                             WHERE
+                               parent_office_id IN ( -- ho
+                                                    SELECT
+                                                      office_id
+                                                    FROM
+                                                      office
+                                                    WHERE
+                                                      office_level_id = :OFFICE_LEVEL_ID AND
+                                                      office_id = :OFFICE_ID))))
+UNION
+( -- divisional query
+ SELECT
+   case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+ FROM
+   office
+ WHERE
+   parent_office_id IN ( -- ro
+                        SELECT
+                          office_id
+                        FROM
+                          office
+                        WHERE
+                          parent_office_id IN ( -- ho
+                                               SELECT
+                                                 office_id
+                                               FROM
+                                                 office
+                                               WHERE
+                                                 office_level_id = :OFFICE_LEVEL_ID AND
+                                                 office_id = :OFFICE_ID)))
+UNION
+( -- regional query
+ SELECT
+  case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+ FROM
+   office
+ WHERE
+   parent_office_id IN ( -- ho
+                        SELECT
+                          office_id
+                        FROM
+                          office
+                        WHERE
+                          office_level_id = :OFFICE_LEVEL_ID AND
+                          office_id = :OFFICE_ID))
+union
+( -- Head office query
+                         select case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id' from office where office_level_id = :OFFICE_LEVEL_ID and office_id = :OFFICE_ID))x))
+
+union
+
+-- centers query
+
+select '0' as officeId ,customer_id as customerId,display_name as displayName,
+-- '0' as office_level_id,
+case customer_level_id
+when '3' then '6'
+else '0'
+end as officeLevelId,customer_level_id as customerLevelId,'0' as globalOfficeNumber,global_cust_num as globalCustomerNumber from customer where customer_level_id=3 and branch_id in(select office_id from(( -- bo
+ SELECT
+
+  case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+
+ FROM
+   office
+ WHERE
+   parent_office_id IN
+     ( -- ao
+      SELECT
+        office_id
+      FROM
+        office
+      WHERE
+        parent_office_id IN
+          ( -- do
+           SELECT
+             office_id
+           FROM
+             office
+           WHERE
+             parent_office_id IN
+               ( -- ro
+                SELECT
+                  office_id
+                FROM
+                  office
+                WHERE
+                  parent_office_id IN ( -- ho
+                                       SELECT
+                                         office_id
+                                       FROM
+                                         office
+                                       WHERE
+                                         office_level_id = :OFFICE_LEVEL_ID AND
+                                         office_id = :OFFICE_ID)))))
+UNION
+( -- areas query
+ SELECT
+   case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+ FROM
+   office
+ WHERE
+   parent_office_id IN
+     ( -- do
+      SELECT
+        office_id
+      FROM
+        office
+      WHERE
+        parent_office_id IN ( -- ro
+                             SELECT
+                               office_id
+                             FROM
+                               office
+                             WHERE
+                               parent_office_id IN ( -- ho
+                                                    SELECT
+                                                      office_id
+                                                    FROM
+                                                      office
+                                                    WHERE
+                                                      office_level_id = :OFFICE_LEVEL_ID AND
+                                                      office_id = :OFFICE_ID))))
+UNION
+( -- divisional query
+ SELECT
+   case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+ FROM
+   office
+ WHERE
+   parent_office_id IN ( -- ro
+                        SELECT
+                          office_id
+                        FROM
+                          office
+                        WHERE
+                          parent_office_id IN ( -- ho
+                                               SELECT
+                                                 office_id
+                                               FROM
+                                                 office
+                                               WHERE
+                                                 office_level_id = :OFFICE_LEVEL_ID AND
+                                                 office_id = :OFFICE_ID)))
+UNION
+( -- regional query
+ SELECT
+  case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id'
+ FROM
+   office
+ WHERE
+   parent_office_id IN ( -- ho
+                        SELECT
+                          office_id
+                        FROM
+                          office
+                        WHERE
+                          office_level_id = :OFFICE_LEVEL_ID AND
+                          office_id = :OFFICE_ID))
+union
+( -- Head office query
+                         select case office_id
+  when '' then '0'
+  when null then '0'
+  else office_id
+  end as 'office_id' from office where office_level_id = :OFFICE_LEVEL_ID and office_id = :OFFICE_ID))x)
+
+union
+-- **
+-- branches query
+( -- bo
+ SELECT
+   office_id as officeId,'0' as customerId,display_name as displayName,office_level_id as officeLevelId,'0' as customerLevelId,global_office_num as globalOfficeNumber,'0' as globalCustomerNumber
+ FROM
+   office
+ WHERE
+   parent_office_id IN
+     ( -- ao
+      SELECT
+        office_id
+      FROM
+        office
+      WHERE
+        parent_office_id IN
+          ( -- do
+           SELECT
+             office_id
+           FROM
+             office
+           WHERE
+             parent_office_id IN
+               ( -- ro
+                SELECT
+                  office_id
+                FROM
+                  office
+                WHERE
+                  parent_office_id IN ( -- ho
+                                       SELECT
+                                         office_id
+                                       FROM
+                                         office
+                                       WHERE
+                                         office_level_id = :OFFICE_LEVEL_ID AND
+                                         office_id = :OFFICE_ID)))))
+UNION
+-- **
+-- areas query
+(
+ SELECT
+   office_id as officeId,'0' as customerId,display_name as displayName,office_level_id as officeLevelId,'0' as customerLevelId,global_office_num as globalOfficeNumber,'0' as globalCustomerNumber
+ FROM
+   office
+ WHERE
+   parent_office_id IN
+     ( -- do
+      SELECT
+        office_id
+      FROM
+        office
+      WHERE
+        parent_office_id IN ( -- ro
+                             SELECT
+                               office_id
+                             FROM
+                               office
+                             WHERE
+                               parent_office_id IN ( -- ho
+                                                    SELECT
+                                                      office_id
+                                                    FROM
+                                                      office
+                                                    WHERE
+                                                      office_level_id = :OFFICE_LEVEL_ID AND
+                                                      office_id = :OFFICE_ID))))
+UNION
+-- **
+-- divisional query
+(
+ SELECT
+   office_id as officeId,'0' as customerId,display_name as displayName,office_level_id as officeLevelId,'0' as customerLevelId,global_office_num as globalOfficeNumber,'0' as globalCustomerNumber
+ FROM
+   office
+ WHERE
+   parent_office_id IN ( -- ro
+                        SELECT
+                          office_id
+                        FROM
+                          office
+                        WHERE
+                          parent_office_id IN ( -- ho
+                                               SELECT
+                                                 office_id
+                                               FROM
+                                                 office
+                                               WHERE
+                                                 office_level_id = :OFFICE_LEVEL_ID AND
+                                                 office_id = :OFFICE_ID)))
+UNION
+-- **
+-- regional query
+(
+ SELECT
+   office_id as officeId,'0' as customerId,display_name as displayName,office_level_id as officeLevelId,'0' as customerLevelId,global_office_num as globalOfficeNumber,'0' as globalCustomerNumber
+ FROM
+   office
+ WHERE
+   parent_office_id IN ( -- ho
+                        SELECT
+                          office_id
+                        FROM
+                          office
+                        WHERE
+                          office_level_id = :OFFICE_LEVEL_ID AND
+                          office_id = :OFFICE_ID))
+                          union
+-- **
+-- Head office query
+(
+select office_id as officeId,'0' as customerId,display_name as displayName,office_level_id as officeLevelId,'0' as customerLevelId,global_office_num as globalOfficeNumber,'0' as globalCustomerNumber from office where office_level_id = :OFFICE_LEVEL_ID and office_id = :OFFICE_ID)
+
+        ]]>
+	</sql-query>
 
 </hibernate-mapping>

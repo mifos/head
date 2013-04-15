@@ -19,19 +19,19 @@ explanation of the license and how it is applied.
 --%>
 
 
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@taglib uri="/tags/date" prefix="date"%>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
-<%@ taglib uri="/sessionaccess" prefix="session"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+		<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
+			<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+				<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+					<%@taglib uri="/tags/date" prefix="date"%>
+						<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+							<%@ taglib uri="/sessionaccess" prefix="session"%>
+								<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 
-<head>
+									<head>
 
-<style>
+										<style>
 tr.even {
   background-color: #ddd;
 }
@@ -68,14 +68,16 @@ border-bottom : solid 1px #EAEBF4;
 }
 
 </style>
-</head>
-<tiles:insert definition=".financialAccountingLayout">
-<tiles:put name="body" type="string" >
-<!-- <span id="page.id" title="CustomerList"></span> -->
-<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="pages/js/datePicker.js"></script>
-<link rel="stylesheet" type="text/css" href="pages/css/datepicker/calendar.css" />
-<script language="javascript">
+									</head>
+									<tiles:insert definition=".financialAccountingLayout">
+										<tiles:put name="body" type="string">
+											<!-- <span id="page.id" title="CustomerList"></span> -->
+											<script src="pages/js/jquery/jquery-1.4.2.min.js">
+											</script>
+											<script type="text/javascript" src="pages/js/datePicker.js">
+											</script>
+											<link rel="stylesheet" type="text/css" href="pages/css/datepicker/calendar.css" />
+											<script language="javascript">
 
 function fnSubmit(form, buttonSubmit) {
 	buttonSubmit.disabled=true;
@@ -96,108 +98,147 @@ function fnEditTransaction(form) {
 	form.submit();
 }
 
+function fnloadDate(form) {
+	form.method.value="loadLastUpdatedDate";
+	form.action="processaccountingtransactionsaction.do";
+	form.submit();
+}
+
 </script>
 
-<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
-<fmt:setBundle basename="org.mifos.config.localizedResources.SimpleAccountingUIResources"/>
+											<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}' />
+											<fmt:setBundle basename="org.mifos.config.localizedResources.SimpleAccountingUIResources" />
 
-<html-el:form action="/processaccountingtransactionsaction.do">
+											<html-el:form action="/processaccountingtransactionsaction.do">
 
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
+												<table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
 
-							<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
-									<tr>
-										<td align="center" class="heading">
+															<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td align="center" class="heading">
 											&nbsp;
 										</td>
-									</tr>
-							</table>
+																</tr>
+															</table>
 
 
-					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="burlywoodborder">
-							<tr>
-								<td align="left" valign="top" class="paddingleftCreates">
+															<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
+																<tr>
 
-									<table width="93%" border="0" cellpadding="3" cellspacing="0">
-										<tr>
-											<td class="headingorange">
-												<span id="bulkentry.heading" class="heading"> <mifos:mifoslabel name="simpleAccounting.head" /> - </span>
-												<mifos:mifoslabel name="simpleAccounting.processMifosAccountingTransactions" />
 
-											</td>
-										</tr>
-										<tr>
-										  <td><b><font size='2' color="red"><mifos:mifoslabel name="simpleAccounting.processMifosNote" /></font></b></td>
-										</tr>
-									</table>
+																	<td align="left" valign="top" class="paddingleftCreates">
 
-									<logic:messagesPresent>
-										<font class="fontnormalRedBold"><span id="BulkEntry.error.message"> <html-el:errors bundle="simpleAccountingUIResources" /> </span> </font>
-										<br>
-									</logic:messagesPresent>
-									<br>
+																		<table width="93%" border="0" cellpadding="3" cellspacing="0">
+																			<tr>
+																				<td class="headingorange">
+																					<span id="bulkentry.heading" class="heading">
+																						<mifos:mifoslabel name="simpleAccounting.head" /> - </span>
+																					<mifos:mifoslabel name="simpleAccounting.processMifosAccountingTransactions" />
 
-				<table width="93%" border="0" cellpadding="3" cellspacing="0">
-					<tr class="fontnormal">
-							<td align="right">
-			                   <mifos:mifoslabel name="simpleAccounting.groupBy" mandatory="yes" isColonRequired="Yes"/>
-			                </td>
-			                <td align="left">
-			                    <html-el:text property="groupBy" value="Branch Office" readonly="true"/>
-			                </td>
-					</tr>
-					<tr class="fontnormal">
-						<td align="right">
-			                   <mifos:mifoslabel name="simpleAccounting.lastProcessDate" mandatory="yes" isColonRequired="Yes"/>
-			                </td>
-			                <td align="left">
-			               	   <date:datetag property="lastProcessDate" isDisabled="Yes" renderstyle="simple"/>
-			                </td>
-			        </tr>
+																				</td>
+																			</tr>
+																			<tr>
+																				<font class="fontnormalRedBold">
+																					<span id="reviewapplypayment.error.message">
+																						<html-el:errors bundle="accountsUIResources" />
+																					</font>
+																					<td>
+																						<b>
+																							<font size='2' color="red">
+																								<mifos:mifoslabel name="simpleAccounting.processMifosNote" />
+																							</font>
+																						</b>
+																					</td>
+																				</tr>
+																			</table>
 
-			<tr class="fontnormal">
-			     			<td align="right">
-			                   <mifos:mifoslabel name="simpleAccounting.processTillDate" mandatory="yes" isColonRequired="Yes"/>
-			                </td>
-			                <td align="left">
-			                   <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="processTillDate" size="10"/>
-							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('processTillDate', this);"/>
-			                </td>
-			</tr>
-		   </table>
-			<br>
-			<table width="93%" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-											<td align="center" class="blueline">
+																			<logic:messagesPresent>
+																				<font class="fontnormalRedBold">
+																					<span id="BulkEntry.error.message">
+																						<html-el:errors bundle="simpleAccountingUIResources" />
+																					</span>
+																				</font>
+																				<br>
+																				</logic:messagesPresent>
+																				<br>
+
+																					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+																						<tr class="fontnormal">
+																							<td align="right">
+																								<mifos:mifoslabel name="simpleAccounting.office" mandatory="yes" isColonRequired="Yes" />
+																							</td>
+
+																							<td align="left">
+
+																								<c:choose>
+																									<c:when test="${sessionScope.officeLevelId=='1'}">
+
+																										<mifos:select property="office" onchange="fnloadDate(this.form)">
+																											<c:forEach items="${sessionScope.DynamicOfficesOnHierarchy}" var="offices">
+																												<html-el:option value="${offices.globalOfficeNumber}">${offices.displayName}</html-el:option>
+																											</c:forEach>
+																										</mifos:select>
+																									</c:when>
+
+																									<c:when test="${sessionScope.officeLevelId=='5'}">
+																										<html-el:text property="groupBy" value="${sessionScope.DynamicOfficesOnHierarchy.displayName}" readonly="true" />
+																									</c:when>
+																								</c:choose>
+																							</td>
+
+																						</tr>
+																						<tr class="fontnormal">
+																							<td align="right">
+																								<mifos:mifoslabel name="simpleAccounting.lastProcessDate" mandatory="yes" isColonRequired="Yes" />
+																							</td>
+																							<td align="left">
+																								<date:datetag property="lastProcessDate" isDisabled="Yes" renderstyle="simple" />
+																							</td>
+																						</tr>
+
+																						<tr class="fontnormal">
+																							<td align="right">
+																								<mifos:mifoslabel name="simpleAccounting.processTillDate" mandatory="yes" isColonRequired="Yes" />
+																							</td>
+																							<td align="left">
+																								<mifos:mifosalphanumtext styleId="createLoanProduct.input.prdOffering" property="processTillDate" size="10" />
+							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('processTillDate', this);" />
+																							</td>
+																						</tr>
+																					</table>
+																					<br>
+																						<table width="93%" border="0" cellpadding="0" cellspacing="0">
+																							<tr>
+																								<td align="center" class="blueline">
 												&nbsp;
 											</td>
-										</tr>
-			</table>
-					<html-el:hidden property="method" value="preview" />
-					<html-el:hidden property="input" value="preview" />
-				<br>
+																							</tr>
+																						</table>
+																						<html-el:hidden property="method" value="preview" />
+																						<html-el:hidden property="input" value="preview" />
+																						<br>
 
-					<table width="93%" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-											<td align="center">
-												 <html-el:submit styleId="simpleaccounting.button.process" styleClass="buttn"  onclick="fnSubmit(this.form, this)">
-													<mifos:mifoslabel name="simpleAccounting.process"/>
-											    </html-el:submit>
-											</td>
-										</tr>
-									</table>
+																							<table width="93%" border="0" cellpadding="0" cellspacing="0">
+																								<tr>
+																									<td align="center">
+																										<html-el:submit styleId="simpleaccounting.button.process" styleClass="buttn" onclick="fnSubmit(this.form, this)">
+																											<mifos:mifoslabel name="simpleAccounting.process" />
+																										</html-el:submit>
+																									</td>
+																								</tr>
+																							</table>
 
-<br>
-								</td>
-							</tr>
-						</table>
-						<br>
-					</td>
-				</tr>
-			</table>
-		</html-el:form>
-		</body>
-	</tiles:put>
-</tiles:insert>
+																							<br>
+																							</td>
+																						</tr>
+																					</table>
+																					<br>
+																					</td>
+																				</tr>
+																			</table>
+																		</html-el:form>
+																	</body>
+																</tiles:put>
+															</tiles:insert>

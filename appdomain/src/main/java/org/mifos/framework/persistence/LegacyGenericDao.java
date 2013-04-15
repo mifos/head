@@ -177,6 +177,21 @@ public abstract class LegacyGenericDao {
         }
     }
 
+    // Hugo Technologies
+    public int executeNamedQueryForUpdate(final String queryName, final Map<String, ?> queryParameters) throws PersistenceException {
+        try {
+		StaticHibernateUtil.startTransaction();
+            Query query = createdNamedQuery(queryName);
+            query.setProperties(queryParameters);
+            int result = query.executeUpdate();
+            StaticHibernateUtil.commitTransaction();
+            return result;
+
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
+
     public Object executeUniqueHqlQuery(final String hqlQuery) {
         return getSession().createQuery(hqlQuery).uniqueResult();
     }
@@ -218,4 +233,19 @@ public abstract class LegacyGenericDao {
         return queryResult.size() > 0 && queryResult.get(0) != null ? BigDecimal.valueOf(((Number) queryResult.get(0))
                 .doubleValue()) : null;
     }
+    @SuppressWarnings("unchecked")
+     public int deleteNamedQueryWithResultTransformer(String globalnum) {
+            try {
+                //Query query = getSession().getNamedQuery(queryName);
+            	System.out.println("hello");
+                Query query1 =getSession().createQuery("delete  from CoaBranchBO  where globalofficenum =:GLOBAL_OFFICE_NUM_DELETE ");
+               query1.setParameter("GLOBAL_OFFICE_NUM_DELETE", globalnum);
+    
+    int result = query1.executeUpdate();
+               return result; 
+            } catch (Exception e) {
+                throw new MifosRuntimeException(e);
+            }
+        }
+        
 }

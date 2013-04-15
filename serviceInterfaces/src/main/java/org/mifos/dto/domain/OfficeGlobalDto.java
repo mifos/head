@@ -30,6 +30,19 @@ public class OfficeGlobalDto {
 	private String globalOfficeNum;
 	private String displayName;
 
+	public OfficeGlobalDto(){
+		this.globalOfficeNum = globalOfficeNum;
+		this.displayName = displayName;
+	}
+
+
+	public OfficeGlobalDto(String globalOfficeNum,String displayName){
+		super();
+		this.globalOfficeNum = globalOfficeNum;
+		this.displayName = displayName;
+	}
+
+
 	public String getGlobalOfficeNum() {
 		return globalOfficeNum;
 	}
@@ -42,6 +55,7 @@ public class OfficeGlobalDto {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+
 
 
 }
