@@ -79,33 +79,33 @@ border-bottom : solid 1px #EAEBF4;
 function fnloadOffices(form) {
 
 	form.method.value="loadOffices";
-	form.action="generalledgeraction.do";
+	form.action="viewstagetransactionsaction.do";
 	form.submit();
 }
 
 function fnloadMainAccounts(form) {
 	form.method.value="loadMainAccounts";
-	form.action="generalledgeraction.do";
+	form.action="viewstagetransactionsaction.do";
 	form.submit();
 
 }
 
 function fnloadAccountHeads(form) {
 	form.method.value="loadAccountHeads";
-	form.action="generalledgeraction.do";
+	form.action="viewstagetransactionsaction.do";
 	form.submit();
 }
 
 function fnSubmit(form, buttonSubmit) {
 	buttonSubmit.disabled=true;
 	form.method.value="preview";
-	form.action="generalledgeraction.do";
+	form.action="viewstagetransactionsaction.do";
 	form.submit();
 }
 
 function fnCancel(form) {
 	form.method.value="cancel";
-	form.action="generalledgeraction.do";
+	form.action="viewstagetransactionsaction.do";
 	form.submit();
 }
 
@@ -121,11 +121,11 @@ function fnBankDetail(){
 
 </script>
 <span id="page.id" title="simpleaccounting"></span>
-<mifos:NumberFormattingInfo /> 
+<mifos:NumberFormattingInfo />
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.SimpleAccountingUIResources"/>
 <body onload="fnBankDetail()">
-<html-el:form action="/generalledgeraction.do">
+<html-el:form action="/viewstagetransactionsaction.do">
 
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -140,7 +140,7 @@ function fnBankDetail(){
 							</table>
 
 
-					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="burlywoodborder">
+					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
 							<tr>
 								<td align="left" valign="top" class="paddingleftCreates">
 
@@ -156,6 +156,7 @@ function fnBankDetail(){
 											<td class="fontnormal">
 												<br>
 												<span class="mandatorytext"> <font color="#FF0000">*</font> </span>
+
 												<mifos:mifoslabel name="simpleAccounting.mandatory" bundle="simpleAccountingUIResources"/>
 											</td>
 										</tr>
@@ -168,21 +169,26 @@ function fnBankDetail(){
 									<br>
 
 
+
+	<c:set var="transactionDetailIDabc" value="${sessionScope.transactionDetailID}" scope="session"/>
+
+
+
 				<table width="93%" border="0" cellpadding="3" cellspacing="0">
 					<tr class="fontnormal">
 							<td align="right">
 			                   <mifos:mifoslabel name="simpleAccounting.trxnDate" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/>
 			                </td>
 			                <td align="left">
-			                     <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="trxnDate" size="8"/>
-							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('trxnDate', this);"/>
+			                     <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="stageTrxnDate" name="viewtransactionstageactionform" size="8"/>
+							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('stageTrxnDate', this);"/>
 			                </td>
 
 					</tr>
 					<tr class="fontnormal">
 						<td align="right"><mifos:mifoslabel name="simpleAccounting.officeHeirarchy" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 						<td align="left">
-							<mifos:select property="officeHierarchy" onchange="fnloadOffices(this.form)">
+							<mifos:select name="viewtransactionstageactionform" property="stageOfficeHierarchy" onchange="fnloadOffices(this.form)">
 							<html-el:option value="1"><mifos:mifoslabel name="simpleAccounting.headOffice" bundle="simpleAccountingUIResources"/></html-el:option>
 							<html-el:option value="2"><mifos:mifoslabel name="simpleAccounting.regionalOffice" bundle="simpleAccountingUIResources"/></html-el:option>
 							<html-el:option value="3"><mifos:mifoslabel name="simpleAccounting.divisionalOffice" bundle="simpleAccountingUIResources"/></html-el:option>
@@ -194,7 +200,7 @@ function fnBankDetail(){
 					   </td>
 					   <td align="right"><mifos:mifoslabel name="simpleAccounting.office" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 					   <td align="left">
-						<mifos:select property="office">
+						<mifos:select name="viewtransactionstageactionform" property="stageOffice">
 						<c:forEach items="${sessionScope.OfficesOnHierarchy}" var="offices">
 						<html-el:option value="${offices.globalOfficeNum}">${offices.displayName}</html-el:option>
 						</c:forEach>
@@ -205,16 +211,24 @@ function fnBankDetail(){
 			<tr class="fontnormal">
 			     <td width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.trxnType" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 							<td width="25%" align="left">
-								<mifos:select styleId="trxnTypeId" property="trxnType" onchange="fnloadMainAccounts(this.form)">
+
+
+								<mifos:select name="viewtransactionstageactionform" styleId="trxnTypeId" property="stageTrxnType" onchange="fnloadMainAccounts(this.form)">
+								<c:if test="${viewtransactionstageactionform.stageTrxnType !='JV'}" >
 								<html-el:option value="CR"><mifos:mifoslabel name="simpleAccounting.cashReceipt" bundle="simpleAccountingUIResources" /></html-el:option>
 								<html-el:option value="CP"><mifos:mifoslabel name="simpleAccounting.cashPayment" bundle="simpleAccountingUIResources" /></html-el:option>
 								<html-el:option value="BR"><mifos:mifoslabel name="simpleAccounting.bankReceipt" bundle="simpleAccountingUIResources" /></html-el:option>
 								<html-el:option value="BP"><mifos:mifoslabel name="simpleAccounting.bankPayment" bundle="simpleAccountingUIResources" /></html-el:option>
+								</c:if>
+							    <c:if test="${viewtransactionstageactionform.stageTrxnType=='JV'}" >
+								<html-el:option value="JV" ><mifos:mifoslabel name="simpleAccounting.journalVoucher" bundle="simpleAccountingUIResources" /></html-el:option>
+								</c:if>
 								</mifos:select>
+
 							</td>
 			 <td width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.mainAccount" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 					<td width="25%" align="left">
-						<mifos:select property="mainAccount" onchange="fnloadAccountHeads(this.form)">
+						<mifos:select name="viewtransactionstageactionform"  property="stageMainAccount" onchange="fnloadAccountHeads(this.form)">
 				        <c:forEach items="${sessionScope.MainAccountGlCodes}" var="mainAccount">
 				            <html-el:option value="${mainAccount.glcode}">${mainAccount.glname}</html-el:option>
 				        </c:forEach>
@@ -226,7 +240,7 @@ function fnBankDetail(){
 
 			<td align="right"><mifos:mifoslabel name="simpleAccounting.accountHead" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 				<td align="left">
-					<mifos:select property="accountHead">
+					<mifos:select name="viewtransactionstageactionform" property="stageAccountHead">
 				        <c:forEach items="${sessionScope.AccountHeadGlCodes}" var="accountHead">
 				            <html-el:option value="${accountHead.glcode}">${accountHead.glname}</html-el:option>
 				        </c:forEach>
@@ -235,7 +249,7 @@ function fnBankDetail(){
 
 				<td align="right"><mifos:mifoslabel name="simpleAccounting.amount" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 				<td align="left">
-					  <html-el:text property="amount" styleClass="separatedNumber" styleId="simpleaccounting.input.amount"/>
+					  <html-el:text name="viewtransactionstageactionform" property="stageAmount" styleClass="separatedNumber" styleId="simpleaccounting.input.amount"/>
 				</td>
 
 			</tr>
@@ -248,23 +262,27 @@ function fnBankDetail(){
 				    <tr class="fontnormal">
 				      <td align="right"><mifos:mifoslabel name="simpleAccounting.chequeNo" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 				<td align="left">
-					<mifos:mifosnumbertext property="chequeNo" style="width:150px" maxlength="60" /></td>
+					<mifos:mifosnumbertext property="stageChequeNo" style="width:150px" maxlength="60" /></td>
 				<td align="right"><mifos:mifoslabel name="simpleAccounting.chequeDate" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-					<td align="left">
-						<date:datetag property="chequeDate" isDisabled="No" renderstyle="simple"/></td>
+			                <td align="left">
+			                     <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="chequeDate" name="viewtransactionstageactionform" size="8"/>
+							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('chequeDate', this);"/>
+			                </td>
+
 			 </tr>
 
 				<tr class="fontnormal">
 			      <td align="right"><mifos:mifoslabel name="simpleAccounting.bankName" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 					<td align="left">
-						<mifos:mifosalphanumtext property="bankName" style="width:150px" maxlength="60" />
+						<mifos:mifosalphanumtext property="stageBankName" style="width:150px" maxlength="60" />
 					</td>
 			 <td align="right"><mifos:mifoslabel name="simpleAccounting.bankBranch" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 				 <td align="left">
-					<mifos:mifosalphanumtext property="bankBranch" style="width:150px" maxlength="60" />
+					<mifos:mifosalphanumtext property="stageankBranch" style="width:150px" maxlength="60" />
 				</td>
 
 			       </tr>
+
 			  </table>
 		     <br>
 			  </div>
@@ -273,7 +291,7 @@ function fnBankDetail(){
 			<tr class="fontnormal">
 		   <td align="right"><mifos:mifoslabel name="simpleAccounting.trxnNotes" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 		 <td align="left" colspan="3">
-		 <mifos:textarea property="notes" cols='68'></mifos:textarea>
+		 <mifos:textarea name="viewtransactionstageactionform" property="stageNotes" cols='68'></mifos:textarea>
              </td>
 		</tr>
 		</table>
