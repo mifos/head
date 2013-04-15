@@ -36,6 +36,7 @@ import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.CustomerHierarchyDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.dto.screen.SearchFiltersDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.MifosUser;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
@@ -114,6 +115,9 @@ public class SearchResultController {
 
         modelAndView.addObject("customerSearch", customerSearchFormBean);
 
+        if (customerSearchFormBean.getFilters() == null) {
+            customerSearchFormBean.setFilters(new SearchFiltersDto());
+        }
         customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
                 customerSearchFormBean.getOfficeId(), currentPage * PAGE_SIZE, PAGE_SIZE, customerSearchFormBean.getFilters());
 

@@ -154,8 +154,10 @@
         </div>
         <div class="row">
             [@spring.bind "customerSearch.filters.customerLevels['CENTER']" /]
-            [@form.label "${spring.status.expression}"][@spring.message "manageRoles.centers" /][/@form.label]: 
-            <select id="centerSearch" name="${spring.status.expression}">
+            [#if isCenterHierarchyExists ]
+                [@form.label "${spring.status.expression}"][@spring.message "manageRoles.centers" /][/@form.label]: 
+            [/#if]
+            <select id="centerSearch" name="${spring.status.expression}" [#if !isCenterHierarchyExists ]style="display:none"[/#if]>
                 <option value="true"[@spring.checkSelected true?string/]>[@spring.message "boolean.yes" /]</option>
                 <option value="false"[@spring.checkSelected false?string/]>[@spring.message "boolean.no" /]</option>
             </select>
