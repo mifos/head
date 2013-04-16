@@ -82,10 +82,6 @@ function fnloadOffices(form) {
 	form.submit();
 }
 
-
-
-
-
 function fnloadCreditAccounts(form) {
 	form.method.value="loadCreditAccount";
 	form.action="journalvoucheraction.do";
@@ -178,8 +174,8 @@ function fnCancel(form) {
 					   <td align="right"><mifos:mifoslabel name="simpleAccounting.office" mandatory="yes" isColonRequired="Yes"/></td>
 					   <td align="left">
 						<mifos:select property="office">
-						<c:forEach items="${sessionScope.JVOfficesOnHierarchy}" var="offices">
-						<html-el:option value="${offices.globalOfficeNum}">${offices.displayName}</html-el:option>
+						<c:forEach items="${sessionScope.DynamicOfficesOnHierarchy}" var="offices">
+						<html-el:option value="${offices.globalOfficeNumber}">${offices.displayName}</html-el:option>
 						</c:forEach>
 						</mifos:select>
 					</td>

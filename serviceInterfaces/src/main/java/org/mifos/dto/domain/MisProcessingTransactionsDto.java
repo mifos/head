@@ -32,6 +32,15 @@ public class MisProcessingTransactionsDto {
 	private String glDebit;
 	private String glCredit;
 	private BigDecimal amount;
+	private String transactionNotes;
+
+	public String getTransactionNotes() {
+		return transactionNotes;
+	}
+
+	public void setTransactionNotes(String transactionNotes) {
+		this.transactionNotes = transactionNotes;
+	}
 
 	public BigDecimal getAmount() {
 		return amount;
