@@ -542,6 +542,7 @@
        </rollback>
    </changeSet>
    <changeSet id="MIFOSACC" author="Hugo Technologies" context="expansion">
+        <validCheckSum>3:2d1556a83a8379c89e9c6540380f3bd8</validCheckSum>
 		<sql endDelimiter=";">
 			Insert into config_key_value
 			(configuration_type,configuration_key,
