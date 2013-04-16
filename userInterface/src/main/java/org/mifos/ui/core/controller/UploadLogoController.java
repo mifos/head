@@ -25,15 +25,23 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+import org.apache.commons.io.IOUtils;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,10 +61,10 @@ public class UploadLogoController {
 	public static final String LOGO_DIRECTORY = "logo";
 	
 	@Autowired
-	private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
+	private MessageSource messageSource;
 	
 	@Autowired
-	private MessageSource messageSource;
+	private ServletContext servletContext;
 	
 	@ModelAttribute("breadcrumbs")
 	public List<BreadCrumbsLinks> showBreadCrumbs() {
@@ -84,6 +92,30 @@ public class UploadLogoController {
     	}
     	return "uploadNewLogo";
     }
+    
+    @RequestMapping("/getMifosLogo")
+    public ResponseEntity<byte[]> getMifosLogo() throws IOException {
+        InputStream in = getLogoStream();
+        byte[] logoContent = IOUtils.toByteArray(in);
+        in.close();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        return new ResponseEntity<byte[]>(logoContent, headers, HttpStatus.OK);
+    }
+    
+    private InputStream getLogoStream() throws IOException {
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        Resource customized = configurationLocator.getUploadedMifosLogo(LOGO_DIRECTORY + File.separator + "logo.png");
+        InputStream inputStream;
+        if (customized.exists()) {
+            inputStream = customized.getInputStream();
+        } else {
+            inputStream = servletContext.getResourceAsStream("/pages/framework/images/logo.jpg");
+        }
+        return inputStream;
+    }
 
     private void scaleAndSaveLogo(CommonsMultipartFile logo) throws IOException { 
     	BufferedImage bufferedImage = ImageIO.read(logo.getInputStream());
@@ -108,7 +140,8 @@ public class UploadLogoController {
     	} else {
     		finalImage = bufferedImage;
     	}
-    	File dir = new File(viewOrganizationSettingsServiceFacade.getUploadStorageDirectory() + LOGO_DIRECTORY + File.separator);
+    	ConfigurationLocator configurationLocator = new ConfigurationLocator();
+    	File dir = new File(configurationLocator.getConfigurationDirectory() + File.separator + LOGO_DIRECTORY + File.separator);
     	dir.mkdirs();
     	File file = new File(dir, "logo.png");
 		ImageIO.write(finalImage, "png", file);

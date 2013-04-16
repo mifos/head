@@ -410,5 +410,5 @@ Renders a group of radio buttons.
 [/#macro]
 
 [#macro returnToPage url value id]
-	<input type="submit" name="backButton" value="[@spring.message "${value}"/]" onclick="window.location.href='${url}'" id="${id}" class="buttn">
+	<input type="button" name="backButton" value="[@spring.message "${value}"/]" onclick="window.location.href='${url}'" id="${id}" class="buttn">
 [/#macro]

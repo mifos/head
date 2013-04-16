@@ -234,7 +234,7 @@ table#login-table td#login-submit {
 
 #login-page-header {
    background-attachment: scroll;
-   background-image: url(../framework/images/logo.jpg);
+   background-image: url(../../getMifosLogo.ftl);
    background-repeat: no-repeat;
    background-position: left top;
    background-color: white;

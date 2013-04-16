@@ -38,6 +38,7 @@
     <http pattern="/initializeApplication.ftl*" security="none" />
     <http pattern="/customPropertiesUpdate.ftl*" security="none" />
     <http pattern="/uncaughtException.ftl" security="none" />
+    <http pattern="/getMifosLogo.ftl" security="none" />
     
     <http pattern="/**/*.css*" security="none" />
     <http pattern="/**/*.gif" security="none" />

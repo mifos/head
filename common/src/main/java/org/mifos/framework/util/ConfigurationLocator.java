@@ -161,6 +161,10 @@ public class ConfigurationLocator {
         LOGGER.info("ConfigurationLocator found configuration in resource: " + res.getDescription());
         return res;
     }
+    
+    public Resource getUploadedMifosLogo(String logoPath) throws IOException {
+        return getConfigurationResource(logoPath);
+    }
 
     public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
         this.configurationLocatorHelper = fileFactory;

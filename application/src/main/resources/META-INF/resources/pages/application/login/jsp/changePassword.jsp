@@ -42,7 +42,7 @@ explanation of the license and how it is applied.
 <html-el:form action="/loginAction.do" focus="oldPassword">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="200" rowspan="2"><img src="pages/framework/images/logo.jpg" width="200"
+			<td width="200" rowspan="2"><img src="getMifosLogo.ftl" width="200"
 				height="70"></td>
 			<td align="right" bgcolor="#FFFFFF" class="fontnormal">
 				<html-el:link styleId="logout_link" href="j_spring_security_logout">
