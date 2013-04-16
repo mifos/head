@@ -60,7 +60,7 @@ public class ChartOfAccountsConfigIntegrationTest extends MifosIntegrationTestCa
     @Test
     public void testGetAllAccounts() throws Exception {
         Set<GLAccount> glAccounts = coa.getGLAccounts();
-        Assert.assertEquals("default chart of accounts should have 56 " + "general ledger accounts", 56,
+        Assert.assertEquals("default chart of accounts should have 58 " + "general ledger accounts", 58,
                 glAccounts.size());
         assert true;
     }
