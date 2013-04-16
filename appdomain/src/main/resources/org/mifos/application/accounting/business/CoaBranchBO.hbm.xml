@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+  <class name="org.mifos.application.accounting.business.CoaBranchBO" table="coa_branch" >
+    <id name="coaid" type="integer" column="coa_id">
+       <generator class="native"></generator>
+    </id>
+
+    <property name="glcode" type="string" column="glcode_value"></property>
+    <property name="coaname" type="string" column="coa_name"></property>
+    <property name="globalofficenum" type="string" column="global_office_num"></property>
+  </class>
+</hibernate-mapping>

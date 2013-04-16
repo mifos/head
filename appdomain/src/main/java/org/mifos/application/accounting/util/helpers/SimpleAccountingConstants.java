@@ -30,7 +30,7 @@ public interface SimpleAccountingConstants {
 	String PROCESS = "process";
 	String INACTIVE ="I";
 	String ACTIVE ="A";
-
+	String ENTER_GRETERTHAN="errors.greterthan";
 	// FIXME: add underbars for readability
 	String LOADSUCCESS = "load_success";
 	String SUBMITSUCCESS = "submit_success";
@@ -67,7 +67,7 @@ public interface SimpleAccountingConstants {
 	String DEBIT_ACCOUNT = "simpleAccounting.debitAccount";
 	String ACCOUNT_HEAD = "simpleAccounting.accountHead";
 	String CREDIT_ACCOUNT = "simpleAccounting.creditAccount";
-
+	String BRANCH_NAME="simpleAccounting.branch";
 	String AMOUNT = "simpleAccounting.amount";
 	String CHEQUE_NO = "simpleAccounting.chequeNo";
 	String CHEQUE_DATE = "simpleAccounting.chequeDate";
@@ -75,7 +75,17 @@ public interface SimpleAccountingConstants {
 	String BANK_BRANCH = "simpleAccounting.bankBranch";
 	String TRXN_NOTES = "simpleAccounting.trxnNotes";
 	String VOUCHER_NOTES = "simpleAccounting.voucherNotes";
+	String BRANCHOFFICE = "simpleAccounting.branchoffice";
 
 	String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+
+	String PICKDATE = "pickDate";
+	String AUDIT = "simpleAccounting.audit";
+	String AUDIT_COMMENTS = "simpleAccounting.auditComments";
+	String INVALID_CHEQUE_DATE = "error.invaliddate";
+
+	String APPROVE ="approve";
+	String REJECT ="reject";
+
 
 }

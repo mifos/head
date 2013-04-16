@@ -102,7 +102,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("1")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("200"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("200"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("2")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("300"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("300"));
@@ -110,7 +110,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("2")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("300"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("300"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("41"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("43"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("3")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
@@ -118,7 +118,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("3")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("50"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("52"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("4")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("10"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("10"));
@@ -126,7 +126,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("4")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("10"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("10"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("50"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("52"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("6")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("20"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("20"));
@@ -134,7 +134,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("6")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("20"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("20"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("42"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("44"));
             } else {
 
                 //--fail("There should not be any other entry");
@@ -202,11 +202,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("24"));
             } else {
                 //--fail("There should not be any other entry");
             }
@@ -240,7 +240,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
-                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("20"));
+                Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("22"));
             } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isDebitEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
                 Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("100"));
