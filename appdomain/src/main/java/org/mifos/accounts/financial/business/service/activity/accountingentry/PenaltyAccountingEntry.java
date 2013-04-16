@@ -20,26 +20,55 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
+import java.util.Iterator;
+import java.util.Set;
+
+import org.mifos.accounts.business.PenaltiesTrxnDetailEntity;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
+import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class PenaltyAccountingEntry extends BaseAccountingEntry {
 
     @Override
     protected void applySpecificAccountActionEntry() throws FinancialException {
-        Money amount = financialActivity.getMiscPenaltyAmount();
+        if (financialActivity.getAccountTrxn() instanceof LoanTrxnDetailEntity) {
+            LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
+            Set<PenaltiesTrxnDetailEntity> penaltiesTrxn = loanTrxn.getPenaltiesTrxnDetails();
+            Iterator<PenaltiesTrxnDetailEntity> iterPenalties = penaltiesTrxn.iterator();
+            FinancialActionTypeEntity finActionPenalty = getFinancialAction(FinancialActionConstants.PENALTYPOSTING);
+            while (iterPenalties.hasNext()) {
+                PenaltiesTrxnDetailEntity penaltyTrxn = iterPenalties.next();
 
-        FinancialActionTypeEntity finActionMiscPenalty = FinancialActionCache
-                .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
-        addAccountEntryDetails(amount, finActionMiscPenalty,
-                getGLcode(finActionMiscPenalty.getApplicableDebitCharts()), FinancialConstants.DEBIT);
+                addAccountEntryDetails(penaltyTrxn.getPenaltyAmount(), finActionPenalty, penaltyTrxn
+                        .getAccountPenalties().getPenalty().getGlCode(), FinancialConstants.CREDIT);
 
-        addAccountEntryDetails(amount, finActionMiscPenalty,
-                getGLcode(finActionMiscPenalty.getApplicableCreditCharts()), FinancialConstants.CREDIT);
+                addAccountEntryDetails(penaltyTrxn.getPenaltyAmount(), finActionPenalty,
+                        getGLcode(finActionPenalty.getApplicableDebitCharts()), FinancialConstants.DEBIT);
+            }
+
+            FinancialActionTypeEntity finActionMiscPenalty = FinancialActionCache
+                    .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
+            addAccountEntryDetails(loanTrxn.getMiscPenaltyAmount(), finActionMiscPenalty,
+                    getGLcode(finActionMiscPenalty.getApplicableDebitCharts()), FinancialConstants.DEBIT);
+
+            addAccountEntryDetails(loanTrxn.getMiscPenaltyAmount(), finActionMiscPenalty,
+                    getGLcode(finActionMiscPenalty.getApplicableCreditCharts()), FinancialConstants.CREDIT);
+        } else {
+            Money amount = financialActivity.getMiscPenaltyAmount();
+
+            FinancialActionTypeEntity finActionMiscPenalty = FinancialActionCache
+                    .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
+            addAccountEntryDetails(amount, finActionMiscPenalty,
+                    getGLcode(finActionMiscPenalty.getApplicableDebitCharts()), FinancialConstants.DEBIT);
+
+            addAccountEntryDetails(amount, finActionMiscPenalty,
+                    getGLcode(finActionMiscPenalty.getApplicableCreditCharts()), FinancialConstants.CREDIT);
+        }
     }
 
 }
