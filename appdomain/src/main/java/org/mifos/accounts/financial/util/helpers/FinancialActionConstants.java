@@ -21,11 +21,7 @@
 package org.mifos.accounts.financial.util.helpers;
 
 public enum FinancialActionConstants {
-    PRINCIPALPOSTING(1), INTERESTPOSTING(2), FEEPOSTING(3), MISCFEEPOSTING(4),
-
-    /** Not currently used in code. Default mapping exists (not sure why). */
-    PENALTYPOSTING(5),
-
+    PRINCIPALPOSTING(1), INTERESTPOSTING(2), FEEPOSTING(3), MISCFEEPOSTING(4), PENALTYPOSTING(5),
     MISCPENALTYPOSTING(6), DISBURSAL(7), ROUNDING(8), MANDATORYDEPOSIT(9), VOLUNTARYDEPOSIT(10), MANDATORYWITHDRAWAL(11), VOLUNTARYWITHDRAWAL(
             12),
 
