@@ -306,7 +306,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             throw new MifosRuntimeException(e);
         } catch (ValidationException e) {
             transactionHelper.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new BusinessRuleException(e.getKey(),e.getValues(), e);
         } catch (ServiceException e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
