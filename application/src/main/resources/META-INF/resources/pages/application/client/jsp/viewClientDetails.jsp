@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <style type="text/css">
 
@@ -87,8 +88,7 @@ explanation of the license and how it is applied.
 
 </script>
 
-<sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
-
+<sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
     <script type="text/javascript">
     
     $(document).ready(function() {
@@ -113,7 +113,7 @@ explanation of the license and how it is applied.
     	    	});
     	    	
     	    	$("#personalInformation").removeClass("changing");
-    	    	$(this).html("Change fields order");
+    	    	$(this).html("<spring:message code="informationOrder.changeFieldsOrder" />");
     	    } else {
     	    	$("#personalInformation").addClass("changing");
     	        $(this).html("Save changes");
@@ -666,8 +666,8 @@ explanation of the license and how it is applied.
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:link>
                                 <br />
-                                <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
-                                    <span id="changeOrder">Change fields order</span>
+                                <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
+                                    <span id="changeOrder"><spring:message code="informationOrder.changeFieldsOrder" /></span>
                                 </sec:authorize>
                             </td>
 						</tr>
@@ -872,7 +872,7 @@ explanation of the license and how it is applied.
                                         </c:choose>
                                         <c:if test="${displayed}">
                                             <td>
-                                               <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
+                                               <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
                                                    <span class="changeOrderArrows">
                                                        <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
                                                        <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />

@@ -35,6 +35,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <style type="text/css">
 
@@ -84,8 +85,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
      	
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
- <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
-
+<sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
     <script type="text/javascript">
     
     $(document).ready(function() {
@@ -110,7 +110,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                 });
                 
                 $("#personalInformation").removeClass("changing");
-                $(this).html("Change fields order");
+                $(this).html("<span id="changeOrder"><spring:message code="informationOrder.changeFieldsOrder" /></span>");
             } else {
                 $("#personalInformation").addClass("changing");
                 $(this).html("Save changes");
@@ -471,8 +471,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:if>
 							</c:when>
 							</c:choose>
-                            <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
-                                    <span id="changeOrder">Change fields order</span>
+                            <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
+                                    <span id="changeOrder"><span id="changeOrder"><spring:message code="informationOrder.changeFieldsOrder" /></span></span>
                                 </sec:authorize>
                             </td>
 						</tr>
@@ -869,7 +869,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                          </c:choose>
                                          <c:if test="${displayed}">
                                             <td>
-                                               <sec:authorize access="hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')">
+                                               <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
                                                    <span class="changeOrderArrows">
                                                        <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
                                                        <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />

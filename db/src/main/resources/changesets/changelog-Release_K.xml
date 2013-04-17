@@ -56,7 +56,7 @@
             <sql endDelimiter=";">drop table information_order;</sql>
         </rollback>
     </changeSet>
-        <changeSet id="MIFOS-5983_2" author="Lukasz Gasior" context="expansion">
+    <changeSet id="MIFOS-5983_2" author="Lukasz Gasior" context="expansion">
         <sql endDelimiter=";">
             insert into information_order (name, additional_question_id, page, order_) values
                 ("salutation", null, "CreateClient", 1), ("firstName", null, "CreateClient", 2), ("middleName", null, "CreateClient", 3),
@@ -71,6 +71,18 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">delete from information_order where page = "CreateClient";</sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS-5983_3" author="Lukasz Gasior" context="expansion">
+        <sql endDelimiter=";">
+            insert into information_order (name, page, order_) values ("amount", "CreateLoan", 1), ("interestRate", "CreateLoan", 2), 
+                    ("numberOfInstallments", "CreateLoan", 3), ("disbursalDate", "CreateLoan", 4), ("modeOfPayment", "CreateLoan", 5), 
+                    ("repaymentDay", "CreateLoan", 6), ("gracePeriod", "CreateLoan", 7), ("sourceOfFunds", "CreateLoan", 8), 
+                    ("purposeOfLoan", "CreateLoan", 9), ("collateralType", "CreateLoan", 10), ("collateralNotes", "CreateLoan", 11), 
+                    ("externalId", "CreateLoan", 12);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">delete from information_order where page = "CreateLoan";</sql>
         </rollback>
     </changeSet>
     <changeSet id="MIFOS-5739" author="Pawel Reise" context="expansion">

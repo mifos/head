@@ -62,6 +62,7 @@ import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.dto.screen.UploadedFileDto;
+import org.mifos.platform.questionnaire.service.InformationOrderServiceFacade;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.service.BusinessRuleException;
@@ -81,6 +82,9 @@ public class LoanAccountController {
     private LoanCreationLoanDetailsDto dto;
     private LoanControllerHelper loanControllerHelper;
 
+    @Autowired
+    private InformationOrderServiceFacade informationOrderServiceFacade;
+    
 	@Autowired
     public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, AdminServiceFacade adminServiceFacade, 
     		LoanControllerHelper loanControllerHelper) {
@@ -314,6 +318,8 @@ public class LoanAccountController {
             formBean.setFiles(new ArrayList<CommonsMultipartFile>());
             formBean.setFilesMetadata(new ArrayList<UploadedFileDto>());
         }
+        
+        formBean.setLoanInformationOrder(informationOrderServiceFacade.getInformationOrder("CreateLoan"));
 
     	return dto;
     }

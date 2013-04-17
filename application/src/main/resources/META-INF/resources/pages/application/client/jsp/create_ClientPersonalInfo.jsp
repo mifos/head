@@ -30,6 +30,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 
 <style type="text/css">
@@ -120,6 +122,7 @@ explanation of the license and how it is applied.
        clientCustActionForm.submit();
    }
 </script>
+<sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
  <script type="text/javascript">
     
     $(document).ready(function() {
@@ -144,7 +147,7 @@ explanation of the license and how it is applied.
                 });
                 
                 $("#personalInformation").removeClass("changing");
-                $(this).html("Change fields order");
+                $(this).html("<spring:message code="informationOrder.changeFieldsOrder" />");
             } else {
                 $("#personalInformation").addClass("changing");
                 $(this).html("Save changes");
@@ -174,6 +177,7 @@ explanation of the license and how it is applied.
     });
     
     </script>
+</sec:authorize>
 <script language="javascript">
 
 	/***<!-- NLO : Date: 15/07/2006  -->
@@ -436,9 +440,11 @@ explanation of the license and how it is applied.
 										bundle="ClientUIResources"></mifos:mifoslabel><br>
 									<br>
 									</td>
-                                        <span id="changeOrder">Change fields order</span>
+                                        <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
                                     <td>
+                                    <span id="changeOrder"><spring:message code="informationOrder.changeFieldsOrder" /></span>
                                     </td>
+                                    </sec:authorize>
 								</tr>
                                 <tr colspan="2" width="100%">
                                     <td>
@@ -814,6 +820,7 @@ explanation of the license and how it is applied.
                                                     <c:set var="displayed" value="true" scope="request" />
                                             </c:when>
                                        </c:choose>
+                                       <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
                                        <c:if test="${displayed}">
                                             <td>
                                                 <span class="changeOrderArrows">
@@ -823,6 +830,7 @@ explanation of the license and how it is applied.
                                             </td>
                                             </tr>
                                         </c:if>
+                                        </sec:authorize>
                                        </c:forEach>
                                        
                                 </tbody>

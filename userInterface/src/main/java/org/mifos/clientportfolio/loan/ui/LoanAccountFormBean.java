@@ -38,6 +38,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallments
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.screen.UploadedFileDto;
+import org.mifos.platform.questionnaire.service.InformationOrder;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ErrorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +164,17 @@ public class LoanAccountFormBean implements Serializable {
     private List<CommonsMultipartFile> files;
     private List<UploadedFileDto> filesMetadata;
 
-    public Locale getLocale() {
+    private List<InformationOrder> loanInformationOrder;
+    
+    public List<InformationOrder> getLoanInformationOrder() {
+		return loanInformationOrder;
+	}
+
+	public void setLoanInformationOrder(List<InformationOrder> loanInformationOrder) {
+		this.loanInformationOrder = loanInformationOrder;
+	}
+
+	public Locale getLocale() {
         return locale;
     }
 

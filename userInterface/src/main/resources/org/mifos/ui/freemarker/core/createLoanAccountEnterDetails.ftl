@@ -19,6 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 
+[#assign security=JspTaglibs["http://www.springframework.org/security/tags"] /]
 [@layout.webflow currentTab="ClientsAndAccounts"
                  currentState="createLoanAccount.flowState.enterAccountInfo" 
                  states=["createLoanAccount.flowState.selectCustomer", 
@@ -28,6 +29,108 @@
                          
 <span id="page.id" title="LoanCreationDetail"></span>
 [@i18n.formattingInfo /]
+<style type="text/css">
+
+    #changeOrder {
+        font-size: 10px;
+        color: #000166;
+        cursor: pointer;
+        text-decoration: underline;
+        float: right;
+        padding-right: 20px;
+        font-family: sans-serif;
+    }
+    
+   #accountDetails.changing #changeOrder {
+        font-size: 13px;
+        color: green;
+        font-weight: bold;
+    }
+    
+    .changeOrderArrows {
+        display: none;
+        width: 50px;
+    }
+    
+    .changeOrderArrows img {
+        cursor: pointer;
+    }
+    
+    #accountDetails.changing .changeOrderArrows {
+        display: block;
+    }
+    
+    #accountDetails.changing #accountDetailsInner > tbody > tr {
+        cursor: pointer;
+    }
+    
+    #accountDetails.changing #accountDetailsInner > tbody > tr:hover {
+        background-color: #FFFFA7;
+    }
+        
+    #accountDetailsInner td {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        width: 100%;
+    }
+    
+</style>
+ [@security.authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')"]
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+    
+        $("#changeOrder").click(function() {
+            if ($("#accountDetails").hasClass("changing")) {
+                
+                $("#accountDetailsInner > tbody").sortable('disable').enableSelection();
+                
+                var order = {};
+                
+                $('#accountDetailsInner > tbody > tr').each(function() {
+                    order[$(this).attr("data-order-id")] = $('#accountDetailsInner > tbody > tr').index(this);
+                });
+                
+                $.ajax({
+                     contentType: "application/json",
+                        type: "POST",
+                        url: "saveInformationOrder.ftl",
+                        data: JSON.stringify(order),
+                        dataType: "json"
+                });
+                
+                $("#accountDetails").removeClass("changing");
+                $(this).html("[@spring.message "createLoanAccount.enterAccountInfo.changeFieldsOrder" /]");
+            } else {
+                $("#accountDetails").addClass("changing");
+                $(this).html("Save changes");
+                
+                $("#accountDetailsInner > tbody").sortable({
+                    helper: function(e, ui) {
+                        ui.children().each(function() {
+                            $(this).width($(this).width());
+                        });
+                        return ui;
+                    }
+                }).disableSelection();
+                $("#accountDetailsInner > tbody").sortable("enable");
+            }
+        });
+        
+        $(".moveUp").click(function() {
+            var parentTr = $(this).parents("tr:first"); 
+            parentTr.insertBefore(parentTr.prev());
+        });
+        
+        $(".moveDown").click(function() {
+            var parentTr = $(this).parents("tr:first"); 
+            parentTr.insertAfter(parentTr.next());
+        });
+    
+    });
+    
+    </script>
+    [/@security.authorize]
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 [#if customerSearchFormBean.redoLoanAccount]
@@ -104,14 +207,28 @@
 </div>
 <br/>
 <br/>
-
+<form action="${flowExecutionUrl}" method="post" class="two-columns" enctype="multipart/form-data">
+    <fieldset>
 [#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.glim.individualdetails.header" /]</span></p>
 [#else]
-<p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
+<table id="accountDetails">
+    <tr>
+        <td>
+        <span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span>
+        </td>
+     [@security.authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')"]
+        <td>
+            <span id="changeOrder">[@spring.message "createLoanAccount.enterAccountInfo.changeFieldsOrder" /]</span>    
+        </td>
+     [/@security.authorize]
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table id="accountDetailsInner">
+        
 [/#if]
-<form action="${flowExecutionUrl}" method="post" class="two-columns" enctype="multipart/form-data">
-    <fieldset>
+
     [#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
     <script type="text/javascript">
     	function calculateTotalLoanAmount() {
@@ -290,160 +407,302 @@
     		<td>&nbsp;</td>
     	</tr>
     </table>
-    <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
-    [#else]
-    <div class="row">
+    <table id="accountDetails">
+    <tr>
+        <td>
+        <span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span>
+        </td>
+     [@security.authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')"]
+        <td>
+            <span id="changeOrder">[@spring.message "createLoanAccount.enterAccountInfo.changeFieldsOrder" /]</span>    
+        </td>
+     [/@security.authorize]
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table id="accountDetailsInner">
+    [/#if]
+    
+    [#list loanAccountFormBean.loanInformationOrder as informationOrder]
+        [#switch informationOrder.name]
+        [#case "amount"]
+            [#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
+               [#else]
+             <tr data-order-id="${informationOrder.id}">
+        <td>
         [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
         [@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" attributes="class=separatedNumber" /]
         <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
-    </div>
+        </td>
+        <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+    </tr>
     [/#if]
-    
-    <div class="row">
+        [#break]
+        [#case "interestRate"]
+             <tr data-order-id="${informationOrder.id}">
+        <td>
         [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
         [@form.input path="loanAccountFormBean.interestRate" id="loancreationdetails.input.interestRate" attributes="class=separatedNumber" /]
         <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span>
-    </div>
-    <div class="row">
+    </td>
+    <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+    </tr>
+         [#break]
+         [#case "numberOfInstallments"]
+           <tr data-order-id="${informationOrder.id}">
+        <td>
         [@form.label "numberOfInstallments" true ][@spring.message "createLoanAccount.numberOfInstallments"/][/@form.label]
         [@form.input path="loanAccountFormBean.numberOfInstallments" id="loancreationdetails.input.numberOfInstallments" /]
         <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments?string.number} - ${loanProductReferenceData.maxNumberOfInstallments?string.number})</span>
-    </div>
-    <div class="row">
-        [@form.label "disbursaldatedd" true ][@spring.message "createLoanAccount.disbursalDate"/][/@form.label]
+    </td>
+    <td>
+    <span class="changeOrderArrows">
+            <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+            <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+        </span>
+    </td>
+    </tr>
+         [#break]
+         [#case "disbursalDate"]
+         <tr data-order-id="${informationOrder.id}">
+        <td>
+        [@form.label "disbursaldatedd" tfrue ][@spring.message "createLoanAccount.disbursalDate"/][/@form.label]
         [@form.input path="loanAccountFormBean.disbursementDateDD" id="disbursementDateDD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
         [@form.input path="loanAccountFormBean.disbursementDateMM" id="disbursementDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
         [@form.input path="loanAccountFormBean.disbursementDateYY" id="disbursementDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
-    </div>
-    [#if customerSearchFormBean.redoLoanAccount]
-    <div class="row">
+    </td>
+    <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+    </tr>
+         [#break]
+         [#case "modeOfPayment"]
+            [#if customerSearchFormBean.redoLoanAccount]
+     <tr data-order-id="${informationOrder.id}">
+        <td>
         [@form.label "disbursalpaymenttype" true ][@spring.message "reviewInstallments.mode_of_payment"/][/@form.label]
         [@form.singleSelectWithPrompt "loanAccountFormBean.disbursalPaymentTypeId", loanProductReferenceData.disbursalPaymentTypes /]
-    </div>
+    </td>
+    <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+    </tr>
     [/#if]
-    
-    [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]
-    	[@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
-    	
-    		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 1]
-    		<div class="row">
-	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" checked=checked />
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" disabled=disabled/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
-		    	<div id="week" id="weekDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
-		    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</div>
-			        [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
-			        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.weekFrequency" attributes="size=3 maxlength=2"/]
-			        <span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
-			        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions id="weekDay" /]
-		    	</div>
-    		</div>
-    		[/#if]
-    		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 2]
-    		<div class="row">
-	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" checked=checked />
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" disabled=disabled/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
-	    		<div id="montlycontainer" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
-			    	<div id="monthlyoption1">
-			    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</div>
-			    		[@spring.bind "loanAccountFormBean.montlyOption" /]
-			    		<input type="radio" id="${spring.status.expression}0" name="montlyOption" value="dayOfMonth"
-			    			[#if spring.stringStatusValue == "dayOfMonth"]
-			    				checked="checked"
-			    			[/#if]
-			    		/>
-			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
-			    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="loancreationdetails.input.dayOfMonth" attributes="size=3 maxlength=2"/]
-			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
-				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
-				        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
-			    	</div>
-			    	<div id="monthlyoption2">
-			    		[@spring.bind "loanAccountFormBean.montlyOption" /]
-			    		<input type="radio" id="${spring.status.expression}1" name="montlyOption" value="weekOfMonth"
-			    			[#if spring.stringStatusValue == "weekOfMonth"]
-			    				checked="checked"
-			    			[/#if]
-			    		/>
-			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.weekOfMonthLabel" /]</span>
-			    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" id="monthRank" /]
-			    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" id="monthWeek"/]
-			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
-				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
-				        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
-			    	</div>
-			    </div>
-	    	</div>
-    		[/#if]
-    		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 3]
-    		<div class="row">
-	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" disabled=disabled />
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" checked=checked/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
-		    	<div id="day" id="dayDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
-		    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifdays,specifythefollowing" /]</div>
-			        [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
-			        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.dayFrequency" attributes="size=3 maxlength=2"/]
-			        <span id="dayLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.day(s)" /]</span>
-		    	</div>
-    		</div>
-    		[/#if]
+         [#break]
+         [#case "repaymentDay"]
+         [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]
+         <tr data-order-id="${informationOrder.id}">
+        <td>
+            [#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 1]
+            
+                  [@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
+                <input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" checked=checked />
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
+                <input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+                <input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" disabled=disabled/>
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
+                <div id="week" id="weekDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
+                    <div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</div>
+                    [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
+                    [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.weekFrequency" attributes="size=3 maxlength=2"/]
+                    <span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
+                    [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions id="weekDay" /]
+                </div>
+        
+            [/#if]
+            [#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 2]
+            
+            [@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
+                <input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" checked=checked />
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
+                <input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+                <input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" disabled=disabled/>
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
+                <div id="montlycontainer" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
+                    <div id="monthlyoption1">
+                        <div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</div>
+                        [@spring.bind "loanAccountFormBean.montlyOption" /]
+                        <input type="radio" id="${spring.status.expression}0" name="montlyOption" value="dayOfMonth"
+                            [#if spring.stringStatusValue == "dayOfMonth"]
+                                checked="checked"
+                            [/#if]
+                        />
+                        <span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
+                        [@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="loancreationdetails.input.dayOfMonth" attributes="size=3 maxlength=2"/]
+                        <span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
+                        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+                        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
+                    </div>
+                    <div id="monthlyoption2">
+                        [@spring.bind "loanAccountFormBean.montlyOption" /]
+                        <input type="radio" id="${spring.status.expression}1" name="montlyOption" value="weekOfMonth"
+                            [#if spring.stringStatusValue == "weekOfMonth"]
+                                checked="checked"
+                            [/#if]
+                        />
+                        <span>[@spring.message "manageLoanProducts.defineLoanProduct.weekOfMonthLabel" /]</span>
+                        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" id="monthRank" /]
+                        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" id="monthWeek"/]
+                        <span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
+                        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+                        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
+                    </div>
+                </div>
+      
+            [/#if]
+            [#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 3]
+        
+            [@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
+                <input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" disabled=disabled />
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
+                <input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+                <input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" checked=checked/>
+                <span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
+                <div id="day" id="dayDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
+                    <div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifdays,specifythefollowing" /]</div>
+                    [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
+                    [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.dayFrequency" attributes="size=3 maxlength=2"/]
+                    <span id="dayLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.day(s)" /]</span>
+                </div>
+            
+            [/#if]
+            </td>
+            <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+        </tr>
     [/#if]
-    
-    <div class="row">
+         [#break]
+         [#case "gracePeriod"]
+         <tr data-order-id="${informationOrder.id}">
+   <td>
         [@form.label "graceduration" true ][@spring.message "createLoanAccount.graceDuration"/][/@form.label]
         [#if loanAccountFormBean.graceDuration?? && loanAccountFormBean.graceDuration == 0]
-	    	[@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" attributes="disabled"/]
-	    [#else]
-	    	[@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" /]
-	   	[/#if]
+            [@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" attributes="disabled"/]
+        [#else]
+            [@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" /]
+        [/#if]
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
-    </div>
-    <div class="row">
+   </td>
+   <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+   </tr>
+         [#break]
+         [#case "sourceOfFunds"]
+            <tr data-order-id="${informationOrder.id}">
+   <td>
         [@form.label "fundId" loanAccountFormBean.sourceOfFundsMandatory][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
-    </div>
-
-	[#if loanProductReferenceData.glimApplicable]
-	[#else]
-    <div class="row">
+   </td>
+   <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+   </tr>
+         [#break]
+         [#case "purposeOfLoan"]
+            [#if loanProductReferenceData.glimApplicable]
+    [#else]
+   <tr data-order-id="${informationOrder.id}">
+   <td>
         [@form.label "loanPurposeId" loanAccountFormBean.purposeOfLoanMandatory][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'"/]
-    </div>
+    </td>
+    <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+    </tr>
     [/#if]
-    
-    [#if loanAccountFormBean.collateralTypeAndNotesHidden]
+         [#break]
+         [#case "collateralType"]
+          [#if loanAccountFormBean.collateralTypeAndNotesHidden]
     [#else]
-    <div class="row">
+    <tr data-order-id="${informationOrder.id}">
+   <td>
         [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
-    </div>
+   </td>
+   <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+   </tr>
+       [/#if]
+         [#break]
+         [#case "collateralNotes"]
+          [#if loanAccountFormBean.collateralTypeAndNotesHidden]
+    [#else]
+      <tr data-order-id="${informationOrder.id}">
+   <td>
+        [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
+   </td>
+   <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+   </tr>
+       [/#if]
     
-    <div class="row">
-        [@form.label "collateralNotes" false][@spring.message "createLoanAccount.collateralNotes" /][/@form.label]
-        [@spring.bind "loanAccountFormBean.collateralNotes" /]
-        <textarea name="${spring.status.expression}" rows="4" cols="50" maxlength="200">${spring.status.value?if_exists}</textarea>
-    </div>
-    [/#if]
-    
+         [#break]
+         [#case "externalId"]
     [#if loanAccountFormBean.externalIdHidden]
     [#else]
-    <div class="row">
+    <tr data-order-id="${informationOrder.id}">
+   <td>
         [@form.label "externalId" loanAccountFormBean.externalIdMandatory][@spring.message "createLoanAccount.externalId"/][/@form.label]
         [@form.input path="loanAccountFormBean.externalId" id="externalId" /]
-    </div>
+    </td>
+    <td>
+            <span class="changeOrderArrows">
+                <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+            </span>
+        </td>
+    </tr>
     [/#if]
-    
+         [#break]
+        [/#switch]
+    [/#list]  
+          </table>
+        </td>
+    </tr>
+    </table>
     <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultfees.header" /]</span></p>
 
 	<div class="default-fees">
