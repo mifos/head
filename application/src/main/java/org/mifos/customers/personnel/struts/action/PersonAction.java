@@ -212,7 +212,7 @@ public class PersonAction extends SearchAction {
             createGroupQuestionnaire.saveResponses(request, personActionForm, userDetails.getId());
             return mapping.findForward(ActionForwards.create_success.toString());
         } catch (BusinessRuleException e) {
-            throw new PersonnelException(e.getMessageKey(), e);
+            throw new PersonnelException(e.getMessageKey(), e, e.getMessageValues());
         }
     }
 
