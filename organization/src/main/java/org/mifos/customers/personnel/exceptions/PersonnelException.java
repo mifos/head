@@ -58,5 +58,9 @@ public class PersonnelException extends ApplicationException {
     public PersonnelException(String key, Throwable cause) {
         super(key, cause);
     }
+    
+    public PersonnelException(String key, Throwable cause, Object[] values) {
+        super(key, cause, values);
+    }
 
 }
