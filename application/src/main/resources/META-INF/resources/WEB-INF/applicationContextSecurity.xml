@@ -61,7 +61,7 @@
         <intercept-url pattern="/createQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/createQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/viewAndEditQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
-        <intercept-url pattern="/viewAndEditQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
+        <intercept-url pattern="/viewAndEditQuestionGroup.ftl*" access="isFullyAuthenticated()"/>
         <intercept-url pattern="/uploadQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/defineNewPenalty.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_DEFINE_PENALTY')"/>
         <intercept-url pattern="/editPenalty.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_MODIFY_PENALTY')"/>
