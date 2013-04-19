@@ -85,6 +85,14 @@
             <sql endDelimiter=";">delete from information_order where page = "CreateLoan";</sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS-5627" author="Lukasz Gasior" context="expansion">
+        <sql endDelimiter=";">
+            insert into information_order (name, page, order_) values ("guaranties", "Loan", 18);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">delete from information_order where page = "Loan" and name = "guaranties";</sql>
+        </rollback>
+    </changeSet>
     <changeSet id="MIFOS-5739" author="Pawel Reise" context="expansion">
         <sql endDelimiter=";">
             create table file_info (

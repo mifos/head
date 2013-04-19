@@ -110,7 +110,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                 });
                 
                 $("#personalInformation").removeClass("changing");
-                $(this).html("<span id="changeOrder"><spring:message code="informationOrder.changeFieldsOrder" /></span>");
+                $(this).html("<spring:message code="informationOrder.changeFieldsOrder" />");
             } else {
                 $("#personalInformation").addClass("changing");
                 $(this).html("Save changes");
@@ -865,28 +865,10 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                                      <br />
                                               <c:set var="displayed" value="true" scope="request" />
                                             </c:when>
-                                            
-                                         </c:choose>
-                                         <c:if test="${displayed}">
-                                            <td>
-                                               <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
-                                                   <span class="changeOrderArrows">
-                                                       <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
-                                                       <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
-                                                   </span>
-                                               </sec:authorize>
-                                            </td>
-                                            </tr>
-                                        </c:if>
-                                    </c:forEach>
-                                </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        					
-					</table>
-     
-     				<c:if test="${loanInformationDto.accountTypeId== 1 || loanInformationDto.accountTypeId == 4 || 
+                                             <c:when test="${personalInformation.name == 'guaranties'}">
+                                            <tr data-order-id="<c:out value="${personalInformation.id}" />">
+                                                   <td>
+                                                   <c:if test="${loanInformationDto.accountTypeId== 1 || loanInformationDto.accountTypeId == 4 || 
                         (loanInformationDto.accountTypeId==5 && !loanInformationDto.group)}">
                         <table width="96%" border="0" cellpadding="0" cellspacing="0">
                             <tr>
@@ -914,6 +896,28 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                         scope="session" xmlFileName="GuarantyInformation.xml"moduleName="org/mifos/accounts/loan/util/resources" 
                         passLocale="true" randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}"/>
                     </c:if>
+                                                    <c:set var="displayed" value="true" scope="request" />
+                                            </c:when>
+                                         </c:choose>
+                                         <c:if test="${displayed}">
+                                            </td>
+                                            <td>
+                                               <sec:authorize access="isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')">
+                                                   <span class="changeOrderArrows">
+                                                       <img class="moveUp" src="pages/framework/images/smallarrowtop.gif" />&nbsp;
+                                                       <img class="moveDown" src="pages/framework/images/smallarrowdown.gif" />
+                                                   </span>
+                                               </sec:authorize>
+                                            </td>
+                                            </tr>
+                                        </c:if>
+                                    </c:forEach>
+                                </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        					
+					</table>
 
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
