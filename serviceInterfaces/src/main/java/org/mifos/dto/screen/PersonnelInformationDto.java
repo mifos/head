@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.mifos.dto.domain.CustomFieldDto;
 
 @SuppressWarnings("PMD")
@@ -80,6 +81,10 @@ public class PersonnelInformationDto implements Serializable {
         this.personnelNotes = personnelNotes;
         this.passwordExpirationDate = passwordExpirationDate == null ? null : new Date(passwordExpirationDate.getTime());	
     }
+    
+    public DateTime getPasswordExpirationDateTime() {
+		return passwordExpirationDate == null ? null : new DateTime(passwordExpirationDate.getTime());
+	}
     
     public Date getPasswordExpirationDate() {
 		return passwordExpirationDate == null ? null : new Date(passwordExpirationDate.getTime());

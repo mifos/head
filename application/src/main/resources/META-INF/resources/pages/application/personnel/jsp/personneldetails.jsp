@@ -242,7 +242,7 @@ explanation of the license and how it is applied.
                             name="Personnel.PasswordExpirationIndefinite" bundle="PersonnelUIResources"/>
                             </c:if>
                             <c:if test="${not empty personnelInformationDto.passwordExpirationDate}">
-                        <c:out value="${personnelInformationDto.passwordExpirationDate}" />
+                                <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.passwordExpirationDateTime)}" />
                         </c:if> </span><br>
                         <br>
 						<span class="fontnormal">
