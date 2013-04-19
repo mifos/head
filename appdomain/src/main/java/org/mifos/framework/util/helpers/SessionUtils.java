@@ -274,7 +274,7 @@ public class SessionUtils {
                 "The attribute being removed from session is" + key);
     }
 
-    public static void addWarningMessage(HttpServletRequest request, String key) throws PageExpiredException {
+    public static void addWarningMessage(HttpServletRequest request, String key, Object... values) throws PageExpiredException {
         ActionMessages warningMessages = null;
         if (request.getAttribute(MIFOS_WARNING_MESSAGES) == null) {
             warningMessages = new ActionMessages();
@@ -282,7 +282,7 @@ public class SessionUtils {
         } else {
             warningMessages = (ActionMessages) getAttribute(MIFOS_WARNING_MESSAGES, request);
         }
-        warningMessages.add(key, new ActionMessage(key));
+        warningMessages.add(key, new ActionMessage(key, values));
     }
     
     public static void addWarningMessage(HttpServletRequest request, ActionMessage actionMessage) throws PageExpiredException {

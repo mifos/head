@@ -292,31 +292,44 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             boolean duplicateNameOnBlackListedClient = false;
             boolean governmentIdValidationUnclosedFailing = false;
             boolean duplicateNameOnClient = false;
+            ClientBO matchedClient = null;
 
             if (defaultFeeRemoval) {
                 customerDao.checkPermissionForDefaultFeeRemoval(userContext, officeId, loanOfficerId);
             }
 
             if (StringUtils.isNotBlank(governmentId)) {
-                governmentIdValidationUnclosedFailing = this.customerDao.validateGovernmentIdForUnclosedClient(governmentId);
-                if (!governmentIdValidationUnclosedFailing ){
-                    governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
+            	matchedClient = this.customerDao.validateGovernmentIdForUnclosedClient(governmentId);
+                governmentIdValidationUnclosedFailing = matchedClient != null;
+                if (!governmentIdValidationUnclosedFailing ) {
+                	matchedClient = this.customerDao.validateGovernmentIdForClient(governmentId);
+                    governmentIdValidationFailing = matchedClient != null;
                 }
             }
             if (!governmentIdValidationFailing && !governmentIdValidationUnclosedFailing) {
-                duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
+            	matchedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
                         dateOfBirth);
+                duplicateNameOnBlackListedClient = matchedClient != null;
                 if (!duplicateNameOnBlackListedClient) {
-                    duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
+                	matchedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
                             dateOfBirth);
+                    duplicateNameOnClosedClient = matchedClient != null;
                     if(!duplicateNameOnClosedClient){
-                        duplicateNameOnClient = this.customerDao.validateForClientsOnName(clientName);
+                    	matchedClient = this.customerDao.validateForClientsOnName(clientName);
+                        duplicateNameOnClient = matchedClient != null;
                     }
                 }
             }
 
-            return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
-                    duplicateNameOnClosedClient, duplicateNameOnBlackListedClient, governmentIdValidationUnclosedFailing, duplicateNameOnClient);
+            return matchedClient != null ?  
+            	new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
+                    duplicateNameOnClosedClient, duplicateNameOnBlackListedClient, governmentIdValidationUnclosedFailing, duplicateNameOnClient, 
+                    matchedClient.getGlobalCustNum(), matchedClient.getDisplayName(), matchedClient.getAddress().getPhoneNumber(),
+                    matchedClient.getGovernmentId(), matchedClient.getAddress().getDisplayAddress(), matchedClient.getOffice().getOfficeName(), matchedClient.getOffice().getGlobalOfficeNum()) :
+            	new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
+                        duplicateNameOnClosedClient, duplicateNameOnBlackListedClient, governmentIdValidationUnclosedFailing, duplicateNameOnClient, 
+                        null, null, null, null, null, null, null);
+                    	
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }

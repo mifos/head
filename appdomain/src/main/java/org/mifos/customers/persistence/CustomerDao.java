@@ -209,9 +209,9 @@ public interface CustomerDao {
 
     void updateLoanOfficersForAllChildrenAndAccounts(Short loanOfficerId, String searchId, Short officeId);
 
-    boolean validateGovernmentIdForClient(String governmentId);
+    ClientBO validateGovernmentIdForClient(String governmentId);
     
-    boolean validateGovernmentIdForUnclosedClient(String governmentId);
+    ClientBO validateGovernmentIdForUnclosedClient(String governmentId);
 
     void validateClientForDuplicateNameOrGovtId(String name, Date dob, String governmentId) throws CustomerException;
 
@@ -223,11 +223,11 @@ public interface CustomerDao {
 
     void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
 
-    boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
+    ClientBO validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
     
-    boolean validateForClientsOnName(final String name);
+    ClientBO validateForClientsOnName(final String name);
 
-    boolean validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
+    ClientBO validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
 
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     List<SavingsDetailDto> getSavingsDetailDto(Integer centerId, UserContext userContext);

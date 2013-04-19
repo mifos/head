@@ -368,20 +368,25 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             throws PageExpiredException {
         if (processRules.isGovernmentIdValidationFailing()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+            SessionUtils.setAttribute("processRules", processRules, request);
         }
 
         if (processRules.isDuplicateNameOnBlackListedClient()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_BLACKLISTED);
+            SessionUtils.setAttribute("processRules", processRules, request);
         }
 
         if (processRules.isDuplicateNameOnClosedClient()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_CLOSED);
+            SessionUtils.setAttribute("processRules", processRules, request);
         }
         if (processRules.isGovermentIdValidationUnclosedFailing()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_UNCLOSED);
+            SessionUtils.setAttribute("processRules", processRules, request);
         }
         if (processRules.isduplicateNameOnClient()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_EXIST);
+            SessionUtils.setAttribute("processRules", processRules, request);
         }
         if(ClientRules.isAgeCheckEnabled()&&ClientRules.isAgeCheckWarningInsteadOfErrorEnabled()) {
         	if(age > ClientRules.getMaximumAgeForNewClient() || age< ClientRules.getMinimumAgeForNewClient()){

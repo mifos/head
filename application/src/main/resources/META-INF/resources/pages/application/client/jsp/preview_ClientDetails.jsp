@@ -72,11 +72,11 @@ explanation of the license and how it is applied.
 		<html-el:form action="clientCustAction.do?method=create">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'meeting')}" var="meeting" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'processRules')}" var="processRules" />
 			<html-el:hidden property="input" value="create" />
 			<html-el:hidden property="status" value="" />
 			<!-- Body begins -->
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
 					<table width="90%" border="0" align="center" cellpadding="0"
 						cellspacing="0">
@@ -172,7 +172,19 @@ explanation of the license and how it is applied.
 										<font class="fontnormalRedBold"><html-el:messages id="warningMessage" name="org.mifos.application.WARNING_MESSAGES" 
 											bundle="ClientUIResources">
 												<bean:write name="warningMessage"/>
-											</html-el:messages></font>
+											</html-el:messages>
+                                        <c:if test="${not empty processRules}">
+                                            <p>
+                                            <span><mifos:mifoslabel name="client.matchedRecordIs" bundle="ClientUIResources" /></span><br />
+                                            <span><mifos:mifoslabel name="client.Name" bundle="ClientUIResources" /> <c:out value="${processRules.displayName}" /></span><br />
+                                            <span><mifos:mifoslabel name="client.Telephone" bundle="ClientUIResources" /> <c:out value="${processRules.phone}" /></span><br />
+                                            <span><mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="ClientUIResources" />: <c:out value="${processRules.governmentId}" /></span><br />
+                                            <span><mifos:mifoslabel name="client.Address" bundle="ClientUIResources" />: <c:out value="${processRules.displayAddress}" /></span><br />
+                                            <span><mifos:mifoslabel name="client.Office" bundle="ClientUIResources" /> <c:out value="${processRules.officeName}" /> (<c:out value="${processRules.officeNum}" />)</span><br />
+                                            <span><mifos:mifoslabel name="client.SystemId" bundle="ClientUIResources" />: <c:out value="${processRules.globalCustNum}" /></span>
+                                            </p>
+                                        </c:if>
+                                    </font>
 									</td>
 								</tr>
 								<logic:messagesPresent>

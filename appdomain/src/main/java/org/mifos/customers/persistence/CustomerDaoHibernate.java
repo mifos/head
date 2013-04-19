@@ -868,38 +868,41 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public boolean validateGovernmentIdForClient(String governmentId) {
+    public ClientBO validateGovernmentIdForClient(String governmentId) {
         return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_GOVT_ID, governmentId,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
-    public boolean validateGovernmentIdForUnclosedClient(String governmentId) {
+    @Override
+    public ClientBO validateGovernmentIdForUnclosedClient(String governmentId) {
         return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
-    public boolean validateForClientsOnName(final String name) {
+    @Override
+    public ClientBO validateForClientsOnName(final String name) {
         return checkForDuplicacyBasedOnName("Customer.getClientBasedOnName", name, new DateTime() , Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
+    
     @Override
-    public boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+    public ClientBO validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
-    public boolean validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+    public ClientBO validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CANCELLED);
     }
 
     @SuppressWarnings("unchecked")
-    private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
+    private ClientBO checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
             final Integer customerId, CustomerStatus customerStatus) {
 
         String trimmedGovtId = StringUtils.trim(governmentId);
         if (StringUtils.isBlank(trimmedGovtId)) {
-            return false;
+            return null;
         }
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -907,13 +910,12 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("GOVT_ID", trimmedGovtId);
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", customerStatus.getValue());
-        List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
-        int queryResultValue = ((Long) queryResult.get(0)).intValue();
-        return (customerId > 0 ? queryResultValue > 0 : queryResultValue > 1);
+        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(queryName, queryParameters);
+        return (queryResult.size() > 0) ? queryResult.get(0) : null;
     }
 
     @SuppressWarnings("unchecked")
-    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth,
+    private ClientBO checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth,
             final Integer customerId, CustomerStatus customerStatus) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientName", name);
@@ -921,8 +923,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("DATE_OFBIRTH", dateOfBirth.toDate());
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", customerStatus.getValue());
-        List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
-        return ((Number) queryResult.get(0)).intValue() > 0;
+        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(queryName, queryParameters);
+        return queryResult.size() > 0 ? queryResult.get(0) : null;
     }
 
     @SuppressWarnings("unchecked")
@@ -1535,7 +1537,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         Integer customerId = Integer.valueOf(0);
 
         if (StringUtils.isNotBlank(governmentId)) {
-            if (checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
+            if (checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) != null) {
                 String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GOVERNMENT_ID);
                 throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId,
                         label });
@@ -1549,7 +1551,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     // Returns true if another client with same govt id is found with a state other than closed
-    private boolean checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
+    private ClientBO checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
         return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId, customerId, CustomerStatus.CLIENT_CLOSED);
     }
 
@@ -1567,8 +1569,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("DATE_OFBIRTH", dob);
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
-        Long count = (Long) this.genericDao.executeUniqueResultNamedQuery(queryName, queryParameters);
-        return count > 0;
+        List<CustomerBO> result = (List<CustomerBO>) this.genericDao.executeNamedQuery(queryName, queryParameters);
+        return result.size() > 0;
     }
 
     @Override
