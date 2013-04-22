@@ -806,6 +806,7 @@
             <entityName name="Gender"/>
         </propertyName>
         <propertyName name="dateOfJoiningMFI" parentName="personnelDetails" displayKey="Personnel.dateOfJoiningMFI"  />
+        <propertyName name="passwordExpirationDate" parentName="personnelDetails" displayKey="Personnel.passwordExpirationDate"  />
 
         <propertyName name="status" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes" >
             <entityName name="PersonnelStatus">

@@ -372,6 +372,9 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         this.dobDD = null;
         this.dobMM = null;
         this.dobYY = null;
+        this.passwordExpirationDateDD = null;
+        this.passwordExpirationDateMM = null;
+        this.passwordExpirationDateYY = null;
         this.maritalStatus = null;
         this.gender = null;
         this.dateOfJoiningMFIDD = null;
@@ -598,6 +601,7 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         validateNameDetail(errors);
         validateEmail(errors);
         validateDateOfBirth(errors);
+        validatePasswordExpirationDate(errors);
         validateDateofJoiningMFI(errors);
         validateGender(errors);
         validateUserHirerchy(errors);
@@ -617,6 +621,17 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         }
     }
 
+    private void validatePasswordExpirationDate(ActionErrors errors) {
+        if (StringUtils.isNotBlank(getPasswordExpirationDate())) {
+            if (Integer.valueOf(passwordExpirationDateDD) > 31 || 
+            		Integer.valueOf(passwordExpirationDateMM) > 12 || 
+            		Integer.valueOf(passwordExpirationDateDD) < 1 || 
+            		Integer.valueOf(passwordExpirationDateMM) < 1) {
+            	errors.add(PersonnelConstants.INVALID_PASSWORD_EXPIRATION_DATE, new ActionMessage(PersonnelConstants.INVALID_PASSWORD_EXPIRATION_DATE));    
+            }
+        }
+    }
+    
     private void validateDateOfBirth(ActionErrors errors) {
         if (StringUtils.isBlank(getDob())) {
             errors.add(PersonnelConstants.ERROR_DOB, new ActionMessage(PersonnelConstants.ERROR_DOB));
@@ -676,6 +691,7 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         validateNameDetail(errors);
         validateEmail(errors);
         validateDateOfBirth(errors);
+        validatePasswordExpirationDate(errors);
         validateDateofJoiningMFI(errors);
         validateGender(errors);
         validateStatus(errors, request);

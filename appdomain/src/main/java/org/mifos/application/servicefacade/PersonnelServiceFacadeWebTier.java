@@ -219,7 +219,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 personnelDetailsEntity.getGender(), new DateTime(personnelDetailsEntity.getDateOfJoiningMFI()).toDateMidnight().toDateTime(),
                 new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()).toDateMidnight().toDateTime(), new DateTime(personnelDetailsEntity
                         .getDateOfLeavingBranch()).toDateMidnight().toDateTime(), addressDto, name.getFirstName(), name.getMiddleName(), name
-                        .getSecondLastName(), name.getLastName());
+                        .getSecondLastName(), name.getLastName(), new DateTime(personnelDetailsEntity.getPersonnel().getPasswordExpirationDate()).toDateMidnight().toDateTime());
 
         String emailId = personnel.getEmailId();
 
@@ -291,7 +291,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                             .getCustomFields(), name, personnel.getGovernmentIdNumber(),
                     personnel.getDob().toDate(), personnel.getMaritalStatus(), personnel.getGender(), personnel
                             .getDateOfJoiningMFI().toDate(), personnel.getDateOfJoiningBranch().toDate(), address,
-                    Integer.valueOf(user.getUserId()).shortValue(), personnel.getPasswordExpirationDate(), null);
+                    Integer.valueOf(user.getUserId()).shortValue(), personnel.getPasswordExpirationDate().toDate(), null);
             transactionHelper.startTransaction();
             this.personnelDao.save(newPersonnel);
             transactionHelper.flushSession();
@@ -382,7 +382,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                     personnel.getMaritalStatus(), preferredLocaleId, personnelStatus, address, personnel.getTitle(),
                     personnelLevel, selectedRoles, newOffice);
             userForUpdate.getPersonnelDetails().setDob(personnel.getDob().toDate());
-            userForUpdate.setPasswordExpirationDate(personnel.getPasswordExpirationDate());
+            userForUpdate.setPasswordExpirationDate(personnel.getPasswordExpirationDate().toDate());
             if (!StringUtils.isEmpty(personnel.getPassword())) {
             	this.personelService.changePassword(userForUpdate, personnel.getPassword(), false);
             }

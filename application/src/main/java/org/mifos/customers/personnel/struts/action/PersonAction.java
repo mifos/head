@@ -248,6 +248,11 @@ public class PersonAction extends SearchAction {
             dateOfJoiningMFI = DateUtils.getDateAsSentFromBrowser(personActionForm.getDateOfJoiningMFI());
         }
 
+        Date passwordExpirationDate = null;
+        if (personActionForm.getPasswordExpirationDate() != null && !personActionForm.getPasswordExpirationDate().equals("")) {
+            passwordExpirationDate = DateUtils.getDate(personActionForm.getPasswordExpirationDate());
+        }
+        
         List<RoleBO> roles = new ArrayList<RoleBO>();
         boolean addFlag = false;
         List<RoleBO> selectList = new ArrayList<RoleBO>();
@@ -286,8 +291,7 @@ public class PersonAction extends SearchAction {
                 personActionForm.getCustomFields(), personActionForm.getFirstName(), personActionForm.getMiddleName(), personActionForm.getLastName(),
                 personActionForm.getSecondLastName(), personActionForm.getGovernmentIdNumber(), new DateTime(dob),
                 getIntegerValue(personActionForm.getMaritalStatus()), getIntegerValue(personActionForm.getGender()), new DateTime(dateOfJoiningMFI),
-                new DateTimeService().getCurrentDateTime(), addressDto, personnelStatus.getValue(), 
-                personActionForm.getPasswordExpirationDate() != null ? new Date(personActionForm.getPasswordExpirationDate()) : null);
+                new DateTimeService().getCurrentDateTime(), addressDto, personnelStatus.getValue(), new DateTime(passwordExpirationDate));
 
         return perosonnelInfo;
     }

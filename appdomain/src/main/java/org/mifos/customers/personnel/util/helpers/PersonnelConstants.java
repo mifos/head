@@ -134,6 +134,7 @@ public interface PersonnelConstants {
     String CREATE_FAILED = "error.createfailed";
     String UPDATE_FAILED = "error.updatefailed";
     String INVALID_DOB = "error.invaliddob";
+    String INVALID_PASSWORD_EXPIRATION_DATE = "error.invalidPasswordExpiratonDate";
     String INVALID_MFIDATE = "error.invalidmfidate";
     String DUPLICATE_GOVT_ID = "error.duplicategovtid";
     String DUPLICATE_USER_NAME_OR_DOB = "error.duplicate_username_or_dob";

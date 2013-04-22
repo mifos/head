@@ -23,7 +23,6 @@ package org.mifos.ui.core.controller;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -129,6 +128,7 @@ public class UserFormBean implements Serializable {
 
     // preview fields
     private DateTime dateOfBirth;
+    private DateTime passwordExpirationDate;
     private Integer age;
     private DateTime mfiJoiningDate;
     private List<String> selectedRoleNames;
@@ -172,6 +172,12 @@ public class UserFormBean implements Serializable {
             this.dateOfBirth = new DateTime().withDate(this.dateOfBirthYear.intValue(), this.dateOfBirthMonth.intValue(), this.dateOfBirthDay.intValue());
         } catch (Exception e) {
             messages.addMessage(new MessageBuilder().error().source("dateOfBrith").code("NotValid.UserFormBean.dateOfBrith").defaultText("dateOfBirth is not valid").build());
+        }
+        
+        try {
+            this.passwordExpirationDate = new DateTime().withDate(this.passwordExpirationDateYear.intValue(), this.passwordExpirationDateMonth.intValue(), this.passwordExpirationDateDay.intValue());
+        } catch (Exception e) {
+            messages.addMessage(new MessageBuilder().error().source("passwordExpirationDate").code("NotValid.UserFormBean.passwordExpirationDate").defaultText("Password expiration date is not valid").build());
         }
 
         try {
@@ -308,6 +314,8 @@ public class UserFormBean implements Serializable {
 
     public void prepareForPreview() {
         this.dateOfBirth = new DateTime().withDate(this.dateOfBirthYear.intValue(), this.dateOfBirthMonth.intValue(), this.dateOfBirthDay.intValue());
+        this.passwordExpirationDate = new DateTime().withDate(this.passwordExpirationDateYear.intValue(), this.passwordExpirationDateMonth.intValue(), 
+        		this.passwordExpirationDateDay.intValue());
         this.age = new DateTime().yearOfEra().getDifference(this.dateOfBirth);
         this.mfiJoiningDate = new DateTime().withDate(this.mfiJoiningDateYear.intValue(), this.mfiJoiningDateMonth.intValue(), this.mfiJoiningDateDay.intValue());
 
@@ -618,6 +626,10 @@ public class UserFormBean implements Serializable {
     public DateTime getDateOfBirthAsDateTime() {
         return this.dateOfBirth;
     }
+    
+    public DateTime getPasswordExpirationDateAsDateTime() {
+        return this.passwordExpirationDate;
+    }
 
     public Integer getAge() {
         return this.age;
@@ -627,8 +639,8 @@ public class UserFormBean implements Serializable {
         return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.mfiJoiningDate);
     }
 
-    public Date getPasswordExpirationDate() {
-    	return new Date(passwordExpirationDateDay, passwordExpirationDateMonth, passwordExpirationDateYear);
+    public String getPasswordExpirationDate() {
+        return org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.getDefault()).print(this.passwordExpirationDate);
     }
     
     public DateTime getMfiJoiningDateAsDateTime() {

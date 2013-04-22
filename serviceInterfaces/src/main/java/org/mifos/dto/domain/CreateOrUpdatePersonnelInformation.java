@@ -20,7 +20,6 @@
 
 package org.mifos.dto.domain;
 
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -49,7 +48,7 @@ public class CreateOrUpdatePersonnelInformation {
     private final DateTime dateOfJoiningMFI;
     private final DateTime dateOfJoiningBranch;
     private final AddressDto address;
-    private final Date passwordExpirationDate;
+    private final DateTime passwordExpirationDate;
 
     private final Short personnelStatusId;
     private final Long id;
@@ -59,7 +58,7 @@ public class CreateOrUpdatePersonnelInformation {
             List<CustomFieldDto> customFields, String firstName, String middleName, String lastName,
             String secondLastName, String governmentIdNumber, DateTime dob, Integer maritalStatus, Integer gender,
             DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, AddressDto address, Short personnelStatusId,
-            Date passwordExpirationDate) {
+            DateTime passwordExpirationDate) {
         this.id = id;
         this.personnelLevelId = personnelLevelId;
         this.officeId = officeId;
@@ -82,11 +81,11 @@ public class CreateOrUpdatePersonnelInformation {
         this.dateOfJoiningBranch = dateOfJoiningBranch;
         this.address = address;
         this.personnelStatusId = personnelStatusId;
-        this.passwordExpirationDate = passwordExpirationDate == null ? null : new Date(passwordExpirationDate.getTime());
+        this.passwordExpirationDate = passwordExpirationDate;
     }
     
-    public Date getPasswordExpirationDate() {
-		return passwordExpirationDate == null ? null : new Date(passwordExpirationDate.getTime());
+    public DateTime getPasswordExpirationDate() {
+		return passwordExpirationDate;
 	}
 
 	public Short getPersonnelLevelId() {

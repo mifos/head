@@ -386,6 +386,18 @@ explanation of the license and how it is applied.
 										value="${personActionForm.loginName}" /> <br>
 									</td>
 								</tr>
+                                
+                                <tr><td class="fontnormalbold">
+                                <mifos:mifoslabel
+                            name="Personnel.PasswordExpirationDate" bundle="PersonnelUIResources" />
+                            <c:if test="${empty personActionForm.passwordExpirationDate}">
+                            <mifos:mifoslabel
+                            name="Personnel.PasswordExpirationIndefinite" bundle="PersonnelUIResources"/>
+                            </c:if>
+                            <c:if test="${not empty personActionForm.passwordExpirationDate}">
+                                <c:out value="${personActionForm.passwordExpirationDate}" />
+                        </c:if><br /></td>
+                                </tr>
 
 								<tr>
 									<td class="fontnormalbold"><br>

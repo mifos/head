@@ -21,7 +21,6 @@
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,7 +196,7 @@ public class SystemUserController {
         DateTime dateOfBirth = userFormBean.getDateOfBirthAsDateTime();
         DateTime mfiJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
         DateTime branchJoiningDate = userFormBean.getMfiJoiningDateAsDateTime();
-        Date passwordExpirationDate = userFormBean.getPasswordExpirationDate();
+        DateTime passwordExpirationDate = userFormBean.getPasswordExpirationDateAsDateTime();
 
         String email = userFormBean.getEmail();
 
@@ -279,7 +278,13 @@ public class SystemUserController {
         populatedBean.setDateOfBirthDay(details.getDob().getDayOfMonth());
         populatedBean.setDateOfBirthMonth(details.getDob().getMonthOfYear());
         populatedBean.setDateOfBirthYear(details.getDob().getYearOfEra());
-
+        
+        if (details.getDateOfJoiningMFI() != null) {
+        	populatedBean.setDateOfBirthDay(details.getPasswordExpirationDate().getDayOfMonth());
+        	populatedBean.setDateOfBirthMonth(details.getPasswordExpirationDate().getMonthOfYear());
+        	populatedBean.setDateOfBirthYear(details.getPasswordExpirationDate().getYearOfEra());
+        }
+        
         if (details.getDateOfJoiningMFI() != null) {
             populatedBean.setMfiJoiningDateDay(details.getDateOfJoiningMFI().getDayOfMonth());
             populatedBean.setMfiJoiningDateMonth(details.getDateOfJoiningMFI().getMonthOfYear());

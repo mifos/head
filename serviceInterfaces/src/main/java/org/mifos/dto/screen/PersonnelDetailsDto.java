@@ -34,6 +34,7 @@ public class PersonnelDetailsDto implements Serializable {
     private final Integer maritalStatus;
     private final Integer gender;
     private final DateTime dateOfJoiningMFI;
+    private final DateTime passwordExpirationDate;
     private final DateTime dateOfJoiningBranch;
     private final DateTime dateOfLeavingBranch;
     private final AddressDto address;
@@ -44,7 +45,7 @@ public class PersonnelDetailsDto implements Serializable {
 
     public PersonnelDetailsDto(String governmentIdNumber, DateTime dob, Integer maritalStatus, Integer gender,
             DateTime dateOfJoiningMFI, DateTime dateOfJoiningBranch, DateTime dateOfLeavingBranch, AddressDto address,
-            String firstName, String middleName, String secondLastName, String lastName) {
+            String firstName, String middleName, String secondLastName, String lastName, DateTime passwordExpirationDate) {
         this.governmentIdNumber = governmentIdNumber;
         this.dob = dob;
         this.maritalStatus = maritalStatus;
@@ -57,9 +58,14 @@ public class PersonnelDetailsDto implements Serializable {
         this.middleName = middleName;
         this.secondLastName = secondLastName;
         this.lastName = lastName;
+        this.passwordExpirationDate = passwordExpirationDate;
     }
 
-    public String getGovernmentIdNumber() {
+    public DateTime getPasswordExpirationDate() {
+		return passwordExpirationDate;
+	}
+
+	public String getGovernmentIdNumber() {
         return this.governmentIdNumber;
     }
 
