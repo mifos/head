@@ -858,6 +858,25 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         shutdownManager.sessionDestroyed(httpSessionEvent);
     }
     
+    private void copyFilesByExtension(File fromDirectory, File toDirectory, String[] copiedExtensions)
+            throws IOException {
+        for (File fileEntry : fromDirectory.listFiles()) {
+            if (fileEntry == null || fileEntry.getName() == null || fileEntry.getName().length() <= 0
+                    || !fileEntry.getName().contains(".")) {
+                continue;
+            }
+            String fileExtension = fileEntry.getName().substring(fileEntry.getName().lastIndexOf('.'));
+
+            for (String extension : copiedExtensions) {
+                if (fileExtension.equals(extension)) {
+                    FileUtils.copyFileToDirectory(fileEntry, toDirectory);
+                    logger.info("Copy file: " + fileEntry.getName() + " to: " + toDirectory);
+                    break;
+                }
+            }
+        }
+    }
+    
     private void copyResources(ServletContext sc) throws IOException {
         URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
         ConfigurationLocator configurationLocator = new ConfigurationLocator();
@@ -865,46 +884,60 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         try {
         if(protocol.getProtocol().equals("jar")){
         String destinationDirectoryForJobs = configPath+"/ETL/MifosDataWarehouseETL";
+        String destinationDirectoryForReportJobs = configPath+"/uploads/report";
         String destinationDirectoryForJar = configPath+"/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
         String pathFromJar ="/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
         String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
+        String pathFromReportJobs = "/../../../../reporting/src/main/resources/pentaho";
+        String pathFromBirtJobs = "/../../../../reporting/src/main/resources/birt/report";
         if(File.separatorChar == '\\'){
           destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
           destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+          destinationDirectoryForReportJobs = destinationDirectoryForReportJobs.replaceAll("/", "\\\\");
         }
         File directory = new File(destinationDirectoryForJobs);
+        File reportDirectory = new File(destinationDirectoryForReportJobs);
         directory.mkdirs();
+        reportDirectory.mkdirs();
         FileUtils.cleanDirectory(directory);
             File jarDest = new File(destinationDirectoryForJar);
-            URL fullPath = sc.getResource(pathFromJar);   
-            File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
-            for (File fileEntry : f.listFiles()) {
-                FileUtils.copyFileToDirectory(fileEntry, directory);
-                logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
-            }
+            URL fullPath = sc.getResource(pathFromJar);
+            File fromDirectory = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
+            File fromReportDirectory = new File(sc.getResource(pathFromReportJobs).toString().replace("file:", ""));
+            File fromBirtDirectory = new File(sc.getResource(pathFromBirtJobs).toString().replace("file:", ""));
+            copyFilesByExtension(fromDirectory, directory, new String[] { ".kjb", ".ktr" });
+            copyFilesByExtension(fromReportDirectory, reportDirectory, new String[] { ".prpt" });
+            copyFilesByExtension(fromBirtDirectory, reportDirectory, new String[] { ".rptdesign" });
             FileUtils.copyURLToFile(fullPath, jarDest);
             logger.info("Copy file: "+fullPath+" to: "+directory);
         } 
         } catch (NullPointerException e) {
                 String destinationDirectoryForJobs = configPath+"/ETL/MifosDataWarehouseETL";
+                String destinationDirectoryForReportJobs = configPath+"/uploads/report";
                 String destinationDirectoryForJar = configPath+"/ETL/";
                 String pathFromJar =sc.getRealPath("/")+"/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
                 String pathFromJobs = sc.getRealPath("/")+"/WEB-INF/MifosDataWarehouseETL/";
+                String pathFromReportJobs = sc.getRealPath("/")+"/../../../../reporting/src/main/resources/pentaho";
+                String pathFromBirtJobs = sc.getRealPath("/")+"/../../../../reporting/src/main/resources/birt/report";
                 if(File.separatorChar == '\\'){
                   destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
                   destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+                  destinationDirectoryForReportJobs = destinationDirectoryForReportJobs.replaceAll("/", "\\\\");
                 }
                 File directory = new File(destinationDirectoryForJobs);
+                File reportDirectory = new File(destinationDirectoryForReportJobs);
                 directory.mkdirs();
+                reportDirectory.mkdirs();
                 FileUtils.cleanDirectory(directory);
                 logger.info(System.getProperty("user.dir"));
                     File jarDest = new File(destinationDirectoryForJar);
-                    URL fullPath = sc.getResource(pathFromJar);  
-                    File f = new File(pathFromJobs);
-                    for (File fileEntry : f.listFiles()) {
-                        FileUtils.copyFileToDirectory(fileEntry, directory);
-                        logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
-                    }
+                    URL fullPath = sc.getResource(pathFromJar);
+                    File fromDirectory = new File(pathFromJobs);
+                    File fromReportDirectory = new File(pathFromReportJobs);
+                    File fromBirtDirectory = new File(pathFromBirtJobs);
+                    copyFilesByExtension(fromDirectory, directory, new String[] { ".kjb", ".ktr" });
+                    copyFilesByExtension(fromReportDirectory, reportDirectory, new String[] { ".prpt" });
+                    copyFilesByExtension(fromBirtDirectory, reportDirectory, new String[] { ".rptdesign" });
                     FileUtils.copyFileToDirectory(new File(pathFromJar), jarDest);
                     logger.info("Copy file: "+fullPath+" to: "+directory);
         }
