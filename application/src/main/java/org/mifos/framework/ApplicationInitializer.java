@@ -22,6 +22,7 @@ package org.mifos.framework;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
@@ -99,6 +100,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -212,6 +214,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 initJNDIforPentaho(applicationContext);
                 setAttributesOnContext(servletContext);
                 copyResources(servletContext);
+                copyLogo(servletContext);
             }
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application";
@@ -941,5 +944,18 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     FileUtils.copyFileToDirectory(new File(pathFromJar), jarDest);
                     logger.info("Copy file: "+fullPath+" to: "+directory);
         }
-    }   
+    }
+    
+    private void copyLogo(ServletContext servletContext) throws IOException {
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        Resource logoResource = configurationLocator.getUploadedMifosLogo();
+        if (!logoResource.exists()) {
+            InputStream defaultLogoStream = servletContext.getResourceAsStream("/pages/framework/images/logo.jpg");
+            File logoDir = new File(configurationLocator.getConfigurationDirectory() + File.separator + configurationLocator.getLogoDirectory());
+            logoDir.mkdir();
+            File logo = new File(logoDir, configurationLocator.getLogoName());
+            FileUtils.copyInputStreamToFile(defaultLogoStream, logo);
+            logger.info("Copy default logo to: " + logo.getAbsolutePath());
+        }
+    }
 }

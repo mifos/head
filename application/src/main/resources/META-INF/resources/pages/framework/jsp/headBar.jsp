@@ -6,7 +6,7 @@
 <!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 <script type="text/javascript" src="pages/js/lab.js"></script>
   <tr>
-    <td width="200" rowspan="2"><img src="getMifosLogo.ftl" width="200" height="70"></td>
+    <td class="logo" bgcolor="#FFFFFF" width="200" rowspan="2"><img src="getMifosLogo.ftl" /></td>
     <td align="right" bgcolor="#FFFFFF" class="fontnormal">
 		<c:if test="${requestScope.currentPageUrl != null}">
 			<c:choose>

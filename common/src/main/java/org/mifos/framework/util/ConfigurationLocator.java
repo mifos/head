@@ -46,6 +46,8 @@ public class ConfigurationLocator {
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
+    private static final String LOGO_DIR = "logo";
+    private static final String LOGO_NAME = "logo.png";
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationLocator.class.getName());
 
     @SuppressWarnings("PMD.ImmutableField")
@@ -162,8 +164,8 @@ public class ConfigurationLocator {
         return res;
     }
     
-    public Resource getUploadedMifosLogo(String logoPath) throws IOException {
-        return getConfigurationResource(logoPath);
+    public Resource getUploadedMifosLogo() throws IOException {
+        return getConfigurationResource(getLogoDirectory() + File.separator + getLogoName());
     }
 
     public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
@@ -205,5 +207,13 @@ public class ConfigurationLocator {
                 fileBuffer.replace(matcher.start(), matcher.end(), homeProperty);
             }
         }
+    }
+    
+    public String getLogoDirectory() {
+        return LOGO_DIR;
+    }
+    
+    public String getLogoName() {
+        return LOGO_NAME;
     }
 }

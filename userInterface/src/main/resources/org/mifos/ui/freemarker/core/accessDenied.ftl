@@ -28,7 +28,7 @@
         <p id="accessDeniedMessage" class="red">[@spring.message "accessDeniedMessage" /]</p>
         <div class="clear">&nbsp;</div>
    		<div class ="marginLeft20px">
-    		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "accessdenied.button.back"/]
+    		[@form.returnToPage  "${Session.urlToBackPage}" "button.back" "accessdenied.button.back"/]
     	</div> 
     </div>
 </div>

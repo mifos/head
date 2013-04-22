@@ -133,7 +133,7 @@ public class PentahoReportFormBean implements Serializable {
                         multiSelectFormParam.getSelectedValuesOptions().put(val, text);
                     }
                 }
-            } else {
+            } else if (!param.getParamName().equals("mifosLogoPath")) {
                 addParameter(param);
             }
         }
@@ -146,7 +146,7 @@ public class PentahoReportFormBean implements Serializable {
         allParams.addAll(this.reportInputParams);
         allParams.addAll(this.reportSingleSelectParams);
         allParams.addAll(this.reportMultiSelectParams);
-
+        
         Map<String, AbstractPentahoParameter> result = new HashMap<String, AbstractPentahoParameter>();
         for (AbstractPentahoParameter param : allParams) {
             result.put(param.getParamName(), param);

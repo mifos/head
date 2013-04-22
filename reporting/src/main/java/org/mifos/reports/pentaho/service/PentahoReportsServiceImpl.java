@@ -41,6 +41,7 @@ import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsJasperMap;
@@ -48,6 +49,7 @@ import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
 import org.mifos.reports.pentaho.PentahoValidationError;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
+import org.mifos.reports.pentaho.params.PentahoInputParameter;
 import org.mifos.reports.pentaho.util.PentahoOutputType;
 import org.mifos.reports.pentaho.util.PentahoParamParser;
 import org.mifos.reports.pentaho.util.PentahoReportLocator;
@@ -316,9 +318,10 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     }
 
     private void addParametersToReport(MasterReport report, Map<String, AbstractPentahoParameter> params)
-            throws ReflectionException {
+            throws ReflectionException, IOException {
         ReportParameterValues rptParamValues = report.getParameterValues();
         ReportParameterDefinition paramsDefinition = report.getParameterDefinition();
+        params.put("mifosLogoPath", getLogoParameterForReport());
 
         for (ParameterDefinitionEntry paramDefEntry : paramsDefinition.getParameterDefinitions()) {
             String paramName = paramDefEntry.getName();
@@ -331,6 +334,17 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
                 }
             }
         }
+    }
+    
+    private PentahoInputParameter getLogoParameterForReport() throws IOException {
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        org.springframework.core.io.Resource logo = configurationLocator.getUploadedMifosLogo();
+        PentahoInputParameter logoParameter = new PentahoInputParameter();
+        logoParameter.setParamName("mifosLogoPath");
+        logoParameter.setLabelName("mifosLogoPath");
+        String logoPath = logo.getFile().getAbsolutePath();
+        logoParameter.setValue(logoPath);
+        return logoParameter;
     }
 
     private String getReportFilename(Integer reportId) {

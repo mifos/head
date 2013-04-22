@@ -24,7 +24,7 @@
 <span id="page.id" title="Login"></span>
 <div class="container" align="center"> &nbsp;
   <!--Header-->
-  <span class="logo"><img src="getMifosLogo.ftl" width="200" height="70"></span>
+  <span class="logo"><img src="getMifosLogo.ftl" /></span>
   <div class="orangeline" style="margin-top:65px;">&nbsp;</div>
   <!--  Main Login Begins-->
     <div class="borders maindiv marginAuto">

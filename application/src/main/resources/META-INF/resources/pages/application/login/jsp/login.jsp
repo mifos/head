@@ -35,8 +35,7 @@ explanation of the license and how it is applied.
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="200" rowspan="2"><IMG height=70 alt=""
-				src="getMifosLogo.ftl" width=200></td>
+			<td class="logo" width="200" rowspan="2"><IMG alt="" src="getMifosLogo.ftl" /></td>
 
 			<td align="right" bgcolor="#ffffff" class="fontnormal">&nbsp;</td>
 		</tr>

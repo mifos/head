@@ -72,7 +72,7 @@
 		[/#if]
         <div class="clear">&nbsp;</div>
    		<div class ="marginLeft20px">
-    		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "jndi.button.back"/]
+    		[@form.returnToPage  "${Session.urlToBackPage}" "button.back" "jndi.button.back"/]
     	</div> 
     </div>
 </div>

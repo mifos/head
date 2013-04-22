@@ -42,6 +42,9 @@ public class BackUrlInterceptor extends HandlerInterceptorAdapter {
                     .withLink("accessDenied", errorPage).build(); 
             request.setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
         }
+        if (!"getMifosLogo.ftl?".equals(urlToBackPage)) {
+            request.getSession().setAttribute(Constants.URLTOBACKPAGE, urlToBackPage);
+        }
         request.setAttribute(Constants.URLTOBACKPAGE, urlToBackPage);
         request.setAttribute("accountingActivationStatus", Boolean.parseBoolean(accountingActivationStatus));
         request.getSession().setAttribute("previousPageUrl", UrlHelper.constructCurrentPageUrl(request));

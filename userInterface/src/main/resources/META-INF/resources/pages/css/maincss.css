@@ -122,6 +122,8 @@ padding-top:5px;
 	position:absolute;	
 	left:0;
 	clear:right;
+    text-align: center;
+    text-indent: 0px !important;
 }
 .orangeline {
 	background:#FF9600;

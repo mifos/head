@@ -516,4 +516,7 @@ public interface SecurityConstants {
     short LOAN_REMOVE_PENALTY_TYPE_ATTACHED_TO_ACCOUNT = 249;
     
     short CAN_MODIFY_CHART_OF_ACCOUNTS = 300;
+    
+    /** View */
+    short CAN_CHANGE_MIFOS_LOGO = 313;
 }

@@ -25,7 +25,7 @@
     <!--Header-->
     <div class="topAlign append-1"><a href="j_spring_security_logout">[@spring.message "changePassword.logOut"/]</a>
     </div>
-    <span class="logo"><img src="getMifosLogo.ftl" width="200" height="70"></span>
+    <span class="logo"><img src="getMifosLogo.ftl" /></span>
 
     <div class="orangeline" style="margin-top:75px;">&nbsp;</div>
     <div class="content" title="Change Password">

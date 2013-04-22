@@ -147,4 +147,6 @@
     
     <bean id="loanFileService" class="org.mifos.framework.fileupload.service.LoanFileServiceFileSystem" />
     
+    <bean id="logoServiceFacade" class="org.mifos.config.servicefacade.LogoServiceFacadeWebTier" />
+    
 </beans>

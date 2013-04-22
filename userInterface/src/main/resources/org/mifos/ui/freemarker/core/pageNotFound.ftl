@@ -29,7 +29,7 @@
     <p id="pageNotFoundMessage" class="red">[@spring.message "pageNotFoundMessage" /]</p>
     <div class="clear">&nbsp;</div>
    		<div class ="marginLeft20px">
-    		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "pageNotFound.button.back"/]
+    		[@form.returnToPage  "${Session.urlToBackPage}" "button.back" "pageNotFound.button.back"/]
     	</div>
    </div>
 </div>

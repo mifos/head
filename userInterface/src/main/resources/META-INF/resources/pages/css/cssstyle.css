@@ -640,3 +640,6 @@ select {
 .paddingright20{
 padding-right: 20px;
 }
+.logo {
+    text-align: center;
+}

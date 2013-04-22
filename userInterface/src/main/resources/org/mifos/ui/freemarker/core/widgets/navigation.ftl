@@ -82,7 +82,7 @@
 
 [#macro headerTop]
 <div class="site_logo">
-    <span class="logo"><img src="getMifosLogo.ftl" width="200" height="70"></span>
+    <span class="logo"><img src="getMifosLogo.ftl" /></span>
     [@switchSiteType/]
     <a id="changeLanguagLink" href="#">Change Preferred Language</a>
     <span id="dialog" title="Change Preferred Language" style="display:none;">Change Preferred Language</span>&nbsp;|&nbsp;
