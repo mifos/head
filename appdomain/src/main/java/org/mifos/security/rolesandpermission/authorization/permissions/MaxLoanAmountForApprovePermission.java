@@ -74,25 +74,29 @@ public class MaxLoanAmountForApprovePermission implements MifosPermission {
 
     private boolean checkPermissionByAccountUpdateStatus(MifosUser user, AccountUpdateStatus accountUpdateStatus)
             throws ServiceException {
-        boolean isAllowed = true;
+        boolean isAllowed = false;
 
         if (!accountUpdateStatus.getNewStatusId().equals(AccountState.LOAN_APPROVED.getValue())) {
             return true;
         }
         LoanBO loanBO = loanDao.findById(accountUpdateStatus.getSavingsId().intValue());
         Money totalPrincipalAmount = loanBO.getTotalPrincipalAmount();
+        BigDecimal maxAmountRestriction = BigDecimal.ZERO;
 
         List<Short> roleIds = user.getRoleIds();
         for (Short roleId : roleIds) {
             BigDecimal amountRestriction = rolesPermissionsBusinessService
                     .getRoleActivityRestrictionAmountValueByRestrictionTypeId(roleId,
                             ActivityRestrictionType.MAX_LOAN_AMOUNT_FOR_APPROVE.getValue());
-
-            if (amountRestriction == null
-                    || totalPrincipalAmount.isLessThan(new Money(loanBO.getCurrency(), amountRestriction))) {
-                return true;
-            } else {
-                isAllowed = false;
+            
+            if (amountRestriction != null && amountRestriction.compareTo(maxAmountRestriction) == 1) {
+                maxAmountRestriction = amountRestriction;
+            }
+            
+            if ((amountRestriction == null && maxAmountRestriction.compareTo(BigDecimal.ZERO) == 0)
+                    || (maxAmountRestriction.compareTo(BigDecimal.ZERO) != 0 && totalPrincipalAmount
+                            .isLessThan(new Money(loanBO.getCurrency(), maxAmountRestriction)))) {
+                isAllowed = true;
             }
         }
 
