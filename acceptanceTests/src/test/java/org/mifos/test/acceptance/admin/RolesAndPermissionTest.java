@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.admin;
 
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -42,7 +43,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"admin", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance", "ui", "db_unit"})
 public class RolesAndPermissionTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -64,6 +65,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_dbunit.xml", dataSource, selenium);
         navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
@@ -114,7 +116,46 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
         // reverting for other tests to pass
         changePermission(adminPage, "10_0", true);
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void editLoanStatusWithMaxRestrictionAndMultipleRolesTest() throws Exception {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        // Set 'Maximum loan amount' for role Admin
+        setMaximumLoanAmountRestriction(adminPage, "100", true);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000043");
 
+        try {
+            loanAccountPage.changeAccountStatusToAccepted();
+        } catch (AssertionError ae) {
+            Assert.assertEquals(
+                    ae.getMessage(),
+                    "Expected page <LoanAccountDetail>, actual page <ChangeStatusPreview>!!! with error message > User does not have permission to approve loans of this value");
+        }
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        setMaximumLoanAmountRestriction(adminPage, "", false);
+    }
+
+    private void setMaximumLoanAmountRestriction(AdminPage adminPage, String amount,
+            boolean enablePermissionAndRestriction) {
+        ViewRolesPage viewRolesPage = adminPage.navigateToViewRolesPage();
+        Assert.assertEquals("Role 'CanRunBatchJobs' does not exist!", selenium.isTextPresent("CanRunBatchJobs"), true);
+
+        ManageRolePage manageRolePage = viewRolesPage.navigateToManageRolePage("Admin");
+        manageRolePage.verifyPage();
+
+        if (enablePermissionAndRestriction) {
+            selenium.check("css=input#activityRestrictionCheckbox1");
+        } else {
+            selenium.uncheck("css=input#activityRestrictionCheckbox1");
+        }
+        selenium.type("css=input[name='restrictionValue(1)']", amount);
+
+        viewRolesPage = manageRolePage.submitAndGotoViewRolesPage();
+        viewRolesPage.navigateToAdminPage();
+    }
+    
     private void changePermission(AdminPage adminPage, String permissionValue, boolean enablePermission) {
         ViewRolesPage viewRolesPage;
         ManageRolePage manageRolePage;

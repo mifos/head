@@ -4718,6 +4718,7 @@
   <personnel_movement/>
   <personnel_notes/>
   <personnel_role personnel_role_id="1" role_id="1" personnel_id="1"/>
+  <personnel_role personnel_role_id="2" role_id="2" personnel_id="1"/>
   <personnel_status personnel_status_id="1" lookup_id="152"/>
   <personnel_status personnel_status_id="2" lookup_id="153"/>
   <position position_id="1" lookup_id="186"/>
@@ -5165,7 +5166,9 @@
   <report_parameter_map/>
   <rest_approval/>
   <role role_id="1" role_name="Admin" version_no="3" updated_by="1" updated_date="2011-02-18"/>
+  <role role_id="2" role_name="CanRunBatchJobs" version_no="3" updated_by="1" updated_date="2011-02-18"/>
   <role_activity_restriction/>
+  <roles_activity activity_id="241" role_id="2" />
   <roles_activity activity_id="-16" role_id="1"/>
   <roles_activity activity_id="-15" role_id="1"/>
   <roles_activity activity_id="-14" role_id="1"/>
