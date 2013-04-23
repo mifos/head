@@ -85,6 +85,7 @@ import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.FamilyDetailDto;
 import org.mifos.dto.domain.LoanDetailDto;
+import org.mifos.dto.domain.MatchedClientDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
@@ -292,43 +293,59 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             boolean duplicateNameOnBlackListedClient = false;
             boolean governmentIdValidationUnclosedFailing = false;
             boolean duplicateNameOnClient = false;
-            ClientBO matchedClient = null;
-
+            List<ClientBO> matchedClients = new ArrayList<ClientBO>();
+            List<ClientBO> temp;
+            
             if (defaultFeeRemoval) {
                 customerDao.checkPermissionForDefaultFeeRemoval(userContext, officeId, loanOfficerId);
             }
 
             if (StringUtils.isNotBlank(governmentId)) {
-            	matchedClient = this.customerDao.validateGovernmentIdForUnclosedClient(governmentId);
-                governmentIdValidationUnclosedFailing = matchedClient != null;
+            	temp = this.customerDao.validateGovernmentIdForUnclosedClient(governmentId);
+            	if (temp != null) {
+            		matchedClients.addAll(temp);
+            	}
+                governmentIdValidationUnclosedFailing = temp != null && temp.size() > 0;
                 if (!governmentIdValidationUnclosedFailing ) {
-                	matchedClient = this.customerDao.validateGovernmentIdForClient(governmentId);
-                    governmentIdValidationFailing = matchedClient != null;
+                	temp = this.customerDao.validateGovernmentIdForClient(governmentId);
+                	if (temp != null) {
+                		matchedClients.addAll(temp);
+                	}
+                    governmentIdValidationFailing = temp != null && temp.size() > 0;
                 }
             }
             if (!governmentIdValidationFailing && !governmentIdValidationUnclosedFailing) {
-            	matchedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
+            	temp = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
                         dateOfBirth);
-                duplicateNameOnBlackListedClient = matchedClient != null;
+            	if (temp != null) {
+            		matchedClients.addAll(temp);
+            	}
+            	duplicateNameOnBlackListedClient = temp != null && temp.size() > 0;
                 if (!duplicateNameOnBlackListedClient) {
-                	matchedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
+                	temp = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
                             dateOfBirth);
-                    duplicateNameOnClosedClient = matchedClient != null;
+                	if (temp != null) {
+                		matchedClients.addAll(temp);
+                	}
+                    duplicateNameOnClosedClient = temp != null && temp.size() > 0;
                     if(!duplicateNameOnClosedClient){
-                    	matchedClient = this.customerDao.validateForClientsOnName(clientName);
-                        duplicateNameOnClient = matchedClient != null;
+                    	temp = this.customerDao.validateForClientsOnName(clientName);
+                        if (temp != null) {
+                        	matchedClients.addAll(temp);
+                        }
+                    	duplicateNameOnClient = temp != null && temp.size() > 0;
                     }
                 }
             }
 
-            return matchedClient != null ?  
-            	new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
-                    duplicateNameOnClosedClient, duplicateNameOnBlackListedClient, governmentIdValidationUnclosedFailing, duplicateNameOnClient, 
-                    matchedClient.getGlobalCustNum(), matchedClient.getDisplayName(), matchedClient.getAddress().getPhoneNumber(),
-                    matchedClient.getGovernmentId(), matchedClient.getAddress().getDisplayAddress(), matchedClient.getOffice().getOfficeName(), matchedClient.getOffice().getGlobalOfficeNum()) :
-            	new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
+            List<MatchedClientDto> matched = new ArrayList<MatchedClientDto>();
+            for (ClientBO client: matchedClients) {
+            	matched.add(new MatchedClientDto(client.getGlobalCustNum(), client.getDisplayName(), client.getAddress().getPhoneNumber(), 
+            			client.getGovernmentId(), client.getDisplayAddress(), client.getOffice().getOfficeName(), client.getOffice().getGlobalOfficeNum()));
+            }
+            return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
                         duplicateNameOnClosedClient, duplicateNameOnBlackListedClient, governmentIdValidationUnclosedFailing, duplicateNameOnClient, 
-                        null, null, null, null, null, null, null);
+                        matched);
                     	
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);

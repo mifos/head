@@ -174,15 +174,17 @@ explanation of the license and how it is applied.
 												<bean:write name="warningMessage"/>
 											</html-el:messages>
                                         <c:if test="${not empty processRules}">
-                                            <p>
-                                            <span><mifos:mifoslabel name="client.matchedRecordIs" bundle="ClientUIResources" /></span><br />
-                                            <span><mifos:mifoslabel name="client.Name" bundle="ClientUIResources" /> <c:out value="${processRules.displayName}" /></span><br />
-                                            <span><mifos:mifoslabel name="client.Telephone" bundle="ClientUIResources" /> <c:out value="${processRules.phone}" /></span><br />
-                                            <span><mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="ClientUIResources" />: <c:out value="${processRules.governmentId}" /></span><br />
-                                            <span><mifos:mifoslabel name="client.Address" bundle="ClientUIResources" />: <c:out value="${processRules.displayAddress}" /></span><br />
-                                            <span><mifos:mifoslabel name="client.Office" bundle="ClientUIResources" /> <c:out value="${processRules.officeName}" /> (<c:out value="${processRules.officeNum}" />)</span><br />
-                                            <span><mifos:mifoslabel name="client.SystemId" bundle="ClientUIResources" />: <c:out value="${processRules.globalCustNum}" /></span>
-                                            </p>
+                                            <c:forEach var="matchedClient" items="${processRules.matchedClients}">
+                                                <p>
+                                                <span><mifos:mifoslabel name="client.matchedRecordIs" bundle="ClientUIResources" /></span><br />
+                                                <span><mifos:mifoslabel name="client.Name" bundle="ClientUIResources" /> <c:out value="${matchedClient.displayName}" /></span><br />
+                                                <span><mifos:mifoslabel name="client.Telephone" bundle="ClientUIResources" /> <c:out value="${matchedClient.phone}" /></span><br />
+                                                <span><mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="ClientUIResources" />: <c:out value="${matchedClient.governmentId}" /></span><br />
+                                                <span><mifos:mifoslabel name="client.Address" bundle="ClientUIResources" />: <c:out value="${matchedClient.displayAddress}" /></span><br />
+                                                <span><mifos:mifoslabel name="client.Office" bundle="ClientUIResources" /> <c:out value="${matchedClient.officeName}" /> (<c:out value="${matchedClient.officeNum}" />)</span><br />
+                                                <span><mifos:mifoslabel name="client.SystemId" bundle="ClientUIResources" />: <c:out value="${matchedClient.globalCustNum}" /></span>
+                                                </p>
+                                            </c:forEach>
                                         </c:if>
                                     </font>
 									</td>

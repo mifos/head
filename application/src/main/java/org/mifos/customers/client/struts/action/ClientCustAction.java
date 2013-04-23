@@ -366,6 +366,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     private void addWarningMessages(HttpServletRequest request, ProcessRulesDto processRules, int age)
             throws PageExpiredException {
+    	SessionUtils.removeAttribute("processRules", request);
         if (processRules.isGovernmentIdValidationFailing()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
             SessionUtils.setAttribute("processRules", processRules, request);
@@ -480,6 +481,20 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+        String governmentId = actionForm.getGovernmentId();
+        ClientNameDetailDto clientNameDetail = actionForm.getClientName();
+        clientNameDetail.setNames(ClientRules.getNameSequence());
+        String clientName = clientNameDetail.getDisplayName();
+        String givenDateOfBirth = actionForm.getDateOfBirth();
+
+        ClientNameDetailDto spouseName = actionForm.getSpouseName();
+        spouseName.setNames(ClientRules.getNameSequence());
+
+        DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
+        
+        ProcessRulesDto processRules = this.clientServiceFacade.previewClient(governmentId,
+        		dateOfBirth, clientName, actionForm.isDefaultFeeRemoved(), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
+        addWarningMessages(request, processRules,calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
         return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
 
     }

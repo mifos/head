@@ -21,6 +21,7 @@
 package org.mifos.dto.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -33,30 +34,18 @@ public class ProcessRulesDto implements Serializable {
     private final boolean governmentIdValidationUnclosedFailing;
     private final boolean duplicateNameOnClient;
 
-    private final String globalCustNum;
-    private final String displayName;
-    private final String phone;
-    private final String governmentId;
-    private final String displayAddress;
-    private final String officeName;
-    private final String officeNum;
+    private final List<MatchedClientDto> matchedClients;
     
     public ProcessRulesDto(boolean clientPendingApprovalStateEnabled, boolean governmentIdValidationFailing,
             boolean duplicateNameOnClosedClient, boolean duplicateNameOnBlackListedClient, boolean governmentIdValidationUnclosedFailing, boolean duplicateNameOnClient,
-            String globalCustName, String displayName, String phone, String governmentId, String displayAddress, String officeName, String officeNum) {
+            List<MatchedClientDto> matchedClients) {
         this.clientPendingApprovalStateEnabled = clientPendingApprovalStateEnabled;
         this.governmentIdValidationFailing = governmentIdValidationFailing;
         this.duplicateNameOnClosedClient = duplicateNameOnClosedClient;
         this.duplicateNameOnBlackListedClient = duplicateNameOnBlackListedClient;
         this.governmentIdValidationUnclosedFailing = governmentIdValidationUnclosedFailing;
         this.duplicateNameOnClient = duplicateNameOnClient;
-        this.displayName = displayName;
-        this.phone = phone;
-        this.governmentId = governmentId;
-        this.displayAddress = displayAddress;
-        this.officeName = officeName;
-        this.officeNum = officeNum;
-        this.globalCustNum = globalCustName;
+        this.matchedClients = matchedClients;
     }
 
     public boolean isClientPendingApprovalStateEnabled() {
@@ -81,31 +70,7 @@ public class ProcessRulesDto implements Serializable {
         return duplicateNameOnClient;
     }
 
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public String getGovernmentId() {
-		return governmentId;
-	}
-
-	public String getDisplayAddress() {
-		return displayAddress;
-	}
-
-	public String getGlobalCustNum() {
-		return globalCustNum;
-	}
-
-	public String getOfficeName() {
-		return officeName;
-	}
-
-	public String getOfficeNum() {
-		return officeNum;
+	public List<MatchedClientDto> getMatchedClients() {
+		return matchedClients;
 	}
 }

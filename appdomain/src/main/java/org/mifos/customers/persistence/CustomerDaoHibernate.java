@@ -40,7 +40,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -51,7 +50,6 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -108,7 +106,6 @@ import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.fileupload.domain.ClientFileEntity;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -868,36 +865,36 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public ClientBO validateGovernmentIdForClient(String governmentId) {
+    public List<ClientBO> validateGovernmentIdForClient(String governmentId) {
         return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_GOVT_ID, governmentId,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
-    public ClientBO validateGovernmentIdForUnclosedClient(String governmentId) {
+    public List<ClientBO> validateGovernmentIdForUnclosedClient(String governmentId) {
         return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
-    public ClientBO validateForClientsOnName(final String name) {
+    public List<ClientBO> validateForClientsOnName(final String name) {
         return checkForDuplicacyBasedOnName("Customer.getClientBasedOnName", name, new DateTime() , Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
     
     @Override
-    public ClientBO validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+    public List<ClientBO> validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
-    public ClientBO validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+    public List<ClientBO> validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CANCELLED);
     }
 
     @SuppressWarnings("unchecked")
-    private ClientBO checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
+    private List<ClientBO> checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
             final Integer customerId, CustomerStatus customerStatus) {
 
         String trimmedGovtId = StringUtils.trim(governmentId);
@@ -911,11 +908,11 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", customerStatus.getValue());
         List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(queryName, queryParameters);
-        return (queryResult.size() > 0) ? queryResult.get(0) : null;
+        return (queryResult.size() > 0) ? queryResult : null;
     }
 
     @SuppressWarnings("unchecked")
-    private ClientBO checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth,
+    private List<ClientBO> checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth,
             final Integer customerId, CustomerStatus customerStatus) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientName", name);
@@ -924,7 +921,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", customerStatus.getValue());
         List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(queryName, queryParameters);
-        return queryResult.size() > 0 ? queryResult.get(0) : null;
+        return queryResult.size() > 0 ? queryResult : null;
     }
 
     @SuppressWarnings("unchecked")
@@ -1551,7 +1548,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     // Returns true if another client with same govt id is found with a state other than closed
-    private ClientBO checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
+    private List<ClientBO> checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
         return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId, customerId, CustomerStatus.CLIENT_CLOSED);
     }
 
