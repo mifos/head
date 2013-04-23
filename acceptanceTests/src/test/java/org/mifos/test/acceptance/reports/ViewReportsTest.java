@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.reports;
 
-import org.junit.Assert;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -73,22 +72,6 @@ public class ViewReportsTest extends UiTestCaseBase {
 
         viewReportPage.verifyReportCategories(expectedData);
 
-    }
-    
-    public void verifyBirtReportTemplatesDownload() throws InterruptedException {
-        ViewReportsPage viewReportPage = loadAndNavigateToReportsPage();
-        viewReportPage.verifyPage();
-        
-        selenium.click("css=a[href='birtReportsUploadAction.do?method=downloadBirtReport&reportId=1']");
-        Thread.sleep(10000);
-        Assert.assertFalse(selenium.isTextPresent("File not found."));
-        
-        viewReportPage = loadAndNavigateToReportsPage();
-        viewReportPage.verifyPage();
-        
-        selenium.click("css=a[href='birtReportsUploadAction.do?method=downloadBirtReport&reportId=6']");
-        Thread.sleep(10000);
-        Assert.assertFalse(selenium.isTextPresent("File not found."));
     }
 
     private ViewReportsPage loadAndNavigateToReportsPage() {
