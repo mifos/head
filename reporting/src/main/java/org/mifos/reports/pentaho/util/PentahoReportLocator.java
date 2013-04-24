@@ -26,6 +26,7 @@ import java.net.URL;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.util.ConfigurationLocator;
 
 public class PentahoReportLocator {
 
@@ -57,8 +58,9 @@ public class PentahoReportLocator {
     }
 
     private static String getPathToUploadedReport(String reportFileName) {
-        String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
-                "$HOME/.mifos/uploads");
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        String configPath = configurationLocator.getConfigurationDirectory() + "/uploads";
+        String uploadsDir = configPath;
         StringBuilder sb;
         if (File.separatorChar == '\\') { // windows platform
             uploadsDir = uploadsDir.replaceAll("/", "\\\\");
@@ -68,7 +70,6 @@ public class PentahoReportLocator {
             sb = new StringBuilder("file://");
         }
 
-        uploadsDir = uploadsDir.replace("$HOME", System.getProperty("user.home"));
         sb.append(uploadsDir);
 
         if (!uploadsDir.endsWith(File.separator)) {
