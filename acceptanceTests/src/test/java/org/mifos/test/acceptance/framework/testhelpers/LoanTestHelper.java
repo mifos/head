@@ -1084,7 +1084,6 @@ public class LoanTestHelper {
         selenium.type("cust_search_account.input.searchString", guarantorName);
         selenium.click("cust_search_account.button.search");
         selenium.waitForPageToLoad("30000");
-        selenium.type("css=label > input[type='text']", globalCustNum);
         selenium.click("link="+guarantorName+":ID"+globalCustNum);
         selenium.waitForPageToLoad("30000");
         selenium.click("id=apply.guarantor.submit");

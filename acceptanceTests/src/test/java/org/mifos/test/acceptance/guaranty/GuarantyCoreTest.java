@@ -12,6 +12,7 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.GLIMClient;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -27,6 +28,7 @@ import org.testng.annotations.Test;
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class GuarantyCoreTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
+    private ClientTestHelper clientTestHelper;
     private CustomPropertiesHelper customPropertiesHelper;
     
     @Override
@@ -34,6 +36,7 @@ public class GuarantyCoreTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
         customPropertiesHelper = new CustomPropertiesHelper(selenium);
         customPropertiesHelper.setNewGroupLoanWithMembers(true);
     }
@@ -70,7 +73,7 @@ public class GuarantyCoreTest extends UiTestCaseBase {
         loanAccountPage = loanAccountPage.disburseLoan(disburseParams);
         verifyGuarantyGroupIndividualLoan(loanAccountPage);
     }
-    public void verifyGuarantyGroupIndividualLoan(LoanAccountPage loanAccountPage){
+    private void verifyGuarantyGroupIndividualLoan(LoanAccountPage loanAccountPage){
         String loanId = loanAccountPage.getAccountId();
         loanAccountPage.navigateToIndividualLoanAccountPage(1);
         String guarantiedLoanId=loanAccountPage.getAccountId();
@@ -80,11 +83,11 @@ public class GuarantyCoreTest extends UiTestCaseBase {
         loanTestHelper.applyGuarantyFromLoanAccountPage(guarantorName, guarantorGlobalId);
         
         Assert.assertTrue(selenium.isTextPresent(guarantorName));
-        selenium.open("viewClientDetails.ftl?globalCustNum=" + guarantorGlobalId);
+        clientTestHelper.navigateToClientViewDetailsPage(guarantorName);
         Assert.assertTrue(selenium.isTextPresent(guarantiedClientName));
         Assert.assertTrue(selenium.isTextPresent(guarantiedLoanId));
         loanTestHelper.repayLoan(loanId);
-        selenium.open("viewClientDetails.ftl?globalCustNum=" + guarantorGlobalId);
+        clientTestHelper.navigateToClientViewDetailsPage(guarantorName);
         Assert.assertFalse(selenium.isTextPresent(guarantiedClientName));
         Assert.assertFalse(selenium.isTextPresent(guarantiedLoanId));
     }
