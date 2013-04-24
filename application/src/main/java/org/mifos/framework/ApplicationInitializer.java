@@ -21,6 +21,7 @@
 package org.mifos.framework;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
@@ -37,6 +38,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import javax.naming.InitialContext;
 import javax.naming.NameAlreadyBoundException;
@@ -95,6 +98,7 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyCompositeUserType;
+import org.mifos.reports.MifosViewerServletContextListener;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
@@ -864,52 +868,63 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     private void copyResources(ServletContext sc) throws IOException {
         URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
         ConfigurationLocator configurationLocator = new ConfigurationLocator();
-    	String configPath = configurationLocator.getConfigurationDirectory();
-        try {
-        if(protocol.getProtocol().equals("jar")){
-        String destinationDirectoryForJobs = configPath+"/ETL/MifosDataWarehouseETL";
-        String destinationDirectoryForJar = configPath+"/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
-        String pathFromJar ="/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
-        String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
-        if(File.separatorChar == '\\'){
-          destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
-          destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
-        }
-        File directory = new File(destinationDirectoryForJobs);
-        directory.mkdirs();
-        FileUtils.cleanDirectory(directory);
+        String configPath = configurationLocator.getConfigurationDirectory();
+        if (protocol.getProtocol().equals("jar")) {
+            String destinationDirectoryForJobs = configPath + "/ETL/MifosDataWarehouseETL";
+            String destinationDirectoryForJar = configPath + "/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+            String destinationDirectoryForReportJobs = configPath + "/uploads/report";
+            String pathFromJar = "/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+            String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
+
+            if (File.separatorChar == '\\') {
+                destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
+                destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+                destinationDirectoryForReportJobs = destinationDirectoryForReportJobs.replaceAll("/", "\\\\");
+            }
+            File directory = new File(destinationDirectoryForJobs);
+            directory.mkdirs();
+            FileUtils.cleanDirectory(directory);
             File jarDest = new File(destinationDirectoryForJar);
-            URL fullPath = sc.getResource(pathFromJar);   
+            URL fullPath = sc.getResource(pathFromJar);
             File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
             for (File fileEntry : f.listFiles()) {
                 FileUtils.copyFileToDirectory(fileEntry, directory);
-                logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
+                logger.info("Copy file: " + fileEntry.getName() + " to: " + directory);
             }
             FileUtils.copyURLToFile(fullPath, jarDest);
-            logger.info("Copy file: "+fullPath+" to: "+directory);
-        } 
-        } catch (NullPointerException e) {
-                String destinationDirectoryForJobs = configPath+"/ETL/MifosDataWarehouseETL";
-                String destinationDirectoryForJar = configPath+"/ETL/";
-                String pathFromJar =sc.getRealPath("/")+"/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
-                String pathFromJobs = sc.getRealPath("/")+"/WEB-INF/MifosDataWarehouseETL/";
-                if(File.separatorChar == '\\'){
-                  destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
-                  destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+            logger.info("Copy file: " + fullPath + " to: " + directory);
+
+            File reportDirectory = new File(destinationDirectoryForReportJobs);
+            reportDirectory.mkdirs();
+
+            String jarPath = "/WEB-INF/lib/mifos-reporting-1.12-SNAPSHOT.jar";
+            String jarName = sc.getResource(jarPath).toString().replace("file:", "");
+            JarInputStream jarFileStream = new JarInputStream(new FileInputStream(jarName));
+            JarEntry jarEntry;
+            while (true) {
+                jarEntry = jarFileStream.getNextJarEntry();
+                if (jarEntry == null) {
+                    break;
                 }
-                File directory = new File(destinationDirectoryForJobs);
-                directory.mkdirs();
-                FileUtils.cleanDirectory(directory);
-                logger.info(System.getProperty("user.dir"));
-                    File jarDest = new File(destinationDirectoryForJar);
-                    URL fullPath = sc.getResource(pathFromJar);  
-                    File f = new File(pathFromJobs);
-                    for (File fileEntry : f.listFiles()) {
-                        FileUtils.copyFileToDirectory(fileEntry, directory);
-                        logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
+
+                String jarEntryName = jarEntry.getName();
+                int lastIndexOfDot = jarEntryName.lastIndexOf('.');
+                if (lastIndexOfDot != -1) {
+                    String jarEntryExtension = jarEntryName.substring(lastIndexOfDot);
+                    if (jarEntryExtension.equals(".prpt") || jarEntryExtension.equals(".rptdesign")) {
+                        InputStream inputStream = MifosViewerServletContextListener.class.getClassLoader()
+                                .getResourceAsStream(jarEntryName);
+                        int lastIndexOfSlash = jarEntryName.replaceAll("\\\\", "/").lastIndexOf('/');
+                        String reportFileName = jarEntryName.substring(lastIndexOfSlash + 1);
+                        File reportFile = new File(destinationDirectoryForReportJobs + File.separatorChar
+                                + reportFileName);
+
+                        logger.info("Copying " + reportFileName + " to: " + destinationDirectoryForReportJobs
+                                + File.separatorChar + reportFileName);
+                        FileUtils.copyInputStreamToFile(inputStream, reportFile);
                     }
-                    FileUtils.copyFileToDirectory(new File(pathFromJar), jarDest);
-                    logger.info("Copy file: "+fullPath+" to: "+directory);
+                }
+            }
         }
     }
     

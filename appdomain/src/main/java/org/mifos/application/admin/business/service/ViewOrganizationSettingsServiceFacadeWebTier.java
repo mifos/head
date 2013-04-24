@@ -283,14 +283,11 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
     
 
     public String getUploadStorageDirectory() {
-        String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
-                "$HOME/.mifos/uploads");
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        String reportPath = configurationLocator.getConfigurationDirectory() + "/uploads";
+        String uploadsDir = reportPath;
         if (File.separatorChar == '\\') { // windows platform
             uploadsDir = uploadsDir.replaceAll("/", "\\\\");
-        }
-        int id = uploadsDir.indexOf("$HOME");
-        if (id != -1) {
-            uploadsDir = uploadsDir.substring(0, id) + System.getProperty("user.home") + uploadsDir.substring(id + 5);
         }
         return uploadsDir;
     }
