@@ -49,6 +49,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
@@ -151,14 +152,11 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public static String getUploadStorageDirectory() {
-        String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
-                "$HOME/.mifos/uploads");
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        String reportPath = configurationLocator.getConfigurationDirectory() + "/uploads";
+        String uploadsDir = reportPath;
         if (File.separatorChar == '\\') { // windows platform
             uploadsDir = uploadsDir.replaceAll("/", "\\\\");
-        }
-        int id = uploadsDir.indexOf("$HOME");
-        if (id != -1) {
-            uploadsDir = uploadsDir.substring(0, id) + System.getProperty("user.home") + uploadsDir.substring(id+5);
         }
         return uploadsDir;
     }
