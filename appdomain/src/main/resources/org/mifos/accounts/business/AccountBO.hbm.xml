@@ -1190,6 +1190,11 @@ select coll.*,
             where guaranty.loanId =:loanId]]>
     </query>
     
+    <query name="loan.findGuarantyByLoanIdAndGuarantorId">
+        <![CDATA[from org.mifos.accounts.loan.business.GuarantyEntity guaranty
+            where guaranty.loanId =:loanId and guaranty.guarantorId = :guarantorId]]>
+    </query>
+    
     <query name="loan.findGuarantyByGuarantorId">
         <![CDATA[from org.mifos.accounts.loan.business.GuarantyEntity guaranty
             where guaranty.guarantorId =:guarantorId]]>

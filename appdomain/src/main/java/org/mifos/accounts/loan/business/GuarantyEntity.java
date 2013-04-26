@@ -30,7 +30,15 @@ public class GuarantyEntity  extends AbstractEntity{
         return guarantyId;
     }
 
-    public Integer getGuarantorId() {
+    public Integer getGuarantyId() {
+		return guarantyId;
+	}
+
+	public void setGuarantyId(Integer guarantyId) {
+		this.guarantyId = guarantyId;
+	}
+
+	public Integer getGuarantorId() {
         return guarantorId;
     }
 

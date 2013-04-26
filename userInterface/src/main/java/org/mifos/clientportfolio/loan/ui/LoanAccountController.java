@@ -127,12 +127,20 @@ public class LoanAccountController {
 	
 	public void linkGuarantor (Integer guarantorId, Integer loanId){
 	    try{
-	    this.loanAccountServiceFacade.linkGuarantor(guarantorId, loanId);
+	    	this.loanAccountServiceFacade.linkGuarantor(guarantorId, loanId);
 	    } catch (Exception e){
 	        throw new MifosRuntimeException();
 	    }
-	    
 	}
+	
+	public void unlinkGuaranty(Integer guarantorId, Integer loanId) {
+		try {
+			loanAccountServiceFacade.unlinkGuaranty(guarantorId, loanId);
+		} catch (Exception e) {
+	        throw new MifosRuntimeException();
+	    }
+	}
+	
     public LoanCreationProductDetailsDto retrieveLoanProducts(int customerId, org.springframework.binding.message.MessageContext messageContext) {
         LoanCreationProductDetailsDto loanProductDetails = this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
         

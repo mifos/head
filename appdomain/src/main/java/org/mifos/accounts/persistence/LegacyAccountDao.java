@@ -29,14 +29,11 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
-import org.codehaus.jackson.map.util.Named;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -65,7 +62,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
@@ -690,10 +686,16 @@ public class LegacyAccountDao extends LegacyGenericDao {
         
     }
     
+    public List<GuarantyEntity> getGuarantyByLoanIdAndGuarantorId(Integer guarantorId, Integer loanId) throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("loanId", loanId);
+        parameters.put("guarantorId", guarantorId);
+        return executeNamedQuery(NamedQueryConstants.FIND_GUARANTY_BY_LOANID_AND_GUARANTORID, parameters);
+    }
+    
     public List<GuarantyEntity> getGuarantyByLoanId (Integer loanId) throws PersistenceException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("loanId", loanId);
-        List<GuarantyEntity> asd = executeNamedQuery(NamedQueryConstants.FIND_GUARANTY_BY_LOANID, parameters);
         return executeNamedQuery(NamedQueryConstants.FIND_GUARANTY_BY_LOANID, parameters);
     }
     

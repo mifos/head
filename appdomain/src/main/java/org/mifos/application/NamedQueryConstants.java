@@ -91,6 +91,7 @@ public interface NamedQueryConstants {
     // for Guaranty
     String FIND_GUARANTY_BY_GUARANTORID = "loan.findGuarantyByGuarantorId";
     String FIND_GUARANTY_BY_LOANID = "loan.findGuarantyByLoanId";
+    String FIND_GUARANTY_BY_LOANID_AND_GUARANTORID = "loan.findGuarantyByLoanIdAndGuarantorId";
     // for Savings accounts
     String RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER = "savings.retrieveTotalSavingsForCustomer";
 

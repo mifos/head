@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <secured attributes="ROLE_CAN_REMOVE_GUARANTY"/>
+    <var name="customerSearchFormBean" class="org.mifos.clientportfolio.loan.ui.CustomerSearchFormBean" />
+
+    <on-start>
+        <set name="flowScope.loanAccountNumber" value="requestParameters.globalAccountNum" type="string" />
+        <set name="flowScope.accountId" value="requestParameters.accountId" type="string" />
+        <set name="flowScope.customerId" value="requestParameters.customerId" type="string" />
+    </on-start>
+    
+    <view-state id="confirmUnlinkStep" view="unlinkGuarantyConfirm">
+        <transition on="submit" to="confirmation" validate="true">
+            <evaluate expression="loanAccountController.unlinkGuaranty(flowScope.customerId, flowScope.accountId)"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/> 
+    </view-state>
+        
+    <end-state id="confirmation" view="externalRedirect:contextRelative:/viewLoanAccountDetails.ftl?globalAccountNum=${flowScope.loanAccountNumber}"/>
+    <end-state id="cancel" view="externalRedirect:contextRelative:/viewLoanAccountDetails.ftl?globalAccountNum=${flowScope.loanAccountNumber}"/>
+</flow>
