@@ -236,7 +236,8 @@ public class QuestionGroupController extends QuestionnaireController {
         return sectionQuestionDetails;
     }
 
-    public String saveQuestionnaire(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
+    public String saveQuestionnaire(QuestionGroupDetails questionGroupDetails, int questionGroupIndex,
+            RequestContext requestContext) throws Exception {
         QuestionGroupDetail questionGroupDetail = questionGroupDetails.getDetails().get(questionGroupIndex);
         try {
             questionnaireServiceFacade.saveResponses(new QuestionGroupDetails(questionGroupDetails.getCreatorId(),
