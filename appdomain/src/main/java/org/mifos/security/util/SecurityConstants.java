@@ -511,6 +511,7 @@ public interface SecurityConstants {
     /** Question Groups */
     short CAN_MANAGE_QUESTION_GROUPS = 240;
     short CAN_ACTIVATE_QUESTION_GROUPS = 243;
+    short CAN_EDIT_QUESTION_GROUP_RESPONSES = 316;
 
     /** Penalties */
     short LOAN_REMOVE_PENALTY_TYPE_ATTACHED_TO_ACCOUNT = 249;
