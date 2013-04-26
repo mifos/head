@@ -144,7 +144,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void saveResponses(QuestionGroupDetails questionGroupDetails) {
+    public void saveResponses(QuestionGroupDetails questionGroupDetails) throws Exception {
+        if (!rolesPermissionService.hasUserAccessForActivity(SecurityConstants.CAN_EDIT_QUESTION_GROUP_RESPONSES)) {
+            throw new AccessDeniedException("Access denied");
+        }
         questionnaireService.saveResponses(questionGroupDetails);
         if (auditLogService != null) {
             int creatorId = questionGroupDetails.getCreatorId();

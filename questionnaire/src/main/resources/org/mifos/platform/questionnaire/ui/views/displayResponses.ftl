@@ -19,6 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
+[#assign security=JspTaglibs["http://www.springframework.org/security/tags"] /]
 [@clientLeftPane]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script src="pages/questionnaire/js/display.js" type="text/javascript"></script>
@@ -40,9 +41,11 @@
                 [#list questionGroupInstanceDetails as questionGroupInstanceDetail]
                 <fieldset id="questionGroup.sections" class="bluetableborderFull marginTop15">
                     [#if questionGroupInstanceDetail.questionGroupDetail.active && questionGroupInstanceDetail.questionGroupDetail.editable]
+                        [@security.authorize access="isFullyAuthenticated() and hasRole('CAN_EDIT_QUESTION_GROUP_RESPONSES')"]
                         <span class="topRight">
                             <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="${questionGroupInstanceDetail_index}">[@spring.message "questionnaire.edit"/]</a>
                         </span>
+                        [/@security.authorize]
                     [/#if]
                     [#list questionGroupInstanceDetail.questionGroupDetail.sectionDetails as sectionDetail]
                     <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
