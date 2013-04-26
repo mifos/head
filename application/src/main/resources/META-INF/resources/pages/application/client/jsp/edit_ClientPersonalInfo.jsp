@@ -46,7 +46,8 @@ explanation of the license and how it is applied.
 		</script>
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />
-	<form name="goBackToViewClientDetails" method="get" action ="viewClientDetails.ftl">
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personalInformationOrder')}" var="personalInformationOrder" />
+    <form name="goBackToViewClientDetails" method="get" action ="viewClientDetails.ftl">
 		<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
 	</form>
 	<html-el:form action="clientCustAction.do?method=previewEditPersonalInfo"
@@ -95,201 +96,236 @@ explanation of the license and how it is applied.
 							<br>
 							</td>
 						</tr>
-						<%-- Salutation --%>
-						<tr class="fontnormal">
-							<td width="17%" align="right"><mifos:mifoslabel
-								name="client.Salutation" mandatory="yes"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td width="83%">
-								<mifos:select	name="clientCustActionForm"	property="clientName.salutation" size="1">
-								<c:forEach var="salutationEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}" >
-									<html-el:option value="${salutationEntityList.id}">${salutationEntityList.name}</html-el:option>
-								</c:forEach>
-								</mifos:select>
-							</td>
-						</tr>
-						<%-- First Name --%>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.firstName"><mifos:mifoslabel name="client.FirstName"
-								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.firstName" name="clientCustActionForm" property="clientName.firstName" maxlength="200" /></td>
-						</tr>
-						<%-- Middle Name --%>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.middleName"><mifos:mifoslabel keyhm="Client.MiddleName" name="client.MiddleName"
-								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.middleName" keyhm="Client.MiddleName" name="clientCustActionForm"	property="clientName.middleName" maxlength="200" /></td>
-						</tr>
-						<%-- Last Name --%>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.lastName"><mifos:mifoslabel name="client.LastName"
-								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.lastName" name="clientCustActionForm" property="clientName.lastName" maxlength="200" /></td>
-						</tr>
-						<%-- Second Last Name --%>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.secondLastName"><mifos:mifoslabel keyhm="Client.SecondLastName" name="client.SecondLastName"
-								isColonRequired="no" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.secondLastName" keyhm="Client.SecondLastName" name="clientCustActionForm"
-								 property="clientName.secondLastName" maxlength="200" />
-							</td>
-						</tr>
-						<html-el:hidden property="clientName.nameType" value="3" />
+      
+                        <html-el:hidden property="clientName.nameType" value="3" />
+                        
+                        <c:forEach items="${personalInformationOrder}" var="personalInformation">
+                            <c:choose>
+                                <c:when test="${personalInformation.name == 'salutation'}">
+                                    <%-- Salutation --%>
+                        <tr class="fontnormal">
+                            <td width="17%" align="right"><mifos:mifoslabel
+                                name="client.Salutation" mandatory="yes"
+                                bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td width="83%">
+                                <mifos:select   name="clientCustActionForm" property="clientName.salutation" size="1">
+                                <c:forEach var="salutationEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}" >
+                                    <html-el:option value="${salutationEntityList.id}">${salutationEntityList.name}</html-el:option>
+                                </c:forEach>
+                                </mifos:select>
+                            </td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'firstName'}">
+                                <%-- First Name --%>
+                        <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.firstName"><mifos:mifoslabel name="client.FirstName"
+                                mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.firstName" name="clientCustActionForm" property="clientName.firstName" maxlength="200" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'middleName'}">
+                                <%-- Middle Name --%>
+                        <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.middleName"><mifos:mifoslabel keyhm="Client.MiddleName" name="client.MiddleName"
+                                bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.middleName" keyhm="Client.MiddleName" name="clientCustActionForm"   property="clientName.middleName" maxlength="200" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'lastName'}">
+                                <%-- Last Name --%>
+                        <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.lastName"><mifos:mifoslabel name="client.LastName"
+                                mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.lastName" name="clientCustActionForm" property="clientName.lastName" maxlength="200" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'secondLastName'}">
+                                <%-- Second Last Name --%>
+                        <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.secondLastName"><mifos:mifoslabel keyhm="Client.SecondLastName" name="client.SecondLastName"
+                                isColonRequired="no" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.secondLastName" keyhm="Client.SecondLastName" name="clientCustActionForm"
+                                 property="clientName.secondLastName" maxlength="200" />
+                            </td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'governmentId'}">
+                                <c:choose>
 
-						<c:choose>
+                            <c:when test="${BusinessKey.customerStatus.id != CustomerStatus.CLIENT_ACTIVE.value}">
+                                <!-- If status is approved then display government id and date of birth as labels -->
+                                <%-- Government Id --%>
+                                <tr class="fontnormal">
+                                    <td align="right">
+                                    <span id="edit_ClientPersonalInfo.label.governmentId">
+                                    <mifos:mifoslabel   keyhm="Client.GovernmentId" name="${ConfigurationConstants.GOVERNMENT_ID}" isColonRequired="yes"/>
+                                    </span>
+                                        </td>
+                                    <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.governmentId" keyhm="Client.GovernmentId" name="clientCustActionForm"
+                                        property="governmentId" maxlength="50" /></td>
+                                </tr>
 
-							<c:when test="${BusinessKey.customerStatus.id != CustomerStatus.CLIENT_ACTIVE.value}">
-								<!-- If status is approved then display government id and date of birth as labels -->
-								<%-- Government Id --%>
-								<tr class="fontnormal">
-									<td align="right">
-									<span id="edit_ClientPersonalInfo.label.governmentId">
-									<mifos:mifoslabel	keyhm="Client.GovernmentId" name="${ConfigurationConstants.GOVERNMENT_ID}" isColonRequired="yes"/>
-									</span>
-										</td>
-									<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.governmentId" keyhm="Client.GovernmentId" name="clientCustActionForm"
-										property="governmentId" maxlength="50" /></td>
-								</tr>
-
-							</c:when>
-							<c:otherwise>
-								<%-- Government Id Label--%>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel keyhm="Client.GovernmentId" isColonRequired="yes"
-										name="${ConfigurationConstants.GOVERNMENT_ID}"></mifos:mifoslabel></td>
-									<td><c:out value="${BusinessKey.governmentId}" />
-										<html-el:hidden	name="clientCustActionForm" property="governmentId"	value="${BusinessKey.governmentId}" /></td>
-								</tr>
-							</c:otherwise>
-						</c:choose>
-						<%-- Date Of  Birth Label--%>
+                            </c:when>
+                            <c:otherwise>
+                                <%-- Government Id Label--%>
+                                <tr class="fontnormal">
+                                    <td align="right"><mifos:mifoslabel keyhm="Client.GovernmentId" isColonRequired="yes"
+                                        name="${ConfigurationConstants.GOVERNMENT_ID}"></mifos:mifoslabel></td>
+                                    <td><c:out value="${BusinessKey.governmentId}" />
+                                        <html-el:hidden name="clientCustActionForm" property="governmentId" value="${BusinessKey.governmentId}" /></td>
+                                </tr>
+                            </c:otherwise>
+                        </c:choose>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'dateOfBirth'}">
+                                <%-- Date Of  Birth Label--%>
                        <tr class="fontnormal">
-                       		<td align="right">
-                       			<mifos:mifoslabel name="client.DateOfBirth" mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel>
-                       	    </td>
+                            <td align="right">
+                                <mifos:mifoslabel name="client.DateOfBirth" mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel>
+                            </td>
                             <td>
                             <date:datetag renderstyle="simple" property="dateOfBirth" /></td>
                             </td>
                        </tr>
-						<%-- Gender --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="client.Gender"
-								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td>
-								<mifos:select name="clientCustActionForm" property="clientDetailView.gender" size="1">
-									<c:forEach var="genderEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}" >
-										<html-el:option value="${genderEntityList.id}">${genderEntityList.name}</html-el:option>
-									</c:forEach>
-								</mifos:select>
-							</td>
-						</tr>
-						<%-- Marital Status --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.MaritalStatus" name="client.MaritalStatus"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td>
-								<mifos:select keyhm="Client.MaritalStatus" name="clientCustActionForm" property="clientDetailView.maritalStatus" size="1">
-									<c:forEach var="maritalStatusEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}" >
-										<html-el:option value="${maritalStatusEntityList.id}">${maritalStatusEntityList.name}</html-el:option>
-									</c:forEach>
-								</mifos:select>
-							</td>
-						</tr>
-						<%-- Number Of Children--%>
-						<tr class="fontnormal">
-							<td align="right" class="fontnormal"><span id="edit_ClientPersonalInfo.label.customField"><mifos:mifoslabel
-								keyhm="Client.NumberOfChildren" name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" keyhm="Client.NumberOfChildren" 
-									name="clientCustActionForm"	property="clientDetailView.numChildren" maxlength="5" size="10" /></td>
-						</tr>
-						<%-- Citizenship --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Citizenship" isColonRequired="yes"
-								name="${ConfigurationConstants.CITIZENSHIP}"></mifos:mifoslabel></td>
-							<td><mifos:select keyhm="Client.Citizenship"
-										name="clientCustActionForm"
-										property="clientDetailView.citizenship" size="1">
-										<c:forEach var="citizenshipEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}" >
-											<html-el:option value="${citizenshipEntityList.id}">${citizenshipEntityList.name}</html-el:option>
-										</c:forEach>
-								</mifos:select></td>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'gender'}">
+                                <%-- Gender --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel name="client.Gender"
+                                mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td>
+                                <mifos:select name="clientCustActionForm" property="clientDetailView.gender" size="1">
+                                    <c:forEach var="genderEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}" >
+                                        <html-el:option value="${genderEntityList.id}">${genderEntityList.name}</html-el:option>
+                                    </c:forEach>
+                                </mifos:select>
+                            </td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'maritalStatus'}">
+                                <%-- Marital Status --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel keyhm="Client.MaritalStatus" name="client.MaritalStatus"
+                                bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td>
+                                <mifos:select keyhm="Client.MaritalStatus" name="clientCustActionForm" property="clientDetailView.maritalStatus" size="1">
+                                    <c:forEach var="maritalStatusEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}" >
+                                        <html-el:option value="${maritalStatusEntityList.id}">${maritalStatusEntityList.name}</html-el:option>
+                                    </c:forEach>
+                                </mifos:select>
+                            </td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'numberOfChildren'}">
+                                <%-- Number Of Children--%>
+                        <tr class="fontnormal">
+                            <td align="right" class="fontnormal"><span id="edit_ClientPersonalInfo.label.customField"><mifos:mifoslabel
+                                keyhm="Client.NumberOfChildren" name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" keyhm="Client.NumberOfChildren" 
+                                    name="clientCustActionForm" property="clientDetailView.numChildren" maxlength="5" size="10" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'citizenship'}">
+                                <%-- Citizenship --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel keyhm="Client.Citizenship" isColonRequired="yes"
+                                name="${ConfigurationConstants.CITIZENSHIP}"></mifos:mifoslabel></td>
+                            <td><mifos:select keyhm="Client.Citizenship"
+                                        name="clientCustActionForm"
+                                        property="clientDetailView.citizenship" size="1">
+                                        <c:forEach var="citizenshipEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}" >
+                                            <html-el:option value="${citizenshipEntityList.id}">${citizenshipEntityList.name}</html-el:option>
+                                        </c:forEach>
+                                </mifos:select></td>
 
-						</tr>
-						<%-- Ethnicity --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Ethnicity"
-								name="${ConfigurationConstants.ETHNICITY}" isColonRequired="yes"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:select keyhm="Client.Ethnicity"
-										name="clientCustActionForm"
-										property="clientDetailView.ethnicity" size="1">
-										<c:forEach var="ethnicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}" >
-											<html-el:option value="${ethnicityEntityList.id}">${ethnicityEntityList.name}</html-el:option>
-										</c:forEach>
-								</mifos:select></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'ethnicity'}">
+                                <%-- Ethnicity --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel keyhm="Client.Ethnicity"
+                                name="${ConfigurationConstants.ETHNICITY}" isColonRequired="yes"
+                                bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td><mifos:select keyhm="Client.Ethnicity"
+                                        name="clientCustActionForm"
+                                        property="clientDetailView.ethnicity" size="1">
+                                        <c:forEach var="ethnicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}" >
+                                            <html-el:option value="${ethnicityEntityList.id}">${ethnicityEntityList.name}</html-el:option>
+                                        </c:forEach>
+                                </mifos:select></td>
 
-						</tr>
-						<%-- Education Level --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="client.EducationLevel" keyhm="Client.EducationLevel"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'educationLevel'}">
+                                <%-- Education Level --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel name="client.EducationLevel" keyhm="Client.EducationLevel"
+                                bundle="ClientUIResources"></mifos:mifoslabel></td>
 
-							<td><mifos:select keyhm="Client.EducationLevel"
-										name="clientCustActionForm"
-										property="clientDetailView.educationLevel" size="1">
-										<c:forEach var="educationLevelEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}" >
-											<html-el:option value="${educationLevelEntityList.id}">${educationLevelEntityList.name}</html-el:option>
-										</c:forEach>
-									</mifos:select></td>
-						</tr>
-						<%-- Business Activities --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.BusinessActivities"
-								name="client.BusinessActivities" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:select name="clientCustActionForm" keyhm="Client.BusinessActivities"
-										property="clientDetailView.businessActivities" size="1">
-										<c:forEach var="businessActivitiesEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}" >
-											<html-el:option value="${businessActivitiesEntityList.id}">${businessActivitiesEntityList.name}</html-el:option>
-										</c:forEach>
-									</mifos:select></td>
-						</tr>
-						<%-- Poverty Status --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.PovertyStatus"
-								name="client.PovertyStatus" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:select name="clientCustActionForm" keyhm="Client.PovertyStatus"
-										property="clientDetailView.povertyStatus" size="1">
-										<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}" >
-											<html-el:option value="${povertyStatus.id}">${povertyStatus.name}</html-el:option>
-										</c:forEach>
-									</mifos:select></td>
-						</tr>
-						<%-- Handicapped --%>
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Handicapped" isColonRequired="yes"
-								name="${ConfigurationConstants.HANDICAPPED}"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:select keyhm="Client.Handicapped"
-										name="clientCustActionForm"
-										property="clientDetailView.handicapped" size="1">
-										<c:forEach var="handicappedEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}" >
-											<html-el:option value="${handicappedEntityList.id}">${handicappedEntityList.name}</html-el:option>
-										</c:forEach>
-								</mifos:select>
-							</td>
-						</tr>
-
-						<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
-					    <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isPhotoFieldHidden') == false}" >
-						<tr class="fontnormal">
-							<td align="right">
-							<span id="edit_ClientPersonalInfo.label.file">
-							<mifos:mifoslabel keyhm="Client.Photo" name="client.Photo"
-								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td>
-		                      <c:if test = "${sessionScope.clientCustActionForm.picture != null 
-		                      && sessionScope.clientCustActionForm.picture.fileName != null 
-		                      && sessionScope.clientCustActionForm.picture.fileName != '' }" >
+                            <td><mifos:select keyhm="Client.EducationLevel"
+                                        name="clientCustActionForm"
+                                        property="clientDetailView.educationLevel" size="1">
+                                        <c:forEach var="educationLevelEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}" >
+                                            <html-el:option value="${educationLevelEntityList.id}">${educationLevelEntityList.name}</html-el:option>
+                                        </c:forEach>
+                                    </mifos:select></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'businessActivity'}">
+                                <%-- Business Activities --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel keyhm="Client.BusinessActivities"
+                                name="client.BusinessActivities" bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td><mifos:select name="clientCustActionForm" keyhm="Client.BusinessActivities"
+                                        property="clientDetailView.businessActivities" size="1">
+                                        <c:forEach var="businessActivitiesEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}" >
+                                            <html-el:option value="${businessActivitiesEntityList.id}">${businessActivitiesEntityList.name}</html-el:option>
+                                        </c:forEach>
+                                    </mifos:select></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'povertyStatus'}">
+                                <%-- Poverty Status --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel keyhm="Client.PovertyStatus"
+                                name="client.PovertyStatus" bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td><mifos:select name="clientCustActionForm" keyhm="Client.PovertyStatus"
+                                        property="clientDetailView.povertyStatus" size="1">
+                                        <c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}" >
+                                            <html-el:option value="${povertyStatus.id}">${povertyStatus.name}</html-el:option>
+                                        </c:forEach>
+                                    </mifos:select></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'handicapped'}">
+                                <%-- Handicapped --%>
+                        <tr class="fontnormal">
+                            <td align="right"><mifos:mifoslabel keyhm="Client.Handicapped" isColonRequired="yes"
+                                name="${ConfigurationConstants.HANDICAPPED}"
+                                bundle="ClientUIResources"></mifos:mifoslabel></td>
+                            <td><mifos:select keyhm="Client.Handicapped"
+                                        name="clientCustActionForm"
+                                        property="clientDetailView.handicapped" size="1">
+                                        <c:forEach var="handicappedEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}" >
+                                            <html-el:option value="${handicappedEntityList.id}">${handicappedEntityList.name}</html-el:option>
+                                        </c:forEach>
+                                </mifos:select>
+                            </td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'photo'}">
+                                <%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
+                        <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isPhotoFieldHidden') == false}" >
+                        <tr class="fontnormal">
+                            <td align="right">
+                            <span id="edit_ClientPersonalInfo.label.file">
+                            <mifos:mifoslabel keyhm="Client.Photo" name="client.Photo"
+                                bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td>
+                              <c:if test = "${sessionScope.clientCustActionForm.picture != null 
+                              && sessionScope.clientCustActionForm.picture.fileName != null 
+                              && sessionScope.clientCustActionForm.picture.fileName != '' }" >
                                 <img src="clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
                                 <br />
                                 <a id="editPersonalInformation.link.deletePhoto"
@@ -300,169 +336,184 @@ explanation of the license and how it is applied.
                                 Choose another file to change the picture
                             </c:if>
                             <br />
-							<mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
-								onkeypress="return onKeyPressForFileComponent(this);" /></td>
-						</tr>
-						</c:if>
-						<%-- Spouse/Father details --%>
-						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired') &&
-								!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsHidden')}">
-						<tr class="fontnormal">
-							<td align="right" class="fontnormal"><mifos:mifoslabel keyhm="Client.SpouseFatherInformation"
-								name="client.SpouseFatherName" bundle="ClientUIResources"/></td>
-							<td>
-							<table width="100%" border="0" cellspacing="0" cellpadding="0">
-								<tr class="fontnormal">
-								  <td width="14%"><mifos:mifoslabel name="client.Relationship" bundle="ClientUIResources"></mifos:mifoslabel>
-									<mifos:select name="clientCustActionForm"
-										property="spouseName.nameType" size="1">
-										<c:forEach var="spouseEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}" begin="0" end="1" >
-											<html-el:option value="${spouseEntityList.id}">${spouseEntityList.name}</html-el:option>
-										</c:forEach>
-									</mifos:select>
-								   </td>
-								   <td class="paddingL10">
-										<table border="0" cellspacing="0" cellpadding="0">
-											<tr class="fontnormal">
-												<td class="paddingL10">
-													<span id="edit_ClientPersonalInfo.label.spouseFirstName">
-													<mifos:mifoslabel keyhm="Client.SpouseFatherInformation" name="client.SpouseFirstName"
-														bundle="ClientUIResources">
-													</mifos:mifoslabel>
-													</span>
-												</td>
-											</tr>
-											<tr class="fontnormal">
-												<td class="paddingL10">
-													<mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseFirstName" property="spouseName.firstName" maxlength="200"	style="width:100px;" />
-												</td>
-											</tr>
-										</table>
-									<td class="paddingL10">
-										<table border="0" cellspacing="0" cellpadding="0">
-											<tr class="fontnormal">
-												<td class="paddingL10">
-													<span id="edit_ClientPersonalInfo.label.spouseMiddleName">
-													<mifos:mifoslabel keyhm="Client.SpouseFatherMiddleName" name="client.SpouseMiddleName" bundle="ClientUIResources">
-													</mifos:mifoslabel>
-													</span>
-												</td>
-											</tr>
-											<tr class="fontnormal">
-												<td class="paddingL10">
-												  <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseMiddleName" keyhm="Client.SpouseFatherMiddleName" property="spouseName.middleName" maxlength="200" style="width:100px;" />
-												</td>
-											</tr>
-										</table>
-									</td>
-									<td class="paddingL10">
-										<table border="0" cellspacing="0" cellpadding="0">
-											<tr class="fontnormal">
-												<td class="paddingL10">
-													<span id="edit_ClientPersonalInfo.label.spouseSecondLastName">
-													<mifos:mifoslabel keyhm="Client.SpouseFatherSecondLastName"
-														name="client.SpouseSecondLastName" bundle="ClientUIResources">
-													</mifos:mifoslabel>
-												</td>
-											</tr>
-											<tr class="fontnormal">
-												<td class="paddingL10">
-													<mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseSecondLastName" keyhm="Client.SpouseFatherSecondLastName"
-																property="spouseName.secondLastName"
-																	maxlength="200" style="width:100px;" />
-												</td>
-											</tr>
-										</table>
-									</td>
-									<td class="paddingL10">
-										<table border="0" cellspacing="0" cellpadding="0">
-											<tr class="fontnormal">
-												<td class="paddingL10">
-													<span id="edit_ClientPersonalInfo.label.spouseLastName">
-													<mifos:mifoslabel keyhm="Client.SpouseFatherInformation" name="client.SpouseLastName"
+                            <mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
+                                onkeypress="return onKeyPressForFileComponent(this);" /></td>
+                        </tr>
+                        </c:if>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'spouseDetails'}">
+                                <%-- Spouse/Father details --%>
+                        <c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired') &&
+                                !session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsHidden')}">
+                        <tr class="fontnormal">
+                            <td align="right" class="fontnormal"><mifos:mifoslabel keyhm="Client.SpouseFatherInformation"
+                                name="client.SpouseFatherName" bundle="ClientUIResources"/></td>
+                            <td>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr class="fontnormal">
+                                  <td width="14%"><mifos:mifoslabel name="client.Relationship" bundle="ClientUIResources"></mifos:mifoslabel>
+                                    <mifos:select name="clientCustActionForm"
+                                        property="spouseName.nameType" size="1">
+                                        <c:forEach var="spouseEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}" begin="0" end="1" >
+                                            <html-el:option value="${spouseEntityList.id}">${spouseEntityList.name}</html-el:option>
+                                        </c:forEach>
+                                    </mifos:select>
+                                   </td>
+                                   <td class="paddingL10">
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                    <span id="edit_ClientPersonalInfo.label.spouseFirstName">
+                                                    <mifos:mifoslabel keyhm="Client.SpouseFatherInformation" name="client.SpouseFirstName"
+                                                        bundle="ClientUIResources">
+                                                    </mifos:mifoslabel>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                    <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseFirstName" property="spouseName.firstName" maxlength="200"    style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    <td class="paddingL10">
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                    <span id="edit_ClientPersonalInfo.label.spouseMiddleName">
+                                                    <mifos:mifoslabel keyhm="Client.SpouseFatherMiddleName" name="client.SpouseMiddleName" bundle="ClientUIResources">
+                                                    </mifos:mifoslabel>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                  <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseMiddleName" keyhm="Client.SpouseFatherMiddleName" property="spouseName.middleName" maxlength="200" style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="paddingL10">
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                    <span id="edit_ClientPersonalInfo.label.spouseSecondLastName">
+                                                    <mifos:mifoslabel keyhm="Client.SpouseFatherSecondLastName"
+                                                        name="client.SpouseSecondLastName" bundle="ClientUIResources">
+                                                    </mifos:mifoslabel>
+                                                </td>
+                                            </tr>
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                    <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseSecondLastName" keyhm="Client.SpouseFatherSecondLastName"
+                                                                property="spouseName.secondLastName"
+                                                                    maxlength="200" style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="paddingL10">
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                    <span id="edit_ClientPersonalInfo.label.spouseLastName">
+                                                    <mifos:mifoslabel keyhm="Client.SpouseFatherInformation" name="client.SpouseLastName"
                                                                       bundle="ClientUIResources">
-													   </mifos:mifoslabel>
-													</span>
-												</td>
-											</tr>
-											<tr class="fontnormal">
-												<td class="paddingL10">
-												   <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseLastName" property="spouseName.lastName" maxlength="200"
-																style="width:100px;" />
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-							</td>
-						</tr>
-						</c:if>
-					</table>
-					
-					<br>
-					<!-- Address Fields -->
-					<table width="95%" border="0" cellpadding="3" cellspacing="0">
-						<tr>
-							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-								name="client.AddressHeading"  keyhm="Client.Address" isManadatoryIndicationNotRequired="yes" bundle="ClientUIResources"></mifos:mifoslabel><br>
-							<br>
-							</td>
-						</tr>
-						<tr class="fontnormal">
-							<td width="17%" align="right"><span id="edit_ClientPersonalInfo.label.address1"><mifos:mifoslabel keyhm="Client.Address1" isColonRequired="yes"
-								name="${ConfigurationConstants.ADDRESS1}"></mifos:mifoslabel></span></td>
-							<td width="83%"><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address1" keyhm="Client.Address1"
-								name="clientCustActionForm"
-								property="address.line1"
-								maxlength="200" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.address2"><mifos:mifoslabel keyhm="Client.Address2" isColonRequired="yes"
-								name="${ConfigurationConstants.ADDRESS2}"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address2" keyhm="Client.Address2" name="clientCustActionForm"
-								property="address.line2"
-								maxlength="200" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.address3"><mifos:mifoslabel keyhm="Client.Address3" isColonRequired="yes"
-								name="${ConfigurationConstants.ADDRESS3}"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address3" keyhm="Client.Address3" name="clientCustActionForm"
-								property="address.line3"
-								maxlength="200" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.city"><mifos:mifoslabel keyhm="Client.City" isColonRequired="yes"
-								name="${ConfigurationConstants.CITY}"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.city" keyhm="Client.City" name="clientCustActionForm"
-								property="address.city"
-								maxlength="100" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.state"><mifos:mifoslabel keyhm="Client.State" isColonRequired="yes"
-								name="${ConfigurationConstants.STATE}"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.state"  keyhm="Client.State" name="clientCustActionForm"
-								property="address.state"
-								maxlength="100" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.country"><mifos:mifoslabel keyhm="Client.Country" name="client.Country"
-								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.country" keyhm="Client.Country" name="clientCustActionForm"
-								property="address.country"
-								maxlength="100" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.postalCode"><mifos:mifoslabel keyhm="Client.PostalCode" isColonRequired="yes"
-								name="${ConfigurationConstants.POSTAL_CODE}"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.postalCode" keyhm="Client.PostalCode" name="clientCustActionForm"
-								property="address.zip"
-								maxlength="20" /></td>
-						</tr>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.telephone"><mifos:mifoslabel keyhm="Client.PhoneNumber" name="client.Telephone"
-								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td>
+                                                       </mifos:mifoslabel>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="fontnormal">
+                                                <td class="paddingL10">
+                                                   <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseLastName" property="spouseName.lastName" maxlength="200"
+                                                                style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            </td>
+                        </tr>
+                        </c:if>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'addressHeading'}">
+                                <tr>
+                            <td colspan="2" class="fontnormalbold"><mifos:mifoslabel
+                                name="client.AddressHeading"  keyhm="Client.Address" isManadatoryIndicationNotRequired="yes" bundle="ClientUIResources"></mifos:mifoslabel><br>
+                            <br>
+                            </td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'address1'}">
+                                <tr class="fontnormal">
+                            <td width="17%" align="right"><span id="edit_ClientPersonalInfo.label.address1"><mifos:mifoslabel keyhm="Client.Address1" isColonRequired="yes"
+                                name="${ConfigurationConstants.ADDRESS1}"></mifos:mifoslabel></span></td>
+                            <td width="83%"><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address1" keyhm="Client.Address1"
+                                name="clientCustActionForm"
+                                property="address.line1"
+                                maxlength="200" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'address2'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.address2"><mifos:mifoslabel keyhm="Client.Address2" isColonRequired="yes"
+                                name="${ConfigurationConstants.ADDRESS2}"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address2" keyhm="Client.Address2" name="clientCustActionForm"
+                                property="address.line2"
+                                maxlength="200" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'address3'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.address3"><mifos:mifoslabel keyhm="Client.Address3" isColonRequired="yes"
+                                name="${ConfigurationConstants.ADDRESS3}"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address3" keyhm="Client.Address3" name="clientCustActionForm"
+                                property="address.line3"
+                                maxlength="200" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'city'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.city"><mifos:mifoslabel keyhm="Client.City" isColonRequired="yes"
+                                name="${ConfigurationConstants.CITY}"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.city" keyhm="Client.City" name="clientCustActionForm"
+                                property="address.city"
+                                maxlength="100" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'state'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.state"><mifos:mifoslabel keyhm="Client.State" isColonRequired="yes"
+                                name="${ConfigurationConstants.STATE}"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.state"  keyhm="Client.State" name="clientCustActionForm"
+                                property="address.state"
+                                maxlength="100" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'country'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.country"><mifos:mifoslabel keyhm="Client.Country" name="client.Country"
+                                bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.country" keyhm="Client.Country" name="clientCustActionForm"
+                                property="address.country"
+                                maxlength="100" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'postalCode'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.postalCode"><mifos:mifoslabel keyhm="Client.PostalCode" isColonRequired="yes"
+                                name="${ConfigurationConstants.POSTAL_CODE}"></mifos:mifoslabel></span></td>
+                            <td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.postalCode" keyhm="Client.PostalCode" name="clientCustActionForm"
+                                property="address.zip"
+                                maxlength="20" /></td>
+                        </tr>
+                                </c:when>
+                                <c:when test="${personalInformation.name == 'telephone'}">
+                                <tr class="fontnormal">
+                            <td align="right"><span id="edit_ClientPersonalInfo.label.telephone"><mifos:mifoslabel keyhm="Client.PhoneNumber" name="client.Telephone"
+                                bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+                            <td>
                                                             <c:choose>
                                                                 <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CanEditPhoneNumber')}">
                                                                     <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
@@ -476,7 +527,11 @@ explanation of the license and how it is applied.
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>
-						</tr>
+                        </tr>
+                                </c:when>
+                            </c:choose>
+                        </c:forEach>
+	
 					</table>
 					<br>
 					<!-- Custom Fields -->

@@ -734,6 +734,9 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         SessionUtils.setAttribute("CanEditPhoneNumber", ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()), request);
 
+        InformationOrderServiceFacade informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderServiceFacade.class);
+        SessionUtils.setCollectionAttribute("personalInformationOrder", informationOrderServiceFacade.getInformationOrder("CreateClient"), request);
+        
         boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {

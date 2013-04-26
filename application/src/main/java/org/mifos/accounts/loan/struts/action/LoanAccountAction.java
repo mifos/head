@@ -673,6 +673,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setCollectionAttribute(LOANFUNDS, getFunds(loanOffering), request);
         setRequestAttributesForEditPage(request, loanBO);
 
+        InformationOrderServiceFacade informationOrderServiceFacade = ApplicationContextProvider.getBean(InformationOrderServiceFacade.class);
+        SessionUtils.setCollectionAttribute("detailsInformationOrder", informationOrderServiceFacade.getInformationOrder("CreateLoan"), request);
+        
         setFormAttributes(loanBO, form, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
