@@ -294,7 +294,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    public void shouldSaveQuestionGroupDetail() throws Exception {
+    public void shouldSaveQuestionGroupDetail() {
         List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1, 1,
@@ -397,7 +397,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    public void testSaveResponsesTwoQuestionGroups() throws Exception {
+    public void testSaveResponsesTwoQuestionGroups() {
 
         questionnaireServiceFacade = new QuestionnaireServiceFacadeImpl(questionnaireService, auditLogService, null);
 

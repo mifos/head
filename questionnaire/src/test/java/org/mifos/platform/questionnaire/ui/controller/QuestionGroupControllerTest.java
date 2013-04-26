@@ -397,7 +397,7 @@ public class QuestionGroupControllerTest {
     }
 
     @Test
-    public void testSaveQuestionnaireSuccess() throws Exception {
+    public void testSaveQuestionnaireSuccess() {
         String result = questionGroupController.saveQuestionnaire(
                 getQuestionGroupDetails(), 1, requestContext);
         verify(questionnaireServiceFacade, times(1)).saveResponses(argThat(new QuestionGroupDetailsMatcher(
@@ -407,7 +407,7 @@ public class QuestionGroupControllerTest {
     }
 
     @Test
-    public void testSaveQuestionnaireFailure() throws Exception {
+    public void testSaveQuestionnaireFailure() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         validationException.addChildException(new MandatoryAnswerNotFoundException("q1"));
         doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
@@ -420,7 +420,7 @@ public class QuestionGroupControllerTest {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
-    public void testSaveQuestionnaireFailureForNumericResponseWithoutBounds() throws Exception {
+    public void testSaveQuestionnaireFailureForNumericResponseWithoutBounds() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         validationException.addChildException(new BadNumericResponseException("q1", null, null));
         doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
@@ -433,7 +433,7 @@ public class QuestionGroupControllerTest {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
-    public void testSaveQuestionnaireFailureForNumericResponseNotWithinBounds() throws Exception {
+    public void testSaveQuestionnaireFailureForNumericResponseNotWithinBounds() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         validationException.addChildException(new BadNumericResponseException("q1", 10, 100));
         doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
@@ -446,7 +446,7 @@ public class QuestionGroupControllerTest {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
-    public void testSaveQuestionnaireFailureForNumericResponseLessThanMinBound() throws Exception {
+    public void testSaveQuestionnaireFailureForNumericResponseLessThanMinBound() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         validationException.addChildException(new BadNumericResponseException("q1", 10, null));
         doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
@@ -459,7 +459,7 @@ public class QuestionGroupControllerTest {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
-    public void testSaveQuestionnaireFailureForNumericResponseGreaterThanMaxBound() throws Exception {
+    public void testSaveQuestionnaireFailureForNumericResponseGreaterThanMaxBound() {
         ValidationException validationException = new ValidationException(GENERIC_VALIDATION);
         validationException.addChildException(new BadNumericResponseException("q1", null, 100));
         doThrow(validationException).when(questionnaireServiceFacade).saveResponses(Mockito.<QuestionGroupDetails>any());
