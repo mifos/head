@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  <span id="page.id" title="AccountNotes"></span> 
-<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+<form name="goBackToLoanAccountDetails" method="get" action ="<c:choose><c:when test="${param.accountTypeId=='1'}">viewLoanAccountDetails.ftl</c:when><c:otherwise>viewSavingsAccountDetails.ftl</c:otherwise></c:choose>">
     <input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
 </form>
 <html-el:form action="notesAction.do">
