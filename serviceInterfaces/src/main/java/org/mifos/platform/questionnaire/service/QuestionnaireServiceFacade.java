@@ -59,7 +59,8 @@ public interface QuestionnaireServiceFacade {
 
     List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException;
 
-    void saveResponses(QuestionGroupDetails questionGroupDetails) throws Exception;
+    @PreAuthorize("isFullyAuthenticated() and hasRole('CAN_EDIT_QUESTION_GROUP_RESPONSES')")
+    void saveResponses(QuestionGroupDetails questionGroupDetails);
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 

@@ -114,7 +114,7 @@ public class QuestionnaireFlowAdapter {
         }
     }
 
-    public void saveResponses(HttpServletRequest request, QuestionResponseCapturer form, int associateWithId) throws Exception {
+    public void saveResponses(HttpServletRequest request, QuestionResponseCapturer form, int associateWithId) {
         List<QuestionGroupDetail> questionResponses = form.getQuestionGroups();
         if (CollectionUtils.isNotEmpty(questionResponses)) {
             QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
