@@ -59,7 +59,7 @@ public interface QuestionnaireServiceFacade {
 
     List<QuestionGroupDetail> getQuestionGroups(String event, String source) throws SystemException;
 
-    void saveResponses(QuestionGroupDetails questionGroupDetails);
+    void saveResponses(QuestionGroupDetails questionGroupDetails) throws Exception;
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 
