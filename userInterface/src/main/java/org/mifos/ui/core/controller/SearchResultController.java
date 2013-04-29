@@ -179,6 +179,9 @@ public class SearchResultController {
 		
     	CustomerHierarchyDto customerHierarchyDto = new CustomerHierarchyDto();
     	
+        if (customerSearchFormBean.getFilters() == null) {
+            customerSearchFormBean.setFilters(new SearchFiltersDto());
+        }
     	if ( customerSearchFormBean.getSearchString() != null && !customerSearchFormBean.getSearchString().isEmpty() ){
     		customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
                     customerSearchFormBean.getOfficeId(), 0, 10, customerSearchFormBean.getFilters());
