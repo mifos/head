@@ -694,6 +694,7 @@
   <activity activity_id="297" parent_id="113" activity_name_lookup_id="711" description_lookup_id="711"/>
   <activity activity_id="298" parent_id="113" activity_name_lookup_id="712" description_lookup_id="712"/>
   <activity activity_id="299" parent_id="113" activity_name_lookup_id="713" description_lookup_id="713"/>
+  <activity activity_id="316" parent_id="203" activity_name_lookup_id="729" description_lookup_id="729"/>
   <activity_restriction_type activity_restriction_type_id="1" activity_id="104" lookup_id="689"/>
   <admin_document/>
   <admin_document_acc_action_mix/>
@@ -3743,6 +3744,7 @@
   <lookup_value lookup_id="726" entity_id="87" lookup_name="QuestionGroup.QGForViewClientCentreGroupLoan3"/>
   <lookup_value lookup_id="727" entity_id="87" lookup_name="QuestionGroup.QGForLoanApproval2"/>
   <lookup_value lookup_id="728" entity_id="87" lookup_name="QuestionGroup.QGForCreateSavingsAccount1"/>
+  <lookup_value lookup_id="729" entity_id="87" lookup_name="Can edit question group responses"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -4374,6 +4376,7 @@
   <lookup_value_locale lookup_value_id="1052" locale_id="1" lookup_id="726" lookup_value="Can edit QGForViewClientCentreGroupLoan"/>
   <lookup_value_locale lookup_value_id="1053" locale_id="1" lookup_id="727" lookup_value="Can edit QGForLoanApproval"/>
   <lookup_value_locale lookup_value_id="1054" locale_id="1" lookup_id="728" lookup_value="Can edit QGForCreateSavingsAccount"/>
+  <lookup_value_locale lookup_value_id="1055" locale_id="1" lookup_id="729" lookup_value="Can edit question group responses"/>
   <max_min_interest_rate account_id="10" min_interest_rate="0.0000" max_interest_rate="0.0000"/>
   <max_min_interest_rate account_id="11" min_interest_rate="0.0000" max_interest_rate="0.0000"/>
   <max_min_interest_rate account_id="12" min_interest_rate="24.0000" max_interest_rate="24.0000"/>
@@ -5398,6 +5401,7 @@
   <roles_activity activity_id="297" role_id="1"/>
   <roles_activity activity_id="298" role_id="1"/>
   <roles_activity activity_id="299" role_id="1"/>
+  <roles_activity activity_id="316" role_id="1"/>
   <saving_schedule id="1" account_id="2" customer_id="5" action_date="2010-01-22" deposit="10.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0"/>
   <saving_schedule id="2" account_id="2" customer_id="5" action_date="2010-01-29" deposit="10.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="2" customer_id="5" action_date="2010-02-05" deposit="10.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>
