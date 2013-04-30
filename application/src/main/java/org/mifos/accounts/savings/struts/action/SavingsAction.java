@@ -454,7 +454,7 @@ public class SavingsAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
-    @TransactionDemarcate(joinToken = true)
+    @TransactionDemarcate(saveToken = true)
     public ActionForward getDepositDueDetails(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getDepositDueDetails()");
