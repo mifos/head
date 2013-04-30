@@ -24,16 +24,11 @@ import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
 import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -189,9 +184,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
                 validateAmount(errors);
                 validateModeOfPaymentSecurity(request, errors);
             }
-            if (methodCalled != null && methodCalled.equals("preview")) {
-                validateHashMap(errors);
-            }
+
             if (!errors.isEmpty()) {
                 request.setAttribute(Globals.ERROR_KEY, errors);
                 if (methodCalled.equals("divide")) {
@@ -223,22 +216,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         }
         return errors;
     }
-    private void validateHashMap(ActionErrors errors) {
-        MifosCurrency currency = null;
-        if (getCurrencyId() != null && AccountingRules.isMultiCurrencyEnabled()) {
-            currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
-        }
-
-        ArrayList<String> mapValue = new ArrayList<String>(individualValues.values());
-        for (int i=0; i<individualValues.size(); i++){
-            DoubleConversionResult conversionResult = validateAmount(mapValue.get(i), currency , AccountConstants.ACCOUNT_AMOUNT, errors, "");
-            if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                        getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
-            }
-        }
-    }
-
+    
     private void validateModeOfPaymentSecurity(HttpServletRequest request, ActionErrors errors){
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         if(getPaymentTypeId().equals("4") && !ActivityMapper.getInstance().isModeOfPaymentSecurity(userContext)){
