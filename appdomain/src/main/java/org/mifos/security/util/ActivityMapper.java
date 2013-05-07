@@ -1625,6 +1625,11 @@ public class ActivityMapper {
         return legacyRolesPermissionsDao.isActivityAllowed(userContext,
                 new ActivityContext(SecurityConstants.PERSONNEL_NOTE_CREATE, recordOfficeId, recordLoanOfficerId));
     }
+    public boolean isEditingOfficeMembershipForClientPermitted(UserContext userContext, Short recordOfficeId,
+            Short recordLoanOfficerId) {
+        return legacyRolesPermissionsDao.isActivityAllowed(userContext,
+                new ActivityContext(SecurityConstants.CIENT_TRANSFER_THE_CLIENT, recordOfficeId, recordLoanOfficerId));
+    }
 
     public boolean isPaymentPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {

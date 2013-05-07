@@ -1615,7 +1615,26 @@ public class CustomerDaoHibernate implements CustomerDao {
         return ActivityMapper.getInstance().isEditMeetingSchedulePermittedForCustomers(customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
     }
+    
+    public void checkPermissionforEditingClientOfficeMembership(UserContext userContext, ClientBO client)
+            throws CustomerException {
 
+        Short recordOfficeId = client.getOffice().getOfficeId();
+        Short recordLoanOfficerId = userContext.getId();
+
+        if (client.getPersonnel() != null) {
+            recordLoanOfficerId = client.getPersonnel().getPersonnelId();
+        }
+
+        if (!isPermissionAllowedForEditingClientOfficeMembership(userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+    
+    private boolean isPermissionAllowedForEditingClientOfficeMembership(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isEditingOfficeMembershipForClientPermitted(userContext, recordOfficeId, recordLoanOfficerId);
+    }
+    
     @Override
     public List<ValueListElement> retrieveTitles() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();

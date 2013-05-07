@@ -222,6 +222,8 @@ public interface CustomerDao {
     void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
 
     void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
+    
+    void checkPermissionforEditingClientOfficeMembership(UserContext userContext, ClientBO client) throws CustomerException;
 
     List<ClientBO> validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
     

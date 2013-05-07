@@ -159,7 +159,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     private void createParentGroup() {
-        Short officeId = 3;
+        Short officeId = 1;
         Short personnel = 3;
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE, officeId, meeting,

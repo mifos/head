@@ -29,7 +29,6 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -974,6 +973,10 @@ public class CustomerServiceImpl implements CustomerService {
         client.validateReceivingGroup(receivingGroup);
         client.validateForActiveAccounts();
         client.validateForPeriodicFees();
+        
+        if(client.getOfficeId() != receivingGroup.getOfficeId()){
+            customerDao.checkPermissionforEditingClientOfficeMembership(client.getUserContext(), client);
+        }
 
         	
         CustomerBO oldParent = client.getParentCustomer();
