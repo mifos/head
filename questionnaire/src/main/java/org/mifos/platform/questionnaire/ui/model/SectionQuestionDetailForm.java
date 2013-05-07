@@ -63,4 +63,12 @@ public class SectionQuestionDetailForm {
     public void setShowOnPage(boolean showOnPage) {
     	sectionQuestionDetail.setShowOnPage(showOnPage);
     }
+    
+    public Integer getSequenceNumber() {
+        return sectionQuestionDetail.getSequenceNumber();
+    }
+    
+    public void setSequenceNumber(Integer sequenceNumber) {
+        sectionQuestionDetail.setSequenceNumber(sequenceNumber);
+    }
 }

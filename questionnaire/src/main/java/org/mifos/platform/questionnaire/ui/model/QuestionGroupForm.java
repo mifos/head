@@ -178,8 +178,30 @@ public class QuestionGroupForm extends ScreenObject {
         currentQuestion.setChoices();
         SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(currentQuestion.getQuestionDetail(), false);
         currentSection.addSectionQuestion(sectionQuestionDetail);
-        sectionQuestionDetail.getQuestionDetail().setId(-1 * currentSection.getSectionQuestionDetails().size());
+        Integer newQuestionId = getNewQuestionId();
+        sectionQuestionDetail.getQuestionDetail().setId(newQuestionId);
         currentQuestion = new Question(new QuestionDetail());
+        questionsToAdd.add(newQuestionId);
+        updateSequenceNumbers();
+    }
+    
+    private Integer getNewQuestionId() {
+        Integer minId = 0;
+        List<SectionQuestionDetail> sectionQuestionDetails = currentSection.getSectionQuestionDetails();
+        for (SectionQuestionDetail sectionQuestionDetail : sectionQuestionDetails) {
+            if (sectionQuestionDetail.getQuestionId() < minId) {
+                minId = sectionQuestionDetail.getQuestionId();
+            }
+        }
+        return minId - 1;
+    }
+    
+    private void updateSequenceNumbers() {
+        List<SectionQuestionDetailForm> questions = currentSection.getSectionQuestions();
+        int sequenceNumber = 0;
+        for (SectionQuestionDetailForm sectionQuestionDetailForm : questions) {
+            sectionQuestionDetailForm.setSequenceNumber(sequenceNumber++);
+        }
     }
 
     public boolean isDuplicateText(String questionTitle) {
