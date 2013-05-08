@@ -73,7 +73,7 @@ rm mifos-webapp*.jar
 
 #move content
 mv *.properties $TEMP_DIR/output
-mv sql $TEMP_DIR/output
+mv sql $TEMP_DIR/output/WEB-INF/classes
 mv org $TEMP_DIR/output/WEB-INF/classes
 mv META-INF/resources/pages $TEMP_DIR/output
 mv META-INF/resources/WEB-INF/* $TEMP_DIR/output/WEB-INF
