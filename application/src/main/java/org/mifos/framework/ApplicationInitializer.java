@@ -869,22 +869,27 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
         ConfigurationLocator configurationLocator = new ConfigurationLocator();
         String configPath = configurationLocator.getConfigurationDirectory();
-        if (protocol.getProtocol().equals("jar")) {
-            String destinationDirectoryForJobs = configPath + "/ETL/MifosDataWarehouseETL";
-            String destinationDirectoryForJar = configPath + "/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
-            String destinationDirectoryForReportJobs = configPath + "/uploads/report";
-            String pathFromJar = "/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
-            String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
+        String destinationDirectoryForJobs = configPath + "/ETL/MifosDataWarehouseETL";
+        String destinationDirectoryForJar = configPath + "/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String destinationDirectoryForReportJobs = configPath + "/uploads/report";
+        String pathFromJar = "/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
 
-            if (File.separatorChar == '\\') {
-                destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
-                destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
-                destinationDirectoryForReportJobs = destinationDirectoryForReportJobs.replaceAll("/", "\\\\");
-            }
-            File directory = new File(destinationDirectoryForJobs);
-            directory.mkdirs();
-            FileUtils.cleanDirectory(directory);
-            File jarDest = new File(destinationDirectoryForJar);
+        if (File.separatorChar == '\\') {
+            destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
+            destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+            destinationDirectoryForReportJobs = destinationDirectoryForReportJobs.replaceAll("/", "\\\\");
+        }
+
+        File directory = new File(destinationDirectoryForJobs);
+        directory.mkdirs();
+        FileUtils.cleanDirectory(directory);
+        File jarDest = new File(destinationDirectoryForJar);
+        File reportDirectory = new File(destinationDirectoryForReportJobs);
+        reportDirectory.mkdirs();
+
+        if (protocol.getProtocol().equals("jar")) {
+            // Mifos WAR
             URL fullPath = sc.getResource(pathFromJar);
             File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
             for (File fileEntry : f.listFiles()) {
@@ -893,9 +898,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             }
             FileUtils.copyURLToFile(fullPath, jarDest);
             logger.info("Copy file: " + fullPath + " to: " + directory);
-
-            File reportDirectory = new File(destinationDirectoryForReportJobs);
-            reportDirectory.mkdirs();
 
             String jarPath = "/WEB-INF/lib/mifos-reporting-1.12-SNAPSHOT.jar";
             String jarName = sc.getResource(jarPath).toString().replace("file:", "");
@@ -907,23 +909,74 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     break;
                 }
 
+                // Skip irrelevant folders
                 String jarEntryName = jarEntry.getName();
-                int lastIndexOfDot = jarEntryName.lastIndexOf('.');
-                if (lastIndexOfDot != -1) {
-                    String jarEntryExtension = jarEntryName.substring(lastIndexOfDot);
-                    if (jarEntryExtension.equals(".prpt") || jarEntryExtension.equals(".rptdesign")) {
-                        InputStream inputStream = MifosViewerServletContextListener.class.getClassLoader()
-                                .getResourceAsStream(jarEntryName);
-                        int lastIndexOfSlash = jarEntryName.replaceAll("\\\\", "/").lastIndexOf('/');
-                        String reportFileName = jarEntryName.substring(lastIndexOfSlash + 1);
-                        File reportFile = new File(destinationDirectoryForReportJobs + File.separatorChar
-                                + reportFileName);
-
-                        logger.info("Copying " + reportFileName + " to: " + destinationDirectoryForReportJobs
-                                + File.separatorChar + reportFileName);
-                        FileUtils.copyInputStreamToFile(inputStream, reportFile);
-                    }
+                if (!jarEntryName.startsWith("birt/report") && !jarEntryName.startsWith("pentaho")) {
+                    continue;
                 }
+
+                int lastIndexOfDot = jarEntryName.lastIndexOf('.');
+                if (lastIndexOfDot != -1 && !jarEntry.isDirectory()) {
+                    String destinationDirectory = destinationDirectoryForReportJobs;
+                    String birtReportFolderName = "birt/report";
+                    if (jarEntryName.startsWith(birtReportFolderName)) {
+                        int indexOfLastSlash = jarEntryName.lastIndexOf('/');
+                        String folderName = jarEntryName.substring(birtReportFolderName.length(), indexOfLastSlash)
+                                .replaceAll("/", "");
+                        File birtSubFolder = new File(destinationDirectoryForReportJobs + File.separatorChar
+                                + folderName);
+
+                        birtSubFolder.mkdirs();
+                        destinationDirectory = destinationDirectoryForReportJobs + File.separatorChar + folderName;
+                    }
+
+                    InputStream inputStream = MifosViewerServletContextListener.class.getClassLoader()
+                            .getResourceAsStream(jarEntryName);
+                    int lastIndexOfSlash = jarEntryName.lastIndexOf('/');
+                    String reportFileName = jarEntryName.substring(lastIndexOfSlash + 1);
+                    File reportFile = new File(destinationDirectory + File.separatorChar + reportFileName);
+
+                    FileUtils.copyInputStreamToFile(inputStream, reportFile);
+                    logger.info("Copy file: " + jarEntryName + " to: " + reportFile);
+                }
+            }
+        } else {
+            try {
+                // Mifos Cloud Foundry WAR
+                URL fullPath = sc.getResource(pathFromJar);
+                File f = new File(sc.getRealPath("/") + pathFromJobs);
+                for (File fileEntry : f.listFiles()) {
+                    FileUtils.copyFileToDirectory(fileEntry, directory);
+                    logger.info("Copy file: " + fileEntry.getName() + " to: " + directory);
+                }
+                FileUtils.copyURLToFile(fullPath, jarDest);
+                logger.info("Copy file: " + fullPath + " to: " + directory);
+
+                String sourceBirtReportPath = "/report";
+                String sourcePentahoReportPath = "/WEB-INF/classes/pentaho";
+
+                File birtReports = new File(sc.getRealPath("/") + sourceBirtReportPath);
+                File pentahoReports = new File(sc.getRealPath("/") + sourcePentahoReportPath);
+
+                for (File fileEntry : birtReports.listFiles()) {
+                    if (fileEntry.isDirectory()) {
+                        File destinationDirectory = new File(destinationDirectoryForReportJobs + File.separatorChar
+                                + fileEntry.getName());
+                        FileUtils.copyDirectory(fileEntry, destinationDirectory);
+                        logger.info("Copy directory: " + fileEntry.getName() + " to: " + destinationDirectory);
+                        continue;
+                    }
+
+                    FileUtils.copyFileToDirectory(fileEntry, reportDirectory);
+                    logger.info("Copy file: " + fileEntry.getName() + " to: " + reportDirectory);
+                }
+                for (File fileEntry : pentahoReports.listFiles()) {
+                    FileUtils.copyFileToDirectory(fileEntry, reportDirectory);
+                    logger.info("Copy file: " + fileEntry.getName() + " to: " + reportDirectory);
+                }
+            } catch (NullPointerException e) {
+                // Eclipse
+                logger.info("Could not copy Birt/Pentaho report files to Mifos config directory.");
             }
         }
     }
