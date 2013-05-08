@@ -352,7 +352,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         		closedLoanAccounts.add(new LoanDetailDto(closedAccount.getGlobalAccountNum(), 
         				((LoanBO)closedAccount).getLoanOffering().getPrdOfferingName(), closedAccount.getAccountState().getId(), 
         				closedAccount.getAccountState().getName(), ((LoanBO)closedAccount).getLoanSummary().getOutstandingBalance().toString(), 
-        				closedAccount.getTotalAmountDue().toString()));
+        				closedAccount.getTotalAmountDue().toString(), closedAccount.getTotalAmountInArrears().toString()));
         		
         	} else {
         		closedSavingsAccounts.add(new SavingsDetailDto(closedAccount.getGlobalAccountNum(), 

@@ -1140,7 +1140,8 @@ public class CustomerDaoHibernate implements CustomerDao {
             for (LoanBO loan : loanAccounts) {
                 loanDetail.add(new LoanDetailDto(loan.getGlobalAccountNum(), loan.getLoanOffering()
                         .getPrdOfferingName(), loan.getAccountState().getId(), loan.getAccountState().getName(), loan
-                        .getLoanSummary().getOutstandingBalance().toString(), loan.getTotalAmountDue().toString(), loan.getAccountType().getAccountTypeId()));
+                        .getLoanSummary().getOutstandingBalance().toString(), loan.getTotalAmountDue().toString(), loan.getAccountType().getAccountTypeId(), 
+                        loan.getTotalAmountInArrears().toString()));
             }
             return loanDetail;
         }
@@ -1858,6 +1859,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         return null;
     }
     
+    @Override
     public List<ClientBO> findBorrowersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering) {
         List<ClientBO> borrowers = new ArrayList<ClientBO>();
         if(ordering==null){
@@ -1867,6 +1869,22 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("ID", loanOffID);
         queryParameters.put("ordering",ordering);
         List<ClientBO> queryList = (List<ClientBO>) genericDao.executeNamedQueryWithOffsetAndOrderAppend(NamedQueryConstants.GET_BORROWERS_UNDER_LOANOFF,queryParameters,position,noOfObjects);
+        if (queryList !=null){
+            borrowers.addAll(queryList);
+        }
+        return borrowers;
+    }
+    
+    @Override
+    public List<ClientBO> findAllBorrowersUnderLoanOfficer(Short loanOffID,String ordering) {
+        List<ClientBO> borrowers = new ArrayList<ClientBO>();
+        if(ordering==null){
+            ordering = "customer.globalCustNum";
+        }
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ID", loanOffID);
+        queryParameters.put("ordering",ordering);
+        List<ClientBO> queryList = (List<ClientBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_BORROWERS_UNDER_LOANOFF,queryParameters);
         if (queryList !=null){
             borrowers.addAll(queryList);
         }

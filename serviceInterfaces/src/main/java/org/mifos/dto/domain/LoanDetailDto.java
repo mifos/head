@@ -31,11 +31,12 @@ public class LoanDetailDto implements Serializable {
     private final String accountStateName;
     private final String outstandingBalance;
     private final String totalAmountDue;
+    private final String  totalAmountInArrears;
     //account type for displaying new type of GLIM acc
     private final Short accountTypeId;
 
     public LoanDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
-            final String accountStateName, final String outstandingBalance, final String totalAmountDue) {
+            final String accountStateName, final String outstandingBalance, final String totalAmountDue, final String totalAmountInArrears) {
         this.globalAccountNum = globalAccountNum;
         this.prdOfferingName = prdOfferingName;
         this.accountStateId = accountStateId;
@@ -43,10 +44,11 @@ public class LoanDetailDto implements Serializable {
         this.outstandingBalance = outstandingBalance;
         this.totalAmountDue = totalAmountDue;
         this.accountTypeId = 0;
+        this.totalAmountInArrears = totalAmountInArrears;
     }
     
     public LoanDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
-            final String accountStateName, final String outstandingBalance, final String totalAmountDue, final Short accountTypeId) {
+            final String accountStateName, final String outstandingBalance, final String totalAmountDue, final Short accountTypeId, String totalAmountInArrears) {
         this.globalAccountNum = globalAccountNum;
         this.prdOfferingName = prdOfferingName;
         this.accountStateId = accountStateId;
@@ -54,9 +56,14 @@ public class LoanDetailDto implements Serializable {
         this.outstandingBalance = outstandingBalance;
         this.totalAmountDue = totalAmountDue;
         this.accountTypeId = accountTypeId;
+        this.totalAmountInArrears = totalAmountInArrears;
     }
+    
+    public String getTotalAmountInArrears() {
+		return totalAmountInArrears;
+	}
 
-    public String getGlobalAccountNum() {
+	public String getGlobalAccountNum() {
         return this.globalAccountNum;
     }
 

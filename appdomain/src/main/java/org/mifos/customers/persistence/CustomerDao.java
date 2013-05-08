@@ -95,6 +95,8 @@ public interface CustomerDao {
     
     List<ClientBO> findBorrowersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering);
     
+    List<ClientBO> findAllBorrowersUnderLoanOfficer(Short loanOffID, String ordering);
+    
     int countAllBorrowers();
     
     int countAllBorrowersGroup();

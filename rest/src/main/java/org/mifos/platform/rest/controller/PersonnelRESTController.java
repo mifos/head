@@ -19,21 +19,30 @@
  */
 package org.mifos.platform.rest.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.config.ClientRules;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.dto.screen.PersonnelInformationDto;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.CenterDescriptionDto;
 import org.mifos.dto.domain.ClientDescriptionDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.GroupDescriptionDto;
+import org.mifos.dto.domain.OverdueCustomer;
+import org.mifos.dto.domain.OverdueLoan;
+import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.security.MifosUser;
-import org.mifos.config.ClientRules;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.persistence.CustomerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,9 +56,15 @@ public class PersonnelRESTController {
 
     @Autowired
     private PersonnelServiceFacade personnelServiceFacade;
+    
+    @Autowired
+    private LoanAccountServiceFacade loanAccountServiceFacade;
 
     @Autowired
     private CustomerDao customerDao;
+    
+    @Autowired
+    private LoanDao loanDao;
 
     @Autowired
     private PersonnelDao personnelDao;
@@ -115,6 +130,36 @@ public class PersonnelRESTController {
         }
 
         return hierarchy;
+    }
+    
+    @RequestMapping(value = "personnel/id-current/overdue_borrowers", method = RequestMethod.GET)
+    public @ResponseBody
+    OverdueCustomer[] getOverdueBorrowersUnderPersonnel() {
+    	List<OverdueCustomer> overdueCustomers = new ArrayList<OverdueCustomer>();
+    	PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
+        for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer(loanOfficer.getPersonnelId(), 
+        		loanOfficer.getOffice().getOfficeId())) {
+        	OverdueCustomer customerToAdd = null;
+        	List<LoanBO> loans = client.getOpenLoanAccounts();
+        	for (LoanBO loan: loans) {
+        		if (loan.getTotalAmountInArrears() != null && loan.getTotalAmountInArrears().isNonZero()) {
+                	LoanInformationDto loanInfo = loanAccountServiceFacade.retrieveLoanInformation(loan.getGlobalAccountNum());
+                	if (loanInfo.isDisbursed()) {
+	                	if (customerToAdd == null) {
+	        				customerToAdd = new OverdueCustomer();
+	        				customerToAdd.setDisplayName(client.getDisplayName());
+	        				customerToAdd.setGlobalCustNum(client.getGlobalCustNum());
+	        				customerToAdd.setOverdueLoans(new ArrayList<OverdueLoan>());
+	        				overdueCustomers.add(customerToAdd);
+	        			}
+	        			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
+	        					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalAmountDue().toString());
+	        			customerToAdd.getOverdueLoans().add(overdueLoan);
+                	}
+                }
+        	}
+        }
+        return overdueCustomers.toArray(new OverdueCustomer[]{});
     }
 
     @RequestMapping(value = "personnel/id-current/meetings-{day}", method = RequestMethod.GET)

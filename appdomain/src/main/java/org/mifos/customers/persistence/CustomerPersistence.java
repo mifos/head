@@ -1258,7 +1258,7 @@ public class CustomerPersistence extends LegacyGenericDao {
             totalAmountDue = new Money(mifosCurrency, "7.7");
 
             loanDetails.add(new LoanDetailDto(globalAccountNum, prdOfferingName, accountStateId, accountStateName,
-                    outstandingBalance.toString(), totalAmountDue.toString()));
+                    outstandingBalance.toString(), totalAmountDue.toString(), "0"));
         }
         return loanDetails;
     }
