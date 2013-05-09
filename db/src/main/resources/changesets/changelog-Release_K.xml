@@ -823,5 +823,49 @@
       </sql>
    </rollback>
    </changeSet>
+   <changeSet id="MIFOS-5984" author="Krzysztof Kaczmarczyk" context="expansion">
+        <sql endDelimiter=";">
+            DROP TABLE IF EXISTS sections_questions_link;
+            DROP TABLE IF EXISTS sections_questions_condition;
+            DROP TABLE IF EXISTS sections_questions_condition_type;
+            
+            CREATE TABLE sections_questions_condition_type(
+                condition_type_id bigint auto_increment NOT NULL,
+                condition_name varchar(255) NOT NULL,
+                primary key(condition_type_id)
+            ) engine=innodb character set utf8;
+            
+            CREATE TABLE sections_questions_condition(
+                condition_id bigint auto_increment NOT NULL,
+                condition_type_id bigint NOT NULL,
+                value varchar(255) NOT NULL,
+                additional_value varchar(255),
+                primary key(condition_id),
+                foreign key(condition_type_id)
+                    references sections_questions_condition_type(condition_type_id)
+            ) engine=innodb character set utf8; 
+            
+            CREATE TABLE sections_questions_link(
+                link_id bigint auto_increment NOT NULL,
+                source_section_question_id int NOT NULL,
+                linked_section_question_id  int NOT NULL,
+                condition_id bigint NOT NULL,
+                primary key(link_id),
+                foreign key(source_section_question_id)
+                    references sections_questions(id),
+                foreign key(linked_section_question_id)
+                    references sections_questions(id),
+                foreign key(condition_id)
+                    references sections_questions_condition(condition_id)
+            ) engine=innodb character set utf8
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DROP TABLE IF EXISTS sections_questions_link;
+                DROP TABLE IF EXISTS sections_questions_condition;
+                DROP TABLE IF EXISTS sections_questions_condition_type;
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>
