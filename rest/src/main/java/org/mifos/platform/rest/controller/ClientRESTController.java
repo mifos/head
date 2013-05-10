@@ -35,6 +35,7 @@ import org.mifos.application.servicefacade.CreatePersonalDetailDto;
 import org.mifos.application.servicefacade.CreationAddresDto;
 import org.mifos.application.servicefacade.CreationFeeDto;
 import org.mifos.application.servicefacade.CreationMeetingDto;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.ClientCreationDetail;
@@ -72,7 +73,11 @@ public class ClientRESTController {
     @RequestMapping(value = "client/num-{globalCustNum}", method = RequestMethod.GET)
     public @ResponseBody
     ClientInformationDto getClientByNumber(@PathVariable String globalCustNum) {
-        return clientServiceFacade.getClientInformationDto(globalCustNum);
+    	try {
+    		return clientServiceFacade.getClientInformationDto(globalCustNum);
+    	} catch (MifosRuntimeException e) {
+    		return null;
+    	}
     }
 
     @RequestMapping(value = "client/num-{globalCustNum}/charges", method = RequestMethod.GET)

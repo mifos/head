@@ -1539,6 +1539,25 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
     
     @Override
+    public List<CustomerDetailDto> retrieveLoanGuarantors(String globalAccountNum) throws PersistenceException {
+        
+    	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+    	
+    	List<CustomerDetailDto> guarantors = new ArrayList<CustomerDetailDto>();
+    	
+    	List<GuarantyEntity> guaranties = legacyAccountDao.getGuarantyByLoanId(loan.getAccountId());
+    	
+    	for (GuarantyEntity guaranty: guaranties) {
+    		CustomerBO customerBO = customerDao.findCustomerById(guaranty.getGuarantorId());	
+    		guarantors.add(new CustomerDetailDto(customerBO.getCustomerId(), customerBO.getDisplayName(), customerBO.getSearchId(), 
+    				customerBO.getGlobalCustNum(), null, null, null));
+    	}
+    
+    	return guarantors;
+    	
+    }
+    
+    @Override
 	public OriginalScheduleInfoDto retrieveOriginalLoanSchedule(
 			String globalAccountNum) {
     	LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);

@@ -44,6 +44,7 @@ import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CreateLoanRequest;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
@@ -154,6 +155,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum, Date viewDate);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerDetailDto> retrieveLoanGuarantors(String globalAccountNum) throws PersistenceException;
 
     @PreAuthorize("isFullyAuthenticated()")
     OriginalScheduleInfoDto retrieveOriginalLoanSchedule(String globalAccountNum);

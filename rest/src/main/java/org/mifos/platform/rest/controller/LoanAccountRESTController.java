@@ -52,12 +52,12 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.ApplicableCharge;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
-import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.RepayLoanDto;
@@ -422,6 +422,13 @@ public class LoanAccountRESTController {
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum)
             throws Exception {
         return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum, new DateTime().toDate());
+    }
+    
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/guarantors", method = RequestMethod.GET)
+    public @ResponseBody
+    List<CustomerDetailDto> getLoanGuarantorsByNumber(@PathVariable String globalAccountNum)
+            throws Exception {
+        return loanAccountServiceFacade.retrieveLoanGuarantors(globalAccountNum);
     }
 
     @RequestMapping(value = "/account/loan/create", method = RequestMethod.POST)
