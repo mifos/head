@@ -1,136 +1,120 @@
-{
-    "address": {
-        "state": "",
-        "country": "",
-        "displayAddress": null,
-        "city": "",
-        "zip": "",
-        "phoneNumber": ""
+{ "activeSurveys" : false,
+  "address" : { "city" : "",
+      "country" : "",
+      "displayAddress" : null,
+      "phoneNumber" : "",
+      "state" : "",
+      "zip" : ""
     },
-    "customerMeeting": {
-        "meetingSchedule": "Recur every 1 Week(s) on Monday",
-        "meetingPlace": "rest"
+  "clientDisplay" : { "age" : 25,
+      "areFamilyDetailsRequired" : false,
+      "blackListed" : false,
+      "branchId" : 2,
+      "branchName" : "Branch Office",
+      "businessActivities" : null,
+      "citizenship" : null,
+      "clientUnderGroup" : true,
+      "customerActivationDate" : "2011-09-12",
+      "customerFormedByDisplayName" : "loan officer",
+      "customerId" : 3,
+      "customerLevelId" : 1,
+      "customerStatusId" : 3,
+      "customerStatusName" : "Active",
+      "dateOfBirth" : "1986-06-06",
+      "displayName" : "Client REST API",
+      "educationLevel" : null,
+      "ethnicity" : null,
+      "externalId" : "",
+      "familyDetails" : null,
+      "globalCustNum" : "0002-000000003",
+      "governmentId" : "",
+      "handicapped" : null,
+      "loanOfficerId" : 2,
+      "loanOfficerName" : "loan officer",
+      "maritalStatus" : null,
+      "numChildren" : null,
+      "parentCustomerDisplayName" : "Group-REST",
+      "povertyStatus" : "Very poor",
+      "spouseFatherName" : "first last",
+      "spouseFatherValue" : "Spouse",
+      "trainedDate" : null
     },
-    "customerFlags": [],
-    "clientPerformanceHistory": {
-        "loanCycleNumber": 0,
-        "lastLoanAmount": "0.0",
-        "noOfActiveLoans": 2,
-        "delinquentPortfolioAmountInvalid":false,
-        "delinquentPortfolioAmount": "0.0",
-        "totalSavingsAmount": "105.0",
-        "meetingsAttended": 0,
-        "meetingsMissed": 0,
-        "loanCycleCounters": [
-            {
-                "counter": 1,
-                "offeringName": "REST Loan Product A"
-            },
-            {
-                "counter": 1,
-                "offeringName": "REST Loan Product B"
-            }
-        ]
+  "clientPerformanceHistory" : { "delinquentPortfolioAmount" : "0.0",
+      "delinquentPortfolioAmountInvalid" : false,
+      "lastLoanAmount" : "0.0",
+      "loanCycleCounters" : [ { "counter" : 1,
+            "offeringName" : "REST Loan Product A"
+          },
+          { "counter" : 1,
+            "offeringName" : "REST Loan Product B"
+          }
+        ],
+      "loanCycleNumber" : 0,
+      "meetingsAttended" : 0,
+      "meetingsMissed" : 0,
+      "noOfActiveLoans" : 2,
+      "totalSavingsAmount" : "105.0"
     },
-    "recentCustomerNotes": [
-        {
-            "comment": "Active",
-            "commentDate": "2011-09-12",
-            "personnelName": "mifos"
-        }
+  "closedLoanAccounts" : [  ],
+  "closedSavingsAccounts" : [  ],
+  "customerAccountSummary" : { "globalAccountNum" : "000100000000003",
+      "nextDueAmount" : "0.0"
+    },
+  "customerFlags" : [  ],
+  "customerMeeting" : { "meetingPlace" : "rest",
+      "meetingSchedule" : "Recur every 1 Week(s) on Monday"
+    },
+  "customerSurveys" : [  ],
+  "groupLoanAccountsInUse" : [  ],
+  "loanAccountsInUse" : [ { "accountStateId" : 5,
+        "accountStateName" : "Active in Good Standing",
+        "accountTypeId" : 1,
+        "globalAccountNum" : "000100000000004",
+        "outstandingBalance" : "101.0",
+        "prdOfferingName" : "REST Loan Product A",
+        "totalAmountDue" : "10.0",
+        "totalAmountInArrears" : "0.0"
+      },
+      { "accountStateId" : 5,
+        "accountStateName" : "Active in Good Standing",
+        "accountTypeId" : 1,
+        "globalAccountNum" : "000100000000005",
+        "outstandingBalance" : "1032.0",
+        "prdOfferingName" : "REST Loan Product B",
+        "totalAmountDue" : "103.0",
+        "totalAmountInArrears" : "0.0"
+      },
+      { "accountStateId" : 3,
+        "accountStateName" : "Application Approved",
+        "accountTypeId" : 1,
+        "globalAccountNum" : "000100000000008",
+        "outstandingBalance" : "101.0",
+        "prdOfferingName" : "REST Loan Product A",
+        "totalAmountDue" : "10.0",
+        "totalAmountInArrears" : "0.0"
+      }
     ],
-    "activeSurveys": false,
-    "customerAccountSummary": {
-        "globalAccountNum": "000100000000003",
-        "nextDueAmount": "0.0"
-    },
-    "savingsAccountsInUse": [
-        {
-            "globalAccountNum": "000100000000006",
-            "prdOfferingId": null,
-            "prdOfferingName": "Savings A",
-            "accountStateName": "Active",
-            "accountStateId": 16,
-            "savingsBalance": "10.0",
-            "maxWithdrawalAmount": 1000,
-            "savingsType": "Voluntary"
-        },
-        {
-            "globalAccountNum": "000100000000007",
-            "prdOfferingId": null,
-            "prdOfferingName": "Savings B",
-            "accountStateName": "Active",
-            "accountStateId": 16,
-            "savingsBalance": "95.0",
-            "maxWithdrawalAmount": 1000,
-            "savingsType": "Mandatory"
-        }
-    ],
-    "customerSurveys": [],
-    "loanAccountsInUse": [
-        {
-            "globalAccountNum": "000100000000004",
-            "prdOfferingName": "REST Loan Product A",
-            "outstandingBalance": "101.0",
-            "totalAmountDue": "10.0",
-            "accountStateName": "Active in Good Standing",
-            "accountStateId": 5,
-            "accountTypeId":1
-        },
-        {
-            "globalAccountNum": "000100000000005",
-            "prdOfferingName": "REST Loan Product B",
-            "outstandingBalance": "1032.0",
-            "totalAmountDue": "103.0",
-            "accountStateName": "Active in Good Standing",
-            "accountStateId": 5,
-            "accountTypeId":1
-        },
-        {
-			"globalAccountNum": "000100000000008",
-			"prdOfferingName": "REST Loan Product A",
-			"outstandingBalance": "101.0",
-			"totalAmountDue": "10.0",
-			"accountStateName": "Application Approved",
-			"accountStateId": 3,
-			"accountTypeId":1
-		}
-    ],
-    "groupLoanAccountsInUse":[],
-    "clientDisplay": {
-        "displayName": "Client REST API",
-        "branchId": 2,
-        "customerId": 3,
-        "loanOfficerId": 2,
-        "dateOfBirth": "1986-06-06",
-        "governmentId": "",
-        "maritalStatus": null,
-        "globalCustNum": "0002-000000003",
-        "externalId": "",
-        "customerActivationDate": "2011-09-12",
-        "customerLevelId": 1,
-        "customerStatusName": "Active",
-        "spouseFatherName": "first last",
-        "trainedDate": null,
-        "familyDetails": null,
-        "age": 25,
-        "businessActivities": null,
-        "citizenship": null,
-        "educationLevel": null,
-        "handicapped": null,
-        "numChildren": null,
-        "povertyStatus": "Very poor",
-        "customerStatusId": 3,
-        "loanOfficerName": "loan officer",
-        "parentCustomerDisplayName": "Group-REST",
-        "customerFormedByDisplayName": "loan officer",
-        "blackListed": false,
-        "branchName": "Branch Office",
-        "clientUnderGroup": true,
-        "ethnicity": null,
-        "areFamilyDetailsRequired": false,
-        "spouseFatherValue": "Spouse"
-    },
-    "closedLoanAccounts":[],
-    "closedSavingsAccounts":[]
+  "recentCustomerNotes" : [ { "comment" : "Active",
+        "commentDate" : "2011-09-12",
+        "personnelName" : "mifos"
+      } ],
+  "savingsAccountsInUse" : [ { "accountStateId" : 16,
+        "accountStateName" : "Active",
+        "globalAccountNum" : "000100000000006",
+        "maxWithdrawalAmount" : 1000,
+        "prdOfferingId" : null,
+        "prdOfferingName" : "Savings A",
+        "savingsBalance" : "10.0",
+        "savingsType" : "Voluntary"
+      },
+      { "accountStateId" : 16,
+        "accountStateName" : "Active",
+        "globalAccountNum" : "000100000000007",
+        "maxWithdrawalAmount" : 1000,
+        "prdOfferingId" : null,
+        "prdOfferingName" : "Savings B",
+        "savingsBalance" : "95.0",
+        "savingsType" : "Mandatory"
+      }
+    ]
 }
