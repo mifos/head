@@ -1027,12 +1027,6 @@
         </rollback>
     </changeSet>
    <changeSet id="MIFOS_5628_1" author="Kamil Kalfas">
-       <validCheckSum>3:6e67590c7fa9e8af6457ce29d6d7f7ca</validCheckSum>
-       <preConditions onFail="MARK_RAN">
-           <sqlCheck expectedResult="0">
-               select count(*) from account_type where account_type_id = 5;
-           </sqlCheck>
-       </preConditions>
        <sql endDelimiter=";">
 		   INSERT INTO account_type(account_type_id, lookup_id, description) VALUES(5, 126, 'Group Loan Account');
        </sql>
