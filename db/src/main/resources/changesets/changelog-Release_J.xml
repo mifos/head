@@ -1037,6 +1037,9 @@
 		   INSERT INTO account_type(account_type_id, lookup_id, description) VALUES(5, 126, 'Group Loan Account');
        </sql>
        <rollback>
+           <sql endDelimiter=";">
+           DELETE FROM account_type WHERE account_type_id=5;
+           </sql>
        </rollback>
    </changeSet>
    <changeSet id="MIFOS_5628_2" author="Kamil Kalfas">
