@@ -14,5 +14,10 @@
             <one-to-many class="org.mifos.platform.questionnaire.domain.SectionQuestion"/>
         </bag>
 
+        <bag name="sectionLinks" lazy="false" inverse="true" cascade="save-update">
+            <key column="affected_section_id" not-null="true"/>
+            <one-to-many class="org.mifos.platform.questionnaire.domain.SectionLink"/>
+        </bag>
+        
     </class>
 </hibernate-mapping>

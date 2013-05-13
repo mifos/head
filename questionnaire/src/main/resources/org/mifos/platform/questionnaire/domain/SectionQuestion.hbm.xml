@@ -18,6 +18,12 @@
         <many-to-one name="question" column="question_id" cascade="save-update" lazy="false"
             class="org.mifos.platform.questionnaire.domain.QuestionEntity"
             access="field"/>
+            
+        <bag name="sectionQuestionLinks" lazy="false" inverse="true" cascade="save-update">
+            <key column="affected_section_question_id" not-null="true"/>
+            <one-to-many class="org.mifos.platform.questionnaire.domain.SectionQuestionLink"/>
+        </bag>
+        
     </class>
     <query name="SectionQuestion.retrieveIdFromQuestionGroupIdQuestionIdSectionName">
               <![CDATA[select sectionQuestion.id from SectionQuestion as sectionQuestion, QuestionGroup as questionGroup join questionGroup.sections section

@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.domain;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 public class Section implements Serializable {
     //TODO: For the time being to resolve dependencies
@@ -34,7 +35,17 @@ public class Section implements Serializable {
     private List<SectionQuestion> questions;
     private Integer sequenceNumber;
 
-    @SuppressWarnings({"UnusedDeclaration", "PMD.UncommentedEmptyConstructor"})
+    private List<SectionLink> sectionLinks;
+    
+	public List<SectionLink> getSectionLinks() {
+		return sectionLinks;
+	}
+
+	public void setSectionLinks(List<SectionLink> sectionLinks) {
+		this.sectionLinks = sectionLinks;
+	}
+
+	@SuppressWarnings({"UnusedDeclaration", "PMD.UncommentedEmptyConstructor"})
     public Section() {
     }
 

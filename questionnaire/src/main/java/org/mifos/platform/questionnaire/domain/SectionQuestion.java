@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.domain;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SectionQuestion implements Serializable {
     //TODO: For the time being to resolve dependencies
@@ -34,8 +35,19 @@ public class SectionQuestion implements Serializable {
     private QuestionEntity question;
     private Section section;
     private boolean showOnPage;
+    
+    private List<SectionQuestionLink> sectionQuestionLinks;
 
-    public boolean isShowOnPage() {
+    public List<SectionQuestionLink> getSectionQuestionLinks() {
+		return sectionQuestionLinks;
+	}
+
+	public void setSectionQuestionLinks(
+			List<SectionQuestionLink> sectionQuestionLinks) {
+		this.sectionQuestionLinks = sectionQuestionLinks;
+	}
+
+	public boolean isShowOnPage() {
 		return showOnPage;
 	}
 

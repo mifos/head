@@ -825,45 +825,61 @@
    </changeSet>
    <changeSet id="MIFOS-5984" author="Krzysztof Kaczmarczyk" context="expansion">
         <sql endDelimiter=";">
-            DROP TABLE IF EXISTS sections_questions_link;
-            DROP TABLE IF EXISTS sections_questions_condition;
-            DROP TABLE IF EXISTS sections_questions_condition_type;
+            DROP TABLE IF EXISTS section_link;
+            DROP TABLE IF EXISTS section_question_link;
+            DROP TABLE IF EXISTS question_group_link;
             
-            CREATE TABLE sections_questions_condition_type(
-                condition_type_id bigint auto_increment NOT NULL,
-                condition_name varchar(255) NOT NULL,
-                primary key(condition_type_id)
-            ) engine=innodb character set utf8;
-            
-            CREATE TABLE sections_questions_condition(
-                condition_id bigint auto_increment NOT NULL,
-                condition_type_id bigint NOT NULL,
+            CREATE TABLE question_group_link (
+                id bigint auto_increment NOT NULL,
+                condition_type_lookup_id bigint NOT NULL,
                 value varchar(255) NOT NULL,
                 additional_value varchar(255),
-                primary key(condition_id),
-                foreign key(condition_type_id)
-                    references sections_questions_condition_type(condition_type_id)
-            ) engine=innodb character set utf8; 
-            
-            CREATE TABLE sections_questions_link(
-                link_id bigint auto_increment NOT NULL,
                 source_section_question_id int NOT NULL,
-                linked_section_question_id  int NOT NULL,
-                condition_id bigint NOT NULL,
-                primary key(link_id),
+                primary key(id),
                 foreign key(source_section_question_id)
-                    references sections_questions(id),
-                foreign key(linked_section_question_id)
-                    references sections_questions(id),
-                foreign key(condition_id)
-                    references sections_questions_condition(condition_id)
-            ) engine=innodb character set utf8
+                    references sections_questions(id)
+            ) engine=innodb character set utf8;
+            
+            CREATE TABLE section_question_link (
+                id bigint auto_increment NOT NULL,
+                question_group_link_id bigint NOT NULL,
+                affected_section_question_id int NOT NULL,
+                primary key(id),
+                foreign key(question_group_link_id)
+                    references question_group_link(id),
+                foreign key(affected_section_question_id)
+                    references sections_questions(id)
+            ) engine=innodb character set utf8;
+            
+            CREATE TABLE section_link (
+                id bigint auto_increment NOT NULL,
+                question_group_link_id bigint NOT NULL,
+                affected_section_id int NOT NULL,
+                primary key(id),
+                foreign key(question_group_link_id)
+                    references question_group_link(id),
+                foreign key(affected_section_id)
+                    references sections(id)
+            ) engine=innodb character set utf8;
+            
+            SELECT @lookupEntityId := max(entity_id)+1 from lookup_entity;
+            
+            INSERT INTO lookup_entity (entity_id, entity_name, description) values 
+                (@lookupEntityId, "ConditionType", "Question group link condition type");
+                
+            INSERT INTO lookup_value (entity_id, lookup_name) values 
+                (@lookupEntityId, "QuestionGroupLink.equals"), 
+                (@lookupEntityId, "QuestionGroupLink.before"),
+                (@lookupEntityId, "QuestionGroupLink.after");
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                DROP TABLE IF EXISTS sections_questions_link;
-                DROP TABLE IF EXISTS sections_questions_condition;
-                DROP TABLE IF EXISTS sections_questions_condition_type;
+                DROP TABLE IF EXISTS section_link;
+                DROP TABLE IF EXISTS section_question_link;
+                DROP TABLE IF EXISTS question_group_link;
+                SELECT @lookupEntityId := entity_id from lookup_entity where entity_name = "ConditionType";
+                DELETE FROM lookup_value WHERE entity_id = @lookupEntityId;
+                DELETE FROM lookup_entity WHERE entity_id = @lookupEntityId;
             </sql>
         </rollback>
     </changeSet>

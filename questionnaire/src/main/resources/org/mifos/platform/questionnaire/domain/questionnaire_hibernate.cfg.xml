@@ -7,7 +7,11 @@
         <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
         <mapping class="org.mifos.platform.questionnaire.domain.EventEntity" />
         <mapping class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
-
+        
+        <mapping class="org.mifos.platform.questionnaire.domain.QuestionGroupLink"/>
+        <mapping class="org.mifos.platform.questionnaire.domain.SectionQuestionLink"/>
+        <mapping class="org.mifos.platform.questionnaire.domain.SectionLink"/>
+        
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionEntity.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionChoiceEntity.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml" />
