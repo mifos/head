@@ -39,6 +39,17 @@ CreateQuestionGroup.moveSectionDown = function (sectionName){
     sectionToMoveDownBtn.click();
 }
 
+CreateQuestionGroup.addLink = function (value) {
+    var addLinkBtn = document.getElementById('_eventId_addLink');
+    addLinkBtn.click();
+}
+
+CreateQuestionGroup.removeLink = function (linkId) {
+    var removeLinkBtn = document.getElementById('_eventId_removeLink');
+    removeLinkBtn.value = linkId;
+	removeLinkBtn.click();
+}
+
 $(document).ready(function () {
 	$('#txtListSearch').keyup(function(event) {
 		var search_text = $('#txtListSearch').val();
@@ -82,4 +93,29 @@ $(document).ready(function () {
         	$("#_eventId_defineQuestionGroup").click();
         }
     });
+    
+    $("input[name=linkAppliesTo]").change(function() {
+    	if ($(this).val() == "section") {
+    		$("#affectedQuestion").css("display", "none");
+    		$("#affectedSection").css("display", "table-row");
+    	} else {
+    		$("#affectedQuestion").css("display", "table-row");
+    		$("#affectedSection").css("display", "none");
+    	}
+    	
+    });
+    
+    $("#linkType").change(function() {
+    	switch ($("#linkType option:selected").html()) {
+    	case "Equals":
+    		$("#additionalValue").css("display", "none");
+    		$("#valueTitle").html("Value:");
+    		break;
+    	case "Range":
+    		$("#additionalValue").css("display", "table-row");
+    		$("#valueTitle").html("From:");
+    		break;
+    	}
+    });
+    
 });

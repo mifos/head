@@ -12,11 +12,21 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Formula;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "question_group_link")
 public class QuestionGroupLink implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
+	public static final String CONDITION_TYPE_EQUALS = "QuestionGroupLink.equals";
+	public static final String CONDITION_TYPE_NOT_EQUALS = "QuestionGroupLink.notEquals";
+	public static final String CONDITION_TYPE_GREATER = "QuestionGroupLink.greater";
+	public static final String CONDITION_TYPE_SMALLER = "QuestionGroupLink.smaller";
+	public static final String CONDITION_TYPE_RANGE = "QuestionGroupLink.range";
+	public static final String CONDITION_TYPE_DATE_RANGE = "QuestionGroupLink.dateRange";
+	public static final String CONDITION_TYPE_BEFORE = "QuestionGroupLink.before";
+	public static final String CONDITION_TYPE_AFTER = "QuestionGroupLink.after";
+	
     @Id
     @GeneratedValue
     @Column(name="id")

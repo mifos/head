@@ -824,6 +824,7 @@
    </rollback>
    </changeSet>
    <changeSet id="MIFOS-5984" author="Krzysztof Kaczmarczyk" context="expansion">
+        <validCheckSum>3:1dcade39c06049015146b83ec489f300</validCheckSum>
         <sql endDelimiter=";">
             DROP TABLE IF EXISTS section_link;
             DROP TABLE IF EXISTS section_question_link;
@@ -869,6 +870,11 @@
                 
             INSERT INTO lookup_value (entity_id, lookup_name) values 
                 (@lookupEntityId, "QuestionGroupLink.equals"), 
+                (@lookupEntityId, "QuestionGroupLink.notEquals"),
+                (@lookupEntityId, "QuestionGroupLink.greater"),
+                (@lookupEntityId, "QuestionGroupLink.smaller"),
+                (@lookupEntityId, "QuestionGroupLink.range"),
+                (@lookupEntityId, "QuestionGroupLink.dateRange"),
                 (@lookupEntityId, "QuestionGroupLink.before"),
                 (@lookupEntityId, "QuestionGroupLink.after");
         </sql>

@@ -22,7 +22,6 @@ package org.mifos.platform.questionnaire.domain;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 public class Section implements Serializable {
     //TODO: For the time being to resolve dependencies

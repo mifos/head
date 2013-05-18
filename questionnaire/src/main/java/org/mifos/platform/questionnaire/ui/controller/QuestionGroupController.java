@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.ui.controller;
 
 import static java.text.MessageFormat.format;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,12 +40,15 @@ import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundExcept
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.SectionLinkDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
+import org.mifos.platform.questionnaire.ui.model.SectionQuestionDetailForm;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.ValidationException;
 import org.springframework.binding.message.MessageContext;
@@ -52,12 +56,15 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.webflow.execution.RequestContext;
 
 @Controller
 @SuppressWarnings("PMD")
 public class QuestionGroupController extends QuestionnaireController {
-
+	
     @SuppressWarnings({"UnusedDeclaration"})
     public QuestionGroupController() {
         super();
@@ -116,6 +123,12 @@ public class QuestionGroupController extends QuestionnaireController {
         }
         return "viewQuestionGroupDetail";
     }
+    
+    @RequestMapping(value="/getHiddenVisibleQuestions.ftl", method=RequestMethod.POST)
+    public @ResponseBody Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestions(
+    		@RequestParam Integer questionId, @RequestParam String response) throws ParseException {
+    	return questionnaireServiceFacade.getHiddenVisibleQuestionsAndSections(questionId, response);
+    }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext, boolean createMode) {
@@ -135,6 +148,8 @@ public class QuestionGroupController extends QuestionnaireController {
                 if (containsCreateLoanEventSource(questionGroupForm.getEventSources()) && questionGroupForm.getApplyToAllLoanProducts()) {
                     questionnaireServiceFacade.applyToAllLoanProducts(questionGroupId);
                 }
+                questionnaireServiceFacade.createQuestionLinks(questionGroupForm.getQuestionLinks());
+                questionnaireServiceFacade.createSectionLinks(questionGroupForm.getSectionLinks());
             }
             catch (AccessDeniedException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(),
@@ -168,7 +183,63 @@ public class QuestionGroupController extends QuestionnaireController {
         }
         return evtSourcesMap;
     }
+  
+    public String addLink(QuestionGroupForm questionGroupForm, String sourceQuestionId, 
+    		String linkType, String appliesTo, String affectedQuestionId, String affectedSection, 
+    		String value, String additionalValue, RequestContext requestContext) {
+    	
+    	SectionQuestionDetailForm sourceQuestion = null;
+    	String sourceQuestionDisplay = null;
+    	for (SectionDetailForm s: questionGroupForm.getSections()) {
+    		for (SectionQuestionDetailForm q: s.getSectionQuestions()) {
+    			if (q.getQuestionId() == Integer.parseInt(sourceQuestionId)) {
+    				sourceQuestion = q;	
+    				sourceQuestionDisplay = s.getName() + " - " + q.getText();
+    			}
+    		}
+    	}
+    	
+		if (sourceQuestion == null) {
+			return "failure";
+		}
+		
+    	if (appliesTo.equals("question")) {
+    		
+    		SectionQuestionDetailForm affectedQuestion = null;
+    		String affectedQuestionDisplay = null;
+        	for (SectionDetailForm s: questionGroupForm.getSections()) {
+        		for (SectionQuestionDetailForm q: s.getSectionQuestions()) {
+        			if (q.getQuestionId() == Integer.parseInt(affectedQuestionId)) {
+        				affectedQuestion = q;	
+        				affectedQuestionDisplay = s.getName() + " - " + q.getText();
+        			}
+        		}
+        	}
+    		
+    		if (affectedQuestion == null) {
+    			return "failure";
+    		}
+    		
+    		QuestionLinkDetail questionLink = new QuestionLinkDetail(Integer.parseInt(sourceQuestionId), 
+    				sourceQuestionDisplay, 
+    				Integer.parseInt(affectedQuestionId), affectedQuestionDisplay, value, additionalValue,
+    				linkType, "Equals");
+    		questionGroupForm.getQuestionLinks().add(questionLink);
+    		
+    	} else {
+    		
+    		SectionLinkDetail sectionLink = new SectionLinkDetail();
+    		sectionLink.setSourceQuestionId(Integer.parseInt(sourceQuestionId));
+    		sectionLink.setAffectedSectionId(Integer.parseInt(affectedSection));
+    		sectionLink.setLinkType(linkType);
+    		sectionLink.setValue(value);
+    		sectionLink.setAdditionalValue(additionalValue);
+    		questionGroupForm.getSectionLinks().add(sectionLink);
+    	}
 
+    	return "success";
+    }
+    
     public String addSection(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
         if (questionGroupForm.hasNoQuestionsInCurrentSection()) {
             constructErrorMessage(requestContext.getMessageContext(),
@@ -180,12 +251,14 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     public String deleteSection(QuestionGroupForm questionGroupForm, String sectionName) {
-        questionGroupForm.removeSection(sectionName);
+    	//TODO: usuń wszystki linki ktore mialy ta section w affected
+    	questionGroupForm.removeSection(sectionName);
         return "success";
     }
 
     public String deleteQuestion(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
-        questionGroupForm.removeQuestion(sectionName, questionId);
+        //TODO: usuń wszystki linki ktore mialy to question jako source lub affecte
+    	questionGroupForm.removeQuestion(sectionName, questionId);
         return "success";
     }
 
@@ -235,7 +308,11 @@ public class QuestionGroupController extends QuestionnaireController {
         }
         return sectionQuestionDetails;
     }
-
+    
+    public Map<String, String> getAllLinkTypes() {
+        return questionnaireServiceFacade.getAllLinkTypes();
+    }
+    
     public String saveQuestionnaire(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {
         QuestionGroupDetail questionGroupDetail = questionGroupDetails.getDetails().get(questionGroupIndex);
         try {

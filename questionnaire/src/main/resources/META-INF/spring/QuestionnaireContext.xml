@@ -36,6 +36,28 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="sectionQuestionLinkDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.SectionQuestionLinkDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.SectionQuestionLink</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="sectionLinkDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.SectionLinkDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.SectionLink</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="eventSourceDao" parent="abstractDao">
         <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.EventSourceDao"/>

@@ -35,10 +35,9 @@ public class SectionQuestion implements Serializable {
     private QuestionEntity question;
     private Section section;
     private boolean showOnPage;
-    
     private List<SectionQuestionLink> sectionQuestionLinks;
 
-    public List<SectionQuestionLink> getSectionQuestionLinks() {
+	public List<SectionQuestionLink> getSectionQuestionLinks() {
 		return sectionQuestionLinks;
 	}
 

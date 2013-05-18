@@ -314,6 +314,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private SectionDetail mapToSectionDetail(Section section) {
         SectionDetail sectionDetail = new SectionDetail();
+        sectionDetail.setId(section.getId());
         sectionDetail.setName(section.getName());
         if (section.getSequenceNumber() != null) {
             sectionDetail.setSequenceNumber(section.getSequenceNumber());

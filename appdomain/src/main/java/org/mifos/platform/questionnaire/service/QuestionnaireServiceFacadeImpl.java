@@ -20,12 +20,13 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
-
-import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
@@ -302,5 +303,30 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         }
         return new Short((short)newActivityId);
     }
+
+	@Override
+	public Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(
+			Integer questionId, String response) throws ParseException {
+		return questionnaireService.getHiddenVisibleQuestionsAndSections(questionId, response);
+	}
+
+	@Override
+	public Map<String, String> getAllLinkTypes() {
+		Map<String, String> values = new HashMap<String, String>();
+		values.put("2685", "Equals");
+		values.put("2686", "Before");
+		values.put("2688", "Range");
+		return values;
+	}
+
+	@Override
+	public void createQuestionLinks(List<QuestionLinkDetail> questionLinks) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void createSectionLinks(List<SectionLinkDetail> sectionLinks) {
+		// TODO Auto-generated method stub
+	}
     
 }

@@ -195,6 +195,122 @@
         <input type="submit" id="_eventId_moveQuestionDown" name="_eventId_moveQuestionDown" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_moveSectionUp" name="_eventId_moveSectionUp" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_moveSectionDown" name="_eventId_moveSectionDown" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_addLink" name="_eventId_addLink" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_removeLink" name="_eventId_removeLink" value="" style="visibility:hidden"/>
+    </div>
+    
+    <h1>Question links</h1>
+    <div id="question_links">
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>Source question:</td>
+                <td>
+                    <select name="sourceQuestion">
+                        [#list questionGroupForm.sections as section]
+                            [#list section.sectionQuestions as sectionQuestion]
+                                <option value="${sectionQuestion.questionId}">${section.name} - ${sectionQuestion.text}</option>
+                            [/#list]
+                        [/#list]
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Link type:</td>
+                <td>
+                    <select id="linkType" name="linkType">
+                        [#list LinkTypes?keys as key]
+                            [#if key?is_string]
+                                <option value="${key}">${LinkTypes[key]}</option>
+                            [/#if]
+                        [/#list]
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Applies to:</td>
+                <td>
+                    <input type="radio" name="linkAppliesTo" value="question" checked="yes"/>Question
+                    <input type="radio" name="linkAppliesTo" value="section" />Section
+                </td>
+            </tr>
+            <tr id="affectedQuestion">
+                <td>Affected question:</td>
+                <td>
+                    <select name="affectedQuestion">
+                    [#list questionGroupForm.sections as section]
+                        [#list section.sectionQuestions as sectionQuestion]
+                            <option value="${sectionQuestion.questionId}">${section.name} - ${sectionQuestion.text}</option>
+                        [/#list]
+                    [/#list]
+                    </select>
+                </td>
+            </tr>
+            <tr id="affectedSection" style="display: none;">
+                <td>Affected section:</td>
+                <td>
+                    <select name="affectedSection">
+                        [#list questionGroupForm.sections as section]
+                            <option value="${section.name}">${section.name}</option>
+                        [/#list]
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td id="valueTitle">Value:</td>
+                <td><input type="text" name="value" /></td>
+            </tr>
+            <tr id="additionalValue" style="display: none;">
+                <td>To:</td>
+                <td><input type="text" name="additionalValue" /></td>
+            </tr>
+        </table>
+        
+        <div class="add_link">
+            <div class="button_container">
+                    <input type="submit" name="_eventId_addLink" id="_eventId_addLink" value='Add Link' class="buttn" />
+            </div>
+        </div>
+
+        [#list questionGroupForm.questionLinks as questionLink]
+        [/#list]
+
+        [#list questionGroupForm.sectionLinks as sectionLink]
+        [/#list]
+        <table class="table_common" id="links_questions">
+            <thead>
+            <tr>
+                <th>[@spring.message "questionnaire.link.sourceQuestion"/]</th>
+                <th>[@spring.message "questionnaire.link.linkType"/]</th>
+                <th>[@spring.message "questionnaire.link.affectedQuestion"/]</th>
+                <th>[@spring.message "questionnaire.link.value"/]</th>
+                <th>[@spring.message "questionnaire.link.additionalValue"/]</th>
+            </tr>
+            </thead>
+            <tbody>
+                [#list questionGroupForm.questionLinks as questionLink]
+                    <tr>
+                        <td>${questionLink.soureQuestionDisplay}</td>
+                        <td>${questionLink.linkTypeDisplay}</td>
+                        <td>${questionLink.affectedQuestionDisplay}</td>
+                        <td>${questionLink.value}</td>
+                        <td>${questionLink.additionalValue}</td>`
+                    </tr>
+                [/#list]
+            </tbody>
+        </table>
+        <table class="table_common" id="links_sections">
+            <thead>
+            <tr>
+                <th>[@spring.message "questionnaire.link.affectedSection"/]</th>
+                <th>[@spring.message "questionnaire.link.sourceQuestion"/]</th>
+                <th>[@spring.message "questionnaire.link.linkType"/]</th>
+                <th>[@spring.message "questionnaire.link.value"/]</th>
+                <th>[@spring.message "questionnaire.link.additionalValue"/]</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
     <div class="button_footer">
         <div class="button_container buttonsSubmitCancel">
