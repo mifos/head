@@ -107,9 +107,9 @@ public class QuestionnaireMapperTest {
     private QuestionGroupInstanceDao questionGroupInstanceDao;
 
     @Before
-    public void setUp() {
+    /*public void setUp() {
         questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
-    }
+    }*/
 
     @Test
     public void shouldMapQuestionDtoToQuestionEntity() {

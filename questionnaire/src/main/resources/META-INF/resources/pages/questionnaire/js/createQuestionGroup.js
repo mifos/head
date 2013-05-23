@@ -108,9 +108,15 @@ $(document).ready(function () {
     $("#linkType").change(function() {
     	switch ($("#linkType option:selected").html()) {
     	case "Equals":
+    	case "Not equals":
+    	case "Before":
+    	case "After":
+    	case "Smaller":
+    	case "Greater":
     		$("#additionalValue").css("display", "none");
     		$("#valueTitle").html("Value:");
     		break;
+    	case "Date range":
     	case "Range":
     		$("#additionalValue").css("display", "table-row");
     		$("#valueTitle").html("From:");

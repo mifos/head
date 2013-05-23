@@ -127,12 +127,12 @@ public class QuestionnaireServiceTest {
     private static final Random random = new Random();
 
     @Before
-    public void setUp() {
+    /*public void setUp() {
         QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
         questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper,
                                             questionGroupDao, eventSourceDao, questionGroupInstanceDao,
                                             ppiSurveyLocator, questionGroupDefinitionParser, null);
-    }
+    }*/
 
     @Test
     public void shouldDefineQuestion() throws SystemException {

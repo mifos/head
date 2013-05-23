@@ -29,10 +29,18 @@
         <transition on="removeSmartChoice" to="removeChoice"/>
         <transition on="createQuestions" to="createQuestions" />
         <transition on="addLink" to="addLink" />
+        <transition on="getLinkTypes"> 
+            <evaluate expression="questionGroupController.getLinkTypesByQuestionId(requestParameters.sourceQuestion)" result="flowScope.LinkTypes" />
+        </transition>
         <transition on="removeLink" to="removeLink" />
         <transition on="cancel" to="cancel" bind="false" history="discard"/>
     </view-state>
 
+    <!-- <action-state id="getLinkTypes">
+        <evaluate expression="questionGroupController.getLinkTypesByQuestionId(requestParameters.sourceQuestion)" result="flowScope.LinkTypes" />
+        <transition to="createQuestionGroup" />
+    </action-state> -->
+    
     <action-state id="deleteSection">
         <evaluate expression="questionGroupController.deleteSection(questionGroupForm, flowRequestContext)"/>
         <transition on="success" to="createQuestionGroup" />
@@ -40,12 +48,6 @@
 
     <action-state id="deleteQuestion">
         <evaluate expression="questionGroupController.deleteQuestion(questionGroupForm, requestParameters.questionSection ,requestParameters._eventId_deleteQuestion )"/>
-        <transition on="success" to="createQuestionGroup" />
-    </action-state>
-    
-    <action-state id="addLink">
-        <evaluate expression="questionGroupController.addLink(questionGroupForm, requestParameters.sourceQuestion, requestParameters.linkType, requestParameters.linkAppliesTo, 
-                                requestParameters.affectedQuestion, requestParameters.affectedSection, requestParameters.value, requestParameters.additionalValue, flowRequestContext)"/>
         <transition on="success" to="createQuestionGroup" />
     </action-state>
 
@@ -110,6 +112,13 @@
     <action-state id="addSmartChoiceTag">
         <evaluate expression="questionGroupController.addSmartChoiceTag(questionGroupForm, flowRequestContext, requestParameters._eventId_addSmartChoiceTag)"/>
         <transition to="createQuestionGroup" />
+    </action-state>
+    
+    <action-state id="addLink">
+        <evaluate expression="questionGroupController.addLink(questionGroupForm, requestParameters.sourceQuestion, requestParameters.linkType, requestParameters.linkAppliesTo, 
+                                requestParameters.affectedQuestion, requestParameters.affectedSection, requestParameters.value, requestParameters.additionalValue, flowRequestContext)"/>
+        <transition on="success" to="createQuestionGroup" />
+        <transition on="failure" to="createQuestionGroup" />
     </action-state>
 
     <end-state id="defineQuestionGroupSuccess" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />

@@ -19,10 +19,10 @@
             class="org.mifos.platform.questionnaire.domain.QuestionEntity"
             access="field"/>
             
-        <bag name="sectionQuestionLinks" lazy="false" cascade="save-update">
+        <!-- <bag name="sectionQuestionLinks" lazy="false" cascade="save-update">
             <key column="affected_section_question_id" not-null="true"/>
             <one-to-many class="org.mifos.platform.questionnaire.domain.SectionQuestionLink"/>
-        </bag>
+        </bag> -->
 
     </class>
     <query name="SectionQuestion.retrieveIdFromQuestionGroupIdQuestionIdSectionName">
@@ -34,6 +34,10 @@
     <query name="SectionQuestion.retrieveFromQuestionIdSectionId">
               <![CDATA[from SectionQuestion as sectionQuestion where sectionQuestion.question.questionId = :QUESTION_ID
                         and sectionQuestion.section.id = :SECTION_ID
+              ]]>
+    </query>
+    <query name="SectionQuestion.retrieveFromSectionQuestionId">
+              <![CDATA[from SectionQuestion as sectionQuestion where sectionQuestion.id = :QUESTION_ID
               ]]>
     </query>
 </hibernate-mapping>

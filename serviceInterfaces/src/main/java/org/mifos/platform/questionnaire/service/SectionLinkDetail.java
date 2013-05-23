@@ -25,42 +25,47 @@ import java.io.Serializable;
 public class SectionLinkDetail implements Serializable {
     private static final long serialVersionUID = 5240884292277900071L;
 
-    private Integer sourceQuestionId;
-    private Integer affectedSectionId;
+    private SectionQuestionDetail sourceQuestion;
+    private SectionDetail affectedSection;
     private String value;
     private String additionalValue;
-    private String linkType;
+    private Integer linkType;
+    private String linkTypeDisplay;
     
-	public Integer getSourceQuestionId() {
-		return sourceQuestionId;
-	}
-	public void setSourceQuestionId(Integer sourceQuestionId) {
-		this.sourceQuestionId = sourceQuestionId;
-	}
-	public Integer getAffectedSectionId() {
-		return affectedSectionId;
-	}
-	public void setAffectedSectionId(Integer affectedSectionId) {
-		this.affectedSectionId = affectedSectionId;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	public String getAdditionalValue() {
-		return additionalValue;
-	}
-	public void setAdditionalValue(String additionalValue) {
-		this.additionalValue = additionalValue;
-	}
-	public String getLinkType() {
-		return linkType;
-	}
-	public void setLinkType(String linkType) {
-		this.linkType = linkType;
-	}
-    
-    
+    public SectionQuestionDetail getSourceQuestion() {
+        return sourceQuestion;
+    }
+    public void setSourceQuestion(SectionQuestionDetail sourceQuestion) {
+        this.sourceQuestion = sourceQuestion;
+    }
+    public SectionDetail getAffectedSection() {
+        return affectedSection;
+    }
+    public void setAffectedSection(SectionDetail affectedSection) {
+        this.affectedSection = affectedSection;
+    }
+    public String getValue() {
+        return value;
+    }
+    public void setValue(String value) {
+        this.value = value;
+    }
+    public String getAdditionalValue() {
+        return additionalValue;
+    }
+    public void setAdditionalValue(String additionalValue) {
+        this.additionalValue = additionalValue;
+    }
+    public Integer getLinkType() {
+        return linkType;
+    }
+    public void setLinkType(Integer linkType) {
+        this.linkType = linkType;
+    }
+    public String getLinkTypeDisplay() {
+        return linkTypeDisplay;
+    }
+    public void setLinkTypeDisplay(String linkTypeDisplay) {
+        this.linkTypeDisplay = linkTypeDisplay;
+    }
 }

@@ -196,6 +196,7 @@
         <input type="submit" id="_eventId_moveSectionUp" name="_eventId_moveSectionUp" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_moveSectionDown" name="_eventId_moveSectionDown" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_addLink" name="_eventId_addLink" value="" style="visibility:hidden"/>
+        <input type="submit" id="_eventId_getLinkTypes" name="_eventId_getLinkTypes" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_removeLink" name="_eventId_removeLink" value="" style="visibility:hidden"/>
     </div>
     
@@ -204,8 +205,9 @@
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td>Source question:</td>
-                <td>
+                <td> 
                     <select name="sourceQuestion">
+                        <option value="select">-- Select --</option>
                         [#list questionGroupForm.sections as section]
                             [#list section.sectionQuestions as sectionQuestion]
                                 <option value="${sectionQuestion.questionId}">${section.name} - ${sectionQuestion.text}</option>
@@ -218,6 +220,7 @@
                 <td>Link type:</td>
                 <td>
                     <select id="linkType" name="linkType">
+                        <option value="select">-- Select --</option>
                         [#list LinkTypes?keys as key]
                             [#if key?is_string]
                                 <option value="${key}">${LinkTypes[key]}</option>
@@ -237,6 +240,7 @@
                 <td>Affected question:</td>
                 <td>
                     <select name="affectedQuestion">
+                        <option value="select">-- Select --</option>
                     [#list questionGroupForm.sections as section]
                         [#list section.sectionQuestions as sectionQuestion]
                             <option value="${sectionQuestion.questionId}">${section.name} - ${sectionQuestion.text}</option>
@@ -249,6 +253,7 @@
                 <td>Affected section:</td>
                 <td>
                     <select name="affectedSection">
+                        <option value="select">-- Select --</option>
                         [#list questionGroupForm.sections as section]
                             <option value="${section.name}">${section.name}</option>
                         [/#list]
@@ -279,21 +284,21 @@
         <table class="table_common" id="links_questions">
             <thead>
             <tr>
-                <th>[@spring.message "questionnaire.link.sourceQuestion"/]</th>
-                <th>[@spring.message "questionnaire.link.linkType"/]</th>
-                <th>[@spring.message "questionnaire.link.affectedQuestion"/]</th>
-                <th>[@spring.message "questionnaire.link.value"/]</th>
-                <th>[@spring.message "questionnaire.link.additionalValue"/]</th>
+                <th width="25%">[@spring.message "questionnaire.link.sourceQuestion"/]</th>
+                <th width="25%">[@spring.message "questionnaire.link.affectedQuestion"/]</th>
+                <th width="20%">[@spring.message "questionnaire.link.linkType"/]</th>
+                <th width="15%">[@spring.message "questionnaire.link.value"/]</th>
+                <th width="15%">[@spring.message "questionnaire.link.additionalValue"/]</th>
             </tr>
             </thead>
             <tbody>
                 [#list questionGroupForm.questionLinks as questionLink]
                     <tr>
-                        <td>${questionLink.soureQuestionDisplay}</td>
+                        <td>${questionLink.sourceQuestion.text}</td>
+                        <td>${questionLink.affectedQuestion.text}</td>
                         <td>${questionLink.linkTypeDisplay}</td>
-                        <td>${questionLink.affectedQuestionDisplay}</td>
                         <td>${questionLink.value}</td>
-                        <td>${questionLink.additionalValue}</td>`
+                        <td>${questionLink.additionalValue}</td>
                     </tr>
                 [/#list]
             </tbody>
@@ -301,14 +306,23 @@
         <table class="table_common" id="links_sections">
             <thead>
             <tr>
-                <th>[@spring.message "questionnaire.link.affectedSection"/]</th>
-                <th>[@spring.message "questionnaire.link.sourceQuestion"/]</th>
-                <th>[@spring.message "questionnaire.link.linkType"/]</th>
-                <th>[@spring.message "questionnaire.link.value"/]</th>
-                <th>[@spring.message "questionnaire.link.additionalValue"/]</th>
+                <th width="25%">[@spring.message "questionnaire.link.sourceQuestion"/]</th>
+                <th width="25%">[@spring.message "questionnaire.link.affectedSection"/]</th>
+                <th width="20%">[@spring.message "questionnaire.link.linkType"/]</th>
+                <th width="15%">[@spring.message "questionnaire.link.value"/]</th>
+                <th width="15%">[@spring.message "questionnaire.link.additionalValue"/]</th>
             </tr>
             </thead>
             <tbody>
+                [#list questionGroupForm.sectionLinks as sectionLink]
+                    <tr>
+                        <td>${sectionLink.sourceQuestion.questionDetail.text}</td>
+                        <td>${sectionLink.affectedSection.name}</td>
+                        <td>${sectionLink.linkTypeDisplay}</td>
+                        <td>${sectionLink.value}</td>
+                        <td>${sectionLink.additionalValue}</td>
+                    </tr>
+                [/#list]
             </tbody>
         </table>
     </div>

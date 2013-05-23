@@ -18,15 +18,20 @@ import javax.persistence.Table;
             name = "SectionLink.retrieveDependentSectionLinksFromQuestion",
             query = "from SectionLink s where " +
                     "s.questionGroupLink.sourceSectionQuestion.id = ?"
+    ),
+    @NamedQuery(
+            name = "SectionLink.retrieveSectionIdByQuestionGroupIdAndName",
+            query = "from Section s where " +
+                    "s.id = :id and s.name = :name"
     )
 })
 @Entity
 @Table(name = "section_link")
 public class SectionLink implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @GeneratedValue
     @Column(name="id")
     private Integer id;
@@ -39,28 +44,28 @@ public class SectionLink implements Serializable {
     @JoinColumn(name="affected_section_id")
     private Section affectedSection;
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public QuestionGroupLink getQuestionGroupLink() {
-		return questionGroupLink;
-	}
+    public QuestionGroupLink getQuestionGroupLink() {
+        return questionGroupLink;
+    }
 
-	public void setQuestionGroupLink(QuestionGroupLink questionGroupLink) {
-		this.questionGroupLink = questionGroupLink;
-	}
+    public void setQuestionGroupLink(QuestionGroupLink questionGroupLink) {
+        this.questionGroupLink = questionGroupLink;
+    }
 
-	public Section getAffectedSection() {
-		return affectedSection;
-	}
+    public Section getAffectedSection() {
+        return affectedSection;
+    }
 
-	public void setAffectedSection(Section affectedSection) {
-		this.affectedSection = affectedSection;
-	}
+    public void setAffectedSection(Section affectedSection) {
+        this.affectedSection = affectedSection;
+    }
     
 }

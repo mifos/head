@@ -36,13 +36,14 @@ public interface QuestionnaireServiceFacade {
 
     boolean isDuplicateQuestion(String title);
 
-    Integer createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    QuestionGroupDetail createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
     void createQuestionLinks(List<QuestionLinkDetail> questionLinks);
+    
     void createSectionLinks(List<SectionLinkDetail> sectionLinks);
     
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ACTIVATE_QUESTION_GROUPS')")
-    Integer createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    QuestionGroupDetail createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
     List<QuestionDetail> getAllQuestions();
 
@@ -95,5 +96,7 @@ public interface QuestionnaireServiceFacade {
     Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(Integer questionId, String response) throws ParseException;
 
     Map<String, String> getAllLinkTypes();
-    
+
+    Map<String, String> getLinkTypesByQuestionId(String questionId);
+
 }

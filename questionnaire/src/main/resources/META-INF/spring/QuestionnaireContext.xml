@@ -58,6 +58,17 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="questionGroupLinkDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionGroupLinkDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.QuestionGroupLink</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="eventSourceDao" parent="abstractDao">
         <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.EventSourceDao"/>
@@ -98,6 +109,17 @@
             <bean parent="abstractDaoTarget">
                 <constructor-arg>
                     <value>org.mifos.platform.questionnaire.domain.SectionQuestion</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="sectionDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.SectionDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.Section</value>
                 </constructor-arg>
             </bean>
         </property>

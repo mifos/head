@@ -8,10 +8,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Formula;
 
+@NamedQueries( {
+    @NamedQuery(
+            name = "QuestionGroupLink.retrieveAllConditions",
+            query = "from LookUpValueEntity value, LookUpEntity entity where " +
+                    "value.lookUpEntity.entityId = (SELECT entityId FROM entity where entity.entityType=ConditionType)"
+    )
+})
 @Entity
 @Table(name = "question_group_link")
 public class QuestionGroupLink implements Serializable {
@@ -31,6 +40,9 @@ public class QuestionGroupLink implements Serializable {
     @GeneratedValue
     @Column(name="id")
     private Integer id;
+    
+    @Column(name="condition_type_lookup_id")
+    private Integer conditionTypeId;
     
     @Formula("(select v.lookup_name from lookup_value v where v.lookup_id = condition_type_lookup_id)")
     private String conditionType;
@@ -53,7 +65,15 @@ public class QuestionGroupLink implements Serializable {
 		this.id = id;
 	}
 
-	public String getConditionType() {
+	public Integer getConditionTypeId() {
+        return conditionTypeId;
+    }
+
+    public void setConditionTypeId(Integer conditionTypeId) {
+        this.conditionTypeId = conditionTypeId;
+    }
+
+    public String getConditionType() {
 		return conditionType;
 	}
 

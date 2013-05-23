@@ -27,4 +27,5 @@ import java.util.List;
 public interface SectionQuestionDao extends GenericDao<SectionQuestion, Integer> {
     List<Integer> retrieveIdFromQuestionGroupIdQuestionIdSectionName(String sectionName, Integer questionId, Integer questionGroupId);
     List<SectionQuestion> retrieveFromQuestionIdSectionId(Integer sectionId, Integer questionId);
+    List<SectionQuestion> retrieveFromSectionQuestionId(Integer sectionQuestionId);
 }

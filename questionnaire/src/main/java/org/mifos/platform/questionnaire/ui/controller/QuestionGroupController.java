@@ -42,13 +42,13 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionLinkDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
-import org.mifos.platform.questionnaire.ui.model.SectionQuestionDetailForm;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.ValidationException;
 import org.springframework.binding.message.MessageContext;
@@ -64,7 +64,7 @@ import org.springframework.webflow.execution.RequestContext;
 @Controller
 @SuppressWarnings("PMD")
 public class QuestionGroupController extends QuestionnaireController {
-	
+    
     @SuppressWarnings({"UnusedDeclaration"})
     public QuestionGroupController() {
         super();
@@ -126,30 +126,33 @@ public class QuestionGroupController extends QuestionnaireController {
     
     @RequestMapping(value="/getHiddenVisibleQuestions.ftl", method=RequestMethod.POST)
     public @ResponseBody Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestions(
-    		@RequestParam Integer questionId, @RequestParam String response) throws ParseException {
-    	return questionnaireServiceFacade.getHiddenVisibleQuestionsAndSections(questionId, response);
+            @RequestParam Integer questionId, @RequestParam String response) throws ParseException {
+        return questionnaireServiceFacade.getHiddenVisibleQuestionsAndSections(questionId, response);
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext, boolean createMode) {
         String result = "success";
         if (!questionGroupHasErrors(questionGroupForm, requestContext)) {
-            Integer questionGroupId;
+            QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail();
             try {
                 if (createMode) {
                     questionGroupForm.setActive(true);
                 }
                 if (questionGroupForm.isActive()) {
-                    questionGroupId = questionnaireServiceFacade.createActiveQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                    questionGroupDetail = questionnaireServiceFacade.createActiveQuestionGroup(questionGroupForm.getQuestionGroupDetail());
                 }
                 else {
-                    questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                    questionGroupDetail = questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
                 }
                 if (containsCreateLoanEventSource(questionGroupForm.getEventSources()) && questionGroupForm.getApplyToAllLoanProducts()) {
-                    questionnaireServiceFacade.applyToAllLoanProducts(questionGroupId);
+                    questionnaireServiceFacade.applyToAllLoanProducts(questionGroupDetail.getId());
                 }
-                questionnaireServiceFacade.createQuestionLinks(questionGroupForm.getQuestionLinks());
-                questionnaireServiceFacade.createSectionLinks(questionGroupForm.getSectionLinks());
+                List<QuestionLinkDetail> questionLinkDetails = setUpdatedQuestionForQuestionLinks(questionGroupForm.getQuestionLinks(), questionGroupDetail);
+                List<SectionLinkDetail> sectionLinkDetails = setUpdatedSectionForQuestionLinks(questionGroupForm.getSectionLinks(), questionGroupDetail);
+                
+                questionnaireServiceFacade.createQuestionLinks(questionLinkDetails);
+                questionnaireServiceFacade.createSectionLinks(sectionLinkDetails);
             }
             catch (AccessDeniedException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(),
@@ -183,61 +186,138 @@ public class QuestionGroupController extends QuestionnaireController {
         }
         return evtSourcesMap;
     }
-  
-    public String addLink(QuestionGroupForm questionGroupForm, String sourceQuestionId, 
-    		String linkType, String appliesTo, String affectedQuestionId, String affectedSection, 
-    		String value, String additionalValue, RequestContext requestContext) {
-    	
-    	SectionQuestionDetailForm sourceQuestion = null;
-    	String sourceQuestionDisplay = null;
-    	for (SectionDetailForm s: questionGroupForm.getSections()) {
-    		for (SectionQuestionDetailForm q: s.getSectionQuestions()) {
-    			if (q.getQuestionId() == Integer.parseInt(sourceQuestionId)) {
-    				sourceQuestion = q;	
-    				sourceQuestionDisplay = s.getName() + " - " + q.getText();
-    			}
-    		}
-    	}
-    	
-		if (sourceQuestion == null) {
-			return "failure";
-		}
-		
-    	if (appliesTo.equals("question")) {
-    		
-    		SectionQuestionDetailForm affectedQuestion = null;
-    		String affectedQuestionDisplay = null;
-        	for (SectionDetailForm s: questionGroupForm.getSections()) {
-        		for (SectionQuestionDetailForm q: s.getSectionQuestions()) {
-        			if (q.getQuestionId() == Integer.parseInt(affectedQuestionId)) {
-        				affectedQuestion = q;	
-        				affectedQuestionDisplay = s.getName() + " - " + q.getText();
-        			}
-        		}
-        	}
-    		
-    		if (affectedQuestion == null) {
-    			return "failure";
-    		}
-    		
-    		QuestionLinkDetail questionLink = new QuestionLinkDetail(Integer.parseInt(sourceQuestionId), 
-    				sourceQuestionDisplay, 
-    				Integer.parseInt(affectedQuestionId), affectedQuestionDisplay, value, additionalValue,
-    				linkType, "Equals");
-    		questionGroupForm.getQuestionLinks().add(questionLink);
-    		
-    	} else {
-    		
-    		SectionLinkDetail sectionLink = new SectionLinkDetail();
-    		sectionLink.setSourceQuestionId(Integer.parseInt(sourceQuestionId));
-    		sectionLink.setAffectedSectionId(Integer.parseInt(affectedSection));
-    		sectionLink.setLinkType(linkType);
-    		sectionLink.setValue(value);
-    		sectionLink.setAdditionalValue(additionalValue);
-    		questionGroupForm.getSectionLinks().add(sectionLink);
-    	}
+    private boolean questionGroupLinkHasErrors(QuestionGroupForm questionGroupForm, RequestContext requestContext, String sourceQuestionId, 
+            String linkType, String appliesTo, String affectedQuestionId, String affectedSectionName, 
+            String value, String additionalValue) {
+        boolean result = false;
+        if (isValueNotPresent(value)) {
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.link.error.value.empty", "value", "Please specify Question Link value");
+            result = true;
+        }
+        if (isLinkTypeNotChoosen(linkType)) {
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.link.error.linkType.empty", "linkType", "Please choose a Question Link type.");
+            result = true;
+        }
+        if (isSourceQuestionPresent(sourceQuestionId)) {
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.link.error.sourceQuestion.empty", "sourceQuestionId", "Please choose a valid 'Source question'.");
+            result = true;
+        }
+        if (isAffectedQuestionPresent(affectedQuestionId) && appliesTo.equals("question")) {
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.link.error.affectedQuestion.empty", "affectedQuestionId", "Please choose a valid 'Affected question'.");
+            result = true;
+        }
+        if (isAffectedSectionPresent(affectedSectionName) && appliesTo.equals("section")) {
+            constructErrorMessage(requestContext.getMessageContext(), "questionnaire.link.error.affectedSection.empty", "affectedSectionName", "Please choose a valid 'Affected section'.");
+            result = true;
+        }
+        return result;
+    }
+    private boolean isValueNotPresent(String value){
+        return StringUtils.isEmpty(StringUtils.trimToNull(value));
+        
+    }
+    
+    private boolean isLinkTypeNotChoosen(String linkType){
+        return linkType.equals("select");
+    }
 
-    	return "success";
+    private boolean isSourceQuestionPresent(String sourceQuestionId){
+        return sourceQuestionId.equals("select");
+    }
+    private boolean isAffectedQuestionPresent(String affectedQuestionId){
+        return affectedQuestionId.equals("select");
+    }
+    private boolean isAffectedSectionPresent(String affectedSectionName){
+        return affectedSectionName.equals("select");
+    }
+
+    public QuestionLinkDetail setQuestionLinkDetail(QuestionGroupForm questionGroupForm, String sourceQuestionId, 
+            String affectedQuestionId, String value, String additionalValue, String linkType, String linkTypeDisplay){
+        
+        QuestionLinkDetail questionLinkDetail = new QuestionLinkDetail();
+        SectionQuestionDetail sourceQuestion = findQuestionDetailById(questionGroupForm.getQuestionGroupDetail(), sourceQuestionId);
+        questionLinkDetail.setSourceQuestion(sourceQuestion);
+        SectionQuestionDetail affectedQuestion = findQuestionDetailById(questionGroupForm.getQuestionGroupDetail(), affectedQuestionId);
+        questionLinkDetail.setAffectedQuestion(affectedQuestion);
+        questionLinkDetail.setValue(value);
+        questionLinkDetail.setLinkType(Integer.valueOf(linkType));
+        questionLinkDetail.setLinkTypeDisplay(linkTypeDisplay);
+        if(additionalValue!=null)
+            questionLinkDetail.setAdditionalValue(additionalValue);
+        
+        return questionLinkDetail;
+    }
+    
+    public SectionLinkDetail setSectionLinkDetail(QuestionGroupForm questionGroupForm, String sourceQuestionId, 
+            String affectedSectionName, String value, String additionalValue, String linkType, String linkTypeDisplay){
+        
+        SectionLinkDetail sectionLinkDetail = new SectionLinkDetail();
+        SectionQuestionDetail sourceQuestion = findQuestionDetailById(questionGroupForm.getQuestionGroupDetail(), sourceQuestionId);
+        sectionLinkDetail.setSourceQuestion(sourceQuestion);
+        SectionDetail affectedSection = findSectionDetailByName(questionGroupForm.getQuestionGroupDetail(), affectedSectionName);
+        sectionLinkDetail.setAffectedSection(affectedSection);
+        sectionLinkDetail.setValue(value);
+        sectionLinkDetail.setLinkType(Integer.valueOf(linkType));
+        sectionLinkDetail.setLinkTypeDisplay(linkTypeDisplay);
+        if(additionalValue!=null)
+            sectionLinkDetail.setAdditionalValue(additionalValue);
+        return sectionLinkDetail;
+    }
+    
+    public SectionQuestionDetail findQuestionDetailById(QuestionGroupDetail questionGroupDetail, String questionId){
+        for(SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()){
+            for(SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()){
+                if(sectionQuestionDetail.getQuestionId()==Integer.valueOf(questionId))
+                    return sectionQuestionDetail;
+            }
+        }
+        return null;
+    }
+    
+    public SectionDetail findSectionDetailByName(QuestionGroupDetail questionGroupDetail, String sectionName){
+        for(SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()){
+            if(sectionDetail.getName().equals(sectionName)){
+                    return sectionDetail;
+            }
+        }
+        return null;
+    }
+    public List<QuestionLinkDetail> setUpdatedQuestionForQuestionLinks(List<QuestionLinkDetail> questionLinkDetails, QuestionGroupDetail questionGroupDetail){
+        for(QuestionLinkDetail questionLinkDetail : questionLinkDetails){
+            questionLinkDetail.setSourceQuestion(findQuestionDetailById(questionGroupDetail, String.valueOf(questionLinkDetail.getSourceQuestion().getQuestionId())));
+            questionLinkDetail.setAffectedQuestion(findQuestionDetailById(questionGroupDetail, String.valueOf(questionLinkDetail.getAffectedQuestion().getQuestionId())));
+        }
+        return questionLinkDetails;
+    }
+    public List<SectionLinkDetail> setUpdatedSectionForQuestionLinks(List<SectionLinkDetail> sectionLinkDetails, QuestionGroupDetail questionGroupDetail){
+        for(SectionLinkDetail sectionLinkDetail : sectionLinkDetails){
+            sectionLinkDetail.setSourceQuestion(findQuestionDetailById(questionGroupDetail, String.valueOf(sectionLinkDetail.getSourceQuestion().getQuestionId())));
+            sectionLinkDetail.setAffectedSection(findSectionDetailByName(questionGroupDetail, sectionLinkDetail.getAffectedSection().getName()));
+        }
+        return sectionLinkDetails;
+    }
+    
+    public String addLink(QuestionGroupForm questionGroupForm,
+            String sourceQuestionId, String linkType, String appliesTo,
+            String affectedQuestionId, String affectedSectionName,
+            String value, String additionalValue, RequestContext requestContext) {
+        String result = "success";
+        if (!questionGroupLinkHasErrors(questionGroupForm, requestContext,
+                sourceQuestionId, linkType, appliesTo, affectedQuestionId,
+                affectedSectionName, value, additionalValue)) {
+            
+            if (appliesTo.equals("question")) {
+                QuestionLinkDetail questionLink = setQuestionLinkDetail(questionGroupForm, sourceQuestionId, affectedQuestionId, value, additionalValue, linkType, "test");
+                questionGroupForm.getQuestionLinks().add(questionLink);
+
+            } else {
+                SectionLinkDetail sectionLink = setSectionLinkDetail(questionGroupForm, sourceQuestionId, affectedSectionName, value, additionalValue, linkType, "test");
+                questionGroupForm.getSectionLinks().add(sectionLink);
+            }
+        } else {
+            result = "failure";
+        }
+        return result;
     }
     
     public String addSection(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
@@ -251,14 +331,14 @@ public class QuestionGroupController extends QuestionnaireController {
     }
 
     public String deleteSection(QuestionGroupForm questionGroupForm, String sectionName) {
-    	//TODO: usuń wszystki linki ktore mialy ta section w affected
-    	questionGroupForm.removeSection(sectionName);
+        //TODO: usuń wszystki linki ktore mialy ta section w affected
+        questionGroupForm.removeSection(sectionName);
         return "success";
     }
 
     public String deleteQuestion(QuestionGroupForm questionGroupForm, String sectionName, String questionId) {
         //TODO: usuń wszystki linki ktore mialy to question jako source lub affecte
-    	questionGroupForm.removeQuestion(sectionName, questionId);
+        questionGroupForm.removeQuestion(sectionName, questionId);
         return "success";
     }
 
@@ -311,6 +391,10 @@ public class QuestionGroupController extends QuestionnaireController {
     
     public Map<String, String> getAllLinkTypes() {
         return questionnaireServiceFacade.getAllLinkTypes();
+    }
+    
+    public Map<String, String> getLinkTypesByQuestionId(String questionId){
+        return questionnaireServiceFacade.getLinkTypesByQuestionId(questionId);
     }
     
     public String saveQuestionnaire(QuestionGroupDetails questionGroupDetails, int questionGroupIndex, RequestContext requestContext) {

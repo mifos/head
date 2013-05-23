@@ -34,7 +34,7 @@ public class Section implements Serializable {
     private List<SectionQuestion> questions;
     private Integer sequenceNumber;
 
-    private List<SectionLink> sectionLinks;
+    /*private List<SectionLink> sectionLinks;
     
 	public List<SectionLink> getSectionLinks() {
 		return sectionLinks;
@@ -42,7 +42,7 @@ public class Section implements Serializable {
 
 	public void setSectionLinks(List<SectionLink> sectionLinks) {
 		this.sectionLinks = sectionLinks;
-	}
+	}*/
 
 	@SuppressWarnings({"UnusedDeclaration", "PMD.UncommentedEmptyConstructor"})
     public Section() {

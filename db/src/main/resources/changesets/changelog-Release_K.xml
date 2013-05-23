@@ -824,21 +824,27 @@
    </rollback>
    </changeSet>
    <changeSet id="MIFOS-5984" author="Krzysztof Kaczmarczyk" context="expansion">
-        <validCheckSum>3:1dcade39c06049015146b83ec489f300</validCheckSum>
+        <validCheckSum>3:a5e27a7b08513e592a0f6f7394e63c87</validCheckSum>
         <sql endDelimiter=";">
             DROP TABLE IF EXISTS section_link;
             DROP TABLE IF EXISTS section_question_link;
             DROP TABLE IF EXISTS question_group_link;
             
+            SELECT @lookupEntityId := entity_id from lookup_entity where entity_name = "ConditionType";
+                DELETE FROM lookup_value WHERE entity_id = @lookupEntityId;
+                DELETE FROM lookup_entity WHERE entity_id = @lookupEntityId;
+            
             CREATE TABLE question_group_link (
                 id bigint auto_increment NOT NULL,
-                condition_type_lookup_id bigint NOT NULL,
+                condition_type_lookup_id int NOT NULL,
                 value varchar(255) NOT NULL,
                 additional_value varchar(255),
                 source_section_question_id int NOT NULL,
                 primary key(id),
                 foreign key(source_section_question_id)
-                    references sections_questions(id)
+                    references sections_questions(id),
+                foreign key(condition_type_lookup_id)
+                    references lookup_value(lookup_id)
             ) engine=innodb character set utf8;
             
             CREATE TABLE section_question_link (

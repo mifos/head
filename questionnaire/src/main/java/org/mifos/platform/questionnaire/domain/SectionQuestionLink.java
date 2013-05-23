@@ -18,6 +18,18 @@ import javax.persistence.Table;
             name = "SectionQuestionLink.retrieveDependentSectionQuestionLinksFromQuestion",
             query = "from SectionQuestionLink s where " +
                     "s.questionGroupLink.sourceSectionQuestion.id = ?"
+    ),
+    @NamedQuery(
+            name = "SectionQuestionLink.retrieveAllConditions",
+            query = "SELECT new org.mifos.application.master.business.LookUpValueEntity(value.lookUpId,value.lookUpName) " +
+            		"FROM LookUpValueEntity value, LookUpEntity entity WHERE " +
+                    "value.lookUpEntity.entityId = (SELECT entityId FROM entity where entity.entityType='ConditionType') and entity.entityType='ConditionType'"
+    ),
+    @NamedQuery(
+            name = "SectionQuestionLink.createSectionQuestionLinks",
+            query = "SELECT new org.mifos.application.master.business.LookUpValueEntity(value.lookUpId,value.lookUpName) " +
+                    "FROM LookUpValueEntity value, LookUpEntity entity WHERE " +
+                    "value.lookUpEntity.entityId = (SELECT entityId FROM entity where entity.entityType='ConditionType') and entity.entityType='ConditionType'"
     )
 })
 @Entity
@@ -35,8 +47,8 @@ public class SectionQuestionLink implements Serializable {
     @JoinColumn(name="question_group_link_id")
     private QuestionGroupLink questionGroupLink;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="affected_section_question_id", insertable=false, updatable=false)
+    @ManyToOne
+    @JoinColumn(name="affected_section_question_id")
     private SectionQuestion affectedSectionQuestion;
 
 	public Integer getId() {

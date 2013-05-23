@@ -28,15 +28,19 @@ import org.mifos.platform.questionnaire.domain.QuestionChoiceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
+import org.mifos.platform.questionnaire.domain.QuestionGroupLink;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.QuestionState;
 import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.SectionLink;
 import org.mifos.platform.questionnaire.domain.SectionQuestion;
+import org.mifos.platform.questionnaire.domain.SectionQuestionLink;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.persistence.SectionDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
 import org.mifos.platform.questionnaire.service.SelectionDetail;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
@@ -45,8 +49,10 @@ import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionLinkDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -86,15 +92,28 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
+    
+    @Autowired
+    private SectionDao sectionDao;
 
     @Autowired
     private QuestionGroupInstanceDao questionGroupInstanceDao;
 
+    /*@Autowired
+    private QuestionGroupLinkDao questionGroupLinkDao;
+    
+    @Autowired
+    private SectionLinkDao sectionLinkDao;
+    
+    @Autowired
+    private SectionQuestionLinkDao sectionQuestionLinkDao;*/
+    
     public QuestionnaireMapperImpl() {
-        this(null, null, null, null,null);
+        this(null, null, null, null,null, null);
     }
 
-    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao, QuestionGroupDao questionGroupDao, SectionQuestionDao sectionQuestionDao, QuestionGroupInstanceDao questionGroupInstanceDao) {
+    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao, QuestionGroupDao questionGroupDao, 
+            SectionQuestionDao sectionQuestionDao, QuestionGroupInstanceDao questionGroupInstanceDao, SectionDao sectionDao) {
         populateAnswerToQuestionTypeMap();
         populateQuestionToAnswerTypeMap();
         this.eventSourceDao = eventSourceDao;
@@ -102,6 +121,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         this.questionGroupDao = questionGroupDao;
         this.sectionQuestionDao = sectionQuestionDao;
         this.questionGroupInstanceDao = questionGroupInstanceDao;
+        this.sectionDao = sectionDao;
     }
 
     @Override
@@ -656,6 +676,48 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(QuestionType.SMART_SELECT, AnswerType.SMARTSELECT),
                 makeEntry(QuestionType.MULTI_SELECT, AnswerType.MULTISELECT),
                 makeEntry(QuestionType.SMART_SINGLE_SELECT, AnswerType.SMARTSINGLESELECT));
+    }
+    public SectionQuestion getSectionQuestionById (Integer sectionQuestionId){
+        /*SectionQuestion sectionQuestion = new SectionQuestion();
+        List<SectionQuestion> sectionQuestions;
+        sectionQuestions = sectionQuestionDao.retrieveFromSectionQuestionId(sectionQuestionId);*/
+        return sectionQuestionDao.retrieveFromSectionQuestionId(sectionQuestionId).get(0);
+    }
+    
+    public Section getSectionById (Integer sectionId){
+        /*SectionQuestion sectionQuestion = new SectionQuestion();
+        List<Section> sectionQuestions;
+        sectionQuestions = sectionDao.retrieveFromSectionId(sectionId);*/
+        return sectionDao.retrieveFromSectionId(sectionId).get(0);
+    }
+    
+    public QuestionGroupLink mapToQuestionGroupLink(QuestionLinkDetail questionLinkDetail, SectionLinkDetail sectionLinkDetail){
+        QuestionGroupLink questionGroupLink = new QuestionGroupLink();
+        if(questionLinkDetail != null){
+            questionGroupLink.setValue(questionLinkDetail.getValue());
+            questionGroupLink.setAdditionalValue(questionLinkDetail.getAdditionalValue());
+            questionGroupLink.setSourceSectionQuestion(getSectionQuestionById(questionLinkDetail.getSourceQuestion().getId()));
+            questionGroupLink.setConditionTypeId(questionLinkDetail.getLinkType());
+        } else {
+            questionGroupLink.setValue(sectionLinkDetail.getValue());
+            questionGroupLink.setAdditionalValue(sectionLinkDetail.getAdditionalValue());
+            questionGroupLink.setSourceSectionQuestion(getSectionQuestionById(sectionLinkDetail.getSourceQuestion().getId()));
+            questionGroupLink.setConditionTypeId(sectionLinkDetail.getLinkType());
+        }
+        return questionGroupLink;
+    }
+    
+    public SectionQuestionLink mapToQuestionLink(QuestionLinkDetail questionLinkDetail, QuestionGroupLink questionGroupLink) {
+        SectionQuestionLink sectionQuestionLink = new SectionQuestionLink();
+        sectionQuestionLink.setQuestionGroupLink(questionGroupLink);
+        sectionQuestionLink.setAffectedSectionQuestion(getSectionQuestionById(questionLinkDetail.getAffectedQuestion().getId()));
+        return sectionQuestionLink;
+    }
+    public SectionLink mapToSectionLink(SectionLinkDetail sectionLinkDetail, QuestionGroupLink questionGroupLink) {
+        SectionLink sectionLink = new SectionLink();
+        sectionLink.setAffectedSection(getSectionById(sectionLinkDetail.getAffectedSection().getId()));
+        sectionLink.setQuestionGroupLink(questionGroupLink);
+        return sectionLink;
     }
 
 }

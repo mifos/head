@@ -25,80 +25,62 @@ import java.io.Serializable;
 public class QuestionLinkDetail implements Serializable {
     private static final long serialVersionUID = 5240884292277900071L;
 
-    private Integer sourceQuestionId;
-    private String soureQuestionDisplay;
-    private Integer affectedQuestionId;
-    private String affectedQuestionDisplay;
+    private SectionQuestionDetail sourceQuestion;
+    private SectionQuestionDetail affectedQuestion;
     private String value;
     private String additionalValue;
-    private String linkType;
+    private Integer linkType;
     private String linkTypeDisplay;
     
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
-    public QuestionLinkDetail() {	
+    public QuestionLinkDetail() {    
     }
     
-	public QuestionLinkDetail(Integer sourceQuestionId,
-			String soureQuestionDisplay, Integer affectedQuestionId,
-			String affectedQuestionDisplay, String value,
-			String additionalValue, String linkType, String linkTypeDisplay) {
-		super();
-		this.sourceQuestionId = sourceQuestionId;
-		this.soureQuestionDisplay = soureQuestionDisplay;
-		this.affectedQuestionId = affectedQuestionId;
-		this.affectedQuestionDisplay = affectedQuestionDisplay;
-		this.value = value;
-		this.additionalValue = additionalValue;
-		this.linkType = linkType;
-		this.linkTypeDisplay = linkTypeDisplay;
-	}
-	public String getSoureQuestionDisplay() {
-		return soureQuestionDisplay;
-	}
-	public void setSoureQuestionDisplay(String soureQuestionDisplay) {
-		this.soureQuestionDisplay = soureQuestionDisplay;
-	}
-	public String getAffectedQuestionDisplay() {
-		return affectedQuestionDisplay;
-	}
-	public void setAffectedQuestionDisplay(String affectedQuestionDisplay) {
-		this.affectedQuestionDisplay = affectedQuestionDisplay;
-	}
-	public String getLinkTypeDisplay() {
-		return linkTypeDisplay;
-	}
-	public void setLinkTypeDisplay(String linkTypeDisplay) {
-		this.linkTypeDisplay = linkTypeDisplay;
-	}
-	public Integer getSourceQuestionId() {
-		return sourceQuestionId;
-	}
-	public void setSourceQuestionId(Integer sourceQuestionId) {
-		this.sourceQuestionId = sourceQuestionId;
-	}
-	public Integer getAffectedQuestionId() {
-		return affectedQuestionId;
-	}
-	public void setAffectedQuestionId(Integer affectedQuestionId) {
-		this.affectedQuestionId = affectedQuestionId;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	public String getAdditionalValue() {
-		return additionalValue;
-	}
-	public void setAdditionalValue(String additionalValue) {
-		this.additionalValue = additionalValue;
-	}
-	public String getLinkType() {
-		return linkType;
-	}
-	public void setLinkType(String linkType) {
-		this.linkType = linkType;
-	}
+    public QuestionLinkDetail(SectionQuestionDetail sourceQuestion, SectionQuestionDetail affectedQuestion, String value,
+            String additionalValue, Integer linkType, String linkTypeDisplay) {
+        super();
+        this.sourceQuestion = sourceQuestion;
+        this.affectedQuestion = affectedQuestion;
+        this.value = value;
+        this.additionalValue = additionalValue;
+        this.linkType = linkType;
+        this.linkTypeDisplay = linkTypeDisplay;
+    }
+    public SectionQuestionDetail getSourceQuestion() {
+        return sourceQuestion;
+    }
+    public void setSourceQuestion(SectionQuestionDetail sourceQuestion) {
+        this.sourceQuestion = sourceQuestion;
+    }
+    public SectionQuestionDetail getAffectedQuestion() {
+        return affectedQuestion;
+    }
+    public void setAffectedQuestion(SectionQuestionDetail affectedQuestion) {
+        this.affectedQuestion = affectedQuestion;
+    }
+    public String getLinkTypeDisplay() {
+        return linkTypeDisplay;
+    }
+    public void setLinkTypeDisplay(String linkTypeDisplay) {
+        this.linkTypeDisplay = linkTypeDisplay;
+    }
+    public String getValue() {
+        return value;
+    }
+    public void setValue(String value) {
+        this.value = value;
+    }
+    public String getAdditionalValue() {
+        return additionalValue;
+    }
+    public void setAdditionalValue(String additionalValue) {
+        this.additionalValue = additionalValue;
+    }
+    public Integer getLinkType() {
+        return linkType;
+    }
+    public void setLinkType(Integer linkType) {
+        this.linkType = linkType;
+    }
     
 }
