@@ -61,6 +61,10 @@ public class TableTag extends BodyTagSupport {
     
     private String currentFlowKey = null;
     
+    private String accountId = null;
+    
+    private String globalAccountNum = null;
+    
     private int glMode = 0;
     
     // FIXME: now unused and should be able to be deleted
@@ -70,7 +74,15 @@ public class TableTag extends BodyTagSupport {
         return rootName;
     }
 
-    public void setRootName(String rootName) {
+    public String getGlobalAccountNum() {
+		return globalAccountNum;
+	}
+
+	public void setGlobalAccountNum(String globalAccountNum) {
+		this.globalAccountNum = globalAccountNum;
+	}
+
+	public void setRootName(String rootName) {
         this.rootName = rootName;
     }
 
@@ -82,7 +94,15 @@ public class TableTag extends BodyTagSupport {
         return source;
     }
 
-    public String getPassLocale() {
+    public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public String getPassLocale() {
         return passLocale;
     }
 
@@ -170,6 +190,10 @@ public class TableTag extends BodyTagSupport {
                                     param.setValue(randomNUm);
                                 } else if (param.getName().equalsIgnoreCase("currentFlowKey")) {
                                     param.setValue(currentFlowKey);
+                                } else if (param.getName().equalsIgnoreCase("accountId")) {
+                                    param.setValue(accountId);
+                                }else if (param.getName().equalsIgnoreCase("globalAccountNum")) {
+                                    param.setValue(globalAccountNum);
                                 }
                             }
                         }

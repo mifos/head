@@ -281,6 +281,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     void linkGuarantor(Integer guarantorId, Integer loanId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void unlinkGuaranty(Integer guarantorId, Integer loanId) throws PersistenceException;
 
     @PreAuthorize("isFullyAuthenticated()")
     void disactiveGuarantiesByLoanId(Integer loanId) throws PersistenceException;

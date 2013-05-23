@@ -19,6 +19,17 @@
             <actionParam name="currentFlowKey" valueType="inbuilt"/>
          </linkDetails>
     </column>
-    
+    <column label="Actions" value="remove" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
+         <linkDetails action="unlinkGuaranty.ftl">
+            <actionParam name="method" value="get" valueType="text"/>
+            <actionParam name="globalCustNum" value="globalCustNum" valueType="method"/>
+            <actionParam name="customerId" value="customerId" valueType="method"/>
+            <actionParam name="accountId" valueType="inbuilt"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+            <actionParam name="globalAccountNum" valueType="inbuilt"/>
+         </linkDetails>
+    </column>
   </row>
 </tableInfo>

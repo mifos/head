@@ -29,17 +29,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -2755,6 +2752,22 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         guaranty.setLoanId(loanId);
         guaranty.setState(true);
         genericDao.getSession().save(guaranty);
+        try{
+            transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+        }
+    }
+    
+    @Override
+    public void unlinkGuaranty(Integer guarantorId, Integer loanId) throws PersistenceException {
+        transactionHelper.startTransaction();
+        List<GuarantyEntity> guaranties = legacyAccountDao.getGuarantyByLoanIdAndGuarantorId(guarantorId, loanId);
+        if (guaranties != null && guaranties.size() > 0) {
+        	for (GuarantyEntity en: guaranties) {
+        		genericDao.getSession().delete(en);
+        	}
+        }
         try{
             transactionHelper.commitTransaction();
         } catch (Exception e) {
