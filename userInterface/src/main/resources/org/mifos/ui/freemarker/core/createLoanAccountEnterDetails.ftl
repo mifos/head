@@ -667,8 +667,9 @@
     [#else]
       <tr data-order-id="${informationOrder.id}">
    <td>
-        [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
+        [@form.label "collateralNotes" false][@spring.message "createLoanAccount.collateralNotes" /][/@form.label]
+        [@spring.bind "loanAccountFormBean.collateralNotes" /]
+        <textarea name="${spring.status.expression}" rows="4" cols="50" maxlength="200">${spring.status.value?if_exists}</textarea>
    </td>
    <td>
             <span class="changeOrderArrows">
