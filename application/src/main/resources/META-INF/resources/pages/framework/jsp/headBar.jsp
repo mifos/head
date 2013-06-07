@@ -1,5 +1,4 @@
 <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
-<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/datejs/date.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
