@@ -446,7 +446,7 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	// Hugo Technologies Edit Stage Transactions
 		@Override
 		public ViewStageTransactionsDto getstagedAccountingTransactions(
-				int transactionNo) {
+				String transactionNo) {
 			ViewStageTransactionsDto viewStageTransactionsDto = null;
 			List<ViewStageTransactionsDto> stageAccountingTransactions = null;
 			stageAccountingTransactions = accountingDao
@@ -458,7 +458,7 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		}
 
 		@Override
-		public GlDetailDto getChequeDetails(int transactionNo) {
+		public GlDetailDto getChequeDetails(String transactionNo) {
 			GlDetailDto glDetailDto = null;
 
 			List<GlDetailDto> listOfGlDetailDto = accountingDao.findChequeDetails(transactionNo);

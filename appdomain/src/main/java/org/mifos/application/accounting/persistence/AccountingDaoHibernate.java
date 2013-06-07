@@ -329,7 +329,7 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		// Hugo Technologies Edit staged transaction
 		@Override
 		public List<ViewStageTransactionsDto> findStagedAccountingTransactionOnId(
-				int transactionNO) {
+				String transactionNO) {
 
 			final Map<String, Object> queryparameters = new HashMap<String, Object>();
 			queryparameters.put("TRANSACTION_NO", transactionNO);
@@ -340,7 +340,7 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		}
 
 		@Override
-		public List<GlDetailDto> findChequeDetails(int transactionNo) {
+		public List<GlDetailDto> findChequeDetails(String transactionNo) {
 			final Map<String, Object> queryparameters = new HashMap<String, Object>();
 			queryparameters.put("TRANSACTION_NO", transactionNo);
 			final List<GlDetailDto> glDetailDto = executeNamedQueryWithResultTransformer(

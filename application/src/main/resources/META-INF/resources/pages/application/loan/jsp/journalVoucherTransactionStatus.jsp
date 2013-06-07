@@ -186,9 +186,9 @@ function fnSaveStage(form) {
 					   </td>
 					   <th align="right"><mifos:mifoslabel name="simpleAccounting.office" mandatory="yes" isColonRequired="Yes"/></th>
 					   <td align="left">
-			       	     <c:forEach items="${sessionScope.JVOfficesOnHierarchy}" var="office">
-							 	<c:if test="${office.globalOfficeNum==JournalVoucherActionForm.office}"> 
-					                          ${office.displayName}
+				     <c:forEach items="${sessionScope.DynamicOfficesOnHierarchy}" var="offices">
+								<c:if test="${offices.globalOfficeNumber==JournalVoucherActionForm.office}">
+					                          ${offices.displayName}
 								</c:if>  
 						 </c:forEach>
 					</td>

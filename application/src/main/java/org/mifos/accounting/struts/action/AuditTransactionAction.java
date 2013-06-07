@@ -144,8 +144,7 @@ public class AuditTransactionAction extends BaseAction {
 			throws Exception {
 		ViewStageTransactionActionForm actionForm = (ViewStageTransactionActionForm) form;
 
-		int stageTransactionNo = Integer
-				.parseInt(request.getParameter("txnNo"));
+		String stageTransactionNo = request.getParameter("txnNo");
 
 		ViewStageTransactionsDto viewStageTransactionsDto = accountingServiceFacade
 				.getstagedAccountingTransactions(stageTransactionNo);
@@ -226,8 +225,8 @@ public class AuditTransactionAction extends BaseAction {
 		actionForm
 				.setStageAccountHead(viewStageTransactionsDto.getSubAccount());
 		actionForm.setStageNotes(viewStageTransactionsDto.getNarration());
-		actionForm.setStageAmount(bigdecimalToInt(viewStageTransactionsDto
-				.getTransactionAmount()));
+		actionForm.setStageAmount(viewStageTransactionsDto
+				.getTransactionAmount());
 		storingSession(request, "ViewStageTransactionsDto",
 				viewStageTransactionsDto);
 		List<GLCodeDto> accountingGlDtos = null;

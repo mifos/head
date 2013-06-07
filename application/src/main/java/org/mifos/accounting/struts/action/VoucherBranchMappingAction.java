@@ -124,11 +124,12 @@ public class VoucherBranchMappingAction extends BaseAction {
 		String[] amounts=actionForm.getAmount();
 		String[] notes=actionForm.getTransactionnotes();
 		List<GLCodeDto> coaNameslist=null;
-		int sno=1;int total=0;
+		int sno=1;double total=0;
 		coaNameslist=new ArrayList<GLCodeDto>();
 		for(int i=0;i<coanames.length;i++)
 		{
-			total=total +	Integer.parseInt(amounts[i]);
+			total=total +Double.parseDouble(amounts[i]);
+
 			GLCodeDto GLcodedto=new GLCodeDto();
 			GLcodedto.setSno(sno);sno++;
 			GLcodedto.setCoaName(coanames[i]);
@@ -136,7 +137,7 @@ public class VoucherBranchMappingAction extends BaseAction {
 			GLcodedto.setAmounts(amounts[i]);
 			coaNameslist.add(GLcodedto);
 		}
-		actionForm.setTotal(Integer.toString(total));
+		actionForm.setTotal(String.format("%.2f", total));
 		storingSession(request, "coaNamesList", coaNameslist);
 			storingSession(request, "VoucherBranchMappingActionForm", actionForm);
 			return mapping.findForward(ActionForwards.preview_success.toString());
@@ -184,7 +185,7 @@ public class VoucherBranchMappingAction extends BaseAction {
 			String[] amounts1 = actionForm.getAmount();
 		 amounts = actionForm.getAmount();
 
-		 int totalcheck=Integer.parseInt(actionForm.getTotal());
+		 double totalcheck=Double.parseDouble(actionForm.getTotal());
 		 if(totalcheck !=0){
 				GlMasterBO glMasterBO = new GlMasterBO();
 					glMasterBO.setTransactionDate(DateUtils.getDate(actionForm
@@ -196,7 +197,7 @@ public class VoucherBranchMappingAction extends BaseAction {
 							.setToOfficeLevel(new Integer("5"));
 					glMasterBO.setToOfficeId(actionForm.getBranch());
 					glMasterBO.setMainAccount(actionForm.getMainAccount());
-					glMasterBO.setTransactionAmount(new BigDecimal(Integer.parseInt(actionForm.getTotal())));
+					glMasterBO.setTransactionAmount(new BigDecimal(Double.parseDouble(actionForm.getTotal())));
 					glMasterBO.setAmountAction(amountActionList.get(0));
 					glMasterBO.setTransactionNarration("success");
 					glMasterBO.setGlDetailBOList(glDetailBOList);
@@ -268,7 +269,7 @@ public class VoucherBranchMappingAction extends BaseAction {
 			for(CoaNamesDto subaccount:subaccounthead)
 			{
 
-				int amount=Integer.parseInt(namesdto.getAmount());
+				double amount=Double.parseDouble(namesdto.getAmount());
 				if(amount>0)
 				{
 			glDetailBOList.add(new GlDetailBO(subaccount.getGlcodeValue(),

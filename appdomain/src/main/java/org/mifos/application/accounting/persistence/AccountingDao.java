@@ -96,9 +96,9 @@ public interface AccountingDao {
 	public void updateStage(int transactionNo, int stage);
 
 	public List<ViewStageTransactionsDto> findStagedAccountingTransactionOnId(
-			int transactionNo);
+			String transactionNo);
 
-	public List<GlDetailDto> findChequeDetails(int transactionNo);
+	public List<GlDetailDto> findChequeDetails(String transactionNo);
 
 	public List<GLCodeDto> findAuditGlCodes();
 

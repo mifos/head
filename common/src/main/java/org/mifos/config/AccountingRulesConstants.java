@@ -24,6 +24,7 @@ package org.mifos.config;
 public class AccountingRulesConstants {
 
     public static final String DIGITS_AFTER_DECIMAL = "AccountingRules.DigitsAfterDecimal";
+    public static final String MULTIPLE_DIGITS_AFTER_DECIMAL = "AccountingRules.MultipleDigitsAfterDecimal";
     public static final String ROUNDING_RULE = "AccountingRules.RoundingRule";
     public static final String NUMBER_OF_INTEREST_DAYS = "AccountingRules.NumberOfInterestDays";
     public static final String AMOUNT_TO_BE_ROUNDED_TO = "AccountingRules.AmountToBeRoundedTo";

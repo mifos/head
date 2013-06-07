@@ -191,7 +191,7 @@ public class OpenBalanceActionForm extends BaseActionForm {
 	    protected DoubleConversionResult validateAmount(String amountString, MifosCurrency currency,
                 String fieldPropertyKey, ActionErrors errors, String installmentNo) {
 			String fieldName = fieldPropertyKey;
-			DoubleConversionResult conversionResult = parseDoubleForMoney(amountString, currency);
+			DoubleConversionResult conversionResult = parseDoubleDecimalForMoney(amountString, currency);
 			for (ConversionError error : conversionResult.getErrors()) {
 			String errorText = error.toLocalizedMessage(currency);
 			addError(errors, fieldName, "errors.generic", fieldName, errorText);

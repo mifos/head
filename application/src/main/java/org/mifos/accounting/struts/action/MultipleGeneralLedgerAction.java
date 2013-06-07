@@ -79,6 +79,7 @@ public class MultipleGeneralLedgerAction extends BaseAction {
 		storingSession(request, "OfficesOnHierarchy", null);
 		storingSession(request, "MainAccountGlCodes", null);
 		storingSession(request, "AccountHeadGlCodes", null);
+		storingSession(request, "DynamicOfficesOnHierarchy",null );
 		storingSession(request, "SNoList", null);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -255,7 +256,7 @@ public class MultipleGeneralLedgerAction extends BaseAction {
 		List<GlDetailBO> glDetailBOList = getGlDetailBOList(actionForm,
 				amountActionList);
 		//
-				int totalcheck=Integer.parseInt(actionForm.getTotal());
+				double totalcheck=Double.parseDouble(actionForm.getTotal());
 
 
 				/*if(totalcheck != 0)
@@ -312,18 +313,18 @@ public class MultipleGeneralLedgerAction extends BaseAction {
 		String [] amounts=actionForm.getAmount1();
 		String [] trannotes=actionForm.getNotes1();
 		// saveErrors(request, actionerrors);
-		int total=0;
+		double total=0;
 	 glcodelist=new ArrayList<GLCodeDto>();
 		for(int i=0;i<amounts.length;i++)
 		{
-			total =total+ Integer.parseInt(amounts[i]);
+			total =total+ Double.parseDouble(amounts[i]);
 			GLCodeDto gLcodeDto= new GLCodeDto();
 			gLcodeDto.setAccountHead(accounthead[i]);
 			gLcodeDto.setAmounts(amounts[i]);
 			gLcodeDto.setTrannotes(trannotes[i]);
 			glcodelist.add(gLcodeDto);
 		}
-		actionForm.setTotal(Integer.toString(total));
+		actionForm.setTotal((String.format("%.2f", total)));
 		storingSession(request, "accounHeadValues", glcodelist);
 		storingSession(request, "GeneralLedgerActionForm", actionForm);
 		 monthClosingServiceFacade.validateTransactionDate(DateUtils.getDate(actionForm.getTrxnDate()));
@@ -413,7 +414,7 @@ public class MultipleGeneralLedgerAction extends BaseAction {
 			List<CoaNamesDto> subaccounthead=accountingServiceFacade.loadCoaNamesWithGlcodeValues(glCodeDto.getAccountHead());
 		for(CoaNamesDto subaccount:subaccounthead)
 		{
-			int amount=Integer.parseInt(glCodeDto.getAmounts());
+			double amount=Double.parseDouble(glCodeDto.getAmounts());
 			String Accounthead=glCodeDto.getAccountHead();
 			if(amount>0)
 			{

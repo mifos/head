@@ -43,7 +43,7 @@ public class ApproveTransactions extends BaseAction {
 			throws Exception {
 		ViewStageTransactionActionForm actionForm = (ViewStageTransactionActionForm) form;
 
-		int stageTransactionNo = Integer.parseInt(request.getParameter("txnNo"));
+		String stageTransactionNo = request.getParameter("txnNo");
 
 		ViewStageTransactionsDto viewStageTransactionsDto = accountingServiceFacade
 				.getstagedAccountingTransactions(stageTransactionNo);
@@ -117,7 +117,7 @@ public class ApproveTransactions extends BaseAction {
 		actionForm.setStageMainAccount(viewStageTransactionsDto.getMainAccount());
 		actionForm.setStageAccountHead(viewStageTransactionsDto.getSubAccount());
 		actionForm.setStageNotes(viewStageTransactionsDto.getNarration());
-		actionForm.setStageAmount(bigdecimalToInt(viewStageTransactionsDto.getTransactionAmount()));
+		actionForm.setStageAmount(viewStageTransactionsDto.getTransactionAmount());
 		storingSession(request, "ViewStageTransactionsDto",viewStageTransactionsDto);
 		List<GLCodeDto> accountingGlDtos = null;
 		accountingGlDtos = accountingServiceFacade.accountHead(actionForm.getStageMainAccount());

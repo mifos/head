@@ -86,6 +86,17 @@ public class BaseActionForm extends ValidatorActionForm {
 
     }
 
+    protected DoubleConversionResult parseDoubleDecimalForMoney(String doubleString, MifosCurrency currency) {
+        LocalizationConverter localizationConverter;
+        if (currency == null) {
+            localizationConverter = new LocalizationConverter();
+        } else {
+            localizationConverter = new LocalizationConverter(currency);
+        }
+        return localizationConverter.parseDoubleDecimalForMoney(doubleString);
+
+    }
+
     protected DoubleConversionResult parseDoubleForMoney(String doubleString) {
         return parseDoubleForMoney(doubleString, null);
 

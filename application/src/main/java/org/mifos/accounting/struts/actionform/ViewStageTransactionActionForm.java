@@ -465,7 +465,7 @@ public class ViewStageTransactionActionForm extends BaseActionForm {
 			MifosCurrency currency, String fieldPropertyKey,
 			ActionErrors errors, String installmentNo) {
 		String fieldName = fieldPropertyKey;
-		DoubleConversionResult conversionResult = parseDoubleForMoney(
+		DoubleConversionResult conversionResult = parseDoubleDecimalForMoney(
 				amountString, currency);
 		for (ConversionError error : conversionResult.getErrors()) {
 			String errorText = error.toLocalizedMessage(currency);

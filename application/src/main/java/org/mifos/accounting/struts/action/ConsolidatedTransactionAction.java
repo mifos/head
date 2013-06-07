@@ -107,15 +107,15 @@ public class ConsolidatedTransactionAction extends BaseAction{
 
 		//Cash Payment
 
-		int crbrTotal=0;
-		int cpbpTotal=0;
+		double crbrTotal=0;
+		double cpbpTotal=0;
 		for(ViewStageTransactionsDto viewStageTransactionsDtosvalues:viewStageTransactionsDtos )
 		{
 			if(viewStageTransactionsDtosvalues.getTransactionType().equalsIgnoreCase("Cash Receipt") )
 			{
 				if(viewStageTransactionsDtosvalues.getNarration().equalsIgnoreCase("Mis Processing"))
 				{
-					crbrTotal=crbrTotal + viewStageTransactionsDtosvalues.getTransactionAmount().intValue();
+					crbrTotal=crbrTotal + Double.parseDouble(viewStageTransactionsDtosvalues.getTransactionAmount());
 					viewStageTransactionsDtoCRMisList.add(viewStageTransactionsDtosvalues);
 				}
 
@@ -123,11 +123,11 @@ public class ConsolidatedTransactionAction extends BaseAction{
 			{
 				if(viewStageTransactionsDtosvalues.getNarration().equalsIgnoreCase("Mis Processing"))
 				{
-					cpbpTotal=cpbpTotal + viewStageTransactionsDtosvalues.getTransactionAmount().intValue();
+					cpbpTotal=cpbpTotal + Double.parseDouble(viewStageTransactionsDtosvalues.getTransactionAmount());
 					viewStageTransactionsDtoCPMisList.add(viewStageTransactionsDtosvalues);
 				}
 			} else if (viewStageTransactionsDtosvalues.getMainAccount().equalsIgnoreCase("Inter office Transfers")) {
-				crbrTotal=crbrTotal + viewStageTransactionsDtosvalues.getTransactionAmount().intValue();
+				crbrTotal=crbrTotal + Double.parseDouble(viewStageTransactionsDtosvalues.getTransactionAmount());
 				viewStageTransactionsDtoInterOfficeList.add(viewStageTransactionsDtosvalues);
 			}
 
@@ -141,7 +141,7 @@ public class ConsolidatedTransactionAction extends BaseAction{
 			{
 				if(!viewStageTransactionsDtosvalues.getNarration().equalsIgnoreCase("Mis Processing"))
 				{
-				crbrTotal=crbrTotal + viewStageTransactionsDtosvalues.getTransactionAmount().intValue();
+				crbrTotal=crbrTotal + Double.parseDouble(viewStageTransactionsDtosvalues.getTransactionAmount());
 			viewStageTransactionsDtoCRBRList.add(viewStageTransactionsDtosvalues);
 			}
 			}
@@ -150,7 +150,7 @@ public class ConsolidatedTransactionAction extends BaseAction{
 				if(!viewStageTransactionsDtosvalues.getNarration().equalsIgnoreCase("Mis Processing"))
 				{
 
-				cpbpTotal=cpbpTotal + viewStageTransactionsDtosvalues.getTransactionAmount().intValue();
+				cpbpTotal=cpbpTotal + Double.parseDouble(viewStageTransactionsDtosvalues.getTransactionAmount());
 
 				viewStageTransactionsDtoCPBPList.add(viewStageTransactionsDtosvalues);
 			}
@@ -160,8 +160,8 @@ public class ConsolidatedTransactionAction extends BaseAction{
 		}
 
 
-		actionForm.setCrtotal((Integer.toString(crbrTotal)));
-		actionForm.setCptotal(Integer.toString(cpbpTotal));
+		actionForm.setCrtotal(Double.toString(crbrTotal));
+		actionForm.setCptotal(Double.toString(cpbpTotal));
 		storingSession(request, "ConsolidatedTransactionActionForm",actionForm);
 		storingSession(request, "viewStageTransactionsDtoCRBRListValues",viewStageTransactionsDtoCRBRList);
 		storingSession(request, "viewStageTransactionsDtoCPBPListValues",viewStageTransactionsDtoCPBPList);
@@ -180,7 +180,7 @@ public class ConsolidatedTransactionAction extends BaseAction{
 		{
 		for(int i=0;i<Transactionno.length;i++)
 		{
-			int transactionNoValue=Integer.parseInt( Transactionno[i]);
+			String transactionNoValue= Transactionno[i];
 			approveCRBRTransactions(actionForm,transactionNoValue,request);
 		}
 		}
@@ -189,13 +189,13 @@ public class ConsolidatedTransactionAction extends BaseAction{
 		{
 		for(int i=0;i<cpbpTransactionNO.length;i++)
 		{
-			int transactioncpbpNoValue=Integer.parseInt( cpbpTransactionNO[i]);
+			String transactioncpbpNoValue=cpbpTransactionNO[i];
 			approveCPBPTransactions(actionForm,transactioncpbpNoValue,request);
 		}
 		}
 		return mapping.findForward("submit_success");
             }
-public void approveCRBRTransactions(ConsolidatedTransactionActionForm actionForm,int Transactionno,HttpServletRequest request)
+public void approveCRBRTransactions(ConsolidatedTransactionActionForm actionForm,String Transactionno,HttpServletRequest request)
 {
 	ViewStageTransactionsDto viewStageTransactionsDto = accountingServiceFacade
 			.getstagedAccountingTransactions(Transactionno);
@@ -246,11 +246,11 @@ public void approveCRBRTransactions(ConsolidatedTransactionActionForm actionForm
 		accountingDtos = accountingServiceFacade.auditAccountHeads();
 	}
 
-	actionForm.setTransactionDetailID(new Integer(viewStageTransactionsDto.getTransactionID()).toString());
+	actionForm.setTransactionDetailID(viewStageTransactionsDto.getTransactionID());
 	actionForm.setStageMainAccount(viewStageTransactionsDto.getMainAccount());
 	actionForm.setStageAccountHead(viewStageTransactionsDto.getSubAccount());
 	actionForm.setStageNotes(viewStageTransactionsDto.getNarration());
-	actionForm.setStageAmount(bigdecimalToInt(viewStageTransactionsDto.getTransactionAmount()));
+	actionForm.setStageAmount(viewStageTransactionsDto.getTransactionAmount());
 	String [] Transactionno1=actionForm.getTransactionNo();
 	String [] cpbpTransactionNO1=actionForm.getTransactionCpBpNo();
 	for(int j=0;j<Transactionno1.length;j++)
@@ -284,7 +284,7 @@ public void approveCRBRTransactions(ConsolidatedTransactionActionForm actionForm
 	}
 }
 
-public void approveCPBPTransactions(ConsolidatedTransactionActionForm actionForm,int TransactioncpbpNoValue,HttpServletRequest request)
+public void approveCPBPTransactions(ConsolidatedTransactionActionForm actionForm,String TransactioncpbpNoValue,HttpServletRequest request)
 {
 	ViewStageTransactionsDto viewStageTransactionsDto = accountingServiceFacade
 			.getstagedAccountingTransactions(TransactioncpbpNoValue);
@@ -338,11 +338,11 @@ public void approveCPBPTransactions(ConsolidatedTransactionActionForm actionForm
 		accountingDtos = accountingServiceFacade.auditAccountHeads();
 	}
 
-	actionForm.setTransactionDetailID(new Integer(viewStageTransactionsDto.getTransactionID()).toString());
+	actionForm.setTransactionDetailID(viewStageTransactionsDto.getTransactionID());
 	actionForm.setStageMainAccount(viewStageTransactionsDto.getMainAccount());
 	actionForm.setStageAccountHead(viewStageTransactionsDto.getSubAccount());
 	actionForm.setStageNotes(viewStageTransactionsDto.getNarration());
-	actionForm.setStageAmount(bigdecimalToInt(viewStageTransactionsDto.getTransactionAmount()));
+	actionForm.setStageAmount(viewStageTransactionsDto.getTransactionAmount());
 	String [] cpbpTransactionNO1=actionForm.getTransactionCpBpNo();
 	for(int j=0;j<cpbpTransactionNO1.length;j++)
 	{

@@ -79,7 +79,7 @@ public class SingleGeneralLedgerAction extends BaseAction {
 		storingSession(request, "OfficesOnHierarchy", null);
 		storingSession(request, "MainAccountGlCodes", null);
 		storingSession(request, "AccountHeadGlCodes", null);
-
+		storingSession(request, "DynamicOfficesOnHierarchy", null);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 

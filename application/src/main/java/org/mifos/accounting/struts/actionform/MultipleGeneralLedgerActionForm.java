@@ -431,7 +431,7 @@ public class MultipleGeneralLedgerActionForm extends BaseActionForm {
 				String [] notes123=getNotes1();
 				for(int i=0;i<amounts123.length;i++)
 				{
-					int amoun=Integer.parseInt(amounts123[i]);
+					double amoun=Double.parseDouble(amounts123[i]);
 				//String accounthead=accountHead123[i];
 					if(amoun==0)
 					{
@@ -492,7 +492,7 @@ public class MultipleGeneralLedgerActionForm extends BaseActionForm {
 			MifosCurrency currency, String fieldPropertyKey,
 			ActionErrors errors, String installmentNo) {
 		String fieldName = fieldPropertyKey;
-		DoubleConversionResult conversionResult = parseDoubleForMoney(
+		DoubleConversionResult conversionResult = parseDoubleDecimalForMoney(
 				amountString, currency);
 		for (ConversionError error : conversionResult.getErrors()) {
 			String errorText = error.toLocalizedMessage(currency);

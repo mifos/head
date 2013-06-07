@@ -205,7 +205,7 @@ function fnBankDetail(){
 				   <table width="100%" border="0" cellpadding="2" cellspacing="0" class="burlywoodborder">
 <tr><td>
 				   <table cellpadding="1" cellspacing="1" border="1">
-            <tr>
+            <tr class="fontnormal">
                 <th>
                    Voucher.NO
                 </th>
@@ -216,7 +216,7 @@ function fnBankDetail(){
                     Amount
                 </th>
             </tr>
-            <tr>
+            <tr class="fontnormal">
                 <th>
                  ......
                 </th>
@@ -260,7 +260,7 @@ function fnBankDetail(){
                 </tr>
            </c:forEach>
 
-            <tr>
+            <tr class="fontnormal">
                 <th>
                  ......
                 </th>
@@ -305,7 +305,7 @@ function fnBankDetail(){
         </td>
         <td>
          <table cellpadding="1" cellspacing="1" border="1">
-            <tr>
+            <tr class="fontnormal">
                 <th>
                    Voucher.NO
                 </th>
@@ -316,7 +316,7 @@ function fnBankDetail(){
                     Amount
                 </th>
             </tr>
-            <tr>
+            <tr class="fontnormal">
                 <th>
                  ......
                 </th>
@@ -326,7 +326,7 @@ function fnBankDetail(){
                 <th>
                 .......
                 </th>
-            </tr>
+            </tr class="fontnormal">
              <c:forEach items="${sessionScope.viewStageTransactionsDtoCPBPListValues}" var="accountHeadCPBP">
                 <tr>
                 <td>
@@ -341,7 +341,7 @@ function fnBankDetail(){
 
                 </tr>
            </c:forEach>
-            <tr>
+            <tr class="fontnormal">
                 <th>
                  ......
                 </th>
@@ -353,7 +353,7 @@ function fnBankDetail(){
                 </th>
             </tr>
              <c:forEach items="${sessionScope.viewStageTransactionsDtoCPMisListValues}" var="accountHeadCpMis">
-                <tr>
+                <tr class="fontnormal">
                 <td>
                  <html-el:text property="transactionCpBpNo" name="consolidatedtransactionactionform" styleClass="separatedNumber" readonly="true" value="${accountHeadCpMis.transactionNo}" styleId="${accountHead.sno}" />
                  </td>

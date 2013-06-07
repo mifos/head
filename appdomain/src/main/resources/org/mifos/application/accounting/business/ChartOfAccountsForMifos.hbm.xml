@@ -834,10 +834,10 @@ where ag.office_id= :OFFICEID AND ag.office_level= :OFFICELEVEL AND ag.glcode_va
 		<return-scalar column="mainAccount" type="string" />
 		<return-scalar column="amountAction" type="string" />
 		<return-scalar column="subAccount" type="string" />
-		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="transactionAmount" type="string" />
 		<return-scalar column="narration" type="string" />
 		<return-scalar column="fromOfficeId" type="string" />
-		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="transactionID" type="string" />
 
         <![CDATA[
 			SELECT m.transaction_master_id AS transactionNo,
@@ -929,9 +929,9 @@ where ag.office_id= :OFFICEID AND ag.office_level= :OFFICELEVEL AND ag.glcode_va
 		<return-scalar column="mainAccount" type="string" />
 		<return-scalar column="amountAction" type="string" />
 		<return-scalar column="subAccount" type="string" />
-		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="transactionAmount" type="string" />
 		<return-scalar column="narration" type="string" />
-		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="transactionID" type="string" />
 		<return-scalar column="audit" type="string" />
 
         <![CDATA[
@@ -1033,9 +1033,9 @@ SELECT m.transaction_master_id AS transactionNo,
 		<return-scalar column="mainAccount" type="string" />
 		<return-scalar column="amountAction" type="string" />
 		<return-scalar column="subAccount" type="string" />
-		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="transactionAmount" type="string" />
 		<return-scalar column="narration" type="string" />
-		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="transactionID" type="string" />
 		<return-scalar column="audit" type="string" />
         <![CDATA[
 SELECT m.transaction_master_id AS transactionNo,
@@ -1779,9 +1779,9 @@ and b.debit_credit_flag=1
 		<return-scalar column="mainAccount" type="string" />
 		<return-scalar column="amountAction" type="string" />
 		<return-scalar column="subAccount" type="string" />
-		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="transactionAmount" type="string" />
 		<return-scalar column="narration" type="string" />
-		<return-scalar column="transactionID" type="int" />
+		<return-scalar column="transactionID" type="string" />
 		<return-scalar column="audit" type="string" />
         <![CDATA[
 SELECT m.transaction_master_id AS transactionNo,

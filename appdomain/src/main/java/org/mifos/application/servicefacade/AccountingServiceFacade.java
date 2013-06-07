@@ -88,9 +88,9 @@ public interface AccountingServiceFacade {
 
 	void approveStageAccountingTransactions(int transactionNo, int stage);
 
-	ViewStageTransactionsDto getstagedAccountingTransactions(int transactionNo);
+	ViewStageTransactionsDto getstagedAccountingTransactions(String transactionNo);
 
-	public GlDetailDto getChequeDetails(int stageTransactionNo);
+	public GlDetailDto getChequeDetails(String stageTransactionNo);
 
 	public List<GLCodeDto> auditAccountHeads();
 

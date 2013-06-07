@@ -192,6 +192,9 @@ public class AccountingRules {
     public static Short getDigitsAfterDecimal() {
         return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
+    public static Short getMultipleDigitsAfterDecimal() {
+        return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.MULTIPLE_DIGITS_AFTER_DECIMAL);
+    }
     
     public static Boolean getSimpleAccountingStatus() {
         return MifosConfigurationManager.getInstance().getBoolean(AccountingRulesConstants.ENABLE_SIMPLE_ACCOUNTING);
@@ -213,6 +216,21 @@ public class AccountingRules {
         return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "." + code,
                 getDigitsAfterDecimal());
     }
+    ///Hugo Technologies Multiple DigitsAfterDecimal
+    public static Short getMultpleDigitsAfterDecimal(final MifosCurrency currency) {
+        if (currency == null) return getMultipleDigitsAfterDecimal();
+        final String code = currency.getCurrencyCode();
+        if (getDefaultCurrencyCode().equals(code)) {
+            return getMultipleDigitsAfterDecimal();
+        }
+        if (!getAdditionalCurrencyCodes().contains(code)) {
+            throw new IllegalArgumentException(String.format("Currency not configured. %s. Default currency is: %s", currency, getDefaultCurrencyCode()));
+        }
+        return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.MULTIPLE_DIGITS_AFTER_DECIMAL + "." + code,
+                getMultipleDigitsAfterDecimal());
+    }
+
+
 
     public static Short getDigitsBeforeDecimal() {
         return DIGITS_BEFORE_DECIMAL_FOR_AMOUNT;

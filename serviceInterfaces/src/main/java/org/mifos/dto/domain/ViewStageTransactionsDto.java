@@ -1,6 +1,5 @@
 package org.mifos.dto.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class ViewStageTransactionsDto {
@@ -13,10 +12,10 @@ public class ViewStageTransactionsDto {
 	private String mainAccount;
 	private String amountAction;
 	private String subAccount;
-	private BigDecimal transactionAmount;
+	private String transactionAmount;
 	private String narration;
 	private String fromOfficeId;
-	private int transactionID;
+	private String transactionID;
 	private String audit;
 
   
@@ -83,10 +82,10 @@ public class ViewStageTransactionsDto {
 	public void setSubAccount(String subAccount) {
 		this.subAccount = subAccount;
 	}
-	public BigDecimal getTransactionAmount() {
+	public String getTransactionAmount() {
 		return transactionAmount;
 	}
-	public void setTransactionAmount(BigDecimal transactionAmount) {
+	public void setTransactionAmount(String transactionAmount) {
 		this.transactionAmount = transactionAmount;
 	}
 	public String getNarration() {
@@ -101,10 +100,10 @@ public class ViewStageTransactionsDto {
 	public void setFromOfficeId(String fromOfficeId) {
 		this.fromOfficeId = fromOfficeId;
 	}
-	public int getTransactionID() {
+	public String getTransactionID() {
 		return transactionID;
 	}
-	public void setTransactionID(int transactionID) {
+	public void setTransactionID(String transactionID) {
 		this.transactionID = transactionID;
 	}
 	

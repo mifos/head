@@ -55,6 +55,9 @@ public class LocalizationConverter {
     private char decimalFormatSymbol;
 
     private short digitsAfterDecimalForMoney;
+
+    private short multipleDigitsAfterDecimalForMoney;
+
     private short digitsBeforeDecimalForMoney;
 
     private short digitsAfterDecimalForInterest;
@@ -71,6 +74,7 @@ public class LocalizationConverter {
 
     public LocalizationConverter(MifosCurrency currency) {
         digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(currency);
+        multipleDigitsAfterDecimalForMoney=AccountingRules.getMultpleDigitsAfterDecimal(currency);
         digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
         digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
         digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
@@ -174,6 +178,31 @@ public class LocalizationConverter {
             return result;
         }
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, doubleStr, false);
+        result.setErrors(errors);
+        if (errors.size() > 0) {
+            return result;
+        }
+        try {
+            result.setDoubleValue(getDoubleValueForCurrentLocale(doubleStr));
+        } catch (Exception ex) {
+            // after all the checkings this is not likely to happen, but just in
+            // case
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);
+        }
+        return result;
+    }
+
+    public DoubleConversionResult parseDoubleDecimalForMoney(String doubleStr) {
+        DoubleConversionResult result = new DoubleConversionResult();
+        if (doubleStr == null) {
+            List<ConversionError> errors = new ArrayList<ConversionError>();
+            errors.add(ConversionError.CONVERSION_ERROR);
+            result.setErrors(errors);
+            return result;
+        }
+        List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, multipleDigitsAfterDecimalForMoney,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, doubleStr, false);
         result.setErrors(errors);
