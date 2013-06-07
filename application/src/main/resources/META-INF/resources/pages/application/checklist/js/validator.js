@@ -71,7 +71,6 @@ function createCheckList()
 		{
 			var temp=incrementer;
 			detailsTxt.innerHTML+=textArea.substr(temp,80);
-			detailsTxt.innerHTML+="<br>";
 			incrementer=incrementer+80;
 		}
 		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+k+"]' value='"+value+"' >";

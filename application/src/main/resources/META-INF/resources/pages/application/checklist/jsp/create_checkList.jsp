@@ -104,19 +104,19 @@ explanation of the license and how it is applied.
 								</tr>
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel
-										name="checklist.enter_Info_one" /> <br>
+										name="checklist.enter_Info_one" /> <br />
 									<mifos:mifoslabel name="checklist.enter_Info_two"
 										mandatory="yes" /></td>
 								</tr>
 							</table>
-							<br>
+							<br />
 							<table width="96%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<font class="fontnormalRedBold"> <html-el:errors
 										bundle="checklistUIResources" /> </font>
 									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-										name="checklist.checklistdetails" /> <br>
-									<br>
+										name="checklist.checklistdetails" /> <br />
+									<br />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -206,25 +206,27 @@ explanation of the license and how it is applied.
 											</html-el:button></td>
 										</tr>
 									</table>
-									<br>
+									<br />
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr class="fontnormal">
-											<br>
+											<br />
+                                            
+                                            <div id="myDiv">
 											<c:forEach var="item"
 												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
 												varStatus="loop">
 												<c:if test="${item != ''}">
-													<tr id="myvalue${loop.index}div">
+													<div style="display:inline">
 														<input name='mycheckBOx' type="checkbox" value="${item}" />
 														${item}
 														<input name='detailsList[${loop.index}]' type="hidden"
 															value="${item}" />
-													</tr>
+													</div>
 												</c:if>
 											</c:forEach>
-											<div id="myDiv"></div>
+											</div>
 
-											<br>
+											<br />
 										</tr>
 										<tr valign="top" class="fontnormal">
 											<td colspan="2"><html-el:hidden
@@ -257,7 +259,7 @@ explanation of the license and how it is applied.
 									<td align="center" class="blueline">&nbsp;</td>
 								</tr>
 							</table>
-							<br>
+							<br />
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit
@@ -272,11 +274,11 @@ explanation of the license and how it is applied.
 									</html-el:button></td>
 								</tr>
 							</table>
-							<br>
+							<br />
 							</td>
 						</tr>
 					</table>
-					<br>
+					<br />
 					</td>
 				</tr>
 			</table>

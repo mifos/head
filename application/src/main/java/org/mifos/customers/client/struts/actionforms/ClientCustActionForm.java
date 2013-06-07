@@ -432,8 +432,12 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
         if (picture != null && StringUtils.isNotBlank(picture.getFileName())) {
+            
+            boolean greaterThan300K = false;
+            boolean forbiddenContentType = false;
+            
             if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
-                addInvalidPictureError(errors, "image size should be less then 300K");
+                greaterThan300K = true;
             }
             try {
                 String contentType = URLConnection.guessContentTypeFromStream(picture.getInputStream());
@@ -445,8 +449,15 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
                                             contentType.equals("image/gif") ||
                                             contentType.equals("image/jpg") ||
                                             contentType.equals("image/png"))) {
-                    addInvalidPictureError(errors, "allowed only jpg/gif/png");
+                    forbiddenContentType = true;
                 }
+                
+                if(forbiddenContentType == true)
+                    addInvalidPictureError(errors, "allowed only jpg | gif | png");
+                
+                if(greaterThan300K == true)
+                    addInvalidPictureError(errors, "image size should be less than 300K");
+                
             } catch (IOException e) {
                 addInvalidPictureError(errors, e.getMessage());
             }
