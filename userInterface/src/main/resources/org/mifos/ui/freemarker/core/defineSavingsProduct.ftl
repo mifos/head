@@ -43,7 +43,7 @@
 
     function fnCheckRecMand() {
 
-        if(document.getElementById("selectedDepositType").selectedIndex==1) {
+        if(document.getElementById("selectedDepositType").selectedIndex == 0) {
             document.getElementById("mandamnt").style.display = "inline";
             document.getElementById("recamnt").style.display = "none";
         }
