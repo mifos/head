@@ -100,10 +100,8 @@ border-bottom : solid 1px #EAEBF4;
 <tiles:insert definition=".financialAccountingLayout">
 <tiles:put name="body" type="string" >
 <!-- <span id="page.id" title="CustomerList"></span> -->
-<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}' />
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources" />
-<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 <script type="text/javascript" src="pages/js/datePicker.js"></script>
 <link rel="stylesheet" type="text/css" href="pages/css/datepicker/calendar.css" />
@@ -291,7 +289,7 @@ function fnBankDetail(){
                     COA Description
                 </th>
                 <th>
-                    Amount
+                    <font color="#FF0000">*</font>Amount
                 </th>
                 <th >
                     Transaction Notes
