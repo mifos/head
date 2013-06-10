@@ -72,7 +72,6 @@ border-bottom : solid 1px #EAEBF4;
 <tiles:insert definition=".financialAccountingLayout">
 <tiles:put name="body" type="string" >
 <!-- <span id="page.id" title="CustomerList"></span> -->
-<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script language="javascript">
 
 

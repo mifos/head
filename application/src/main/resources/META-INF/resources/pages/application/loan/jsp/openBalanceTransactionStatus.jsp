@@ -70,7 +70,6 @@ border-bottom : solid 1px #EAEBF4;
 </head>
 <tiles:insert definition=".financialAccountingLayout">
 <tiles:put name="body" type="string" >
-<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script language="javascript">
 
 function fnSubmit(form, buttonSubmit) {
