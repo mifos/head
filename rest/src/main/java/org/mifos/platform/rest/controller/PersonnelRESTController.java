@@ -150,6 +150,8 @@ public class PersonnelRESTController {
 	        				customerToAdd.setDisplayName(client.getDisplayName());
 	        				customerToAdd.setGlobalCustNum(client.getGlobalCustNum());
 	        				customerToAdd.setOverdueLoans(new ArrayList<OverdueLoan>());
+	        				customerToAdd.setPhoneNumber(client.getAddress().getPhoneNumber());
+	        				customerToAdd.setAddress(client.getDisplayAddress());
 	        				overdueCustomers.add(customerToAdd);
 	        			}
 	        			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),

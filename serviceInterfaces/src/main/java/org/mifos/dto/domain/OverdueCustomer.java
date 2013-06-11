@@ -30,6 +30,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @SuppressWarnings("PMD")
 public class OverdueCustomer extends ClientDescriptionDto implements Serializable {
 
+	private String phoneNumber;
+	private String address;
 	private List<OverdueLoan> overdueLoans;
 
 	public List<OverdueLoan> getOverdueLoans() {
@@ -38,6 +40,22 @@ public class OverdueCustomer extends ClientDescriptionDto implements Serializabl
 
 	public void setOverdueLoans(List<OverdueLoan> overdueLoans) {
 		this.overdueLoans = overdueLoans;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 }
