@@ -20,7 +20,6 @@
 
 package org.mifos.dto.domain;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -28,7 +27,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 @SuppressWarnings("PMD")
-public class OverdueCustomer extends ClientDescriptionDto implements Serializable {
+public class OverdueCustomer extends ClientDescriptionDto {
 
 	private String phoneNumber;
 	private String address;

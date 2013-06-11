@@ -20,12 +20,13 @@
 package org.mifos.platform.rest.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.config.ClientRules;
@@ -38,6 +39,8 @@ import org.mifos.dto.domain.ClientDescriptionDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.GroupDescriptionDto;
+import org.mifos.dto.domain.LastRepaymentDto;
+import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.OverdueCustomer;
 import org.mifos.dto.domain.OverdueLoan;
 import org.mifos.dto.screen.LoanInformationDto;
@@ -62,9 +65,6 @@ public class PersonnelRESTController {
 
     @Autowired
     private CustomerDao customerDao;
-    
-    @Autowired
-    private LoanDao loanDao;
 
     @Autowired
     private PersonnelDao personnelDao;
@@ -130,6 +130,62 @@ public class PersonnelRESTController {
         }
 
         return hierarchy;
+    }
+    
+    @RequestMapping(value = "personnel/id-current/last-repayments", method = RequestMethod.GET)
+    public @ResponseBody
+   	List<LastRepaymentDto> getLastRepayments() {
+
+    	List<LastRepaymentDto> lastRepayments = new ArrayList<LastRepaymentDto>();
+    	
+    	PersonnelBO loanOfficer = personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
+    	List<ClientBO> borrowers = customerDao.findAllBorrowersUnderLoanOfficer(loanOfficer.getPersonnelId(), null);
+    	
+    	for (ClientBO borrower: borrowers) {
+
+    		List<LoanBO> loans = borrower.getOpenLoanAccounts();
+        	
+    		if (loans != null && loans.size() != 0) {
+    			LoanBO lastLoan = null;
+    			Date lastLoanDate = null;
+    			
+    			for (LoanBO loan: loans) {
+    				Date lastAction = null;
+    				for (AccountActionDateEntity accountAction : loan.getAccountActionDates()) {
+    					if (lastAction == null || lastAction.before(accountAction.getActionDate())) {
+    						lastAction = accountAction.getActionDate();
+    					}
+    				}
+    				
+    				if (lastLoanDate == null || lastLoanDate.before(lastAction)) {
+    					lastLoan = loan;
+    					lastLoanDate = lastAction;
+    				}
+    			}
+    			
+    			if (lastLoan == null || lastLoanDate == null) {
+    				continue;
+    			}
+    			
+    			ClientDescriptionDto clientDescription = new ClientDescriptionDto(borrower.getCustomerId(), 
+    					borrower.getDisplayName(), 
+    					borrower.getGlobalCustNum(), 
+    					borrower.getSearchId());
+    			
+    			LoanDetailDto loanDetails = new LoanDetailDto(lastLoan.getGlobalAccountNum(), 
+    					lastLoan.getLoanOffering().getPrdOfferingName(), 
+    					lastLoan.getAccountState().getId(), 
+    					lastLoan.getAccountState().getName(), 
+    					lastLoan.getLoanBalance().toString(), 
+    					lastLoan.getTotalAmountDue().toString(),
+    					lastLoan.getAccountType().getAccountTypeId(),
+    					lastLoan.getTotalAmountInArrears().toString());
+    			
+    			lastRepayments.add(new LastRepaymentDto(clientDescription, loanDetails, lastLoanDate));
+    		}
+    	}
+    	
+    	return lastRepayments;
     }
     
     @RequestMapping(value = "personnel/id-current/overdue_borrowers", method = RequestMethod.GET)

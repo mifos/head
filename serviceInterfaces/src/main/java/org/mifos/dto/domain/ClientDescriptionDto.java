@@ -19,14 +19,30 @@
  */
 package org.mifos.dto.domain;
 
+import java.io.Serializable;
 
-public class ClientDescriptionDto {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+public class ClientDescriptionDto implements Serializable {
     private Integer id;
     private String displayName;
     private String globalCustNum;
     private String searchId;
 
-    public Integer getId() {
+    public ClientDescriptionDto() {
+    	super();
+    }
+    
+    public ClientDescriptionDto(Integer id, String displayName,
+			String globalCustNum, String searchId) {
+		super();
+		this.id = id;
+		this.displayName = displayName;
+		this.globalCustNum = globalCustNum;
+		this.searchId = searchId;
+	}
+
+	public Integer getId() {
         return id;
     }
 
