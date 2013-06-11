@@ -57,6 +57,7 @@ public class ClientInformationDto implements Serializable {
     
     private final List<LoanDetailDto> closedLoanAccounts;
     private final List<SavingsDetailDto> closedSavingsAccounts;
+    private final List<LoanDetailDto> guarantedLoanAccounts;
 
     public ClientInformationDto(final ClientDisplayDto clientDisplay,
             final CustomerAccountSummaryDto customerAccountSummary,
@@ -64,7 +65,7 @@ public class ClientInformationDto implements Serializable {
             final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerFlagDto> customerFlags,
             final List<LoanDetailDto> loanAccountsInUse, List<LoanDetailDto> groupLoanAccountsInUse, final List<SavingsDetailDto> savingsAccountsInUse,
             final CustomerMeetingDto customerMeeting, final Boolean activeSurveys,
-            final List<SurveyDto> customerSurveys) {
+            final List<SurveyDto> customerSurveys, final List<LoanDetailDto> guarantedLoanAccounts) {
         this.clientDisplay = clientDisplay;
         this.customerAccountSummary = customerAccountSummary;
         this.clientPerformanceHistory = clientPerformanceHistory;
@@ -79,6 +80,7 @@ public class ClientInformationDto implements Serializable {
         this.customerSurveys = customerSurveys;
         this.closedLoanAccounts = Collections.emptyList();
         this.closedSavingsAccounts = Collections.emptyList();
+        this.guarantedLoanAccounts = guarantedLoanAccounts;
     }
 
     public ClientInformationDto(final ClientDisplayDto clientDisplay,
@@ -93,7 +95,8 @@ public class ClientInformationDto implements Serializable {
     		final CustomerMeetingDto customerMeeting, Boolean activeSurveys,
     		final List<SurveyDto> customerSurveys,
     		final List<LoanDetailDto> closedLoanAccounts,
-    		final List<SavingsDetailDto> closedSavingsAccounts) {
+    		final List<SavingsDetailDto> closedSavingsAccounts,
+    		final List<LoanDetailDto> guarantedLoanAccounts) {
 		this.clientDisplay = clientDisplay;
 		this.customerAccountSummary = customerAccountSummary;
 		this.clientPerformanceHistory = clientPerformanceHistory;
@@ -108,6 +111,11 @@ public class ClientInformationDto implements Serializable {
 		this.customerSurveys = customerSurveys;
 		this.closedLoanAccounts = closedLoanAccounts;
 		this.closedSavingsAccounts = closedSavingsAccounts;
+		this.guarantedLoanAccounts = guarantedLoanAccounts;
+	}
+
+	public List<LoanDetailDto> getGuarantedLoanAccounts() {
+		return guarantedLoanAccounts;
 	}
 
 	public ClientDisplayDto getClientDisplay() {

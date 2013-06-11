@@ -36,7 +36,10 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.loan.business.GuarantyEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -110,6 +113,7 @@ import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.fileupload.service.ClientFileService;
 import org.mifos.framework.image.domain.ClientPhoto;
 import org.mifos.framework.image.service.ClientPhotoService;
@@ -140,6 +144,12 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     
     @Autowired
     private ClientFileService clientFileService;
+    
+    @Autowired
+    private LoanDao loanDao;
+    
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Autowired
     public ClientServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -567,9 +577,29 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
+        List<LoanDetailDto> guarantedLoanAccounts = new ArrayList<LoanDetailDto>();
+        try {
+        	List<GuarantyEntity> guaranties = legacyAccountDao.getGuarantyByGurantorId(clientId);
+		
+	        for(GuarantyEntity guaranty : guaranties){
+	            if (guaranty.getState()) {
+		            LoanBO loan = loanDao.findById(guaranty.getLoanId());
+		            guarantedLoanAccounts.add(new LoanDetailDto(loan.getGlobalAccountNum(), 
+		            		loan.getLoanOffering().getPrdOfferingName(), 
+		            		loan.getAccountState().getId(), loan.getAccountState().getName(), 
+		            		loan.getLoanSummary().getOutstandingBalance().toString(), 
+		            		loan.getTotalAmountDue().toString(), loan.getAccountType().getAccountTypeId(), 
+		            		loan.getTotalAmountInArrears().toString()));
+	            }
+	        }
+        
+		} catch (PersistenceException e) {
+			throw new MifosRuntimeException("Can not get guaranted loan accounts", e);
+		}
+		
         return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
                 recentCustomerNotes, customerFlags, loanDetail, groupLoanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys,
-                closedLoanAccounts, closedSavingsAccounts);
+                closedLoanAccounts, closedSavingsAccounts, guarantedLoanAccounts);
     }
 
     private ClientPerformanceHistoryDto assembleClientPerformanceHistoryDto(
