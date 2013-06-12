@@ -66,6 +66,7 @@
     },
   "customerSurveys" : [  ],
   "groupLoanAccountsInUse" : [  ],
+  "guarantedLoanAccounts" : [  ],
   "loanAccountsInUse" : [ { "accountStateId" : 5,
         "accountStateName" : "Active in Good Standing",
         "accountTypeId" : 1,
