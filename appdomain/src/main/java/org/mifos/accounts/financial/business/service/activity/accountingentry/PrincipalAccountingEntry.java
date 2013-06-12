@@ -42,7 +42,8 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
         Money amountToPost = null;
 
         if (((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId())) {
-            amountToPost = Money.round(loanTrxn.getPrincipalAmount(), loanTrxn.getPrincipalAmount().getCurrency().getRoundingAmount(),
+            amountToPost = Money.round(loanTrxn.getPrincipalAmount(), 
+            		AccountingRules.getFinalRoundOffMultiple(loanTrxn.getPrincipalAmount().getCurrency()),
                     AccountingRules.getCurrencyRoundingMode());
         } else {
             amountToPost = principalAmountNotRounded;
