@@ -85,20 +85,24 @@ public class RolesPermissionsActionForm extends BaseActionForm {
             try {
                 amountValue = new BigDecimal(amountValueString);
 
-                ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activtiyRestrictionTypeId);
-                if (activityRestrictionDto != null) {
-                    activityRestrictionDto.setAmountValue(amountValue);
-                    activityRestrictionDtoToPersistList.add(activityRestrictionDto);
+                if (amountValue.compareTo(BigDecimal.ZERO) > 0) {
+	                	ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activtiyRestrictionTypeId);
+	                if (activityRestrictionDto != null) {
+	                    activityRestrictionDto.setAmountValue(amountValue);
+	                    activityRestrictionDtoToPersistList.add(activityRestrictionDto);
+	                } else {
+	                    // add new restriction for role
+	                    Short roleId = 0;
+	                    if (id != null) {
+	                        roleId = new Short(id);
+	                    }
+	                    activityRestrictionDto = new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue);
+	                    activityRestrictionDtoMap.put(activtiyRestrictionTypeId, activityRestrictionDto);
+	                }
+	                this.activityRestrictionDtoToPersistList.add(activityRestrictionDto);
                 } else {
-                    // add new restriction for role
-                    Short roleId = 0;
-                    if (id != null) {
-                        roleId = new Short(id);
-                    }
-                    activityRestrictionDto = new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue);
-                    activityRestrictionDtoMap.put(activtiyRestrictionTypeId, activityRestrictionDto);
+                	invalidActivityRestrictionsValues.add(ActivityRestrictionType.getByValue(activtiyRestrictionTypeId));
                 }
-                this.activityRestrictionDtoToPersistList.add(activityRestrictionDto);
             } catch (NumberFormatException e) {
                 invalidActivityRestrictionsValues.add(ActivityRestrictionType.getByValue(activtiyRestrictionTypeId));
             }
