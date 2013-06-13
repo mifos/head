@@ -245,11 +245,13 @@
         <span class="span-8 paddingLeft">[@spring.message "manadatoryHiddenFields.middlename"/] </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideClientMiddleName" [#if fields.hideClientMiddleName=true]
-                                                 checked="checked" [/#if]  value="1"
+                                                 checked="checked" [/#if] [#if fields.mandatoryClientMiddleName=true]
+                                               DISABLED [/#if] value="1"
                                                  onclick="disableFields(this)"></span>
         <span class="span-5 paddingLeft"><input type="checkbox"
-                                                name="mandatoryClientMiddleName" [#if fields.mandatoryClientMiddleName=true]
-                                                checked="checked" [/#if]  value="1"
+                                                name="mandatoryClientMiddleName" [#if fields.mandatoryClientMiddleName=true] 
+                                                checked="checked" [/#if] [#if fields.hideClientMiddleName=true]
+                                                DISABLED [/#if] value="1"
                                                 onclick="disableFields(this)"></span>
     </div>
     <div class="span-22 borderbtm">
