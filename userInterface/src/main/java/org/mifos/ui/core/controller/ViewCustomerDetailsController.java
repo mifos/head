@@ -1,5 +1,7 @@
 package org.mifos.ui.core.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,16 +10,20 @@ import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.dto.domain.AdminDocumentDto;
 import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.reports.admindocuments.AdminDocumentsServiceFacade;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import freemarker.ext.servlet.IncludePage;
@@ -33,6 +39,8 @@ public class ViewCustomerDetailsController {
 	CenterServiceFacade centerServiceFacade;
 	@Autowired
 	AdminServiceFacade adminServiceFacade;
+	@Autowired
+	AdminDocumentsServiceFacade adminDocumentsServiceFacade;
 
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
@@ -69,6 +77,32 @@ public class ViewCustomerDetailsController {
 
         return modelAndView;
 	}
+	
+    @RequestMapping(value = "/printClientPaymentReceipt", method = RequestMethod.GET)
+    public ModelAndView showLastPaymentReceipt(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String globalAccountNum) {
+        ModelAndView modelAndView = new ModelAndView("printClientPaymentReceipt");
+        String gan = null;
+        if (globalAccountNum == null) {
+            gan = request.getSession().getAttribute("globalAccountNum").toString();
+        } else {
+            gan = globalAccountNum;
+        }
+        String clientSystemId = request.getParameter("globalCustNum");
+        AccountPaymentDto clientAccountPayment = clientServiceFacade.getClientAccountPayments(gan).get(0);
+
+        List<AdminDocumentDto> adminDocuments = adminDocumentsServiceFacade
+                .getAdminDocumentsForAccountPayment(clientAccountPayment.getPaymentId());
+        if (adminDocuments != null && !adminDocuments.isEmpty()) {
+            clientAccountPayment.setAdminDocuments(adminDocuments);
+        }
+
+        modelAndView.addObject("clientAccountPayment", clientAccountPayment);
+        modelAndView.addObject("globalAccountNum", gan);
+        modelAndView.addObject("clientSystemId", clientSystemId);
+
+        return modelAndView;
+    }
 
 	@RequestMapping(value = "/viewGroupDetails", method=RequestMethod.GET)
 	public ModelAndView showGroupDetails(HttpServletRequest request, HttpServletResponse response) {

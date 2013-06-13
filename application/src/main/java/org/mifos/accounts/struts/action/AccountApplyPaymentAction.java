@@ -162,9 +162,15 @@ public class AccountApplyPaymentAction extends BaseAction {
         
         ActionForward findForward;
         if(actionForm.getPrintReceipt()){
-            findForward = mapping.findForward(getForward("PRINT"));
-        }
-        else {
+            if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
+                findForward = mapping.findForward(getForward("PRINT"));
+            } else {
+                request.getSession().setAttribute("clientSystemId",
+                        accountPaymentDto.getCustomerDto().getGlobalCustNum());
+
+                findForward = mapping.findForward(getForward("PRINT_CLIENT"));
+            }
+        } else {
             findForward = mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
         }
         return findForward;
@@ -227,6 +233,8 @@ public class AccountApplyPaymentAction extends BaseAction {
             return ActionForwards.loan_detail_page.toString();
         } else if (input.equals("PRINT")) {
             return ActionForwards.printPaymentReceipt.toString();
+        } else if (input.equals("PRINT_CLIENT")) {
+            return ActionForwards.printClientPaymentReceipt.toString();
         }
 
         return "applyPayment_success";

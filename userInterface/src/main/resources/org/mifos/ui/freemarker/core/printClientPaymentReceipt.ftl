@@ -20,9 +20,9 @@
 --]
 [#include "layout.ftl"]
 [@clientLeftPane "ClientsAndAccounts"]
-<span id="page.id" title="PrintReceipt"></span>
+<span id="page.id" title="PrintClientPaymentReceipt"></span>
 <div class="content">
-	<table id="loanAccountPayments" class="datatable">
+	<table id="clientAccountPayments" class="datatable">
 		<tr>
 			<td>
 				<span class='fontnormalbold'>
@@ -30,12 +30,12 @@
 				<span>
 			</td>
 		</tr>
-		[#if loanAccountPayment.adminDocuments??]
-			[#list loanAccountPayment.adminDocuments as adminDocument]
+		[#if clientAccountPayment.adminDocuments??]
+			[#list clientAccountPayment.adminDocuments as adminDocument]
 				<tr>
 					<td>
-					    <label for="adminDocOutputType_${loanAccountPayment.paymentId?c}">${adminDocument.name}</label>
-                        <select id="adminDocOutputType_${loanAccountPayment.paymentId?c}" class="adminDocOutputType">
+					    <label for="adminDocOutputType_${clientAccountPayment.paymentId?c}">${adminDocument.name}</label>
+                        <select id="adminDocOutputType_${clientAccountPayment.paymentId?c}" class="adminDocOutputType">
                           <option value="0" selected="selected">PDF</option>
                           <option value="1">XLS</option>
                           <option value="2">RTF</option>
@@ -43,7 +43,7 @@
                           <option value="4">XML</option>
                           <option value="5">CSV</option>
                         </select>
-						<a class="adminDocOutputTypeLink"  href="executeAdminDocument.ftl?adminDocumentId=${adminDocument.id?c}&entityId=${loanAccountPayment.paymentId?c}&outputTypeId=0">
+						<a class="adminDocOutputTypeLink"  href="executeAdminDocument.ftl?adminDocumentId=${adminDocument.id?c}&entityId=${clientAccountPayment.paymentId?c}&outputTypeId=0">
 						Download
 						</a>
 					</td>
@@ -54,6 +54,6 @@
 	</table>
 	<script type="text/javascript" src="pages/application/admindocument/js/adminDocument.js"></script>
     <script type="text/javascript">syncAdminDocumentLinkWithComboBox("adminDocOutputType", "adminDocOutputTypeLink");</script>
-	[@form.returnToPage  "viewLoanAccountDetails.ftl?globalAccountNum=${globalAccountNum}" "printReceipt.returnToLoanAccount" "printpaymentreceipt.button.back"/]
+	[@form.returnToPage  "viewClientDetails.ftl?globalCustNum=${clientSystemId}" "printReceipt.returnToClientAccount" "printpaymentreceipt.button.back"/]
 </div>
 [/@clientLeftPane]
