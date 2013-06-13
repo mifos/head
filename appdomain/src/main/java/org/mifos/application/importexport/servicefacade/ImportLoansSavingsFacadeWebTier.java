@@ -1,26 +1,13 @@
 package org.mifos.application.importexport.servicefacade;
 
 import java.io.InputStream;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
-import org.mifos.accounts.servicefacade.UserContextFactory;
-import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
-import org.mifos.application.importexport.xls.XlsClientsImporter;
 import org.mifos.application.importexport.xls.XlsLoansAccountImporter;
 import org.mifos.application.importexport.xls.XlsSavingsAccountImporter;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.clientportfolio.loan.service.DailySchedule;
@@ -31,23 +18,15 @@ import org.mifos.clientportfolio.loan.service.WeeklySchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
-import org.mifos.dto.domain.ImportedClientDetail;
 import org.mifos.dto.domain.ImportedLoanDetail;
 import org.mifos.dto.domain.ImportedSavingDetail;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.ParsedLoansDto;
 import org.mifos.dto.domain.ParsedSavingsDto;
-import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
-import org.mifos.dto.screen.LoanCreationResultDto;
-import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.security.MifosUser;
-import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ImportLoansSavingsFacadeWebTier implements
         ImportLoansSavingsFacade {
@@ -92,17 +71,17 @@ public class ImportLoansSavingsFacadeWebTier implements
                     .getMeetingDetailsDto().getRecurrenceTypeId();
 
             if (loanRecurrenceTypeId == 1) {
-                if (meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth().equals(0)) {
+            	recurringSchedule = new WeeklySchedule(meetingEvery, meetingDto.getMeetingDetailsDto()
+                        .getRecurrenceDetails().getDayOfWeek());
+            } else if (loanRecurrenceTypeId == 2) {
+            	if (meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth().equals(0)) {
                     recurringSchedule = new MonthlyOnDayOfMonthSchedule(meetingEvery, meetingDto.getMeetingDetailsDto()
-                            .getRecurrenceDetails().getDayOfWeek());
+                            .getRecurrenceDetails().getDayNumber());
                 } else {
                     recurringSchedule = new MonthlyOnWeekOfMonthSchedule(meetingEvery, meetingDto
                             .getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth(), meetingDto
                             .getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
                 }
-            } else if (loanRecurrenceTypeId == 2) {
-                recurringSchedule = new WeeklySchedule(meetingEvery, meetingDto.getMeetingDetailsDto()
-                        .getRecurrenceDetails().getDayOfWeek());
             } else if (loanRecurrenceTypeId == 3) {
                 recurringSchedule = new DailySchedule(meetingEvery);
             }

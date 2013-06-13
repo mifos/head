@@ -47,7 +47,7 @@ public class MeetingRecurrenceTypeEntityTest {
         MeetingRecurrenceDto meetingRecurrenceDto = meetingRecurrenceEntity.toDto();
 
         // verification
-        assertThat(meetingRecurrenceDto.getDayNumber(), is(0));
+        assertThat(meetingRecurrenceDto.getDayNumber(), is(1));
         assertThat(meetingRecurrenceDto.getDayOfWeek(), is(WeekDay.MONDAY.getValue().intValue()));
         assertThat(meetingRecurrenceDto.getWeekOfMonth(), is(RankOfDay.FIRST.getValue().intValue()));
     }
