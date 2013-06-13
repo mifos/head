@@ -46,21 +46,21 @@
 	                [/#if]
 	                [#list questionGroupInstance.questionGroupDetail.sectionDetails as sectionDetail]
 	                <br/>
-	                <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
+	                <span class="paddingleft10 fontnormalbold">${sectionDetail.name?html}</span>
 	                <ol>
 	                    [#list sectionDetail.questions as sectionQuestionDetail]
 	                    <li style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
 	                        <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-	                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionName">${sectionQuestionDetail.text}</span>:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
+	                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionName">${sectionQuestionDetail.text?html}</span>:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
 	                        <ol>
 	                            [#list sectionQuestionDetail.values as answer]
 	                            <li>
-	                                <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer[${answer_index}]">${answer}</span>
+	                                <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer[${answer_index}]">${answer?html}</span>
 	                            </li>
 	                            [/#list]
 	                        </ol>
 	                        [#else]
-	                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer">${sectionQuestionDetail.answer}</span>
+	                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer">${sectionQuestionDetail.answer?html}</span>
 	                        [/#if]
 	                    </li>
 	                    [/#list]

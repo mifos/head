@@ -48,25 +48,25 @@
                         [/@security.authorize]
                     [/#if]
                     [#list questionGroupInstanceDetail.questionGroupDetail.sectionDetails as sectionDetail]
-                    <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
+                    <span class="paddingleft10 fontnormalbold">${sectionDetail.name?html}</span>
                      <table>
                         [#list sectionDetail.questions as sectionQuestionDetail]
                         <tr style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
                             <td><label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                            ${sectionQuestionDetail.text}:</label></td>
+                            ${sectionQuestionDetail.text?html}:</label></td>
                             [#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
                             <td>
                         <ol>
                             [#list sectionQuestionDetail.values as answer]
                             <li>
-                                ${answer}
+                                ${answer?html}
                             </li>
                             [/#list]
                         </ol>
                         </td>
                         [#else]
                         	<td>
-                            ${sectionQuestionDetail.answer}
+                            ${sectionQuestionDetail.answer?html}
                             </td>
                         [/#if]
                         </tr>
