@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -96,6 +97,7 @@ import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
@@ -899,5 +901,22 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     @Override
     public List<ValueListElement> getClientGenders() {
         return this.customerDao.retrieveGenders();
+    }
+    
+    @Override
+    public List<AccountPaymentDto> getClientAccountPayments(String globalAccountNum) {
+        List<AccountPaymentDto> clientAccountPayments = new ArrayList<AccountPaymentDto>();
+
+        try {
+        AccountBO account = legacyAccountDao.findBySystemId(globalAccountNum);
+        List<AccountPaymentEntity> clientAccountPaymentsEntities = account.getAccountPayments();
+        for (AccountPaymentEntity accountPaymentEntity : clientAccountPaymentsEntities) {
+            clientAccountPayments.add(accountPaymentEntity.toScreenDto());
+        }
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+        return clientAccountPayments;
     }
 }
