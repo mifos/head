@@ -119,6 +119,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         List<AccountActionEntity> loanAccountActionTypes = new ArrayList<AccountActionEntity>();
         loanAccountActionTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.LOAN_REPAYMENT.getValue(), currentLocaleId ));
         loanAccountActionTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.DISBURSAL.getValue(), currentLocaleId ));
+        loanAccountActionTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT.getValue(), currentLocaleId ));
         return loanAccountActionTypes;
     }
 

@@ -37,6 +37,7 @@ import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
@@ -112,4 +113,7 @@ public interface ClientServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     List<ValueListElement> getClientGenders();
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AccountPaymentDto> getClientAccountPayments(String globalAccountNum);
 }
