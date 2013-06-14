@@ -126,7 +126,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         if(!checkAccessToQuestionGroup(questionGroupId)) {
             throw new AccessDeniedException("Access denied");
         }
-        return questionnaireService.getQuestionGroup(questionGroupId);
+        QuestionGroupDetail questionGroupDetail = questionnaireService.getQuestionGroup(questionGroupId);;
+        return questionGroupDetail;
     }
 
     @Override
@@ -321,34 +322,23 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         List<LookUpValueEntity> conditionTypes = null;
         conditionTypes=questionnaireService.getAllConditions();
         for(LookUpValueEntity conditionType : conditionTypes){
-            values.put(conditionType.getLookUpId().toString(), conditionType.getLookUpName());
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.equals"))
+                values.put(conditionType.getLookUpId().toString(), "Equals");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.notEquals"))
+                values.put(conditionType.getLookUpId().toString(), "Not equals");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.greater"))
+                values.put(conditionType.getLookUpId().toString(), "Greater");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.smaller"))
+                values.put(conditionType.getLookUpId().toString(), "Smaller");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.range"))
+                values.put(conditionType.getLookUpId().toString(), "Range");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.dateRange"))
+                values.put(conditionType.getLookUpId().toString(), "Date range");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.before"))
+                values.put(conditionType.getLookUpId().toString(), "Before");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.after"))
+                values.put(conditionType.getLookUpId().toString(), "After");
         }
-        /*values.put("2685", "Equals");
-        values.put("2686", "Not equals");
-        values.put("2687", "Before");
-        values.put("2688", "After");
-        values.put("2689", "Smaller");
-        values.put("2690", "Greater");
-        values.put("2691", "Range");
-        values.put("2692", "Date range");*/
-        
-        return values;
-    }
-    @Override
-    public Map<String, String> getLinkTypesByQuestionId(String questionId) {
-        
-        Map<String, String> values = new HashMap<String, String>();
-        if (questionId==null)
-        return values;
-        /*List<LookUpValueEntity> conditionTypes = null;
-        conditionTypes=questionnaireService.getAllConditions();
-        for(LookUpValueEntity conditionType : conditionTypes){
-            values.put(conditionType.getLookUpId().toString(), conditionType.getLookUpName());
-        }*/
-        
-        values.put("2690", "Greater");
-        values.put("2691", "Range");
-        values.put("2692", "Date range");
         
         return values;
     }

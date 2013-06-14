@@ -504,6 +504,8 @@ public class QuestionGroupForm extends ScreenObject {
     public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
         this.sections = initSections();
+        this.sectionLinks = questionGroupDetail.getSectionLinks();
+        this.questionLinks= questionGroupDetail.getQuestionLinks();
     }
 
     private List<SectionDetailForm> initSections() {

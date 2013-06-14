@@ -41,7 +41,9 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionDao;
+import org.mifos.platform.questionnaire.persistence.SectionLinkDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionLinkDao;
 import org.mifos.platform.questionnaire.service.SelectionDetail;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
@@ -98,22 +100,19 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Autowired
     private QuestionGroupInstanceDao questionGroupInstanceDao;
-
-    /*@Autowired
-    private QuestionGroupLinkDao questionGroupLinkDao;
     
     @Autowired
     private SectionLinkDao sectionLinkDao;
     
     @Autowired
-    private SectionQuestionLinkDao sectionQuestionLinkDao;*/
+    private SectionQuestionLinkDao sectionQuestionLinkDao;
     
     public QuestionnaireMapperImpl() {
-        this(null, null, null, null,null, null);
+        this(null, null, null, null,null, null,null,null);
     }
 
     public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao, QuestionGroupDao questionGroupDao, 
-            SectionQuestionDao sectionQuestionDao, QuestionGroupInstanceDao questionGroupInstanceDao, SectionDao sectionDao) {
+            SectionQuestionDao sectionQuestionDao, QuestionGroupInstanceDao questionGroupInstanceDao, SectionDao sectionDao, SectionLinkDao sectionLinkDao, SectionQuestionLinkDao sectionQuestionLinkDao) {
         populateAnswerToQuestionTypeMap();
         populateQuestionToAnswerTypeMap();
         this.eventSourceDao = eventSourceDao;
@@ -122,6 +121,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         this.sectionQuestionDao = sectionQuestionDao;
         this.questionGroupInstanceDao = questionGroupInstanceDao;
         this.sectionDao = sectionDao;
+        this.sectionLinkDao = sectionLinkDao;
+        this.sectionQuestionLinkDao = sectionQuestionLinkDao;
     }
 
     @Override
@@ -306,10 +307,21 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
         List<SectionDetail> sectionDetails = mapToSectionDetails(questionGroup.getSections());
+        List<SectionLink> sectionLinks = new ArrayList<SectionLink>();
+        List<SectionQuestionLink> sectionQuestionLinks = new ArrayList<SectionQuestionLink>();
+        
+        for(SectionDetail sectionDetail : sectionDetails){
+            for(SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestionDetails()){
+                if(!sectionLinkDao.retrieveDependentSectionLinksFromQuestion(sectionQuestionDetail.getId()).isEmpty())
+                    sectionLinks.addAll(sectionLinkDao.retrieveDependentSectionLinksFromQuestion(sectionQuestionDetail.getId()));
+                if(!sectionQuestionLinkDao.retrieveDependentSectionQuestionLinksFromQuestion(sectionQuestionDetail.getId()).isEmpty())
+                    sectionQuestionLinks.addAll(sectionQuestionLinkDao.retrieveDependentSectionQuestionLinksFromQuestion(sectionQuestionDetail.getId()));
+            }
+        }
         List<EventSourceDto> eventSourceDtos = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
                 eventSourceDtos, sectionDetails, questionGroup.isEditable(),
-                QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi());
+                QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi(), mapToQuestionLinkDetails(sectionQuestionLinks), mapToSectionLinkDetails(sectionLinks));
     }
 
     private List<EventSourceDto> mapToEventSource(Set<EventSourceEntity> eventSources) {
@@ -376,10 +388,15 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         for (QuestionGroup questionGroup : questionGroups) {
-            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToEventSource(questionGroup.getEventSources()), mapToSectionDetails(questionGroup.getSections()), questionGroup.isEditable(), questionGroup.getState().state()));
+            questionGroupDetails.add(mapToQuestionGroupDetail(questionGroup));
+            /*questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToEventSource(questionGroup.getEventSources()), mapToSectionDetails(questionGroup.getSections()), questionGroup.isEditable(), questionGroup.getState().state()));*/
         }
         return questionGroupDetails;
     }
+    /*QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
+            eventSourceDtos, sectionDetails, questionGroup.isEditable(),
+            QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi(), mapToQuestionLinkDetails(sectionQuestionLinks), mapToSectionLinkDetails(sectionLinks));
+}*/
 
     @Override
     public List<EventSourceDto> mapToEventSources(List<EventSourceEntity> eventSourceEntities) {
@@ -713,11 +730,50 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         sectionQuestionLink.setAffectedSectionQuestion(getSectionQuestionById(questionLinkDetail.getAffectedQuestion().getId()));
         return sectionQuestionLink;
     }
+    
     public SectionLink mapToSectionLink(SectionLinkDetail sectionLinkDetail, QuestionGroupLink questionGroupLink) {
         SectionLink sectionLink = new SectionLink();
         sectionLink.setAffectedSection(getSectionById(sectionLinkDetail.getAffectedSection().getId()));
         sectionLink.setQuestionGroupLink(questionGroupLink);
         return sectionLink;
     }
-
+    
+    public List<QuestionLinkDetail> mapToQuestionLinkDetails(List<SectionQuestionLink> sectionQuestionLinks) {
+        List<QuestionLinkDetail> questionLinkDetails = new ArrayList<QuestionLinkDetail>();
+        for(SectionQuestionLink sectionQuestionLink : sectionQuestionLinks){
+            QuestionLinkDetail questionLinkDetail = new QuestionLinkDetail();
+            questionLinkDetail.setValue(sectionQuestionLink.getQuestionGroupLink().getValue());
+            questionLinkDetail.setAdditionalValue(sectionQuestionLink.getQuestionGroupLink().getAdditionalValue());
+            questionLinkDetail.setLinkType(sectionQuestionLink.getQuestionGroupLink().getConditionTypeId());
+            questionLinkDetail.setProperLinkTypeDisplay(sectionQuestionLink.getQuestionGroupLink().getConditionType());
+            SectionQuestion sectionQuestion = sectionQuestionLink.getQuestionGroupLink().getSourceSectionQuestion();
+            questionLinkDetail.setSourceQuestion(mapToSectionQuestionDetail(sectionQuestion,
+                    sectionQuestion.isRequired(), sectionQuestion.isShowOnPage(), 
+                    (mapToQuestionDetail(sectionQuestion.getQuestion(), mapToQuestionType(sectionQuestion.getQuestion().getAnswerTypeAsEnum())))));
+            sectionQuestion = sectionQuestionLink.getAffectedSectionQuestion();
+            questionLinkDetail.setAffectedQuestion(mapToSectionQuestionDetail(sectionQuestion,
+                    sectionQuestion.isRequired(), sectionQuestion.isShowOnPage(), 
+                    (mapToQuestionDetail(sectionQuestion.getQuestion(), mapToQuestionType(sectionQuestion.getQuestion().getAnswerTypeAsEnum())))));
+            questionLinkDetails.add(questionLinkDetail);
+        }
+        return questionLinkDetails;
+    }
+    
+    public List<SectionLinkDetail> mapToSectionLinkDetails(List<SectionLink> sectionLinks) {
+        List<SectionLinkDetail> sectionLinkDetails = new ArrayList<SectionLinkDetail>();
+        for(SectionLink sectionLink : sectionLinks){
+            SectionLinkDetail sectionLinkDetail = new SectionLinkDetail();
+            sectionLinkDetail.setValue(sectionLink.getQuestionGroupLink().getValue());
+            sectionLinkDetail.setAdditionalValue(sectionLink.getQuestionGroupLink().getAdditionalValue());
+            sectionLinkDetail.setLinkType(sectionLink.getQuestionGroupLink().getConditionTypeId());
+            sectionLinkDetail.setProperLinkTypeDisplay(sectionLink.getQuestionGroupLink().getConditionType());
+            SectionQuestion sectionQuestion = sectionLink.getQuestionGroupLink().getSourceSectionQuestion();
+            sectionLinkDetail.setSourceQuestion(mapToSectionQuestionDetail(sectionQuestion,
+                    sectionQuestion.isRequired(), sectionQuestion.isShowOnPage(), 
+                    (mapToQuestionDetail(sectionQuestion.getQuestion(), mapToQuestionType(sectionQuestion.getQuestion().getAnswerTypeAsEnum())))));
+            sectionLinkDetail.setAffectedSection(mapToSectionDetail(sectionLink.getAffectedSection()));
+            sectionLinkDetails.add(sectionLinkDetail);
+        }
+        return sectionLinkDetails;
+    }
 }

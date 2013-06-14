@@ -97,4 +97,8 @@ public class SectionDetail implements Serializable {
     public boolean hasActiveQuestions() {
         return !hasNoActiveQuestions();
     }
+
+    public List<SectionQuestionDetail> getQuestionDetails() {
+        return questionDetails;
+    }
 }

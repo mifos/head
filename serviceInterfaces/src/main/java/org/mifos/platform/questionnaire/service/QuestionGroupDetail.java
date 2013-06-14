@@ -40,6 +40,9 @@ public class QuestionGroupDetail implements Serializable {
     private boolean active;
     private boolean ppi;
     private Short activityId;
+    
+    private List<QuestionLinkDetail> questionLinks = new ArrayList<QuestionLinkDetail>();
+    private List<SectionLinkDetail> sectionLinks = new ArrayList<SectionLinkDetail>();
 
     public QuestionGroupDetail() {
         this(0, null, new ArrayList<EventSourceDto>(), new ArrayList<SectionDetail>(), false);
@@ -71,7 +74,19 @@ public class QuestionGroupDetail implements Serializable {
         this.active = active;
         this.ppi = ppi;
     }
-
+    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active, boolean ppi, 
+            List<QuestionLinkDetail> questionLinks,List<SectionLinkDetail> sectionLinks) {
+        this.id = id;
+        this.title = title;
+        this.sectionDetails = sectionDetails;
+        this.eventSourceDtos = eventSourceDtos;
+        this.editable = editable;
+        this.active = active;
+        this.ppi = ppi;
+        this.questionLinks = questionLinks;
+        this.sectionLinks = sectionLinks;
+    }
+    
     public String getTitle() {
         return title;
     }
@@ -180,6 +195,22 @@ public class QuestionGroupDetail implements Serializable {
 
     public void setActivityId(Short activityId) {
         this.activityId = activityId;
+    }
+
+    public List<QuestionLinkDetail> getQuestionLinks() {
+        return questionLinks;
+    }
+
+    public void setQuestionLinks(List<QuestionLinkDetail> questionLinks) {
+        this.questionLinks = questionLinks;
+    }
+
+    public List<SectionLinkDetail> getSectionLinks() {
+        return sectionLinks;
+    }
+
+    public void setSectionLinks(List<SectionLinkDetail> sectionLinks) {
+        this.sectionLinks = sectionLinks;
     }
     
 }

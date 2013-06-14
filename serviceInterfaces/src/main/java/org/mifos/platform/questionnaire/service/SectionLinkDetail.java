@@ -68,4 +68,22 @@ public class SectionLinkDetail implements Serializable {
     public void setLinkTypeDisplay(String linkTypeDisplay) {
         this.linkTypeDisplay = linkTypeDisplay;
     }
+    public void setProperLinkTypeDisplay(String linkTypeDisplay){
+        if(linkTypeDisplay.equals("QuestionGroupLink.equals"))
+            this.linkTypeDisplay =  "Equals";
+        if(linkTypeDisplay.equals("QuestionGroupLink.notEquals"))
+            this.linkTypeDisplay =  "Not equals";
+        if(linkTypeDisplay.equals("QuestionGroupLink.greater"))
+            this.linkTypeDisplay =  "Greater";
+        if(linkTypeDisplay.equals("QuestionGroupLink.smaller"))
+            this.linkTypeDisplay =  "Smaller";
+        if(linkTypeDisplay.equals("QuestionGroupLink.range"))
+            this.linkTypeDisplay =  "Range";
+        if(linkTypeDisplay.equals("QuestionGroupLink.dateRange"))
+            this.linkTypeDisplay =  "Date range";
+        if(linkTypeDisplay.equals("QuestionGroupLink.before"))
+            this.linkTypeDisplay =  "Before";
+        if(linkTypeDisplay.equals("QuestionGroupLink.after"))
+            this.linkTypeDisplay =  "After";
+    }
 }

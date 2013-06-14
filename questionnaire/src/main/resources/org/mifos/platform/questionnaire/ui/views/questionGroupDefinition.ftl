@@ -196,7 +196,6 @@
         <input type="submit" id="_eventId_moveSectionUp" name="_eventId_moveSectionUp" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_moveSectionDown" name="_eventId_moveSectionDown" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_addLink" name="_eventId_addLink" value="" style="visibility:hidden"/>
-        <input type="submit" id="_eventId_getLinkTypes" name="_eventId_getLinkTypes" value="" style="visibility:hidden"/>
         <input type="submit" id="_eventId_removeLink" name="_eventId_removeLink" value="" style="visibility:hidden"/>
     </div>
     
@@ -206,11 +205,11 @@
             <tr>
                 <td>Source question:</td>
                 <td> 
-                    <select name="sourceQuestion">
+                    <select id="sourceQuestion" name="sourceQuestion">
                         <option value="select">-- Select --</option>
                         [#list questionGroupForm.sections as section]
                             [#list section.sectionQuestions as sectionQuestion]
-                                <option value="${sectionQuestion.questionId}">${section.name} - ${sectionQuestion.text}</option>
+                                <option value="${sectionQuestion.questionId}" name="${sectionQuestion.type}">${section.name} - ${sectionQuestion.text}</option>
                             [/#list]
                         [/#list]
                     </select>
@@ -223,7 +222,7 @@
                         <option value="select">-- Select --</option>
                         [#list LinkTypes?keys as key]
                             [#if key?is_string]
-                                <option value="${key}">${LinkTypes[key]}</option>
+                                <option value="${key}" name="${LinkTypes[key]}" >${LinkTypes[key]}</option>
                             [/#if]
                         [/#list]
                     </select>
@@ -239,7 +238,7 @@
             <tr id="affectedQuestion">
                 <td>Affected question:</td>
                 <td>
-                    <select name="affectedQuestion">
+                    <select id="affectedQuestion" name="affectedQuestion">
                         <option value="select">-- Select --</option>
                     [#list questionGroupForm.sections as section]
                         [#list section.sectionQuestions as sectionQuestion]
@@ -262,7 +261,7 @@
             </tr>
             <tr>
                 <td id="valueTitle">Value:</td>
-                <td><input type="text" name="value" /></td>
+                <td><input id="valueId" type="text" name="value" /></td>
             </tr>
             <tr id="additionalValue" style="display: none;">
                 <td>To:</td>
@@ -316,7 +315,7 @@
             <tbody>
                 [#list questionGroupForm.sectionLinks as sectionLink]
                     <tr>
-                        <td>${sectionLink.sourceQuestion.questionDetail.text}</td>
+                        <td>${sectionLink.sourceQuestion.text}</td>
                         <td>${sectionLink.affectedSection.name}</td>
                         <td>${sectionLink.linkTypeDisplay}</td>
                         <td>${sectionLink.value}</td>

@@ -105,6 +105,50 @@ $(document).ready(function () {
     	
     });
     
+    $('#linkType option').attr('disabled', true);
+    $('option[value=select]').attr('disabled', true);
+    
+    $("#sourceQuestion").change(function() {
+    	var selected = $("#sourceQuestion option:selected");
+    	var aff = $("#sourceQuestion").attr('value');
+    	$('#linkType option').attr('disabled', true);
+    	$('#affectedQuestion option').attr('disabled', false);
+    	$('#affectedQuestion option[value='+aff+']').attr('disabled', true);
+    	switch (selected.attr('name')){
+    		case "FREETEXT": 
+    			$('option[name=Not equals]').attr('disabled', false);
+    			$('option[name=Equals]').attr('disabled', false);
+    			break;
+    		case "NUMERIC":
+    			$('option[name=Not equals]').attr('disabled', false);
+				$('option[name=Equals]').attr('disabled', false);
+				$('option[name=Greater]').attr('disabled', false);
+				$('option[name=Smaller]').attr('disabled', false);
+				$('option[name=Range]').attr('disabled', false);
+				break;
+    		case "MULTI_SELECT":
+    			$('option[name=Not equals]').attr('disabled', false);
+				$('option[name=Equals]').attr('disabled', false);
+				break;
+    		case "SINGLE_SELECT":
+    			$('option[name=Not equals]').attr('disabled', false);
+				$('option[name=Equals]').attr('disabled', false);
+				break;
+    		case "DATE":
+    			$('option[name=Date range]').attr('disabled', false);
+    			$('option[name=Before]').attr('disabled', false);
+    			$('option[name=After]').attr('disabled', false);
+    			break;
+    		case "SMART_SELECT":
+    			$('option[name=Not equals]').attr('disabled', false);
+				$('option[name=Equals]').attr('disabled', false);
+				break;
+    		case "SMART_SINGLE_SELECT":
+    			$('option[name=Not equals]').attr('disabled', false);
+				$('option[name=Equals]').attr('disabled', false);
+				break;
+    	}
+    });
     $("#linkType").change(function() {
     	switch ($("#linkType option:selected").html()) {
     	case "Equals":
@@ -123,5 +167,4 @@ $(document).ready(function () {
     		break;
     	}
     });
-    
 });
