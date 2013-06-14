@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.framework.center;
 
+import java.util.Random;
+import java.util.UUID;
+
 import org.mifos.test.acceptance.framework.center.MeetingParameters.WeekDay;
 
 @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
@@ -102,5 +105,15 @@ public class MeetingParameters {
 
     public void setMeetingStartDate(String meetingStartDate) {
         this.meetingStartDate = meetingStartDate;
+    }
+    
+    public static MeetingParameters getRandomMeetingParameters() {
+    	Random rand = new Random();
+    	MeetingParameters meetingParameters = new MeetingParameters();
+    	meetingParameters.setMeetingPlace(UUID.randomUUID().toString());
+    	meetingParameters.setWeekFrequency(Integer.toString(rand.nextInt(6) + 1));
+    	meetingParameters.setWeekDay(WeekDay.findByInt(rand.nextInt(5) + 2));
+    	
+    	return meetingParameters;
     }
 }

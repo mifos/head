@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
+
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -33,7 +36,12 @@ import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.center.ViewCenterChargesDetailPage;
+import org.mifos.test.acceptance.framework.client.ApplyChargesPage;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
@@ -189,6 +197,37 @@ public class CenterTest extends UiTestCaseBase {
     	groupTestHelper.verifyMeetingSchedule(groupName, meetingSchedule);
     	parameters.setWeekDay(MeetingParameters.WeekDay.MONDAY);
     	centerTestHelper.editCenterMeetingSchedule(centerName, parameters);
+    }
+    
+    @Test(enabled = true)
+    public void verifyApplyPaymentForCenterWithUnusualName() {
+    	String centerName = "`~!@#$%^&*()_+-=[];',./{}|:<>? Center";
+    	
+    	CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters.setCenterName(centerName);
+        formParameters.setLoanOfficer("loan officer");
+        MeetingParameters meeting = MeetingParameters.getRandomMeetingParameters();
+        formParameters.setMeeting(meeting);
+        centerTestHelper.createCenter(formParameters, "MyOfficeDHMFT");
+        
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
+        ViewCenterChargesDetailPage viewCenterChargesDetailPage = navigationHelper.navigateToCenterViewDetailsPage(centerName).navigateToViewCenterChargesDetailPage();
+        ApplyChargesPage applyChargesPage = viewCenterChargesDetailPage.navigateToApplyCharges();
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setAmount("100");
+        chargeParameters.setType(ChargeParameters.MISC_FEES);
+        viewCenterChargesDetailPage = applyChargesPage.applyChargeAndNaviagteToViewCenterChargesDetailPage(chargeParameters);
+
+        ApplyPaymentPage applyPaymentPage = viewCenterChargesDetailPage.navigateToApplyPayments();        
+        PaymentParameters parameters = new PaymentParameters();
+        DateTime dateTime = new DateTime();
+        parameters.setAmount("100");
+        parameters.setTransactionDateDD(Integer.toString(dateTime.getDayOfMonth()));
+        parameters.setTransactionDateMM(Integer.toString(dateTime.getMonthOfYear()));
+        parameters.setTransactionDateYYYY(Integer.toString(dateTime.getYear()));
+        parameters.setPaymentType(PaymentParameters.CASH);
+        ApplyPaymentConfirmationPage applyPaymentConfirmationPage = applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(parameters);
+        Assert.assertEquals(true, applyPaymentConfirmationPage.getSelenium().isTextPresent("Review transaction"));//ElementPresent("css=form[name=applyPaymentActionForm]"));
     }
 
     private QuestionResponseParameters getQuestionResponseParameters(String answer) {
