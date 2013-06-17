@@ -20,9 +20,9 @@
 
 package org.mifos.accounts.business;
 
+import static org.mifos.accounts.util.helpers.AccountConstants.MONTH_CLOSING_DAY_CONFIG_KEY;
 import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
 import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
-import static org.mifos.accounts.util.helpers.AccountConstants.MONTH_CLOSING_DAY_CONFIG_KEY;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -82,7 +82,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -595,8 +594,9 @@ public class AccountBO extends AbstractBusinessObject {
         int installmentIndex = 0;
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
         // keep looking at the next installment as long as the current date falls on or
-        // after (!before) the start of the current installment
-        while (installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate().getTime())))) {
+        // after (!before) the start of the current installment or current installment is already paid
+        while (installment != null && (!currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate().getTime())))
+        		|| installment.isPaid())) {
 
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
@@ -627,8 +627,9 @@ public class AccountBO extends AbstractBusinessObject {
         int installmentIndex = 0;
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
 
-        // update all installments that are after current date
-        while (installment != null && currentDate.isAfter(new LocalDate(installment.getActionDate().getTime()))) {
+        // update all installments that are after current date and are not yet paid
+        while (installment != null && (currentDate.isAfter(new LocalDate(installment.getActionDate().getTime()))
+        		|| installment.isPaid())) {
 
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
