@@ -36,8 +36,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.framework.business.EntityMaster;
@@ -568,42 +566,22 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         
         for (SectionQuestionLink dependantQuestionLink: sectionQuestionLinkDao.retrieveDependentSectionQuestionLinksFromQuestion(question.getId())) {
             questions.put(dependantQuestionLink.getAffectedSectionQuestion().getId(), 
-                    isQuestionLinkMatched(dependantQuestionLink.getQuestionGroupLink(), response));
+                    !isQuestionLinkMatched(dependantQuestionLink.getQuestionGroupLink(), response));
         }
         
         for (SectionLink dependantSectionLink: sectionLinkDao.retrieveDependentSectionLinksFromQuestion(question.getId())) {
             sections.put(dependantSectionLink.getAffectedSection().getId(), 
-                    isQuestionLinkMatched(dependantSectionLink.getQuestionGroupLink(), response));
+                    !isQuestionLinkMatched(dependantSectionLink.getQuestionGroupLink(), response));
         }
         
         Map<String, Map<Integer, Boolean>> result = new HashMap<String, Map<Integer, Boolean>>();
-        
-        /* test values */
-        
-        //TODO: delete this piece of code !!!!
-        //####################################
-        
-        final Pattern lastIntPattern = Pattern.compile("[^0-9]+([0-9]+)$");
-        Matcher matcher = lastIntPattern.matcher(response);
-        Integer lastNumberInt = null;
-        if (matcher.find()) {
-            String someNumberStr = matcher.group(1);
-            lastNumberInt = Integer.parseInt(someNumberStr);
-        }
-        
-        if (lastNumberInt != null && (response.startsWith("show") || response.startsWith("hide"))) {
-            sections.put(lastNumberInt, response.startsWith("show"));            
-            questions.put(lastNumberInt, response.startsWith("show"));
-        }
-        
-        /* End test */
         
         result.put("questions", questions);
         result.put("sections", sections);    
         return result;
     }
 
-    public List<LookUpValueEntity>  getAllConditions(){
+    public List<LookUpValueEntity> getAllConditions(){
         List<LookUpValueEntity>  list = sectionQuestionLinkDao.retrieveAllConditions(); 
         return list;
     }
@@ -650,6 +628,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         
         return false;
     }
+    
     public Integer getSectionIdByQuestionGroupIdAndName(Integer questionGroupId, String sectionName){
         return questionGroupDao.retrieveSectionByNameAndQuestionGroupId(sectionName, questionGroupId).get(1).getId();
     }

@@ -825,6 +825,7 @@
    </changeSet>
    <changeSet id="MIFOS-5984" author="Krzysztof Kaczmarczyk" context="expansion">
         <validCheckSum>3:a5e27a7b08513e592a0f6f7394e63c87</validCheckSum>
+        <validCheckSum>3:ac24dcf5de5a7426fbe6d27053dfcdbc</validCheckSum>
         <sql endDelimiter=";">
             DROP TABLE IF EXISTS section_link;
             DROP TABLE IF EXISTS section_question_link;

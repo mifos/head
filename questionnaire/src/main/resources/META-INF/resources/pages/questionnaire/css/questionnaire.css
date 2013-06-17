@@ -192,3 +192,7 @@ li.question_list_table {
 .isMandatory {
     text-align: center;
 }
+
+.question_row td {
+    padding: 4px;    
+}

@@ -57,8 +57,7 @@ explanation of the license and how it is applied.
 		<script>
 			$(document).ready(function() {
 				
-				var updateQuestions = function() {
-                                        
+				var updateQuestions = function() {                
                     var questionId = $(this).closest("tr").attr("data-question-id"),
                         questionResponse = $(this).val();
                     
@@ -83,12 +82,11 @@ explanation of the license and how it is applied.
                             }
                         }
                      });
-                    
                 };
                 
 				$('.question.date-pick').change(updateQuestions);
 				$('.question').blur(updateQuestions);
-				
+				$('input[type=radio]').click(updateQuestions);
 			});
 		</script>
 		
@@ -171,16 +169,16 @@ explanation of the license and how it is applied.
                                  <bean:define id="questionIdx">
                                      <c:out value="${questionLoopStatus.index}" />
                                  </bean:define>
-                                 <tr id="question${question.id}" data-question-id="${question.id}" class="fontnormal bg${(questionLoopStatus.index + 1) % 2}">
-                                     <td width="26%" align="right" valign="top">
+                                 <tr id="question${question.id}" data-question-id="${question.id}" class="question_row fontnormal bg${(questionLoopStatus.index + 1) % 2}">
+                                     <td width="26%" align="right" valign="middle">
                                          <span id="create_ClientPersonalInfo.label.question">
                                              <c:if test="${question.mandatory}">
                                                  <span class="mandatorytext">
                                                      <font color="#FF0000">*</font>
                                                  </span>
                                              </c:if>
-                                             <c:out value="${question.text}" />
-                                         </span>:
+                                             <c:out value="${question.text}" />:
+                                         </span>
                                      </td>
                                      <td width="74%">
                                      <html-el:hidden property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].id' value="${question.id}"></html-el:hidden>
