@@ -180,7 +180,7 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
     }
 
     public MeetingRecurrenceDto toDto() {
-        Integer dayNum = 1;
+        Integer dayNum = Integer.valueOf(1);
         if (this.dayNumber != null) {
             dayNum = this.dayNumber.intValue();
         }
@@ -190,7 +190,7 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
             weekOfMonth = this.rankOfDay.getValue().intValue();
         }
 
-        Integer dayOfWeek = 1;
+        Integer dayOfWeek = Integer.valueOf(0);
         if (weekDay != null) {
             dayOfWeek = this.weekDay.getValue().intValue();
         }
