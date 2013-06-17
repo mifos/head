@@ -216,11 +216,26 @@ explanation of the license and how it is applied.
 						<td width="28%" class="headingorange"><mifos:mifoslabel
 							name="Center.RecentAccountActivity" bundle="CenterUIResources" />
 						</td>
-						<td width="72%" align="right" class="fontnormal"><html-el:link styleId="view_centerchargesdetail.link.accountActivity"
-							href="customerAction.do?method=getAllActivity&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-							<mifos:mifoslabel name="Center.AccountActivity"
-								bundle="CenterUIResources" />
-						</html-el:link></td>
+						<td width="72%" align="right" class="fontnormal">
+                            <c:url value="customerAction.do" var="viewAllActivitiesUrl" >
+                                <c:param name="method" value="getAllActivity" />
+                                <c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
+                                <c:param name="type" value="Center" />
+                                <c:param name="input" value="ViewCenterCharges" />
+                                <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+                                <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                <c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+                                <c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+                                <c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+                                <c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+                                <c:param name="accountId" value="${BusinessKey.accountId}" />
+                            </c:url >
+                            <html-el:link styleId="view_centerchargesdetail.link.accountActivity"
+    							href="${viewAllActivitiesUrl}">
+    							<mifos:mifoslabel name="Center.AccountActivity"
+    								bundle="CenterUIResources" />
+    						</html-el:link>
+                        </td>
 					</tr>
 				</table>
 
