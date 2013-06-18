@@ -714,10 +714,23 @@ public class AccountBO extends AbstractBusinessObject {
                     && newStatusId.equals(AccountState.SAVINGS_ACTIVE.getValue())) {
                 ((SavingsBO) this).resetRecommendedAmountOnFutureInstallments();
             }
+            
+            if (AccountState.fromShort(newStatusId).isClosedLoanAccountState()
+                    || AccountState.fromShort(newStatusId).isCancelledLoanAccountState()) {
+                changeStateForAllFees(FeeStatus.INACTIVE);
+            } else if (AccountState.fromShort(newStatusId).isActiveLoanAccountState()) {
+                changeStateForAllFees(FeeStatus.ACTIVE);
+            }
 
             logger.debug("Coming out successfully from the change status method of AccountBO");
         } catch (PersistenceException e) {
             throw new AccountException(e);
+        }
+    }
+    
+    protected void changeStateForAllFees(FeeStatus newFeeStatus) {
+        for (AccountFeesEntity fee : accountFees) {
+            fee.setFeeStatus(newFeeStatus);
         }
     }
 

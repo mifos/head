@@ -1380,6 +1380,7 @@ public class LoanBO extends AccountBO implements Loan {
                     legacyPersonnelDao.getPersonnel(personnelId), this));
             setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
+            changeStateForAllFees(FeeStatus.INACTIVE);
             setClosedDate(paymentDto.getTransactionDate());
 
             // Client performance entry
@@ -3017,6 +3018,11 @@ public class LoanBO extends AccountBO implements Loan {
                     newAccountState.getValue()));
         } catch (PersistenceException e) {
             throw new AccountException(e);
+        }
+        if (newAccountState.isClosedLoanAccountState() || newAccountState.isCancelledLoanAccountState()) {
+            changeStateForAllFees(FeeStatus.INACTIVE);
+        } else if (newAccountState.isActiveLoanAccountState()) {
+            changeStateForAllFees(FeeStatus.ACTIVE);
         }
         this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(accountState, this.getAccountState(),
                 personnel, this));

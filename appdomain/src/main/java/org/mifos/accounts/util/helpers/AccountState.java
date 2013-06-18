@@ -76,6 +76,16 @@ public enum AccountState implements LocalizedTextLookup {
     public boolean isActiveLoanAccountState() {
         return equals(LOAN_ACTIVE_IN_GOOD_STANDING) || equals(LOAN_ACTIVE_IN_BAD_STANDING);
     }
+    
+    public boolean isClosedLoanAccountState() {
+        return equals(LOAN_CLOSED_OBLIGATIONS_MET) || 
+               equals(LOAN_CLOSED_RESCHEDULED) || 
+               equals(LOAN_CLOSED_WRITTEN_OFF);
+    }
+    
+    public boolean isCancelledLoanAccountState() {
+        return equals(LOAN_CANCELLED);
+    }
 
     public boolean isActiveSavingsAccountState() {
         return equals(SAVINGS_ACTIVE);
