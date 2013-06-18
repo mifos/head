@@ -40,6 +40,7 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
     private final PersonnelBO personnel;
     private Locale locale = null;
     private Date createdDate;
+    private AccountNotesEntity statusChangeNote;
 
     protected AccountStatusChangeHistoryEntity() {
         accountStatusChangeId = null;
@@ -62,6 +63,17 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
         this.personnel = personnel;
         this.account = account;
         this.createdDate = createdDate;
+    }
+    
+    public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus, AccountStateEntity newStatus,
+            PersonnelBO personnel, AccountBO account, Date createdDate, AccountNotesEntity statusChangeNote) {
+        accountStatusChangeId = null;
+        this.oldStatus = oldStatus;
+        this.newStatus = newStatus;
+        this.personnel = personnel;
+        this.account = account;
+        this.createdDate = createdDate;
+        this.statusChangeNote = statusChangeNote;
     }
 
     public AccountBO getAccount() {
@@ -113,6 +125,14 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public AccountNotesEntity getStatusChangeNote() {
+        return statusChangeNote;
+    }
+
+    public void setStatusChangeNote(AccountNotesEntity statusChangeNote) {
+        this.statusChangeNote = statusChangeNote;
     }
 
     public String getUserPrefferedTransactionDate() {

@@ -682,9 +682,9 @@ public class AccountBO extends AbstractBusinessObject {
             }
 
             Date statusChangeDate = (argumentDate == null) ? new DateTimeService().getCurrentJavaDateTime() : argumentDate;
-            AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this
-                    .getAccountState(), accountStateEntity, loggedInUser, this, statusChangeDate);
             AccountNotesEntity accountNotesEntity = new AccountNotesEntity(transactionDate, comment, loggedInUser, this);
+            AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this
+                    .getAccountState(), accountStateEntity, loggedInUser, this, statusChangeDate, accountNotesEntity);
             this.addAccountStatusChangeHistory(historyEntity);
             this.setAccountState(accountStateEntity);
             this.addAccountNotes(accountNotesEntity);

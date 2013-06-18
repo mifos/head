@@ -823,5 +823,18 @@
       </sql>
    </rollback>
    </changeSet>
+   
+   <changeSet id="MIFOS-6020" author="Pawel Reise" context="expansion">
+   <sql endDelimiter=";">
+       alter table account_status_change_history
+            add column note_id integer;
+   </sql>
+   <rollback>
+      <sql endDelimiter=";">
+           alter table account_status_change_history
+                drop column note_id;
+      </sql>
+   </rollback>
+   </changeSet>
 
 </databaseChangeLog>
