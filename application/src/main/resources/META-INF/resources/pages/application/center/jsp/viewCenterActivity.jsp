@@ -81,7 +81,7 @@ explanation of the license and how it is applied.
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
                         <c:url value="applyPaymentAction.do" var="applyPaymentUrl" >
                             <c:param name="method" value="load" />
-                            <c:param name="searchInput" value="ClientChargesDetails" />
+                            <c:param name="searchInput" value="CenterChargesDetails" />
                             <c:param name="statusId" value="${param.statusId}" />
                             <c:param name="globalCustNum" value="${param.globalCustNum}" />
                             <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
@@ -92,9 +92,9 @@ explanation of the license and how it is applied.
                             <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
                             <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
                         </c:url>
-	                	<html-el:link styleId="viewCenterActivity.link.applyPayment" href="${applyPaymentUrl}">
-	                    	<mifos:mifoslabel name="accounts.apply_payment" />
-	                    </html-el:link>
+                        <html-el:link styleId="viewCenterActivity.link.applyPayment" href="${applyPaymentUrl}">
+                            <mifos:mifoslabel name="accounts.apply_payment" />
+                        </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <c:url value="custApplyAdjustment.do" var="applyAdjustmentUrl" >
                             <c:param name="method" value="loadAdjustment" />
