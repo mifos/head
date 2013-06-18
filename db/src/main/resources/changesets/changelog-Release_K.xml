@@ -825,13 +825,17 @@
    </changeSet>
    
    <changeSet id="MIFOS-6020" author="Pawel Reise" context="expansion">
+   <validCheckSum>3:2495a4c6db1be74e7747a846addf1915</validCheckSum>
    <sql endDelimiter=";">
        alter table account_status_change_history
-            add column note_id integer;
+            add column note_id integer,
+            add constraint `note_fk` foreign key (note_id)
+                references account_notes (account_notes_id);
    </sql>
    <rollback>
       <sql endDelimiter=";">
            alter table account_status_change_history
+                drop foreign key `note_fk`,
                 drop column note_id;
       </sql>
    </rollback>
