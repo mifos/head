@@ -27,9 +27,11 @@ import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.config.AccountingRules;
 
 public class ScheduleCalculator {
-    public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {
+    public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate, boolean adjustment) {
         schedule.resetCurrentPayment();
-        computeExtraInterest(schedule, transactionDate);
+        if (!adjustment) {
+        	computeExtraInterest(schedule, transactionDate);
+        }
         if(AccountingRules.isOverdueInterestPaidFirst()){
             amount = schedule.payOverDueInstallments(transactionDate, amount);
         }

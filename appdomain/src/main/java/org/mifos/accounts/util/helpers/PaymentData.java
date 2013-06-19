@@ -46,6 +46,7 @@ public class PaymentData {
     private final Short paymentTypeId;
     private String comment;
     private Money overpaymentAmount;
+    private boolean adjustment;
 
     private AccountPaymentEntity otherTransferPayment;
     /*
@@ -113,7 +114,15 @@ public class PaymentData {
         this.customer = customer;
     }
 
-    public void setReceiptDate(Date receiptDate) {
+    public boolean isAdjustment() {
+		return adjustment;
+	}
+
+	public void setAdjustment(boolean adjustment) {
+		this.adjustment = adjustment;
+	}
+
+	public void setReceiptDate(Date receiptDate) {
         this.receiptDate = receiptDate;
     }
 

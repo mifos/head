@@ -574,6 +574,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 PaymentData paymentData = accountBO.createPaymentData(amount, adjustedPaymentDto.getPaymentDate(), 
                         accountPaymentEntity.getReceiptNumber(), accountPaymentEntity.getReceiptDate(), adjustedPaymentDto.getPaymentType(), 
                         paymentCreator);
+                paymentData.setAdjustment(true);
 
                 //new adjusted savings payment must be tied to this payment
                 if (newSavingsPaymentId != null) {

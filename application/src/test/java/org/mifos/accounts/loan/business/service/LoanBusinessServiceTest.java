@@ -139,7 +139,7 @@ public class LoanBusinessServiceTest {
         when(paymentData.getPersonnel()).thenReturn(personnel);
         loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
         verify(scheduleCalculatorAdaptor, times(1)).applyPayment(loanBO, totalAmount,
-                transactionDate, personnel, accountPaymentEntity);
+                transactionDate, personnel, accountPaymentEntity, false);
         verify(loanBO, times(1)).isDecliningBalanceInterestRecalculation();
         verify(paymentData).getTransactionDate();
         verify(paymentData).getTotalAmount();
@@ -164,7 +164,7 @@ public class LoanBusinessServiceTest {
         when(paymentData.getPersonnel()).thenReturn(personnel);
         loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
         verify(scheduleCalculatorAdaptor, times(0)).applyPayment(loanBO, totalAmount,
-                transactionDate, personnel, accountPaymentEntity);
+                transactionDate, personnel, accountPaymentEntity, false);
         verify(loanBO, times(1)).getAccountActionDatesSortedByInstallmentId();
         verify(loanBO, times(1)).isDecliningBalanceInterestRecalculation();
         verify(paymentData).getTransactionDate();

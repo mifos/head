@@ -128,9 +128,9 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getLoanSummary()).thenReturn(loanSummary);
         when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
         when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
-        scheduleCalculatorAdaptor.applyPayment(loanBO, Money.zero(rupee), getDate(30, 10, 2010), personnel, accountPaymentEntity);
+        scheduleCalculatorAdaptor.applyPayment(loanBO, Money.zero(rupee), getDate(30, 10, 2010), personnel, accountPaymentEntity, false);
         verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
-        verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any());
+        verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any(), Mockito.anyBoolean());
         verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any(), Mockito.<Date>any(), Mockito.<PersonnelBO>any(), Mockito.<AccountPaymentEntity>any());
         verify(loanBO, times(2)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getDisbursementDate();
@@ -153,9 +153,9 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
-        scheduleCalculatorAdaptor.applyPayment(loanBO, new Money(rupee, 112.00), getDate(30, 10, 2010), personnel, accountPaymentEntity);
+        scheduleCalculatorAdaptor.applyPayment(loanBO, new Money(rupee, 112.00), getDate(30, 10, 2010), personnel, accountPaymentEntity, false);
         verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
-        verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any());
+        verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any(), Mockito.anyBoolean());
         verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any(), Mockito.<Date>any(), Mockito.<PersonnelBO>any(), Mockito.<AccountPaymentEntity>any());
         verify(loanBO, times(2)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getDisbursementDate();

@@ -48,10 +48,10 @@ public class ScheduleCalculatorAdaptor {
         this.configurationBusinessService = configurationBusinessService;
     }
 
-    public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate, PersonnelBO personnel, AccountPaymentEntity accountPaymentEntity) {
+    public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate, PersonnelBO personnel, AccountPaymentEntity accountPaymentEntity, boolean adjustment) {
         Schedule schedule = scheduleMapper.mapToSchedule(loanBO.getLoanScheduleEntities(), loanBO.getDisbursementDate(),
                 getDailyInterest(loanBO.getInterestRate()), loanBO.getLoanAmount().getAmount());
-        scheduleCalculator.applyPayment(schedule, amount.getAmount(), paymentDate);
+        scheduleCalculator.applyPayment(schedule, amount.getAmount(), paymentDate, adjustment);
         scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate, personnel, accountPaymentEntity);
     }
 

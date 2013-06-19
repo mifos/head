@@ -321,9 +321,9 @@ public class LoanBusinessService implements BusinessService {
         PersonnelBO personnel = paymentData.getPersonnel();
         Date transactionDate = paymentData.getTransactionDate();
         if(configService.isRecalculateInterestEnabled() && loanBO.isDecliningBalanceEqualPrincipleCalculation())
-        	scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
+        	scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity, paymentData.isAdjustment());
         else if (loanBO.isDecliningBalanceInterestRecalculation()) {
-            scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
+            scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity, paymentData.isAdjustment());
         } else {
             if (AccountingRules.isOverdueInterestPaidFirst()) {
                 for (AccountActionDateEntity accountActionDate : loanBO.getDetailsOfInstallmentsInArrearsOn(new LocalDate(transactionDate))) {
