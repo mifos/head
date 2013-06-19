@@ -182,10 +182,6 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         Integer timeoutVal = httpSession.getMaxInactiveInterval() / 60;
         misc.setProperty("sessionTimeout", timeoutVal.toString());
 
-        // FIXME - #00001 - keithw - Check days in advance usage in CollectionsheetHelper
-//            Integer advanceDaysVal = CollectionSheetHelper.getDaysInAdvance();
-        misc.setProperty("collectionSheetAdvanceDays", "1");
-
         misc.setProperty("backDatedTransactions", booleanToYesNo(AccountingRules.isBackDatedTxnAllowed()));
         misc.setProperty("backDatedApprovals", booleanToYesNo(AccountingRules.isBackDatedApprovalAllowed()));
         ConfigurationBusinessService cbs = new ConfigurationBusinessService();

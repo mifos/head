@@ -138,7 +138,6 @@ public class ViewOrganizationSettingsPage extends MifosPage {
 
     public String[] getDefaultMiscellaneous() {
         return new String[] { "Session timeout: 30",
-                "Number of days in advance the collection sheet should be generated: 1",
                 "Back dated transactions allowed: Yes", "Back dated approvals allowed: Yes",
                 "Group loan with individual monitoring (GLIM): No",
                 "Loan schedule independent of meeting (LSIM): No" };

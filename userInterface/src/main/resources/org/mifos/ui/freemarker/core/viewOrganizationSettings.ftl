@@ -128,7 +128,6 @@
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.miscellaneous"/]</div>
             <div id="miscellaneous">
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.sessiontimeout"/]</span>:&nbsp;<span class="fontnormal">${properties.sessionTimeout}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdaysinadvancethecollectionsheetshouldbegenerated"/]</span>:&nbsp;<span class="fontnormal">${properties.collectionSheetAdvanceDays}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedapprovalsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedApprovals}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backDatedLoanProductCreationAllowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedLoanProductCreationAllowed}</span></div>
