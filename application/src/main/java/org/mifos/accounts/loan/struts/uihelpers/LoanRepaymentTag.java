@@ -55,7 +55,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
     Locale locale = null;
 
     private String memberGlobalNum;
-    private Boolean isNewGropLoan;
+    private Boolean isNewGropLoan = false;
     
     public Boolean getIsNewGropLoan() {
         return isNewGropLoan;
