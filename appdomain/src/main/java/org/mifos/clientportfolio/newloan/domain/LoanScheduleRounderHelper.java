@@ -20,9 +20,10 @@ public interface LoanScheduleRounderHelper {
 	void roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(LoanScheduleEntity roundedInstallment);
 	
 	void roundAndAdjustButLastNonGraceInstallment_v2(LoanScheduleEntity roundedInstallment);
+	
+	void roundAndAdjustButLastNonGraceInstallment_v2(LoanScheduleEntity roundedInstallment, RepaymentTotals totals);
 
 	void updateRunningTotals_v2(RepaymentTotals totals, LoanScheduleEntity roundedInstallment);
 
 	void roundAndAdjustLastInstallment_v2(LoanScheduleEntity roundedInstallment, RepaymentTotals totals);
-
 }
