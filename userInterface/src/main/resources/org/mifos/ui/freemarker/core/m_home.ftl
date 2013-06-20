@@ -72,6 +72,7 @@
 		        </div>
 		        <div>
 	                [@form.input "customerSearch.searchString" "home.input.search" "name='searchString' maxlength='200'" /]
+	                [#include "/searchFilters.ftl"]
 		        </div>
 		        <div>
 		        	[#if Session.UserContext.officeLevelId == 5]

@@ -134,6 +134,22 @@ public class DefaultLoanScheduleRounderHelper implements LoanScheduleRounderHelp
                 installment.getTotalFeeDueWithMiscFeeDue()).subtract(installment.getPenaltyDue()).add(
                 installment.getPrincipalPaid()));
     }
+    
+    /**
+     * To avoid negative principal in last installment.
+     */
+    public void roundAndAdjustButLastNonGraceInstallment_v2(final LoanScheduleEntity installment, final RepaymentTotals totals) {
+    	Money roundedTotalInstallmentPaymentDue = MoneyUtils.initialRound(installment.getTotalPaymentDue());
+            	
+    	if (totals.getRoundedPaymentsDue().isGreaterThan(totals.getRunningPayments().add(roundedTotalInstallmentPaymentDue)))
+    	{
+    		roundAndAdjustButLastNonGraceInstallment_v2(installment);
+    	}
+    	else
+    	{
+    		installment.setPrincipal(new Money(installment.getCurrency(), 0.0));
+    	}
+    }
 
     @Override
     public void roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(final LoanScheduleEntity installment) {

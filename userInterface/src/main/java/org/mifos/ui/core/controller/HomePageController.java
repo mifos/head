@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +15,15 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.CenterServiceFacade;
+import org.mifos.application.servicefacade.ClientServiceFacade;
+import org.mifos.application.servicefacade.CustomerSearchServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.core.MifosException;
 import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.UserDetailDto;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.MifosUser;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +50,19 @@ public class HomePageController {
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
 	
+	@Autowired
+    private ClientServiceFacade clientServiceFacade;
+	
+	@Autowired
+    private CustomerSearchServiceFacade customerSearchServiceFacade;
+	
 	private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ModelAttribute("customerSearch")
 	public ModelAndView showPopulatedForm(HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean )
-			throws MifosException {
+			throws MifosException, PersistenceException {
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		 
@@ -63,6 +75,15 @@ public class HomePageController {
         modelAndView.addObject("customerSearch", customerSearchFormBean);
         boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+        
+        if (sitePreferenceHelper.isMobile(request)) {
+	        List<ValueListElement> availibleClientGenders = clientServiceFacade.getClientGenders();
+	        modelAndView.addObject("availibleClientGenders", availibleClientGenders);
+	        
+	        HashMap<String, ArrayList<CustomerStatusDetailDto>> customerStates = new HashMap<String, ArrayList<CustomerStatusDetailDto>>();
+	        customerStates.putAll(customerSearchServiceFacade.getAvailibleCustomerStates());
+	        modelAndView.addObject("availibleCustomerStates", customerStates);
+        }
         
         if (userDetails.isLoanOfficer()) {
             loadLoanOfficerCustomersHierarchyForSelectedDay(userId, modelAndView, customerSearchFormBean);
