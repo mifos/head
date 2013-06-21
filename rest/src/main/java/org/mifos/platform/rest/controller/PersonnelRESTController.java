@@ -193,31 +193,48 @@ public class PersonnelRESTController {
     OverdueCustomer[] getOverdueBorrowersUnderPersonnel() {
     	List<OverdueCustomer> overdueCustomers = new ArrayList<OverdueCustomer>();
     	PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
+    	
+    	for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(loanOfficer)) {
+            for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
+            	addClientIfHasOverdueLoan(client, overdueCustomers);
+            }
+        }
+
         for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer(loanOfficer.getPersonnelId(), 
         		loanOfficer.getOffice().getOfficeId())) {
-        	OverdueCustomer customerToAdd = null;
-        	List<LoanBO> loans = client.getOpenLoanAccounts();
-        	for (LoanBO loan: loans) {
-        		if (loan.getTotalAmountInArrears() != null && loan.getTotalAmountInArrears().isNonZero()) {
-                	LoanInformationDto loanInfo = loanAccountServiceFacade.retrieveLoanInformation(loan.getGlobalAccountNum());
-                	if (loanInfo.isDisbursed()) {
-	                	if (customerToAdd == null) {
-	        				customerToAdd = new OverdueCustomer();
-	        				customerToAdd.setDisplayName(client.getDisplayName());
-	        				customerToAdd.setGlobalCustNum(client.getGlobalCustNum());
-	        				customerToAdd.setOverdueLoans(new ArrayList<OverdueLoan>());
-	        				customerToAdd.setPhoneNumber(client.getAddress().getPhoneNumber());
-	        				customerToAdd.setAddress(client.getDisplayAddress());
-	        				overdueCustomers.add(customerToAdd);
-	        			}
-	        			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
-	        					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalAmountDue().toString());
-	        			customerToAdd.getOverdueLoans().add(overdueLoan);
-                	}
-                }
-        	}
+        	addClientIfHasOverdueLoan(client, overdueCustomers);
         }
+        
         return overdueCustomers.toArray(new OverdueCustomer[]{});
+    }
+    
+    private void addClientIfHasOverdueLoan(ClientBO client, List<OverdueCustomer> overdueCustomers) {
+    	OverdueCustomer customerToAdd = null;
+    	List<LoanBO> loans = client.getOpenLoanAccounts();
+    	for (LoanBO loan: loans) {
+    		if (loan.getTotalAmountInArrears() != null && loan.getTotalAmountInArrears().isNonZero()) {
+            	LoanInformationDto loanInfo = loanAccountServiceFacade.retrieveLoanInformation(loan.getGlobalAccountNum());
+            	if (loanInfo.isDisbursed()) {
+                	if (customerToAdd == null) {
+        				customerToAdd = createOverdueCustomer(client);
+        				overdueCustomers.add(customerToAdd);
+        			}
+        			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
+        					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalAmountDue().toString());
+        			customerToAdd.getOverdueLoans().add(overdueLoan);
+            	}
+            }
+    	}
+    }
+    
+    private OverdueCustomer createOverdueCustomer(ClientBO client) {
+    	OverdueCustomer overdueCustomer = new OverdueCustomer();
+    	overdueCustomer.setDisplayName(client.getDisplayName());
+		overdueCustomer.setGlobalCustNum(client.getGlobalCustNum());
+		overdueCustomer.setOverdueLoans(new ArrayList<OverdueLoan>());
+		overdueCustomer.setPhoneNumber(client.getAddress().getPhoneNumber());
+		overdueCustomer.setAddress(client.getDisplayAddress());
+		return overdueCustomer;
     }
 
     @RequestMapping(value = "personnel/id-current/meetings-{day}", method = RequestMethod.GET)
