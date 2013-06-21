@@ -2061,8 +2061,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     	        Integer unpaidInstallments = loan.getDetailsOfUnpaidInstallmentsOn(paymentDate).size();
     	        
     	        Integer gracePeriodDiff = loan.getNoOfInstallments().intValue() - loan.getGracePeriodDuration().intValue();
-    	        
-    	        Integer gracePeriodsRemaining = unpaidInstallments - gracePeriodDiff;
+
+    	        Integer gracePeriodsRemaining = Math.max(0, unpaidInstallments - gracePeriodDiff);
     	        
     	        LocalDate disbursementDate = new LocalDate(loan.getDetailsOfUpcomigInstallment().getActionDate());
     	        
