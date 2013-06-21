@@ -68,6 +68,10 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
 
     public LookUpValueEntity(){
     }
+    public LookUpValueEntity(Integer lookUpId, String lookUpName){
+        this.lookUpId = lookUpId;
+        this.lookUpName = lookUpName;
+    }
 
     public LookUpValueEntity(String lookUpName){
         this.lookUpName = lookUpName;

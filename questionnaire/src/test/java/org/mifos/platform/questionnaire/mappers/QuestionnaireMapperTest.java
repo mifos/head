@@ -51,7 +51,10 @@ import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.persistence.SectionDao;
+import org.mifos.platform.questionnaire.persistence.SectionLinkDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionLinkDao;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -69,6 +72,7 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -103,12 +107,22 @@ public class QuestionnaireMapperTest {
     private QuestionGroupDao questionGroupDao;
     @Mock
     private SectionQuestionDao sectionQuestionDao;
+    
     @Mock
     private QuestionGroupInstanceDao questionGroupInstanceDao;
+    
+    @Mock
+    private SectionDao sectionDao;
+    
+    @Mock
+    private SectionLinkDao sectionLinkDao;
+    
+    @Mock
+    private SectionQuestionLinkDao sectionQuestionLinkDao;
 
     @Before
     public void setUp() {
-        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
+        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao, sectionDao, sectionLinkDao, sectionQuestionLinkDao);
     }
 
     @Test

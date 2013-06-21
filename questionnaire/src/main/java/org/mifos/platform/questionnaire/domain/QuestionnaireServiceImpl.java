@@ -27,11 +27,17 @@ import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
@@ -42,13 +48,18 @@ import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupLinkDao;
+import org.mifos.platform.questionnaire.persistence.SectionLinkDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionLinkDao;
 import org.mifos.platform.questionnaire.service.InformationOrder;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionLinkDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -91,6 +102,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     
     @Autowired
     private InformationOrderService informationOrderService;
+    
+    @Autowired
+    private QuestionGroupLinkDao questionGroupLinkDao;
+    
+    @Autowired
+    private SectionQuestionLinkDao sectionQuestionLinkDao;
+    
+    @Autowired
+    private SectionLinkDao sectionLinkDao;
     
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
@@ -148,33 +168,33 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         
         List<EntityMaster> usedSources = new ArrayList<EntityMaster>();
         for (Section section: questionGroup.getSections()) {
-        	for (SectionQuestion sectionQuestion: section.getQuestions()) {
-        		usedSources.clear();
-        		for (EventSourceEntity eventSourceEntity: questionGroup.getEventSources()) {
+            for (SectionQuestion sectionQuestion: section.getQuestions()) {
+                usedSources.clear();
+                for (EventSourceEntity eventSourceEntity: questionGroup.getEventSources()) {
 
-        			if (!(eventSourceEntity.getSource().getEntityType().equals("Client")
-        					|| eventSourceEntity.getSource().getEntityType().equals("Loan"))) {
-        				continue;
-        			}
-        			
-        			InformationOrder informationOrder = 
-        					new InformationOrder(null, "additional", sectionQuestion.getId(), eventSourceEntity.getSource().getEntityType(), 999);        			
-        			
-        			if (!sectionQuestion.isShowOnPage()) {
-        				informationOrderService.removeAdditionalQuestionIfExists(informationOrder);
-        			}
-        			
-        			if (usedSources.contains(eventSourceEntity.getSource())) {
-        				continue;
-        			}
-        			
-        			if (sectionQuestion.isShowOnPage()) {
-        				informationOrderService.addAdditionalQuestionIfNotExists(informationOrder);
-        			}
-        			
-        			usedSources.add(eventSourceEntity.getSource());
-        		}
-        	}
+                    if (!(eventSourceEntity.getSource().getEntityType().equals("Client")
+                            || eventSourceEntity.getSource().getEntityType().equals("Loan"))) {
+                        continue;
+                    }
+                    
+                    InformationOrder informationOrder = 
+                            new InformationOrder(null, "additional", sectionQuestion.getId(), eventSourceEntity.getSource().getEntityType(), 999);                    
+                    
+                    if (!sectionQuestion.isShowOnPage()) {
+                        informationOrderService.removeAdditionalQuestionIfExists(informationOrder);
+                    }
+                    
+                    if (usedSources.contains(eventSourceEntity.getSource())) {
+                        continue;
+                    }
+                    
+                    if (sectionQuestion.isShowOnPage()) {
+                        informationOrderService.addAdditionalQuestionIfNotExists(informationOrder);
+                    }
+                    
+                    usedSources.add(eventSourceEntity.getSource());
+                }
+            }
         }
         
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
@@ -535,4 +555,99 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public QuestionGroup getQuestionGroupById(Integer questionGroupId) {
         return questionGroupDao.getDetails(questionGroupId);
     }
+
+    @Override
+    public Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(
+            Integer questionId, String response) throws ParseException {
+        Map<Integer, Boolean> questions = new HashMap<Integer, Boolean>();
+        Map<Integer, Boolean> sections = new HashMap<Integer, Boolean>();
+        
+        SectionQuestion question = sectionQuestionDao.getDetails(questionId);
+        
+        for (SectionQuestionLink dependantQuestionLink: sectionQuestionLinkDao.retrieveDependentSectionQuestionLinksFromQuestion(question.getId())) {
+            questions.put(dependantQuestionLink.getAffectedSectionQuestion().getId(), 
+                    !isQuestionLinkMatched(dependantQuestionLink.getQuestionGroupLink(), response));
+        }
+        
+        for (SectionLink dependantSectionLink: sectionLinkDao.retrieveDependentSectionLinksFromQuestion(question.getId())) {
+            sections.put(dependantSectionLink.getAffectedSection().getId(), 
+                    !isQuestionLinkMatched(dependantSectionLink.getQuestionGroupLink(), response));
+        }
+        
+        Map<String, Map<Integer, Boolean>> result = new HashMap<String, Map<Integer, Boolean>>();
+        
+        result.put("questions", questions);
+        result.put("sections", sections);    
+        return result;
+    }
+
+    public List<LookUpValueEntity> getAllConditions(){
+        return sectionQuestionLinkDao.retrieveAllConditions();
+    }
+    
+    private boolean isQuestionLinkMatched(QuestionGroupLink link, String response) throws ParseException {
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_EQUALS)) {
+            return link.getValue().equals(response);
+        } 
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_NOT_EQUALS)) {
+            return !link.getValue().equals(response);
+        } 
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_GREATER)) {
+            return Integer.parseInt(response) > Integer.parseInt(link.getValue());    
+        } 
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_SMALLER)) {
+            return Integer.parseInt(response) < Integer.parseInt(link.getValue());
+        } 
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_AFTER)) {
+            return new SimpleDateFormat("dd/MM/yyyy").parse(response)
+                    .after(new SimpleDateFormat("dd/MM/yyyy").parse(link.getValue()));
+        } 
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_BEFORE)) {
+            return new SimpleDateFormat("dd/MM/yyyy").parse(response)
+                    .before(new SimpleDateFormat("dd/MM/yyyy").parse(link.getValue()));
+        } 
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_DATE_RANGE)) {
+            Date responseDate = new SimpleDateFormat("dd/MM/yyyy").parse(response);
+            Date firstDate = new SimpleDateFormat("dd/MM/yyyy").parse(link.getValue());
+            Date secondDate = new SimpleDateFormat("dd/MM/yyyy").parse(link.getAdditionalValue());
+            return (responseDate.after(firstDate) && responseDate.before(secondDate)) || (responseDate.before(firstDate) && responseDate.after(secondDate));
+        }
+        
+        if (link.getConditionType().equals(QuestionGroupLink.CONDITION_TYPE_RANGE)) {
+            int responseInt = Integer.parseInt(response);
+            return (responseInt >= Integer.parseInt(link.getValue()) && 
+                    responseInt <= Integer.parseInt(link.getAdditionalValue())) || (responseInt <= Integer.parseInt(link.getValue()) && 
+                            responseInt >= Integer.parseInt(link.getAdditionalValue()));
+        }
+        
+        return false;
+    }
+    
+    public void createQuestionLinks (List<QuestionLinkDetail> questionLinks){
+        for(QuestionLinkDetail questionLinkDetail : questionLinks){
+            QuestionGroupLink questionGroupLink = questionnaireMapper.mapToQuestionGroupLink(questionLinkDetail, null);
+            questionGroupLinkDao.saveOrUpdate(questionGroupLink);
+            
+            SectionQuestionLink sectionQuestionLink = questionnaireMapper.mapToQuestionLink(questionLinkDetail, questionGroupLink);
+            sectionQuestionLinkDao.saveOrUpdate(sectionQuestionLink);
+        }
+    }
+    
+    public void createSectionLinks(List<SectionLinkDetail> sectionLinks){
+        for(SectionLinkDetail sectionLinkDetail : sectionLinks){
+            QuestionGroupLink questionGroupLink = questionnaireMapper.mapToQuestionGroupLink(null, sectionLinkDetail);
+            questionGroupLinkDao.saveOrUpdate(questionGroupLink);
+            
+            SectionLink sectionLink = questionnaireMapper.mapToSectionLink(sectionLinkDetail, questionGroupLink);
+            sectionLinkDao.saveOrUpdate(sectionLink);
+            }
+    }
 }
+

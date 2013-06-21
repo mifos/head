@@ -30,4 +30,8 @@
                         and sectionQuestion.section.id = :SECTION_ID
               ]]>
     </query>
+    <query name="SectionQuestion.retrieveFromSectionQuestionId">
+              <![CDATA[from SectionQuestion as sectionQuestion where sectionQuestion.id = :QUESTION_ID
+              ]]>
+    </query>
 </hibernate-mapping>

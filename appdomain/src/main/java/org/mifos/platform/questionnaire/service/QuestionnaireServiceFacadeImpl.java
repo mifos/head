@@ -20,12 +20,15 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
-
-import org.mifos.config.Localization;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
@@ -53,6 +56,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     
     @Autowired
     private RolesPermissionServiceFacade rolesPermissionService;
+    
+    public LegacyMasterDao legacyMasterDao;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService,RolesPermissionServiceFacade rolesPermissionService) {
         this.questionnaireService = questionnaireService;
@@ -84,15 +89,15 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public Integer createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+    public QuestionGroupDetail createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         questionGroupDetail.setActivityId(addActivityPermission(questionGroupDetail.getTitle(), questionGroupDetail.getId()));
-        return questionnaireService.defineQuestionGroup(questionGroupDetail).getId();
+        return questionnaireService.defineQuestionGroup(questionGroupDetail);
     }
 
     @Override
-    public Integer createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+    public QuestionGroupDetail createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         questionGroupDetail.setActivityId(addActivityPermission(questionGroupDetail.getTitle(), questionGroupDetail.getId()));
-        return questionnaireService.defineQuestionGroup(questionGroupDetail).getId();
+        return questionnaireService.defineQuestionGroup(questionGroupDetail);
     }
 
     @Override
@@ -194,10 +199,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source) {
-    	boolean includeUnansweredQuestionGroups = true;
-    	if(event.equals("Create") && source.equals("Loan")) {
-    		includeUnansweredQuestionGroups = false;
-    	}
+        boolean includeUnansweredQuestionGroups = true;
+        if(event.equals("Create") && source.equals("Loan")) {
+            includeUnansweredQuestionGroups = false;
+        }
         return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), includeUnansweredQuestionGroups, true));
     }
 
@@ -302,5 +307,48 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         }
         return new Short((short)newActivityId);
     }
-    
+
+    @Override
+    public Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(
+            Integer questionId, String response) throws ParseException {
+        return questionnaireService.getHiddenVisibleQuestionsAndSections(questionId, response);
+    }
+
+    @Override
+    public Map<String, String> getAllLinkTypes() {
+        Map<String, String> values = new HashMap<String, String>();
+        List<LookUpValueEntity> conditionTypes = null;
+        conditionTypes=questionnaireService.getAllConditions();
+        for(LookUpValueEntity conditionType : conditionTypes){
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.equals"))
+                values.put(conditionType.getLookUpId().toString(), "Equals");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.notEquals"))
+                values.put(conditionType.getLookUpId().toString(), "Not equals");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.greater"))
+                values.put(conditionType.getLookUpId().toString(), "Greater");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.smaller"))
+                values.put(conditionType.getLookUpId().toString(), "Smaller");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.range"))
+                values.put(conditionType.getLookUpId().toString(), "Range");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.dateRange"))
+                values.put(conditionType.getLookUpId().toString(), "Date range");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.before"))
+                values.put(conditionType.getLookUpId().toString(), "Before");
+            if(conditionType.getLookUpName().equals("QuestionGroupLink.after"))
+                values.put(conditionType.getLookUpId().toString(), "After");
+        }
+        
+        return values;
+    }
+
+    @Override
+    public void createQuestionLinks(List<QuestionLinkDetail> questionLinks) {
+        questionnaireService.createQuestionLinks(questionLinks);
+        return;
+    }
+
+    @Override
+    public void createSectionLinks(List<SectionLinkDetail> sectionLinks) {
+        questionnaireService.createSectionLinks(sectionLinks);
+    }
 }

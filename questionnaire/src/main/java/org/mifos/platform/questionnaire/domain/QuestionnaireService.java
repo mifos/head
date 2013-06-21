@@ -20,17 +20,22 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
+import org.mifos.platform.questionnaire.service.SectionLinkDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface QuestionnaireService {
     QuestionDetail defineQuestion(QuestionDetail questionDetail) throws SystemException;
@@ -82,5 +87,14 @@ public interface QuestionnaireService {
     Integer getEventSourceId(String event, String source);
     
     QuestionGroup getQuestionGroupById(Integer questionGroupId);
+
+    Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(
+			Integer questionId, String response) throws ParseException;
+    
+    List<LookUpValueEntity>  getAllConditions();
+    
+    void createQuestionLinks (List<QuestionLinkDetail> questionLinks);
+    
+    void createSectionLinks(List<SectionLinkDetail> sectionLinks);
 
 }

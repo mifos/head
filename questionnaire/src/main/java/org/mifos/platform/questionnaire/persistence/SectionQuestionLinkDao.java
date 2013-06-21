@@ -19,13 +19,13 @@
  */
 package org.mifos.platform.questionnaire.persistence;
 
-import org.mifos.platform.persistence.GenericDao;
-import org.mifos.platform.questionnaire.domain.SectionQuestion;
-
 import java.util.List;
 
-public interface SectionQuestionDao extends GenericDao<SectionQuestion, Integer> {
-    List<Integer> retrieveIdFromQuestionGroupIdQuestionIdSectionName(String sectionName, Integer questionId, Integer questionGroupId);
-    List<SectionQuestion> retrieveFromQuestionIdSectionId(Integer sectionId, Integer questionId);
-    List<SectionQuestion> retrieveFromSectionQuestionId(Integer sectionQuestionId);
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.platform.persistence.GenericDao;
+import org.mifos.platform.questionnaire.domain.SectionQuestionLink;
+
+public interface SectionQuestionLinkDao extends GenericDao<SectionQuestionLink, Integer> {
+	List<SectionQuestionLink> retrieveDependentSectionQuestionLinksFromQuestion(Integer questionId);
+	List<LookUpValueEntity> retrieveAllConditions();
 }

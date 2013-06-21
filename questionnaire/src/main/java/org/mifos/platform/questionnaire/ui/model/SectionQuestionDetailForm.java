@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.ui.model;
 
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 @SuppressWarnings("PMD")
 public class SectionQuestionDetailForm {
@@ -68,7 +69,14 @@ public class SectionQuestionDetailForm {
         return sectionQuestionDetail.getSequenceNumber();
     }
     
+    public QuestionType getType(){
+        return sectionQuestionDetail.getQuestionType();
+    }
     public void setSequenceNumber(Integer sequenceNumber) {
         sectionQuestionDetail.setSequenceNumber(sequenceNumber);
+    }
+    
+    public SectionQuestionDetail getSectionQuestionDetail() {
+        return sectionQuestionDetail;
     }
 }

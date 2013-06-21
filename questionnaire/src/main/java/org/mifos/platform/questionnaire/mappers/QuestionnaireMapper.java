@@ -24,12 +24,19 @@ import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
+import org.mifos.platform.questionnaire.domain.QuestionGroupLink;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
+import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.SectionLink;
+import org.mifos.platform.questionnaire.domain.SectionQuestion;
+import org.mifos.platform.questionnaire.domain.SectionQuestionLink;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
+import org.mifos.platform.questionnaire.service.SectionLinkDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -67,4 +74,15 @@ public interface QuestionnaireMapper {
     QuestionGroupInstance mapToQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto);
 
     QuestionEntity mapToQuestion(QuestionDto questionDto);
+    
+    SectionQuestion getSectionQuestionById (Integer sectionQuestionId);
+
+    Section getSectionById(Integer sectionId);
+    
+    QuestionGroupLink mapToQuestionGroupLink(QuestionLinkDetail questionLinkDetail, SectionLinkDetail sectionLinkDetail);
+    
+    SectionQuestionLink mapToQuestionLink(QuestionLinkDetail questionLinkDetail, QuestionGroupLink questionGroupLink);
+
+    SectionLink mapToSectionLink(SectionLinkDetail sectionLinkDetail,
+            QuestionGroupLink questionGroupLink);
 }

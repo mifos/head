@@ -54,6 +54,42 @@ explanation of the license and how it is applied.
     	<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
 		<script type="text/javascript" src="pages/application/surveys/js/captureQuestionResponses_struts.js"></script>
 
+		<script>
+			$(document).ready(function() {
+				
+				var updateQuestions = function() {                
+                    var questionId = $(this).closest("tr").attr("data-question-id"),
+                        questionResponse = $(this).val();
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "getHiddenVisibleQuestions.ftl",
+                        data: {questionId: questionId, response: questionResponse},
+                        success: function(response) {
+                            for (var questionId in response.questions) {
+                                if (response.questions.hasOwnProperty(questionId)) {
+                                    var isVisible = response.questions[questionId];
+                                    $("#question" + questionId).css("display", 
+                                            isVisible ? "table-row" : "none");
+                                }
+                            }
+                            for (var sectionId in response.sections) {
+                                if (response.sections.hasOwnProperty(sectionId)) {
+                                    var isVisible = response.sections[sectionId];
+                                    $("#section" + sectionId).css("display", 
+                                            isVisible ? "table" : "none");
+                                }
+                            }
+                        }
+                     });
+                };
+                
+				$('.question.date-pick').change(updateQuestions);
+				$('.question').blur(updateQuestions);
+				$('input[type=radio]').click(updateQuestions);
+			});
+		</script>
+		
 		<STYLE type="text/css">
 		  .validationErr{
 	        color:#FF0000;
@@ -120,8 +156,10 @@ explanation of the license and how it is applied.
 			<c:if test="${!empty questionGroups}">
                  <table width="93%" border="0" cellpadding="3" cellspacing="0">
                      <c:forEach var="group" items="${questionGroups}" varStatus="groupLoopStatus">
-                         <bean:define id="groupIdx"> <c:out value="${groupLoopStatus.index}" /> </bean:define>
+                     	 <bean:define id="groupIdx"> <c:out value="${groupLoopStatus.index}" /> </bean:define>
                          <c:forEach var="section" items="${group.sectionDetails}" varStatus="sectionLoopStatus">
+                         	<tr><td>
+                             <table id="section${section.id}" width="100%" border="0" cellpadding="0" cellspacing="0">
                              <bean:define id="sectionIdx"><c:out value="${sectionLoopStatus.index}" /></bean:define>
                              <tr><td>&nbsp;</td></tr>
                              <tr>
@@ -131,29 +169,29 @@ explanation of the license and how it is applied.
                                  <bean:define id="questionIdx">
                                      <c:out value="${questionLoopStatus.index}" />
                                  </bean:define>
-                                 <tr class="fontnormal bg${(questionLoopStatus.index + 1) % 2}">
-                                     <td width="26%" align="right" valign="top">
+                                 <tr id="question${question.id}" data-question-id="${question.id}" class="question_row fontnormal bg${(questionLoopStatus.index + 1) % 2}">
+                                     <td width="26%" align="right" valign="middle">
                                          <span id="create_ClientPersonalInfo.label.question">
                                              <c:if test="${question.mandatory}">
                                                  <span class="mandatorytext">
                                                      <font color="#FF0000">*</font>
                                                  </span>
                                              </c:if>
-                                             <c:out value="${question.text}" />
-                                         </span>:
+                                             <c:out value="${question.text}" />:
+                                         </span>
                                      </td>
                                      <td width="74%">
                                      <html-el:hidden property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].id' value="${question.id}"></html-el:hidden>
                                      <c:if test="${question.questionType == 'FREETEXT'}">
-                                         <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField"
+                                         <mifos:mifosalphanumtext styleClass="question" styleId="create_ClientPersonalInfo.input.customField"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
                                      </c:if>
                                      <c:if test="${question.questionType == 'NUMERIC'}">
-                                         <mifos:mifosnumbertext styleId="create_ClientPersonalInfo.input.customField"
+                                         <mifos:mifosnumbertext styleClass="question" styleId="create_ClientPersonalInfo.input.customField"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
                                      </c:if>
                                      <c:if test="${question.questionType == 'DATE'}">
-                                         <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" styleClass="date-pick"
+                                         <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" styleClass="question date-pick"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="10" />
                                      </c:if>
 
@@ -249,11 +287,12 @@ explanation of the license and how it is applied.
                                  </tr>
 
                              </c:forEach>
+                             </table>
+                         	</td></tr>
                          </c:forEach>
                      </c:forEach>
                      <tr>
-                        <td>&nbsp;</td>
-						<td align="left">
+						<td align="center">
 							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="<fmt:message key='Surveys.button.continue'/>" />
 							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="<fmt:message key='Surveys.button.cancel'/>" />
                         </td>

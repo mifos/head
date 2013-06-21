@@ -20,7 +20,9 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
@@ -34,10 +36,14 @@ public interface QuestionnaireServiceFacade {
 
     boolean isDuplicateQuestion(String title);
 
-    Integer createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    QuestionGroupDetail createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
+    void createQuestionLinks(List<QuestionLinkDetail> questionLinks);
+    
+    void createSectionLinks(List<SectionLinkDetail> sectionLinks);
+    
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ACTIVATE_QUESTION_GROUPS')")
-    Integer createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    QuestionGroupDetail createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
     List<QuestionDetail> getAllQuestions();
 
@@ -87,4 +93,7 @@ public interface QuestionnaireServiceFacade {
 
     void applyToAllLoanProducts(Integer entityId);
     
+    Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(Integer questionId, String response) throws ParseException;
+
+    Map<String, String> getAllLinkTypes();
 }

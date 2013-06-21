@@ -7,6 +7,7 @@
 
     <on-start>
        <evaluate expression="questionGroupController.getAllQgEventSources()" result="flowScope.EventSources" />
+       <evaluate expression="questionGroupController.getAllLinkTypes()" result="flowScope.LinkTypes" />
        <evaluate expression="questionGroupController.getAllSectionQuestions()" result="questionGroupForm.questionPool" />
     </on-start>
 
@@ -27,9 +28,11 @@
         <transition on="removeChoiceTag" to="removeChoiceTag"/>
         <transition on="removeSmartChoice" to="removeChoice"/>
         <transition on="createQuestions" to="createQuestions" />
+        <transition on="addLink" to="addLink" />
+        <transition on="removeLink" to="removeLink" />
         <transition on="cancel" to="cancel" bind="false" history="discard"/>
     </view-state>
-
+    
     <action-state id="deleteSection">
         <evaluate expression="questionGroupController.deleteSection(questionGroupForm, requestParameters._eventId_deleteSection)"/>
         <transition on="success" to="createQuestionGroup" />
@@ -101,6 +104,21 @@
     <action-state id="addSmartChoiceTag">
         <evaluate expression="questionGroupController.addSmartChoiceTag(questionGroupForm, flowRequestContext, requestParameters._eventId_addSmartChoiceTag)"/>
         <transition to="createQuestionGroup" />
+    </action-state>
+    
+    <action-state id="addLink">
+        <evaluate expression="questionGroupController.addLink(questionGroupForm, requestParameters.sourceQuestion, requestParameters.linkType, requestParameters.linkAppliesTo, 
+                                requestParameters.affectedQuestion, requestParameters.affectedSection, requestParameters.value, 
+                                requestParameters.additionalValue, flowScope.LinkTypes, flowRequestContext)"/>
+        <transition on="success" to="createQuestionGroup" />
+        <transition on="failure" to="createQuestionGroup" />
+    </action-state>
+    
+    <action-state id="removeLink">
+        <evaluate expression="questionGroupController.removeLink(questionGroupForm, requestParameters._eventId_removeLink, 
+        requestParameters.affectedQ, requestParameters.affectedS, requestParameters.linkValue, requestParameters.additionalLinkValue, flowRequestContext) "/>
+        <transition on="success" to="createQuestionGroup" />
+        <transition on="failure" to="createQuestionGroup" />
     </action-state>
 
     <end-state id="defineQuestionGroupSuccess" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />

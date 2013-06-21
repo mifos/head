@@ -15,4 +15,8 @@
         </bag>
 
     </class>
+    <query name="Section.retrieveFromSectionId">
+              <![CDATA[from Section as section where section.id = :Section_ID
+              ]]>
+    </query>
 </hibernate-mapping>

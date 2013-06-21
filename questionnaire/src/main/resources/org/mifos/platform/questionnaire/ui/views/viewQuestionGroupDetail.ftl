@@ -109,6 +109,58 @@
                         [/#list]
                     </li>
               </ul>
+              
+            [#list questionGroupForm.questionLinks as questionLink]
+            [/#list]
+    
+            [#list questionGroupForm.sectionLinks as sectionLink]
+            [/#list]
+            
+            <h1>Question links</h1>
+            <table class="table_common" id="links_questions">
+                <thead>
+                <tr>
+                    <th width="25%">[@spring.message "questionnaire.link.sourceQuestion"/]</th>
+                    <th width="25%">[@spring.message "questionnaire.link.affectedQuestion"/]</th>
+                    <th width="20%">[@spring.message "questionnaire.link.linkType"/]</th>
+                    <th width="15%">[@spring.message "questionnaire.link.value"/]</th>
+                    <th width="15%">[@spring.message "questionnaire.link.additionalValue"/]</th>
+                </tr>
+                </thead>
+                <tbody>
+                    [#list questionGroupForm.questionLinks as questionLink]
+                        <tr>
+                            <td>${questionLink.sourceQuestion.text}</td>
+                            <td>${questionLink.affectedQuestion.text}</td>
+                            <td>${questionLink.linkTypeDisplay}</td>
+                            <td>${questionLink.value}</td>
+                            <td>${questionLink.additionalValue}</td>
+                        </tr>
+                    [/#list]
+                </tbody>
+            </table>
+            <table class="table_common" id="links_sections">
+                <thead>
+                <tr>
+                    <th width="25%">[@spring.message "questionnaire.link.sourceQuestion"/]</th>
+                    <th width="25%">[@spring.message "questionnaire.link.affectedSection"/]</th>
+                    <th width="20%">[@spring.message "questionnaire.link.linkType"/]</th>
+                    <th width="15%">[@spring.message "questionnaire.link.value"/]</th>
+                    <th width="15%">[@spring.message "questionnaire.link.additionalValue"/]</th>
+                </tr>
+                </thead>
+                <tbody>
+                    [#list questionGroupForm.sectionLinks as sectionLink]
+                        <tr>
+                            <td>${sectionLink.sourceQuestion.text}</td>
+                            <td>${sectionLink.affectedSection.name}</td>
+                            <td>${sectionLink.linkTypeDisplay}</td>
+                            <td>${sectionLink.value}</td>
+                            <td>${sectionLink.additionalValue}</td>
+                        </tr>
+                    [/#list]
+                </tbody>
+            </table>
         </form>
     [/#if]
     </div>

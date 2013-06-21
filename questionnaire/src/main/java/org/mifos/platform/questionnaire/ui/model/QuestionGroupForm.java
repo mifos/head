@@ -20,23 +20,25 @@
 
 package org.mifos.platform.questionnaire.ui.model;
 
-import org.apache.commons.lang.StringUtils;
-import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.service.QuestionDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.SectionDetail;
-import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
-import org.mifos.platform.validation.ScreenObject;
+import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.trim;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.trim;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
+import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionLinkDetail;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionLinkDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.validation.ScreenObject;
 @SuppressWarnings("PMD")
 public class QuestionGroupForm extends ScreenObject {
     private static final long serialVersionUID = -7545625058942409636L;
@@ -56,7 +58,26 @@ public class QuestionGroupForm extends ScreenObject {
     private List<Integer> questionsToAdd = new ArrayList<Integer>();
     private boolean applyToAllLoanProducts;
 
-    public QuestionGroupForm() {
+    private List<QuestionLinkDetail> questionLinks = new ArrayList<QuestionLinkDetail>();
+    private List<SectionLinkDetail> sectionLinks = new ArrayList<SectionLinkDetail>();
+
+	public List<QuestionLinkDetail> getQuestionLinks() {
+		return questionLinks;
+	}
+
+	public void setQuestionLinks(List<QuestionLinkDetail> questionLinks) {
+		this.questionLinks = questionLinks;
+	}
+
+	public List<SectionLinkDetail> getSectionLinks() {
+		return sectionLinks;
+	}
+
+	public void setSectionLinks(List<SectionLinkDetail> sectionLinks) {
+		this.sectionLinks = sectionLinks;
+	}
+
+	public QuestionGroupForm() {
         this(new QuestionGroupDetail());
     }
 
@@ -284,6 +305,26 @@ public class QuestionGroupForm extends ScreenObject {
                     break;
                 }
             }
+            
+            for(Iterator<SectionLinkDetail> iterator = sectionLinks.iterator(); iterator.hasNext();){
+                SectionLinkDetail sectionLinkDetail = iterator.next();
+                if(sectionLinkDetail.getAffectedSection().getName().equals(sectionToDelete.getName()))
+                    iterator.remove();
+                for(SectionQuestionDetail sectionQuestionDetail : sectionToDelete.getQuestionDetails()){
+                    if(sectionLinkDetail.getSourceQuestion().getQuestionDetail().getId().equals(sectionQuestionDetail.getQuestionDetail().getId()))
+                        iterator.remove();
+                }
+                
+            }
+            for(SectionQuestionDetail sectionQuestionDetail : sectionToDelete.getQuestionDetails()){
+                for(Iterator<QuestionLinkDetail> iterator = questionLinks.iterator(); iterator.hasNext();){
+                    QuestionLinkDetail questionLinkDetail = iterator.next();
+                    if(questionLinkDetail.getSourceQuestion().getQuestionDetail().getId().equals(sectionQuestionDetail.getQuestionId()))
+                        iterator.remove();
+                    if(questionLinkDetail.getAffectedQuestion().getQuestionDetail().getId().equals(sectionQuestionDetail.getQuestionId()))
+                        iterator.remove();
+                }
+            }
         }
     }
 
@@ -328,6 +369,20 @@ public class QuestionGroupForm extends ScreenObject {
                 }
                 break;
             }
+        }
+        
+        for(Iterator<SectionLinkDetail> iterator = sectionLinks.iterator(); iterator.hasNext();){
+            SectionLinkDetail sectionLinkDetail = iterator.next();
+            if(sectionLinkDetail.getSourceQuestion().getQuestionDetail().getId().equals(Integer.valueOf(questionId)))
+            iterator.remove();
+        }
+        
+        for(Iterator<QuestionLinkDetail> iterator = questionLinks.iterator(); iterator.hasNext();){
+            QuestionLinkDetail questionLinkDetail = iterator.next();
+            if(questionLinkDetail.getSourceQuestion().getQuestionDetail().getId().equals(Integer.valueOf(questionId)))
+                iterator.remove();
+            if(questionLinkDetail.getAffectedQuestion().getQuestionDetail().getId().equals(Integer.valueOf(questionId)))
+                iterator.remove();
         }
     }
 
@@ -483,6 +538,8 @@ public class QuestionGroupForm extends ScreenObject {
     public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
         this.sections = initSections();
+        this.sectionLinks = questionGroupDetail.getSectionLinks();
+        this.questionLinks= questionGroupDetail.getQuestionLinks();
     }
 
     private List<SectionDetailForm> initSections() {

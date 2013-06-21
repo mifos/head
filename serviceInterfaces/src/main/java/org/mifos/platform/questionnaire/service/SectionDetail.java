@@ -26,6 +26,7 @@ import java.util.List;
 public class SectionDetail implements Serializable {
     private static final long serialVersionUID = -7143251556021871484L;
 
+    private Integer id;
     private String name;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<SectionQuestionDetail> questionDetails;
@@ -35,7 +36,15 @@ public class SectionDetail implements Serializable {
         questionDetails = new ArrayList<SectionQuestionDetail>();
     }
 
-    public String getName() {
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
         return name;
     }
 
@@ -87,5 +96,9 @@ public class SectionDetail implements Serializable {
 
     public boolean hasActiveQuestions() {
         return !hasNoActiveQuestions();
+    }
+
+    public List<SectionQuestionDetail> getQuestionDetails() {
+        return questionDetails;
     }
 }

@@ -70,7 +70,10 @@ import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
+import org.mifos.platform.questionnaire.persistence.SectionDao;
+import org.mifos.platform.questionnaire.persistence.SectionLinkDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
+import org.mifos.platform.questionnaire.persistence.SectionQuestionLinkDao;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -120,6 +123,15 @@ public class QuestionnaireServiceTest {
     @Mock
     private QuestionGroupDefinitionParser questionGroupDefinitionParser;
     
+    @Mock
+    private SectionDao sectionDao;
+    
+    @Mock
+    private SectionLinkDao sectionLinkDao;
+    
+    @Mock
+    private SectionQuestionLinkDao sectionQuestionLinkDao;
+    
     private static final String QUESTION_TITLE = "Test QuestionDetail Title";
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
     public static final String EVENT_CREATE = "Create";
@@ -128,12 +140,12 @@ public class QuestionnaireServiceTest {
 
     @Before
     public void setUp() {
-        QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
+        QuestionnaireMapper questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao, sectionDao, sectionLinkDao, sectionQuestionLinkDao);
         questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper,
                                             questionGroupDao, eventSourceDao, questionGroupInstanceDao,
                                             ppiSurveyLocator, questionGroupDefinitionParser, null);
     }
-
+    
     @Test
     public void shouldDefineQuestion() throws SystemException {
         QuestionDetail questionDefinition = new QuestionDetail(QUESTION_TITLE, QuestionType.FREETEXT);
