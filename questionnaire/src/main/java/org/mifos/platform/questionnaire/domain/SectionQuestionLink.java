@@ -24,6 +24,11 @@ import javax.persistence.Table;
             query = "SELECT new org.mifos.application.master.business.LookUpValueEntity(value.lookUpId,value.lookUpName) " +
                     "FROM org.mifos.application.master.business.LookUpValueEntity value, org.mifos.application.master.business.LookUpEntity entity WHERE " +
                     "value.lookUpEntity.entityId = (SELECT entityId FROM entity where entity.entityType='ConditionType') and entity.entityType='ConditionType'"
+    ),
+    @NamedQuery(
+            name = "SectionQuestionLink.retrieveSectionQuestionLinksByAffectedQuestionId",
+            query = "from SectionQuestionLink s where " +
+                    "s.affectedSectionQuestion.id = :affectedQuestionId"
     )
 })
 @Entity

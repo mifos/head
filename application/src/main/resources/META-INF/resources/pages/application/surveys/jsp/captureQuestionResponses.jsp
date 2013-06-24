@@ -57,7 +57,23 @@ explanation of the license and how it is applied.
 		<script>
 			$(document).ready(function() {
 				
-				var updateQuestions = function() {                
+				var updateSectionsAndQuestionsVisibility = function(response) {
+					for (var questionId in response.questions) {
+                        if (response.questions.hasOwnProperty(questionId)) {
+                            var isVisible = response.questions[questionId];
+                            $("#question" + questionId).css("display", 
+                                    isVisible ? "table-row" : "none");
+                        }
+                    }
+                    for (var sectionId in response.sections) {
+                        if (response.sections.hasOwnProperty(sectionId)) {
+                            var isVisible = response.sections[sectionId];
+                            $("#section" + sectionId).css("display", 
+                                    isVisible ? "table" : "none");
+                        }
+                    }
+				},
+				updateQuestions = function() {                
                     var questionId = $(this).closest("tr").attr("data-question-id"),
                         questionResponse = $(this).val();
                     
@@ -66,20 +82,7 @@ explanation of the license and how it is applied.
                         url: "getHiddenVisibleQuestions.ftl",
                         data: {questionId: questionId, response: questionResponse},
                         success: function(response) {
-                            for (var questionId in response.questions) {
-                                if (response.questions.hasOwnProperty(questionId)) {
-                                    var isVisible = response.questions[questionId];
-                                    $("#question" + questionId).css("display", 
-                                            isVisible ? "table-row" : "none");
-                                }
-                            }
-                            for (var sectionId in response.sections) {
-                                if (response.sections.hasOwnProperty(sectionId)) {
-                                    var isVisible = response.sections[sectionId];
-                                    $("#section" + sectionId).css("display", 
-                                            isVisible ? "table" : "none");
-                                }
-                            }
+                        	updateSectionsAndQuestionsVisibility(response);
                         }
                      });
                 };
@@ -87,6 +90,46 @@ explanation of the license and how it is applied.
 				$('.question.date-pick').change(updateQuestions);
 				$('.question').blur(updateQuestions);
 				$('input[type=radio]').click(updateQuestions);
+			
+				
+				var allQuestionsIds = ""
+		                
+				$('tr').filter(function() { 
+					    return /^question[0-9]+$/.test(this.id); 
+				    }).each(function() {
+				    	allQuestionsIds += $(this).attr("data-question-id") + ",";
+				    });
+				
+				if (allQuestionsIds !== "") {
+				    allQuestionsIds = allQuestionsIds.substring(0, allQuestionsIds.length-1);
+				}
+				
+				var allSectionsIds = ""
+                    
+                $('table').filter(function() { 
+                        return /^section[0-9]+$/.test(this.id); 
+                    }).each(function() {
+                    	allSectionsIds += $(this).attr("data-section-id") + ",";
+                    });
+                
+                if (allSectionsIds !== "") {
+                	allSectionsIds = allSectionsIds.substring(0, allSectionsIds.length-1);
+                }
+	               
+				$.ajax({
+                    type: "POST",
+                    url: "hideAttachedQuestions.ftl",
+                    data: {questionsId: allQuestionsIds, sectionsId: allSectionsIds},
+                    success: function(response) {
+                    	for (var questionId in response.questions) {
+                            $("#question" + response.questions[questionId]).css("display", "none");
+                        }
+                        for (var sectionId in response.sections) {
+                           $("#section" + response.sections[sectionId]).css("display", "none");    
+                        }
+                    }
+                 });
+			 
 			});
 		</script>
 		
@@ -159,7 +202,7 @@ explanation of the license and how it is applied.
                      	 <bean:define id="groupIdx"> <c:out value="${groupLoopStatus.index}" /> </bean:define>
                          <c:forEach var="section" items="${group.sectionDetails}" varStatus="sectionLoopStatus">
                          	<tr><td>
-                             <table id="section${section.id}" width="100%" border="0" cellpadding="0" cellspacing="0">
+                             <table id="section${section.id}" data-section-id="${section.id}" width="100%" border="0" cellpadding="0" cellspacing="0">
                              <bean:define id="sectionIdx"><c:out value="${sectionLoopStatus.index}" /></bean:define>
                              <tr><td>&nbsp;</td></tr>
                              <tr>

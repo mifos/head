@@ -51,7 +51,6 @@
                             }
                         }
                      });
-                    
                 };
                 
                 $('.question.date-pick').change(updateQuestions);

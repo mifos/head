@@ -566,12 +566,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         
         for (SectionQuestionLink dependantQuestionLink: sectionQuestionLinkDao.retrieveDependentSectionQuestionLinksFromQuestion(question.getId())) {
             questions.put(dependantQuestionLink.getAffectedSectionQuestion().getId(), 
-                    !isQuestionLinkMatched(dependantQuestionLink.getQuestionGroupLink(), response));
+                    isQuestionLinkMatched(dependantQuestionLink.getQuestionGroupLink(), response));
         }
         
         for (SectionLink dependantSectionLink: sectionLinkDao.retrieveDependentSectionLinksFromQuestion(question.getId())) {
             sections.put(dependantSectionLink.getAffectedSection().getId(), 
-                    !isQuestionLinkMatched(dependantSectionLink.getQuestionGroupLink(), response));
+                    isQuestionLinkMatched(dependantSectionLink.getQuestionGroupLink(), response));
         }
         
         Map<String, Map<Integer, Boolean>> result = new HashMap<String, Map<Integer, Boolean>>();
@@ -649,5 +649,33 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             sectionLinkDao.saveOrUpdate(sectionLink);
             }
     }
+
+	@Override
+	public Map<String, List<String>>getHiddenQuestionsAndSections(String questionsId, String sectionsId) {
+		List<String> questionIds = new ArrayList(Arrays.asList(questionsId.split(",")));
+		List<String> sectionIds = new ArrayList(Arrays.asList(sectionsId.split(",")));
+		
+		Iterator<String> itQ = questionIds.iterator();
+		while(itQ.hasNext()) {
+			Integer questionId = Integer.parseInt(itQ.next());
+			if (sectionQuestionLinkDao.retrieveSectionQuestionLinksByAffectedQuestionId(questionId).size() == 0) {
+				itQ.remove();
+			}
+		}
+		
+		Iterator<String> itS = sectionIds.iterator();
+		while(itS.hasNext()) {
+			Integer sectionId = Integer.parseInt(itS.next());
+			if (sectionLinkDao.retrieveSectionLinksByAffectedSectionId(sectionId).size() == 0) {
+				itS.remove();
+			}
+		}
+		
+		Map<String, List<String>> toRemove = new HashMap<String, List<String>>();
+		toRemove.put("questions", questionIds);
+		toRemove.put("sections", sectionIds);
+		
+		return toRemove;
+	}
 }
 

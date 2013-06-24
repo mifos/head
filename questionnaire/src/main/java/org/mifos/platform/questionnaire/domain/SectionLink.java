@@ -23,6 +23,11 @@ import javax.persistence.Table;
             name = "SectionLink.retrieveSectionIdByQuestionGroupIdAndName",
             query = "from Section s where " +
                     "s.id = :id and s.name = :name"
+    ),
+    @NamedQuery(
+            name = "SectionLink.retrieveSectionLinksByAffectedSectionId",
+            query = "from SectionLink s where " +
+                    "s.affectedSection.id = :affectedSectionId"
     )
 })
 @Entity

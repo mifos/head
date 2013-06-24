@@ -26,4 +26,5 @@ import org.mifos.platform.questionnaire.domain.SectionLink;
 
 public interface SectionLinkDao extends GenericDao<SectionLink, Integer> {
     List<SectionLink> retrieveDependentSectionLinksFromQuestion(Integer questionId);
+    List<SectionLink> retrieveSectionLinksByAffectedSectionId(Integer affectedSectionId);
 }

@@ -130,6 +130,12 @@ public class QuestionGroupController extends QuestionnaireController {
             @RequestParam Integer questionId, @RequestParam String response) throws ParseException {
         return questionnaireServiceFacade.getHiddenVisibleQuestionsAndSections(questionId, response);
     }
+    
+    @RequestMapping(value="/hideAttachedQuestions.ftl", method=RequestMethod.POST)
+    public @ResponseBody Map<String, List<String>> hideAttachedQuestions(
+            @RequestParam String questionsId, @RequestParam String sectionsId) throws ParseException {
+        return questionnaireServiceFacade.getHiddenQuestionsAndSections(questionsId, sectionsId);
+    }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext, boolean createMode) {

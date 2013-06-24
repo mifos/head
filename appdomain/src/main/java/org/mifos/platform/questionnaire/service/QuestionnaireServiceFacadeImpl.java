@@ -351,4 +351,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     public void createSectionLinks(List<SectionLinkDetail> sectionLinks) {
         questionnaireService.createSectionLinks(sectionLinks);
     }
+
+	@Override
+	public Map<String, List<String>> getHiddenQuestionsAndSections(String questionsId, String sectionsId) {
+		return questionnaireService.getHiddenQuestionsAndSections(questionsId, sectionsId);
+	}
 }

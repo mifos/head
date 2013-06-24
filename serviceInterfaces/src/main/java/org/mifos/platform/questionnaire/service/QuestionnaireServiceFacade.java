@@ -96,4 +96,6 @@ public interface QuestionnaireServiceFacade {
     Map<String, Map<Integer, Boolean>> getHiddenVisibleQuestionsAndSections(Integer questionId, String response) throws ParseException;
 
     Map<String, String> getAllLinkTypes();
+
+    Map<String, List<String>> getHiddenQuestionsAndSections(String questionsId, String sectionsId);
 }

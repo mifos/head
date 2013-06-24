@@ -232,6 +232,23 @@
                     </select>
                 </td>
             </tr>
+             <tr>
+                <td id="valueTitle">Value:</td>
+                <td style="width:70%;">
+                    <input id="valueId" type="text" name="value" style="float:left;"/>
+                    <select id="answers" name="answers" style="display: none;">
+                        <option value="select">-- Select --</option>
+                        [#list questionGroupForm.sections as section]
+                            [#list section.sectionQuestions as sectionQuestion]
+                                [#list sectionQuestion.sectionQuestionDetail.answerChoices as answer]
+                                    <option value="${answer.value}" name="choosenAnswer" class="${sectionQuestion.questionId}" style="display: none;">${answer.value}</option>
+                                [/#list]
+                            [/#list]
+                         [/#list]
+                        
+                    </select>
+                </td>
+            </tr>
             <tr>
                 <td>Applies to:</td>
                 <td>
@@ -260,23 +277,6 @@
                         [#list questionGroupForm.sections as section]
                             <option value="${section.name}">${section.name}</option>
                         [/#list]
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td id="valueTitle">Value:</td>
-                <td style="width:70%;">
-                    <input id="valueId" type="text" name="value" style="float:left;"/>
-                    <select id="answers" name="answers" style="display: none;">
-                        <option value="select">-- Select --</option>
-                        [#list questionGroupForm.sections as section]
-                            [#list section.sectionQuestions as sectionQuestion]
-                                [#list sectionQuestion.sectionQuestionDetail.answerChoices as answer]
-                                    <option value="${answer.value}" name="choosenAnswer" class="${sectionQuestion.questionId}" style="display: none;">${answer.value}</option>
-                                [/#list]
-                            [/#list]
-                         [/#list]
-                        
                     </select>
                 </td>
             </tr>
