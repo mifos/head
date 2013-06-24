@@ -24,6 +24,16 @@
 	<script type="text/javascript" src="pages/js/jquery/jquery.regexSelector.js"></script>
 	<script type="text/javascript">
 
+    $(document).ready(function() {
+        $("form").submit(function() {
+            var value = $("#selected_loan_value").val();
+            
+            if (value.match(/\d{15}/gi)) {
+                $("#selected_loan_value").val(value.substring(5, value.length));
+            }
+        });
+    });
+
 	function addOption(root, text, value)
 	{
 	  var newOpt = new Option(text, value);

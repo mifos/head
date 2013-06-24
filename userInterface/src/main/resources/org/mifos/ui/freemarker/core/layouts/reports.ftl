@@ -25,7 +25,7 @@
     <div class="colmask leftmenu">
         <div class="colleft">
             <div class="col1wrap">
-                <div class="col1">
+                <div class="col1_report">
                 <div class="main_content">
                     [#nested]
                 </div>
