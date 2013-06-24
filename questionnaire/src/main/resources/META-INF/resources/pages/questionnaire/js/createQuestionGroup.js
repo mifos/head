@@ -222,7 +222,7 @@ $(document).ready(function () {
     
     $.validator.addMethod('numeric', function (value) {
         return (
-            value==null ||
+            value==null || value="0" ||
             value=="" ||
             (   /^[0-9]{0,9}$/.test(value)
                 &&
