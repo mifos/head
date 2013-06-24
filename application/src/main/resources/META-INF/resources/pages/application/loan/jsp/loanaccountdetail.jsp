@@ -875,7 +875,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                 <td width="50%" height="23" class="fontnormalbold">
                                     <mifos:mifoslabel name="client.GuaranteeInfoHeading" bundle="ClientUIResources"></mifos:mifoslabel>
                                 </td></br>
-                                <c:if test="${loanInformationDto.accountStateId==5 || loanInformationDto.accountStateId==9}">
+                                <c:if test="${loanInformationDto.accountStateId==5 || loanInformationDto.accountStateId==9
+                                            || loanInformationDto.accountStateId==2 || loanInformationDto.accountStateId==3}">
                                     <c:url value="linkGuarantor.ftl" var="applyGuarantyUrl">
                                         <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}"/>
                                         <c:param name="globalCustNum" value="${loanInformationDto.globalCustNum}"/>
