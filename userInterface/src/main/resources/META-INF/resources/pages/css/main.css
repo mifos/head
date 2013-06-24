@@ -95,6 +95,13 @@ html, body {
     right: 100%;
 }
 
+.leftmenu .col1_report {
+    margin: 0 0 0 200px;
+    overflow: auto;
+    position: relative;
+    right: 100%;
+}
+
 .leftmenu .col1nomargin {
 	margin:0 0 0 120px;
     overflow:hidden;
