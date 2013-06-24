@@ -406,7 +406,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if(!currentDOB.isEqual(newDOB)) {
-            customerDao.validateClientForDuplicateNameOrGovtId(personalInfo.getClientDisplayName(), newDOB.toDateMidnight().toDate(), personalInfo.getGovernmentId());
+            customerDao.validateClientForDuplicateNameOrGovtId(personalInfo.getClientDisplayName(), newDOB.toDateMidnight().toDate(), null);
         }
 
         try {
