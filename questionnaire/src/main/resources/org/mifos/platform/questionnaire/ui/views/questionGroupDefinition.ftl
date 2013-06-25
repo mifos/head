@@ -249,6 +249,10 @@
                     </select>
                 </td>
             </tr>
+            <tr id="additionalValue" style="display: none;">
+                <td>To:</td>
+                <td><input id="additionalValueId" type="text" name="additionalValue" style="float:left;"/></td>
+            </tr>
             <tr>
                 <td>Applies to:</td>
                 <td>
@@ -279,10 +283,6 @@
                         [/#list]
                     </select>
                 </td>
-            </tr>
-            <tr id="additionalValue" style="display: none;">
-                <td>To:</td>
-                <td><input id="additionalValueId" type="text" name="additionalValue" style="float:left;"/></td>
             </tr>
         </table>
         

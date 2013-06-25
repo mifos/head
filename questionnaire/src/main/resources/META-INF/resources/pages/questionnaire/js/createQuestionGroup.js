@@ -124,6 +124,7 @@ $(document).ready(function () {
     	$('#affectedSection option').css("display", "");
     	$('#affectedSection option[value='+sectionName+']').css("display", "none");
     	
+    	$('#valueId').css("display", "");
     	$('#answers').css("display", "none");
 		$('#answers option').css("display", "none");
 		$('#linkType option').css("display", "none");
@@ -222,11 +223,9 @@ $(document).ready(function () {
     
     $.validator.addMethod('numeric', function (value) {
         return (
-            value==null || value="0" ||
+            value==null ||
             value=="" ||
-            (   /^[0-9]{0,9}$/.test(value)
-                &&
-                parseInt(value)
+            (   /^([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])$/.test(value)
             )
         );
     }, 'Please enter a valid number');
