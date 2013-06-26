@@ -210,7 +210,7 @@ public class PersonnelRESTController {
     
     private void addClientIfHasOverdueLoan(ClientBO client, List<OverdueCustomer> overdueCustomers) {
     	OverdueCustomer customerToAdd = null;
-    	List<LoanBO> loans = client.getOpenLoanAccounts();
+    	List<LoanBO> loans = client.getOpenLoanAccountsAndGroupLoans();
     	for (LoanBO loan: loans) {
     		if (loan.getTotalAmountInArrears() != null && loan.getTotalAmountInArrears().isNonZero()) {
             	LoanInformationDto loanInfo = loanAccountServiceFacade.retrieveLoanInformation(loan.getGlobalAccountNum());
