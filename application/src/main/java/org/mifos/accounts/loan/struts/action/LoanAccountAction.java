@@ -444,7 +444,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return url;
     }
 
-    @TransactionDemarcate(joinToken = true)
+    @TransactionDemarcate(saveToken = true)
     public ActionForward getLoanRepaymentSchedule(final ActionMapping mapping,
                                                   final ActionForm form, final HttpServletRequest request,
                                                   @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
