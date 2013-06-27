@@ -30,7 +30,9 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.config.ClientRules;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -139,11 +141,23 @@ public class PersonnelRESTController {
     	List<LastRepaymentDto> lastRepayments = new ArrayList<LastRepaymentDto>();
     	
     	PersonnelBO loanOfficer = personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
-    	List<ClientBO> borrowers = customerDao.findAllBorrowersUnderLoanOfficer(loanOfficer.getPersonnelId(), null);
     	
-    	for (ClientBO borrower: borrowers) {
+    	List<CustomerBO> borrowers = new ArrayList<CustomerBO>();
+    	
+    	for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(loanOfficer)) {
+    		borrowers.add(customerDao.findGroupBySystemId(group.getGlobalCustNum()));
+    		for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
+            	borrowers.add(client);
+            }
+        }
 
-    		List<LoanBO> loans = borrower.getOpenLoanAccounts();
+        for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer(loanOfficer.getPersonnelId(), 
+        		loanOfficer.getOffice().getOfficeId())) {
+        	borrowers.add(client);
+        }
+        
+    	for (CustomerBO borrower: borrowers) {
+    		List<LoanBO> loans = borrower.getOpenLoanAccountsAndGroupLoans();
         	
     		if (loans != null && loans.size() != 0) {
     			LoanBO lastLoan = null;
@@ -181,7 +195,11 @@ public class PersonnelRESTController {
     					lastLoan.getAccountType().getAccountTypeId(),
     					lastLoan.getTotalAmountInArrears().toString());
     			
-    			lastRepayments.add(new LastRepaymentDto(clientDescription, loanDetails, lastLoanDate));
+    			LastRepaymentDto lastRepayment = new LastRepaymentDto(clientDescription, loanDetails, lastLoanDate);
+    			if (borrower instanceof GroupBO) {
+    				lastRepayment.setGroup(true);
+    			}
+    			lastRepayments.add(lastRepayment);
     		}
     	}
     	
@@ -195,6 +213,7 @@ public class PersonnelRESTController {
     	PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
     	
     	for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(loanOfficer)) {
+    		addClientIfHasOverdueLoan(customerDao.findGroupBySystemId(group.getGlobalCustNum()), overdueCustomers);
             for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
             	addClientIfHasOverdueLoan(client, overdueCustomers);
             }
@@ -208,7 +227,7 @@ public class PersonnelRESTController {
         return overdueCustomers.toArray(new OverdueCustomer[]{});
     }
     
-    private void addClientIfHasOverdueLoan(ClientBO client, List<OverdueCustomer> overdueCustomers) {
+    private void addClientIfHasOverdueLoan(CustomerBO client, List<OverdueCustomer> overdueCustomers) {
     	OverdueCustomer customerToAdd = null;
     	List<LoanBO> loans = client.getOpenLoanAccountsAndGroupLoans();
     	for (LoanBO loan: loans) {
@@ -218,22 +237,27 @@ public class PersonnelRESTController {
                 	if (customerToAdd == null) {
         				customerToAdd = createOverdueCustomer(client);
         				overdueCustomers.add(customerToAdd);
+        				
         			}
         			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
         					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalAmountDue().toString());
+        			
         			customerToAdd.getOverdueLoans().add(overdueLoan);
             	}
             }
     	}
     }
     
-    private OverdueCustomer createOverdueCustomer(ClientBO client) {
+    private OverdueCustomer createOverdueCustomer(CustomerBO client) {
     	OverdueCustomer overdueCustomer = new OverdueCustomer();
     	overdueCustomer.setDisplayName(client.getDisplayName());
 		overdueCustomer.setGlobalCustNum(client.getGlobalCustNum());
 		overdueCustomer.setOverdueLoans(new ArrayList<OverdueLoan>());
 		overdueCustomer.setPhoneNumber(client.getAddress().getPhoneNumber());
 		overdueCustomer.setAddress(client.getDisplayAddress());
+		if (client instanceof GroupBO) {
+			overdueCustomer.setGroup(true);
+		}
 		return overdueCustomer;
     }
 

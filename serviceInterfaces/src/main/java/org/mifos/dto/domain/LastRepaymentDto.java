@@ -28,7 +28,8 @@ public class LastRepaymentDto implements Serializable {
 
     private ClientDescriptionDto customer;
     private LoanDetailDto loanAccount;
-    private Date lastInstallmentDate;    
+    private Date lastInstallmentDate; 
+    private boolean group;
     
 	public LastRepaymentDto(ClientDescriptionDto customer,
 			LoanDetailDto loanAccount, Date lastInstallmentDate) {
@@ -60,6 +61,14 @@ public class LastRepaymentDto implements Serializable {
 
 	public void setLoanAccount(LoanDetailDto loanAccount) {
 		this.loanAccount = loanAccount;
+	}
+
+	public boolean isGroup() {
+		return group;
+	}
+
+	public void setGroup(boolean group) {
+		this.group = group;
 	}
 	
 }

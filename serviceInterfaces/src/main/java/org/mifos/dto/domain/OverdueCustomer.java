@@ -32,6 +32,7 @@ public class OverdueCustomer extends ClientDescriptionDto {
 	private String phoneNumber;
 	private String address;
 	private List<OverdueLoan> overdueLoans;
+	private boolean group;
 
 	public List<OverdueLoan> getOverdueLoans() {
 		return overdueLoans;
@@ -55,6 +56,14 @@ public class OverdueCustomer extends ClientDescriptionDto {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public boolean isGroup() {
+		return group;
+	}
+
+	public void setGroup(boolean group) {
+		this.group = group;
 	}
 	
 }
