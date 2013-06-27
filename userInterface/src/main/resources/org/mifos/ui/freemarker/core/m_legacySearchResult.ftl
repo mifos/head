@@ -37,6 +37,7 @@
 					[@spring.message "CustomerSearch.s" /]
 				</option>
 			[/@form.singleSelectWithNested]
+			[#include "/searchFilters.ftl"] 
 			<input type="submit" value="Search" class="buttn"/>
 		</form>
 	</div>
