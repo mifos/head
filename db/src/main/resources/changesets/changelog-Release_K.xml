@@ -913,5 +913,332 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="MIFOS-6024" author="Pawel Reise" context="expansion">
+        <sql endDelimiter=";">
+            /* FINANCIAL ACCOUNTING REPORTS CATEGORY */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-FinancialAccounting');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-FinancialAccounting'),'Financial Accounting');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(317,141,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-FinancialAccounting'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-FinancialAccounting'));
+            
+            set @FINANCIALACC_CATEGORY_ID = (select max(report_category_id)+1 from report_category);
+            
+            insert into report_category(report_category_id, report_category_value, activity_id) 
+                values (@FINANCIALACC_CATEGORY_ID, 'Financial Accounting', 317);
+            
+            insert into roles_activity(activity_id, role_id) values(317, 1);
+            
+            /* TRANSACTION DETAILS REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewTransactionDetailsReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewTransactionDetailsReport'),'Can view Transaction Details report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(318,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewTransactionDetailsReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewTransactionDetailsReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(318, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Transaction Details', 'transaction_details', 318, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Transaction Details'), 
+                    'Transaction Details', 'transaction_details', 'TransactionDetails.prpt');
+            
+            
+            /* FINANCIAL TRANSACTION SUMMARY */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewFinancialTransactionSummaryReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewFinancialTransactionSummaryReport'),'Can view Financial Transaction Summary report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(319,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewFinancialTransactionSummaryReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewFinancialTransactionSummaryReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(319, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Financial Transaction Summary', 'financial_transaction_summary', 319, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Financial Transaction Summary'), 
+                    'Transaction Details', 'financial_transaction_summary', 'FinancialTransactionSummary.prpt');
+            
+            /* GENERAL LEDGER REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewGeneralLedgerReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewGeneralLedgerReport'),'Can view General Ledger report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(320,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewGeneralLedgerReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewGeneralLedgerReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(320, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'General Ledger', 'general_ledger', 320, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='General Ledger'), 
+                    'General Ledger', 'general_ledger', 'GeneralLedger.prpt');
+            
+            
+            /* TRIAL BALANCE REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewTrialBalanceReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewTrialBalanceReport'),'Can view Trial Balance report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(321,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewTrialBalanceReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewTrialBalanceReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(321, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Trial Balance', 'trial_balance', 321, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Trial Balance'), 
+                    'Trial Balance', 'trial_balance', 'TrialBalance.prpt');
+            
+            /* TRIAL BALANCE V2 REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewTrialBalanceV2Report');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewTrialBalanceV2Report'),'Can view Trial Balance V2 report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(322,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewTrialBalanceV2Report'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewTrialBalanceV2Report'));
+            
+            insert into roles_activity(activity_id, role_id) values(322, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Trial Balance V2', 'trial_balance_v2', 322, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Trial Balance V2'), 
+                    'Trial Balance V2', 'trial_balance_v2', 'TrialBalanceV2.prpt');
+            
+            /* RECEIPTS AND PAYMENTS REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewReceiptsAndPaymentsReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewReceiptsAndPaymentsReport'),'Can view Receipts And Payments report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(323,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewReceiptsAndPaymentsReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewReceiptsAndPaymentsReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(323, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Receipts And Payments', 'receipts_and_payments', 323, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Receipts And Payments'), 
+                    'Receipts And Payments', 'receipts_and_payments', 'ReceiptsAndPayments.prpt');
+            
+            /* INCOME AND EXPENDITURE REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewIncomeAndExpenditureReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewIncomeAndExpenditureReport'),'Can view Income And Expenditure report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(324,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewIncomeAndExpenditureReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewIncomeAndExpenditureReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(324, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Income And Expenditure', 'income_and_expenditure', 324, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Income And Expenditure'), 
+                    'Income And Expenditure', 'income_and_expenditure', 'IncomeAndExpenditure.prpt');
+            
+            /* CASH BALANCE REPORT */
+            
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewCashBalanceReport');
+            
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewCashBalanceReport'),'Can view Cash Balance report');
+            
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(325,317,(select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewCashBalanceReport'),
+                    (select lookup_id from lookup_value where entity_id =87 and
+                    lookup_name='Permissions-CanViewCashBalanceReport'));
+            
+            insert into roles_activity(activity_id, role_id) values(325, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+                values((select max(rid.report_id)+1 from report rid), 
+                    (select rci.report_category_id from report_category rci where rci.report_category_value='Financial Accounting'), 
+                    'Cash Balance', 'cash_balance', 325, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+                values((select report_id from report where report_name='Cash Balance'), 
+                    'Cash Balance', 'cash_balance', 'CashBalance.prpt');
+                    
+            create or replace view v_coa  as 
+                select parent_coaid p_coaid, co.coa_name p_coa, co.glcode_id p_glcode_id, gl.glcode_value p_glcode_value,
+                coo.coa_id, coo.coa_name,gll.glcode_id,gll.glcode_value
+                          from coahierarchy c
+                               left join coa co
+                                  on co.coa_id = c.parent_coaid 
+                               left join gl_code gl
+                                  on gl.glcode_id = co.glcode_id
+                               left join coa coo
+                                  on coo.coa_id = c.coa_id
+                               left join gl_code gll
+                                  on gll.glcode_id = coo.glcode_id;
+                             
+            create or replace view v_coa6 as
+                select 
+                    c1.p_glcode_value p_gl1 ,c1.glcode_value gl1,c1.coa_id cid1, c1.coa_name coa1, 
+                    c2.p_glcode_value p_gl2,c2.glcode_value gl2,c2.coa_id cid2,c2.coa_name coa2,
+                    c3.p_glcode_value p_gl3,c3.glcode_value gl3,c3.coa_id cid3,c3.coa_name coa3,
+                    c4.p_glcode_value p_gl4,c4.glcode_value gl4,c4.coa_id cid4,c4.coa_name coa4,
+                    c5.p_glcode_value p_gl5,c5.glcode_value gl5,c5.coa_id cid5,c5.coa_name coa5,
+                    c6.p_glcode_value p_gl6,c6.glcode_value gl6,c6.coa_id cid6,c6.coa_name coa6
+                from 
+                    v_coa c1
+                    left join v_coa c2
+                    on  c1.glcode_value=c2.p_glcode_value
+                    left join v_coa c3
+                    on  c2.glcode_value=c3.p_glcode_value
+                    left join v_coa c4
+                    on  c3.glcode_value=c4.p_glcode_value
+                    left join v_coa c5
+                    on  c4.glcode_value=c5.p_glcode_value
+                    left join v_coa c6
+                    on  c5.glcode_value=c6.p_glcode_value;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from report_jasper_map where report_identifier = 'transaction_details';
+                delete from report_jasper_map where report_identifier = 'financial_transaction_summary';
+                delete from report_jasper_map where report_identifier = 'general_ledger';
+                delete from report_jasper_map where report_identifier = 'trial_balance';
+                delete from report_jasper_map where report_identifier = 'trial_balance_v2';
+                delete from report_jasper_map where report_identifier = 'receipts_and_payments';
+                delete from report_jasper_map where report_identifier = 'income_and_expenditure';
+                delete from report_jasper_map where report_identifier = 'cash_balance';
+                
+                delete from report where report_identifier = 'transaction_details';
+                delete from report where report_identifier = 'financial_transaction_summary';
+                delete from report where report_identifier = 'general_ledger';
+                delete from report where report_identifier = 'trial_balance';
+                delete from report where report_identifier = 'trial_balance_v2';
+                delete from report where report_identifier = 'receipts_and_payments';
+                delete from report where report_identifier = 'income_and_expenditure';
+                delete from report where report_identifier = 'cash_balance';
+                
+                delete from roles_activity where activity_id between 318 and 325;
+                delete from activity where activity_id between 318 and 325;
+                
+                delete from roles_activity where activity_id = 317;
+                delete from report_category where report_category_value = 'Financial Accounting';
+                delete from activity where activity_id = 317;
+                
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewTransactionDetailsReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewFinancialTransactionSummaryReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewGeneralLedgerReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewTrialBalanceReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewTrialBalanceV2Report');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewReceiptsAndPaymentsReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewIncomeAndExpenditureReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanViewCashBalanceReport');
+                delete from lookup_value_locale where lookup_id = 
+                    (select lookup_id from lookup_value where lookup_name='Permissions-FinancialAccounting');
+                
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewTransactionDetailsReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewFinancialTransactionSummaryReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewGeneralLedgerReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewTrialBalanceReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewTrialBalanceV2Report';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewReceiptsAndPaymentsReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewIncomeAndExpenditureReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanViewCashBalanceReport';
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-FinancialAccounting';
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>
