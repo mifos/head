@@ -117,7 +117,7 @@ This file describes how to install Mifos for use in a production environment.
          "trapdoor".
 
     7.2. Release Notes -
-         https://mifosforge.jira.com/wiki/display/MIFOS/v2.6.1
+         https://mifosforge.jira.com/wiki/display/MIFOS/v2.6
 
     7.3. System Recommendations (hardware, networking) -
          https://mifosforge.jira.com/wiki/display/MIFOS/Mifos+System+Recommendations+v2.6
