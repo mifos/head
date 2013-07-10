@@ -35,6 +35,7 @@ A widget to render the UI for collecting questionnaire responses.
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/widget.css); --></STYLE>
     <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
     <script src="pages/questionnaire/js/questionnaire.js" type="text/javascript"></script>
+    <script src="pages/questionnaire/js/questionLinks.js" type="text/javascript"></script>
     <span id="page.id" title="questionnaire"></span>
     <div class="questionnaire-widget">
         [#if headerText?has_content]
@@ -46,14 +47,14 @@ A widget to render the UI for collecting questionnaire responses.
             [#list formBean.questionGroups as questionGroup]        
                 [#list questionGroup.sectionDetails as sectionDetail]
                 <!-- section detail -->
-                <div class="section-name">
+                <div class="section-name" id="section${sectionDetail.id}" data-section-id="${sectionDetail.id}">
                     <b>${sectionDetail.name}</b>
                 </div>
                 <fieldset>
                         [#list sectionDetail.questions as question]
                         <!-- question -->
                         
-                        <div class='row ${((question_index % 2) == 0)?string("even", "odd")}'>
+                        <div class='row ${((question_index % 2) == 0)?string("even", "odd")}' id="question${question.id}" data-question-id="${question.id}">
                             <div class="question">
                                 [@form.label "questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value" question.mandatory "class='question'"]
                                     ${question.text}
@@ -65,11 +66,11 @@ A widget to render the UI for collecting questionnaire responses.
                                 [#switch question.questionType]
                                   [#case "FREETEXT"]
                                     <!-- freetext -->
-                                    [@spring.formTextarea "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50" maxlength="200"' /]
+                                    [@spring.formTextarea "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50" maxlength="200" class="free-text"' /]
                                   [#break]
                                   [#case "NUMERIC"]
                                     <!-- numeric -->
-                                    [@spring.formInput "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="30"' /]
+                                    [@spring.formInput "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="30" class="numeric"' /]
                                   [#break]
                                   [#case "DATE"]
                                     <!-- date -->
