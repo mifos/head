@@ -1241,4 +1241,13 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="MIFOS-6087" author="Pawel Reise" context="expansion">
+        <addColumn tableName="loan_offering">
+            <column name="first_payment_rounding_diff_flag" type="smallint" defaultValue="0" />
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="loan_offering" columnName="first_payment_rounding_diff_flag" />
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

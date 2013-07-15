@@ -63,6 +63,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         GraceType graceType = loanProduct.getGraceType();
         InterestType interestType = loanProduct.getInterestType();
         boolean variableInstallmentLoanProduct = loanProduct.isVariableInstallmentsAllowed();
+        boolean roundingDifferenceInFirstPayment = loanProduct.isRoundingDifferenceInFirstPayment();
         Integer numberOfInstallments = loanScheduleDates.size();
 
         RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
@@ -121,6 +122,11 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         if (variableInstallmentLoanProduct && totalInstallmentAmounts.isEmpty()) {
             // only round inital loan schedule of variable installments product.
             LoanScheduleRounder loanScheduleInstallmentRounder = new VariableInstallmentLoanScheduleRounder();
+            finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
+                    interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        } else if (!variableInstallmentLoanProduct && roundingDifferenceInFirstPayment) {
+            LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
+            LoanScheduleRounder loanScheduleInstallmentRounder = new FirstInstallmentRoudingDifferenceLoanScheduleRounder(loanScheduleRounderHelper);
             finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
                     interestType, unroundedLoanSchedules, allExistingLoanSchedules);
         } else if (!variableInstallmentLoanProduct) {

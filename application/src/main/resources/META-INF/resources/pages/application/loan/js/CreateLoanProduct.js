@@ -26,6 +26,10 @@ $(document).ready(function() {
     showLoanAmountType();
     showInstallType();
     showVariableInstallmentInputs();
+    setRoundingDifferenceInFirstPaymentRowVisibility();
+    $('select[name=\'interestTypes\']').change(function(){
+        setRoundingDifferenceInFirstPaymentRowVisibility();
+    });
 });
 
 function showMeetingFrequency(){
@@ -188,4 +192,13 @@ function showCashFlowInputs() {
         document.getElementById("cashFlowIndebtednessRatioInputDiv").style.display = "none";
         document.getElementById("cashFlowRepaymentCapacityInputDiv").style.display = "none";
    }
+}
+
+function setRoundingDifferenceInFirstPaymentRowVisibility() {
+    if ($('select[name=\'interestTypes\']').val() == '1') {
+        $('#roundingDifferenceInFirstPaymentRow').show();
+    } else {
+        $('#roundingDifferenceInFirstPaymentRow').hide();
+        $('input[name=\'isRoundingDifferenceInFirstPayment\']').removeAttr('checked');
+    }
 }

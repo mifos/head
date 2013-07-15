@@ -18,6 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
+$(document).ready(function() {
+    setRoundingDifferenceInFirstPaymentRowVisibility();
+    $('select[name=\'interestTypes\']').change(function(){
+        setRoundingDifferenceInFirstPaymentRowVisibility();
+    });
+});
 
 function showCashFlowInputs() {
     var isVariableInstallmentType = document.getElementById("editLoanProduct.checkbox.cashFlowValidation");
@@ -166,6 +172,11 @@ function showVariableInstallmentInputs() {
    }
 }
 
-
-
-
+function setRoundingDifferenceInFirstPaymentRowVisibility() {
+    if ($('select[name=\'interestTypes\']').val() == '1') {
+        $('#roundingDifferenceInFirstPaymentRow').show();
+    } else {
+        $('#roundingDifferenceInFirstPaymentRow').hide();
+        $('input[name=\'isRoundingDifferenceInFirstPayment\']').removeAttr('checked');
+    }
+}

@@ -554,6 +554,15 @@ explanation of the license and how it is applied.
 										<br>
 										</td>
 									</tr>
+                                    <tr class="fontnormal" id="roundingDifferenceInFirstPaymentRow">
+                                        <td width="30%" align="right" valign="top">
+                                            <mifos:mifoslabel name="product.roundingDifferenceInFirstPayment" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                        </td>
+                                        <td valign="top">
+                                            <html-el:checkbox styleId="createLoanProduct.checkbox.roundingDifferenceInFirstPayment" 
+                                                 property="isRoundingDifferenceInFirstPayment" value="1" /> 
+                                        </td>
+                                    </tr>
 									<tr class="fontnormal">
                                         <td width="30%" align="right" valign="top">
                                             <mifos:mifoslabel name="product.fixedRepaymentSchedule" bundle="ProductDefUIResources" isColonRequired="yes" />

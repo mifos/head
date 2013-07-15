@@ -303,6 +303,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double minInterestRateValue;
     private Double defInterestRateValue;
 
+    private String isRoundingDifferenceInFirstPayment;
     private String canConfigureVariableInstallments;
     private String isFixedRepaymentSchedule;
     private Integer minimumGapBetweenInstallments;
@@ -1786,6 +1787,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanOfferingQGs = null;
             canConfigureVariableInstallments = null;
             isFixedRepaymentSchedule = null;
+            isRoundingDifferenceInFirstPayment = null;
             cashFlowValidation = null;
             cashFlowThreshold = null;
             cashFlowThresholdValue = null;
@@ -3145,6 +3147,22 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     public boolean isFixedRepaymentSchedule() {
         return getBooleanValue(isFixedRepaymentSchedule);
+    }
+
+    public String getIsRoundingDifferenceInFirstPayment() {
+        return isRoundingDifferenceInFirstPayment;
+    }
+
+    public boolean isRoundingDifferenceInFirstPayment() {
+        return getBooleanValue(isRoundingDifferenceInFirstPayment);
+    }
+
+    public void setIsRoundingDifferenceInFirstPayment(String isRoundingDifferenceInFirstPayment) {
+        this.isRoundingDifferenceInFirstPayment = isRoundingDifferenceInFirstPayment;
+    }
+
+    public void setIsRoundingDifferenceInFirstPayment(boolean isRoundingDifferenceInFirstPayment) {
+        this.setIsRoundingDifferenceInFirstPayment(getStringValue(isRoundingDifferenceInFirstPayment));
     }
 
     public boolean getCashFlowValidation() {

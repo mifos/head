@@ -120,6 +120,7 @@ import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactory;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.FirstInstallmentRoudingDifferenceLoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculator;
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculatorFactoryImpl;
@@ -980,7 +981,7 @@ public class LoanBO extends AccountBO implements Loan {
             if (!havePaymentsBeenMade()) {
 
             	LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
-                LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+            	LoanScheduleRounder loanScheduleInstallmentRounder = getLoanScheduleRounder(loanScheduleRounderHelper);
 
                 List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
 				List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
@@ -1130,11 +1131,18 @@ public class LoanBO extends AccountBO implements Loan {
     private void applyRoundingOnInstallments(List<LoanScheduleEntity> unroundedLoanSchedules, List<LoanScheduleEntity> allExistingLoanSchedules) {
 
     	LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
-        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+        LoanScheduleRounder loanScheduleInstallmentRounder = getLoanScheduleRounder(loanScheduleRounderHelper);
 		loanScheduleInstallmentRounder.round(this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.loanAmount,
         		this.interestType.asEnum(), unroundedLoanSchedules, allExistingLoanSchedules);
 
 	}
+    
+    private LoanScheduleRounder getLoanScheduleRounder(LoanScheduleRounderHelper loanScheduleRounderHelper) {
+        if (isRoundingDifferenceInFirstPayment()) {
+            return new FirstInstallmentRoudingDifferenceLoanScheduleRounder(loanScheduleRounderHelper);
+        }
+        return new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+    }
 
 	private AccountActionDateEntity getLastUnpaidInstallment() throws AccountException {
         Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
@@ -2857,7 +2865,7 @@ public class LoanBO extends AccountBO implements Loan {
 		List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
 
 		LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
-		LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+		LoanScheduleRounder loanScheduleInstallmentRounder = getLoanScheduleRounder(loanScheduleRounderHelper);
 
 		List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration, loanAmount,
 				interestType, unroundedLoanSchedules, allExistingLoanSchedules);
@@ -3422,6 +3430,10 @@ public class LoanBO extends AccountBO implements Loan {
 
     public boolean isFixedRepaymentSchedule() {
         return loanOffering.isFixedRepaymentSchedule();
+    }
+    
+    public boolean isRoundingDifferenceInFirstPayment() {
+        return loanOffering.isRoundingDifferenceInFirstPayment();
     }
 
     public boolean paymentsAllowed() {

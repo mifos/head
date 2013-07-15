@@ -111,6 +111,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private Short waiverInterest;
     private Short variableInstallmentsAllowed;
     private Short fixedRepaymentSchedule;
+    private Short roundingDifferenceInFirstPayment;
     private VariableInstallmentDetailsBO variableInstallmentDetails;
     private PrdOfferingMeetingEntity loanOfferingMeeting;
     private final GLCodeEntity principalGLcode;
@@ -1609,6 +1610,15 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public void setFixedRepaymentSchedule(boolean fixedRepaymentSchedule) {
         this.fixedRepaymentSchedule = fixedRepaymentSchedule ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
+    }
+
+    public boolean isRoundingDifferenceInFirstPayment() {
+        return YesNoFlag.YES.getValue().equals(roundingDifferenceInFirstPayment);
+    }
+
+    public void setRoundingDifferenceInFirstPayment(boolean roundingDifferenceInFirstPayment) {
+        this.roundingDifferenceInFirstPayment = 
+                roundingDifferenceInFirstPayment ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
     }
 
     public VariableInstallmentDetailsBO getVariableInstallmentDetails() {

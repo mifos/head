@@ -118,7 +118,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class DefaultLoanScheduleRounder implements LoanScheduleRounder {
 
-	private final LoanScheduleRounderHelper loanScheduleInstallmentRounder;
+	protected final LoanScheduleRounderHelper loanScheduleInstallmentRounder;
 
 	public DefaultLoanScheduleRounder(LoanScheduleRounderHelper loanScheduleInstallmentRounder) {
 		this.loanScheduleInstallmentRounder = loanScheduleInstallmentRounder;

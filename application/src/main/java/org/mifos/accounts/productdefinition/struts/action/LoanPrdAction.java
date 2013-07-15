@@ -224,6 +224,7 @@ public class LoanPrdAction extends BaseAction {
 
         loanOffering.setQuestionGroups(getQuestionGroups(request));
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
+        loanOffering.setRoundingDifferenceInFirstPayment(loanPrdActionForm.isRoundingDifferenceInFirstPayment());
 
 
         mapCashFlowDetail(loanPrdActionForm, loanOffering);
@@ -392,6 +393,7 @@ public class LoanPrdAction extends BaseAction {
         setInitialObjectForAuditLogging(loanOffering);
         mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
         loanOffering.setFixedRepaymentSchedule(loanPrdActionForm.isFixedRepaymentSchedule());
+        loanOffering.setRoundingDifferenceInFirstPayment(loanPrdActionForm.isRoundingDifferenceInFirstPayment());
         mapCashFlowDetail(loanPrdActionForm, loanOffering);
         loanOffering
                 .update(userContext.getId(),
@@ -724,6 +726,7 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct.getInterestGLcode().getGlcodeId()));
         setVariableInstallmentDetailsOnLoanProductForm(loanPrdActionForm, loanProduct);
         loanPrdActionForm.setIsFixedRepaymentSchedule(loanProduct.isFixedRepaymentSchedule());
+        loanPrdActionForm.setIsRoundingDifferenceInFirstPayment(loanProduct.isRoundingDifferenceInFirstPayment());
 
         loanPrdActionForm.setCashFlowValidation(loanProduct.isCashFlowCheckEnabled());
         CashFlowDetail cashFlowDetail = loanProduct.getCashFlowDetail();

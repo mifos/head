@@ -505,6 +505,22 @@ explanation of the license and how it is applied.
 						</tr>
                         <tr>
                             <td height="23" class="fontnormalbold">
+                                <mifos:mifoslabel name="product.roundingDifferenceInFirstPayment" 
+                                    bundle="ProductDefUIResources" isColonRequired="yes" />
+                                <span class="fontnormal">
+                                    <c:choose>
+                                        <c:when test="${sessionScope.loanproductactionform.isRoundingDifferenceInFirstPayment == '1'}">
+                                            <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
+                                        </c:otherwise>
+                                    </c:choose>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="23" class="fontnormalbold">
                                 <mifos:mifoslabel name="product.canConfigureVariableInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
                                 <span class="fontnormal">
                                     <c:choose>
