@@ -50,10 +50,10 @@
                     <td>${file.description}</td>
                     <td>
                         [#assign question][@spring.message "upload.deleteConfirmQuestion" /][/#assign]
-                        <a href="viewUploadedFiles.ftl?entityId=${entityId}&entityType=${entityType}&backPageUrl=${backPageUrl}&deleteFileId=${file.uploadedFileId}" onclick="return confirm('${question}')" >Delete</a> / 
+                        <a href="viewUploadedFiles.ftl?entityId=${entityId}&entityType=${entityType}&backPageUrl=${backPageUrl}&deleteFileId=${file.uploadedFileId?c}" onclick="return confirm('${question}')" >Delete</a> / 
                         
                         [#if file.existOnDisk]
-                            <a href="viewUploadedFiles.ftl?entityId=${entityId}&entityType=${entityType}&backPageUrl=${backPageUrl}&downloadFileId=${file.uploadedFileId}">Download</a>
+                            <a href="viewUploadedFiles.ftl?entityId=${entityId}&entityType=${entityType}&backPageUrl=${backPageUrl}&downloadFileId=${file.uploadedFileId?c}">Download</a>
                         [#else]
                             <span class="red">[@spring.message "upload.fileNotFound" /]</span>
                         [/#if]
