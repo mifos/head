@@ -28,6 +28,8 @@ public interface SimpleAccountingConstants {
 	String SUBMIT = "submit";
 	String PREVIEW = "preview";
 	String PROCESS = "process";
+	String INACTIVE ="I";
+	String ACTIVE ="A";
 
 	// FIXME: add underbars for readability
 	String LOADSUCCESS = "load_success";

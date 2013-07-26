@@ -177,6 +177,7 @@ public class ActivityMapper {
         parseActionSecurity(getOpenBalanceActionSecurity()); 
         parseActionSecurity(getViewGlTransactionsActionSecurity());
         parseActionSecurity(getProcessAccountingTransactionsActionSecurity()); 
+        parseActionSecurity(getYearEndProcessActionSecurity()); 
         parseActionSecurity(getReportsSecurity());
         parseActionSecurity(getReportsDataSourceSecurity());
         parseActionSecurity(getReportsParamsSecurity());
@@ -507,6 +508,12 @@ public class ActivityMapper {
         ActionSecurity security = new ActionSecurity("processaccountingtransactionsaction");
         security.allow("load", SecurityConstants.ACCOUNTING_CREATE_MISPROCESSING);
         security.allow("process", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getYearEndProcessActionSecurity() {
+        ActionSecurity security = new ActionSecurity("yearEndProcessAction");
+        security.allow("load", SecurityConstants.VIEW);
         return security;
     }
 

@@ -217,6 +217,10 @@ explanation of the license and how it is applied.
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><a href="processaccountingtransactionsaction.do?method=load"><mifos:mifoslabel name="admin.processTransactions" bundle="adminUIResources"/></a></td>
                   </tr>
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="yearEndProcessAction.do?method=load"><mifos:mifoslabel name="admin.yearEndProcess" bundle="adminUIResources"/></a></td>
+                  </tr> 
                </table>
 		     <br>
 			</div>

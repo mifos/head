@@ -359,6 +359,16 @@
 			<forward name="submit_success"
 				path="/pages/application/loan/jsp/processAccountingTransactionsStatus.jsp" />
 		</action>
+		
+		<action path="/yearEndProcessAction"
+			type="org.mifos.accounting.struts.action.YearEndProcessAction"
+			parameter="method"
+			validate="true"
+			input="/mifos-webapp/src/main/resources/META-INF/resources/pages/application/admin/jsp/admin.jsp"
+			scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/yearEndProcess.jsp" />
+		</action>
     </action-mappings>
 
 <!-- 

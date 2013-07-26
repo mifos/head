@@ -28,6 +28,7 @@ import org.mifos.application.accounting.business.GlMasterBO;
 import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
+import org.mifos.security.util.UserContext;
 
 /**
  * Service facade for Mifos Accounting functionality.
@@ -36,7 +37,7 @@ public interface AccountingServiceFacade {
 
 	List<OfficeGlobalDto> loadOfficesForLevel(Short officeLevelId);
 
-	GlBalancesBO loadExistedGlBalancesBO(Integer officeLevelId,String officeId,String glCodeValue);
+	GlBalancesBO loadExistedGlBalancesBO(Integer officeLevelId,String officeId,String glCodeValue,Integer finantialYearId);
 
 	List<OfficeGlobalDto> loadCustomerForLevel(Short customerLevelId);
 
@@ -60,6 +61,8 @@ public interface AccountingServiceFacade {
 	boolean processMisPostings(Date lastProcessDate, Date processTillDate,Short createdBy);
 
 	FinancialYearBO getFinancialYear();
+	
+	FinancialYearBO updateFinancialYear(FinancialYearBO financialYearBO,UserContext userContext);
 
 	List<GLCodeDto> findTotalGlAccounts();
 
@@ -68,4 +71,6 @@ public interface AccountingServiceFacade {
 	boolean savingAccountingTransactions(GlMasterBO bo);
 
 	boolean savingOpeningBalances(GlBalancesBO bo);
+	
+	public void processYearEndBalances(UserContext userContext,FinancialYearBO oldFinancialYearBO);
 }

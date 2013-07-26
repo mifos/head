@@ -403,7 +403,7 @@ public class GeneralLedgerActionForm extends BaseActionForm {
 			errors = chequeDateValidate(errors, locale);
 		return errors;
 	}
-
+	
 	protected DoubleConversionResult validateAmount(String amountString,
 			MifosCurrency currency, String fieldPropertyKey,
 			ActionErrors errors, String installmentNo) {

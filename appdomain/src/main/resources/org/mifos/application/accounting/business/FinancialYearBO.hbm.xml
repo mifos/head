@@ -5,7 +5,7 @@
 <hibernate-mapping>
   <class name="org.mifos.application.accounting.business.FinancialYearBO" table="acc_financialyear" >
     <id name="financialYearId" type="integer" column="financialyear_id">
-       <generator class="native"></generator>
+       <!-- <generator class="native"></generator> -->
     </id>
     <property name="financialYearStartDate" type="date" column="financialyear_startdate"></property>
     <property name="financialYearEndDate" type="date" column="financialyear_enddate"></property>

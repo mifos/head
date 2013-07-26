@@ -100,7 +100,7 @@ public class OpenBalanceAction extends BaseAction {
 			@SuppressWarnings("unused") HttpServletResponse response)
 			throws Exception {
 		OpenBalanceActionForm actionForm = (OpenBalanceActionForm) form;
-		GlBalancesBO balancesBO=accountingServiceFacade.loadExistedGlBalancesBO(new Integer(actionForm.getOfficeHierarchy()), actionForm.getOffice(), actionForm.getCoaName());
+		GlBalancesBO balancesBO=accountingServiceFacade.loadExistedGlBalancesBO(new Integer(actionForm.getOfficeHierarchy()), actionForm.getOffice(), actionForm.getCoaName(),new Integer(actionForm.getFinancialYearId()));
 		if(balancesBO!=null){
 			BigDecimal openBalance=balancesBO.getOpeningBalance();
 			if(openBalance.compareTo(new BigDecimal(0.0))<0)

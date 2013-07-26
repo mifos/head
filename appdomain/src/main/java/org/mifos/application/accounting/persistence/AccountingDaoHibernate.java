@@ -56,12 +56,13 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	public List<GlBalancesBO> findExistedGlBalacesBOs(Integer officeLevelId,
-			String officeId, String glCodeValue) {
+			String officeId, String glCodeValue,Integer financialYearId) {
 		List<GlBalancesBO> balancesBOs = null;
 		Query query = createdNamedQuery("getExistedGlBalancesBO");
 		query.setInteger("OFFICE_LEVEL", officeLevelId);
 		query.setString("OFFICE_ID", officeId);
 		query.setString("GLCODEVALUE", glCodeValue);
+		query.setInteger("FINANCIALYEARID",financialYearId );
 		balancesBOs = query.list();
 		return balancesBOs;
 	}
@@ -121,6 +122,17 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
+	public FinancialYearBO savingFinancialYearBO(FinancialYearBO financialYearBO) {
+		FinancialYearBO bo=null;
+		try {
+			bo = (FinancialYearBO) save(financialYearBO);
+		} catch (Exception e) {
+			throw new MifosRuntimeException(e);
+		}
+		return bo;
+	}
+
+	@Override
 	public boolean savingOpenBalancesTransaction(GlBalancesBO balancesBO) {
 		boolean result = false;
 		try {
@@ -145,10 +157,21 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		queryparameters.put("OFFICEID", glBalancesBO.getOfficeId());
 		queryparameters.put("OFFICELEVEL", glBalancesBO.getOfficeLevel());
 		queryparameters.put("COAID", glBalancesBO.getGlCodeValue());
+		queryparameters.put("FINANCIALYEARID", glBalancesBO.getFinancialYearBO().getFinancialYearId());
 		final List<GlBalancesBO> glBalancesBOs = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.GetExistedOpenBalance",
 				queryparameters, GlBalancesBO.class);
 		return glBalancesBOs;
+	}
+
+	@Override
+	public List<GlBalancesBO> getYearEndGlBalancesBOs(String querystring,int oldFinancialYearId) {
+		List<GlBalancesBO> balancesBOs = null;
+		final Map<String, Object> queryparameters = new HashMap<String, Object>();
+		queryparameters.put("FINANCIALYEARID", oldFinancialYearId);
+		balancesBOs = executeNamedQueryWithResultTransformer(querystring,
+				queryparameters, GlBalancesBO.class);
+		return balancesBOs;
 	}
 
 	@Override
@@ -188,8 +211,9 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
-	public List<ViewTransactionsDto> findAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
-			int startRecord, int numberOfRecords) {
+	public List<ViewTransactionsDto> findAccountingTransactions(
+			Date toTrxnDate, Date fromTrxnDate, int startRecord,
+			int numberOfRecords) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
 		queryparameters.put("TO_TRANSACTION_DATE", toTrxnDate);
 		queryparameters.put("FROM_TRANSACTION_DATE", fromTrxnDate);
@@ -201,7 +225,8 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		return viewAccountingTransactions;
 	}
 
-	public List<RowCount> findTotalNumberOfRecords(Date toTrxnDate,Date fromTrxnDate) {
+	public List<RowCount> findTotalNumberOfRecords(Date toTrxnDate,
+			Date fromTrxnDate) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
 		queryparameters.put("TO_TRANSACTION_DATE", toTrxnDate);
 		queryparameters.put("FROM_TRANSACTION_DATE", fromTrxnDate);

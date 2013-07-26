@@ -162,9 +162,12 @@ border-bottom : solid 1px #EAEBF4;
 				</c:if><br><b>Rows Showing:${ViewGlTransactionPaginaitonVariablesDto.startRecordCurrentPage} - ${ViewGlTransactionPaginaitonVariablesDto.endRecordCurrentPage} ,Total Results:${ViewGlTransactionPaginaitonVariablesDto.totalNoOfRowsForPagination} </b>
 				</div>
 				</td>
-				</tr></c:when><c:otherwise>
-                <tr><td colspan=10><p>No records to display</p></td></tr>
-                </c:otherwise></c:choose>
+				</tr>
+				</c:when>
+				<c:otherwise>
+				<tr><td colspan=10><p><mifos:mifoslabel name="simpleAccounting.viewTransactionsNoRecords" /></p></td></tr>
+				</c:otherwise>
+				</c:choose>
 			</table>
 			<br>
 			<table width="93%" border="0" cellpadding="0" cellspacing="0">

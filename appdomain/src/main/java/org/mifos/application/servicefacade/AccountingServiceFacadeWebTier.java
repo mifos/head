@@ -23,7 +23,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
@@ -31,6 +34,8 @@ import org.mifos.application.accounting.business.GlDetailBO;
 import org.mifos.application.accounting.business.GlMasterBO;
 import org.mifos.application.accounting.persistence.AccountingDao;
 import org.mifos.application.accounting.persistence.AccountingDaoHibernate;
+import org.mifos.application.accounting.util.helpers.SimpleAccountingConstants;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
@@ -40,6 +45,8 @@ import org.mifos.dto.domain.ViewTransactionsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.util.UserContext;
 
 /**
  * Default implementation of {@link AccountingServiceFacade}.
@@ -58,10 +65,10 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	}
 
 	public GlBalancesBO loadExistedGlBalancesBO(Integer officeLevelId,
-			String officeId, String glCodeValue) {
+			String officeId, String glCodeValue,Integer financialYearId) {
 		GlBalancesBO balancesBO = null;
 		List<GlBalancesBO> list = accountingDao.findExistedGlBalacesBOs(
-				officeLevelId, officeId, glCodeValue);
+				officeLevelId, officeId, glCodeValue,financialYearId);
 		if (list.size() > 0) {
 			balancesBO = list.get(0);
 		}
@@ -201,6 +208,39 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		}
 		return financialYearBO;
 	}
+	
+	@Override
+	public FinancialYearBO updateFinancialYear(FinancialYearBO oldFinancialYearBO,UserContext context) {
+		FinancialYearBO newFinancialYearBO=null;
+		accountingDao.savingFinancialYearBO(oldFinancialYearBO); //updating current financial year as Inactive
+		this.hibernateTransactionHelper.flushSession();
+		//creating new Finincial year
+		Calendar calendar=new GregorianCalendar();
+		newFinancialYearBO =new FinancialYearBO();
+		newFinancialYearBO.setFinancialYearStartDate(nextYear(oldFinancialYearBO.getFinancialYearStartDate(),calendar));
+		newFinancialYearBO.setFinancialYearEndDate(nextYear(oldFinancialYearBO.getFinancialYearEndDate(),calendar));
+		try {
+			newFinancialYearBO.setCreatedDate(DateUtils.getLocaleDate(context.getPreferredLocale(),
+					DateUtils.getCurrentDate(context.getPreferredLocale())));
+		} catch (InvalidDateException e) {
+			throw new MifosRuntimeException(e);
+		}
+		newFinancialYearBO.setCreatedBy(context.getId());
+		newFinancialYearBO.setStatus(SimpleAccountingConstants.ACTIVE);
+		
+		
+		calendar.setTime(newFinancialYearBO.getFinancialYearStartDate());
+		newFinancialYearBO.setFinancialYearId(Integer.parseInt(calendar.get(calendar.YEAR)+""+calendar.get(calendar.YEAR)));
+		newFinancialYearBO=accountingDao.savingFinancialYearBO(newFinancialYearBO);
+		this.hibernateTransactionHelper.flushSession();
+		return newFinancialYearBO;
+	}
+	
+	public Date nextYear(Date date,Calendar calendar){
+	      calendar.setTime(date);
+	      calendar.add(Calendar.YEAR, 1);
+	     return calendar.getTime();
+	}
 
 	@Override
 	public List<GLCodeDto> findTotalGlAccounts() {
@@ -247,7 +287,12 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		balancesBOTemp.setOfficeLevel(bo.getFromOfficeLevel());
 		balancesBOTemp.setCreatedBy(bo.getCreatedBy());
 		balancesBOTemp.setCreatedDate(bo.getCreatedDate());
-
+		
+		FinancialYearBO financialYearBO=getFinancialYear();
+		if(financialYearBO!=null)
+		balancesBOTemp.setFinancialYearBO(financialYearBO);
+		else
+			throw new MifosRuntimeException("no financial year defined");
 		balancesBOTemp.setGlCodeValue(accountglCode);
 
 		//
@@ -287,6 +332,33 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		flag = accountingDao.savingOpenBalancesTransaction(balancesBO);
 		this.hibernateTransactionHelper.flushSession();
 		return flag;
+	}
+	
+	public void savingYearEndBalances(FinancialYearBO oldFinancialYearBO,FinancialYearBO newFinancialYearBO){
+        List<GlBalancesBO> assetsGlBalanceBOs;
+        List<GlBalancesBO> liabilitiesGlBalanceBOs;
+        assetsGlBalanceBOs=accountingDao.getYearEndGlBalancesBOs("ChartOfAccountsForMifos.YearEndProcessAssets",oldFinancialYearBO.getFinancialYearId());
+        liabilitiesGlBalanceBOs=accountingDao.getYearEndGlBalancesBOs("ChartOfAccountsForMifos.YearEndProcessLiabilities",oldFinancialYearBO.getFinancialYearId());
+        assetsGlBalanceBOs.addAll(liabilitiesGlBalanceBOs);
+        for(GlBalancesBO balancesBO:assetsGlBalanceBOs){
+        	balancesBO.setFinancialYearBO(newFinancialYearBO);
+        	savingOpeningBalances(balancesBO);
+        }
+		
+	}
+	
+	public void processYearEndBalances(UserContext userContext,FinancialYearBO oldFinancialYearBO){
+		this.hibernateTransactionHelper.startTransaction();
+		FinancialYearBO newFinancialYearBO=processingFinancialYear(userContext,oldFinancialYearBO);
+		savingYearEndBalances(oldFinancialYearBO,newFinancialYearBO);
+		this.hibernateTransactionHelper.commitTransaction();
+	}
+	
+	public FinancialYearBO processingFinancialYear(UserContext userContext,FinancialYearBO oldFinancialYearBO){
+		FinancialYearBO newFinancialYearBO=null;
+		oldFinancialYearBO.setStatus(SimpleAccountingConstants.INACTIVE);
+		newFinancialYearBO=updateFinancialYear(oldFinancialYearBO,userContext);
+		return newFinancialYearBO;
 	}
 
 	public GlBalancesBO getResultantGlBalancesBO(GlBalancesBO fromDatabase,

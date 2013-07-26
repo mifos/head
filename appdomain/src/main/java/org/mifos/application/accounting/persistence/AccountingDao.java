@@ -39,7 +39,7 @@ public interface AccountingDao {
 	public List<GLCodeDto> findMainAccountCashGlCodes();
 
 	public List<GlBalancesBO> findExistedGlBalacesBOs(Integer officeLevelId,
-			String officeId, String glCodeValue);
+			String officeId, String glCodeValue,Integer financialYearId);
 
 	public List<GLCodeDto> findDebitAccounts();
 
@@ -72,6 +72,8 @@ public interface AccountingDao {
 	public void updateLastProcessDate(Date lastProcessDate);
 
 	public boolean savingGeneralLedgerTransaction(GlMasterBO glMasterBO);
+	
+	public FinancialYearBO savingFinancialYearBO(FinancialYearBO financialYearBO);
 
 	public boolean savingOpenBalancesTransaction(GlBalancesBO balancesBO);
 
@@ -79,4 +81,7 @@ public interface AccountingDao {
 			final Serializable persistentObjectId) throws PersistenceException;
 
 	public List<GlBalancesBO> getResultantGlBalancesBO(GlBalancesBO glBalancesBO);
+	
+	public List<GlBalancesBO> getYearEndGlBalancesBOs(String querystring,int oldFinancialYearId );
+	
 }

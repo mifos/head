@@ -20,6 +20,6 @@
   </class>
   
     <query name="getExistedGlBalancesBO">
-        <![CDATA[ from org.mifos.application.accounting.business.GlBalancesBO as glbalance where glbalance.officeLevel = :OFFICE_LEVEL and glbalance.officeId= :OFFICE_ID and glbalance.glCodeValue= :GLCODEVALUE]]>
+        <![CDATA[ from org.mifos.application.accounting.business.GlBalancesBO as glbalance where glbalance.officeLevel = :OFFICE_LEVEL and glbalance.officeId= :OFFICE_ID and glbalance.glCodeValue= :GLCODEVALUE and glbalance.financialYearBO= :FINANCIALYEARID]]>
   </query>
 </hibernate-mapping>
