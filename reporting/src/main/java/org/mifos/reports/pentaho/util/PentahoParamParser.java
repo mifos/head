@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
@@ -95,8 +94,8 @@ public class PentahoParamParser {
 
         if (param instanceof PentahoDateParameter) {
             PentahoDateParameter dateParam = (PentahoDateParameter) param;
-            LocalDate date = dateParam.getDate();
-            Date javaDate = (date == null) ? null : date.toDateMidnight().toDate();
+            Date date = dateParam.getDate();
+            Date javaDate = (date == null) ? null : date;
             result = ReflectionUtil.parseDateToClass(javaDate, clazz);
         } else if (param instanceof PentahoInputParameter) {
             PentahoInputParameter inputParam = (PentahoInputParameter) param;
@@ -150,7 +149,7 @@ public class PentahoParamParser {
 
         Date defaultValue = (Date) paramDefEntry.getDefaultValue();
         if (defaultValue != null) {
-            result.setDate(new LocalDate(defaultValue));
+            result.setDate(defaultValue);
         }
         return result;
     }
