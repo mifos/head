@@ -22,12 +22,13 @@ package org.mifos.reports.pentaho.params;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 public class PentahoDateParameter extends AbstractPentahoParameter {
     private String dateDD;
     private String dateMM;
     private String dateYY;
-    @DateTimeFormat(style = "S-")
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate date;
 
     public String getDateDD() {

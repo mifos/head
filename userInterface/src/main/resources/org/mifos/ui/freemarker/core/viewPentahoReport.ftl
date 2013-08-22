@@ -135,7 +135,7 @@ $(document).ready(function() {
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
 		buttonImageOnly: true,
-		dateFormat: 'dd/mm/yy'
+		dateFormat: 'yy-mm-dd'
     });
   }
 );
