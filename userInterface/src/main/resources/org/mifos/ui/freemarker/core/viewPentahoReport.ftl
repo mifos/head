@@ -90,6 +90,9 @@
 	            this.options[i].selected=true;
 	        }
 	    });
+	    
+	    document.getElementById('input.submit').disabled = true;
+	    document.getElementById('report.form').submit();
 	}
 	
 	function updateDropdown(form){ 			 		
@@ -111,7 +114,7 @@
 		<br />
 		
 		[@form.errors "pentahoReportFormBean.*"/]
-		<form action="execPentahoReport.ftl" method="post" class="two-columns">
+		<form action="execPentahoReport.ftl" method="post" class="two-columns" id="report.form">
 			[@form.input path="pentahoReportFormBean.reportId" id="input.reportId" fieldType="hidden" /]
 		    
 		    <div class="row">
