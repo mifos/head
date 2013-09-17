@@ -583,17 +583,18 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         try {
         	List<GuarantyEntity> guaranties = legacyAccountDao.getGuarantyByGurantorId(clientId);
 		
-	        for(GuarantyEntity guaranty : guaranties){
-	            if (guaranty.getState()) {
-		            LoanBO loan = loanDao.findById(guaranty.getLoanId());
-		            guarantedLoanAccounts.add(new LoanDetailDto(loan.getGlobalAccountNum(), 
-		            		loan.getLoanOffering().getPrdOfferingName(), 
-		            		loan.getAccountState().getId(), loan.getAccountState().getName(), 
-		            		loan.getLoanSummary().getOutstandingBalance().toString(), 
-		            		loan.getTotalAmountDue().toString(), loan.getAccountType().getAccountTypeId(), 
-		            		loan.getTotalAmountInArrears().toString()));
-	            }
-	        }
+            if (guaranties != null && guaranties.size() > 0) {
+                for (GuarantyEntity guaranty : guaranties) {
+                    if (guaranty != null && guaranty.getState() != null && guaranty.getState()) {
+                        LoanBO loan = loanDao.findById(guaranty.getLoanId());
+                        guarantedLoanAccounts.add(new LoanDetailDto(loan.getGlobalAccountNum(), loan.getLoanOffering()
+                                .getPrdOfferingName(), loan.getAccountState().getId(),
+                                loan.getAccountState().getName(), loan.getLoanSummary().getOutstandingBalance()
+                                        .toString(), loan.getTotalAmountDue().toString(), loan.getAccountType()
+                                        .getAccountTypeId(), loan.getTotalAmountInArrears().toString()));
+                    }
+                }
+            }
         
 		} catch (PersistenceException e) {
 			throw new MifosRuntimeException("Can not get guaranted loan accounts", e);
