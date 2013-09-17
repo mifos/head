@@ -24,12 +24,17 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<script>
+function disableSubmitButtonAndSubmit(button_id, form_id) {
+    document.getElementById(button_id).disabled = true;
+    document.getElementById(form_id).submit();
+}
+</script>
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
     <span id="page.id" title="ClientsAccounts"></span>	
-		<form action="searchResult.ftl">
+		<form id="search.form" action="searchResult.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="left" valign="top" class="paddingL10">
@@ -97,7 +102,7 @@ explanation of the license and how it is applied.
 								<tr>
 									<td>&nbsp;</td>
 									<td align="right" class="paddingleft05notop"><html-el:submit
-										styleId="clients_accounts.button.search" styleClass="buttn">
+										styleId="clients_accounts.button.search" styleClass="buttn" onclick="disableSubmitButtonAndSubmit('clients_accounts.button.search', 'search.form')">
 										<mifos:mifoslabel name="CustomerSearch.search" />
 									</html-el:submit></td>
 								</tr>
