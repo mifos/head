@@ -40,7 +40,7 @@
             <input type="submit" id="_eventId_questionnaire" name="_eventId_questionnaire" value="" style="visibility:hidden"/>
                 [#list questionGroupInstanceDetails as questionGroupInstanceDetail]
                 <fieldset id="questionGroup.sections" class="bluetableborderFull marginTop15">
-                    [#if questionGroupInstanceDetail.questionGroupDetail.active && questionGroupInstanceDetail.questionGroupDetail.editable]
+                    [#if questionGroupInstanceDetail.editableForUser && questionGroupInstanceDetail.questionGroupDetail.active && questionGroupInstanceDetail.questionGroupDetail.editable]
                         [@security.authorize access="isFullyAuthenticated() and hasRole('CAN_EDIT_QUESTION_GROUP_RESPONSES')"]
                         <span class="topRight">
                             <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="${questionGroupInstanceDetail_index}">[@spring.message "questionnaire.edit"/]</a>

@@ -150,6 +150,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
+    	if (!checkAccessToQuestionGroup(questionGroupDetails.getDetails().get(0).getId())) {
+    		throw new AccessDeniedException("Access denied");
+    	}
         questionnaireService.saveResponses(questionGroupDetails);
         if (auditLogService != null) {
             int creatorId = questionGroupDetails.getCreatorId();
@@ -194,7 +197,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, String event, String source) {
-        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), false, false);
+    	List<QuestionGroupInstanceDetail> details = questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), false, false);
+    	updateEditableForUserValues(details);
+    	return details;
     }
 
     @Override
@@ -203,7 +208,15 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         if(event.equals("Create") && source.equals("Loan")) {
             includeUnansweredQuestionGroups = false;
         }
-        return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), includeUnansweredQuestionGroups, true));
+        List<QuestionGroupInstanceDetail> details = filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), includeUnansweredQuestionGroups, true));
+        updateEditableForUserValues(details);
+        return details;
+    }
+    
+    private void updateEditableForUserValues(List<QuestionGroupInstanceDetail> details) {
+    	for (QuestionGroupInstanceDetail detail: details) {
+    		detail.setEditableForUser(checkAccessToQuestionGroup(detail.getQuestionGroupDetail().getId()));
+    	}
     }
 
     private List<QuestionGroupInstanceDetail> filterInActiveQuestions(List<QuestionGroupInstanceDetail> instanceDetails) {

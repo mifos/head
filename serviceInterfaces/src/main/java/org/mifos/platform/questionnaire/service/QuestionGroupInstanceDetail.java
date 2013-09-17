@@ -31,6 +31,15 @@ public class QuestionGroupInstanceDetail implements Serializable {
     private QuestionGroupDetail questionGroupDetail;
     private Date dateCompleted;
     private Integer id;
+    private boolean editableForUser = true;
+    
+    public void setEditableForUser(boolean editableForUser) {
+    	this.editableForUser = editableForUser;
+    }
+    
+    public boolean isEditableForUser() {
+    	return editableForUser;
+    }
 
     public String getQuestionGroupTitle() {
         return questionGroupDetail.getTitle();
