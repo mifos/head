@@ -226,17 +226,21 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private void validateModeOfPaymentSecurity(HttpServletRequest request, ActionErrors errors){
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountBO account = null;
+        Short personnelId = userContext.getId();
+        
         try {
-            account = new AccountBusinessService().getAccount(Integer.valueOf(accountId));
+            if(accountId != null) {
+                account = new AccountBusinessService().getAccount(Integer.valueOf(accountId));
+                if(account.getPersonnel() != null) {
+                    personnelId = account.getPersonnel().getPersonnelId();
+                }
+            }
         } catch (NumberFormatException e) {
             throw new MifosRuntimeException(e);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
-        Short personnelId = userContext.getId();
-        if (account.getPersonnel() != null) {
-            personnelId = account.getPersonnel().getPersonnelId();
-        }
+        
         if(getPaymentTypeId().equals("4") && !ActivityMapper.getInstance().isModeOfPaymentSecurity(userContext, personnelId)){
             errors.add(AccountConstants.LOAN_TRANSFER_PERMISSION, new ActionMessage(AccountConstants.LOAN_TRANSFER_PERMISSION,
                     getLocalizedMessage("accounts.mode_of_payment_permission")));
