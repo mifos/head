@@ -150,9 +150,6 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
-    	if (!checkAccessToQuestionGroup(questionGroupDetails.getDetails().get(0).getId())) {
-    		throw new AccessDeniedException("Access denied");
-    	}
         questionnaireService.saveResponses(questionGroupDetails);
         if (auditLogService != null) {
             int creatorId = questionGroupDetails.getCreatorId();
