@@ -26,10 +26,16 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<script>
+function disableSubmitButtonAndSubmit(button_id, form_id) {
+    document.getElementById(button_id).disabled = true;
+    document.getElementById(form_id).submit();
+}
+</script>
 <tiles:insert definition=".homePage">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="Home"></span>
-		<form action="searchResult.ftl">
+		<form id="search.form" action="searchResult.ftl">
 			
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
@@ -116,7 +122,7 @@ explanation of the license and how it is applied.
 													<html-el:hidden property="officeId" value="0"/> 
 													</c:otherwise>
 													</c:choose>												
-                                                    <html-el:submit styleId="home.button.search" property="searchButton" styleClass="buttn">
+                                                    <html-el:submit styleId="home.button.search" property="searchButton" styleClass="buttn" onclick="disableSubmitButtonAndSubmit('home.button.search', 'search.form')">
                                                         <mifos:mifoslabel name="CustomerSearch.search"/>
                                                     </html-el:submit>
 												</td>

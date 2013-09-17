@@ -39,11 +39,16 @@
 		    searchResultTable.fnFilter("");  
 		});
 	});
+	
+	function disableSubmitButtonAndSubmit(button_id, form_id) {
+        document.getElementById(button_id).disabled = true;
+        document.getElementById(form_id).submit();
+    }
 </script>
 <span id="page.id" title="MainSearchResults"></span>
 <div class="content">
 	<div class="fontnormal">
-		<form method="GET" action="searchResult.ftl">
+		<form id="search.form" method="GET" action="searchResult.ftl">
 			[@form.showAllErrors "customerSearch.*"/]
 			[@spring.message "CustomerSearch.searchFor" /]:
 			[@spring.bind "customerSearch.searchString" /]
@@ -55,7 +60,7 @@
 					[@spring.message "CustomerSearch.s" /]
 				</option>
 			[/@form.singleSelectWithNested]
-			<input type="submit" value="Search" class="buttn"/><br/>
+			<input type="submit" value="Search" id="search.button.submit" class="buttn" onclick="disableSubmitButtonAndSubmit('search.button.submit', 'search.form')" /><br/>
             [#include "/searchFilters.ftl" /]
 		</form>
 	</div>
