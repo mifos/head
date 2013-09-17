@@ -39,12 +39,16 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -101,6 +105,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private boolean truePrintReceipt = false;
     
     private String memberType;
+    
+    private AccountBusinessService accountBusinessService;
        
     //Group Loan
     //key memeber account global num
@@ -219,7 +225,19 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     
     private void validateModeOfPaymentSecurity(HttpServletRequest request, ActionErrors errors){
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        if(getPaymentTypeId().equals("4") && !ActivityMapper.getInstance().isModeOfPaymentSecurity(userContext)){
+        AccountBO account = null;
+        try {
+            account = new AccountBusinessService().getAccount(Integer.valueOf(accountId));
+        } catch (NumberFormatException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+        Short personnelId = userContext.getId();
+        if (account.getPersonnel() != null) {
+            personnelId = account.getPersonnel().getPersonnelId();
+        }
+        if(getPaymentTypeId().equals("4") && !ActivityMapper.getInstance().isModeOfPaymentSecurity(userContext, personnelId)){
             errors.add(AccountConstants.LOAN_TRANSFER_PERMISSION, new ActionMessage(AccountConstants.LOAN_TRANSFER_PERMISSION,
                     getLocalizedMessage("accounts.mode_of_payment_permission")));
         }

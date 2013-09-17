@@ -1827,9 +1827,9 @@ public class ActivityMapper {
         return activityAllowed;
     }
     
-    public boolean isModeOfPaymentSecurity(UserContext userContext) {
+    public boolean isModeOfPaymentSecurity(UserContext userContext, Short recordLoanOfficerId) {
         return legacyRolesPermissionsDao.isActivityAllowed(userContext,
-                new ActivityContext(SecurityConstants.LOAN_CAN_TRANSFER_FROM_SAVINGS_ACCOUNT, userContext.getBranchId()));
+                new ActivityContext(SecurityConstants.LOAN_CAN_TRANSFER_FROM_SAVINGS_ACCOUNT, userContext.getBranchId(), recordLoanOfficerId));
     }
 
      public boolean isEditPhoneNumberPermitted(UserContext useContext, Short officeId){
