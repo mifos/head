@@ -1249,5 +1249,16 @@
             <dropColumn tableName="loan_offering" columnName="first_payment_rounding_diff_flag" />
         </rollback>
     </changeSet>
+    
+    <changeSet id="MIFOS-6094" author="Lech Rozanski">
+        <sql>
+            update report_jasper_map set report_jasper = 'GeneralLedgerReport.prpt' where report_identifier = 'general_ledger_report';
+        </sql>
+        <rollback>
+            <sql>
+                update report_jasper_map set report_jasper = 'GeneralLedgerReport.rptdesign' where report_identifier = 'general_ledger_report';
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>
