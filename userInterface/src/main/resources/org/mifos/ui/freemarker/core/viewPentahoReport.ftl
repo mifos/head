@@ -92,6 +92,7 @@
 	    });
 	    
 	    document.getElementById('input.submit').disabled = true;
+	    document.getElementById('input.submit').className = 'submit submit-disabled';
 	    document.getElementById('report.form').submit();
 	}
 	

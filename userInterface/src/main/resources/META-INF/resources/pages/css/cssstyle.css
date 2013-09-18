@@ -188,6 +188,14 @@ label {
     cursor: pointer;
     height: 20px
 }
+.buttn-disabled {
+    color: #888888 !important;
+    border-left: 1px solid #AAAAAA !important;
+    border-top: 1px solid #AAAAAA !important;
+    border-right: 1px solid #888888 !important;
+    border-bottom: 1px solid #888888 !important;
+    background-image: url(../framework/images/buttons/buttonbgdisabled.jpg) !important;
+}
 
 .disabledbuttn
 {
