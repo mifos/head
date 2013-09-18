@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <script>
 function disableSubmitButtonAndSubmit(button_id, form_id) {
     document.getElementById(button_id).disabled = true;
-    document.getElementById(button_id).className = 'buttn buttn-disabled';
+    document.getElementById(button_id).className = 'buttn-disabled';
     document.getElementById(form_id).submit();
 }
 </script>
