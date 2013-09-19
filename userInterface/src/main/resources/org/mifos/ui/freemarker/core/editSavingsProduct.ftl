@@ -158,7 +158,8 @@
             <div class="span-20 ">
                 <span class="span-8 rightAlign  " id="recamnt" >[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]:</span>
                 <span class="  span-8 rightAlign" id="mandamnt" style="display: none"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.mandatoryAmountforDeposit" /]:</span>
-                <span class="span-4">[@spring.formInput "savingsProduct.amountForDeposit" /]</span>
+                <span class="span-4">[@form.numberInput path="savingsProduct.amountForDeposit" id="amountForDeposit" attributes="class=separatedNumber" /]</span>
+         
               </div>
             <div class="span-20 "><span class="  span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]:</span>
                 <span class="span-4">

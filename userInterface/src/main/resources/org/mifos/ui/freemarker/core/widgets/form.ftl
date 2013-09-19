@@ -33,6 +33,19 @@ Renders an HTML input element.
 [/#macro]
 
 [#-- 
+Renders an HTML input element with number.
+
+    path       : spring bind path
+    id         : ID of the element
+    attributes : any additional attributes for the element (such as class, size, etc)
+    fieldType  : Field type: text, hidden 
+--]
+[#macro numberInput path id="" attributes="" fieldType="text"]
+[@spring.bind path /]
+    <input id="${id}" type="${fieldType}" name="${spring.status.expression}" value="${(spring.status.value?number?c)?default("")}" ${attributes} />
+[/#macro]
+
+[#-- 
 Renders an HTML select element.
 
     path        : spring bind path 
