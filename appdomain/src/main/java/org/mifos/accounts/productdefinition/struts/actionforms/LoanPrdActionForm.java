@@ -2501,7 +2501,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         String max = getLocalizedMessage("product.max");
         String defaultString = getLocalizedMessage("product.default");
         if (!StringUtils.isNotBlank(minInterestRate)) {
-            addError(errors, "minInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, min, label, prdrate);
+            addError(errors, "minInterestRate", ProductDefinitionConstants.ERRORS_MANDATORY_MIN_INTEREST);
         } else {
             minInterestResult = parseDoubleForInterest(minInterestRate);
             errorList = minInterestResult.getErrors();
@@ -2517,7 +2517,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
 
         if (!StringUtils.isNotBlank(maxInterestRate)) {
-            addError(errors, "maxInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, max, label, prdrate);
+            addError(errors, "maxInterestRate", ProductDefinitionConstants.ERRORS_MANDATORY_MAX_INTEREST);
         } else {
             maxInterestResult = parseDoubleForInterest(maxInterestRate);
             errorList = maxInterestResult.getErrors();
@@ -2532,8 +2532,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
 
         if (!StringUtils.isNotBlank(defInterestRate)) {
-            addError(errors, "defInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, defaultString, label,
-                    prdrate);
+            addError(errors, "defInterestRate", ProductDefinitionConstants.ERRORS_MANDATORY_DEFAULT_INTEREST);
         } else {
             defInterestResult = parseDoubleForInterest(defInterestRate);
             errorList = defInterestResult.getErrors();

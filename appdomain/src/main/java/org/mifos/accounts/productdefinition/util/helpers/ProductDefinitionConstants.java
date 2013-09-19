@@ -204,7 +204,9 @@ public interface ProductDefinitionConstants {
     String ERROR_SELECT = "errors.select";
     String ERROR_CREATE = "errors.create";
     String ERRORSSELECTCONFIG = "errors.selectconfig";
-    String ERRORSENTERCONFIG = "errors.mandatoryconfig";
+    String ERRORS_MANDATORY_MIN_INTEREST = "errors.mandatoryMinInterestRate";
+    String ERRORS_MANDATORY_MAX_INTEREST = "errors.mandatoryMaxInterestRate";
+    String ERRORS_MANDATORY_DEFAULT_INTEREST = "errors.mandatoryDefaultInterestRate";
     String ERRORSDEFMINMAXCONFIG = "errors.defMinMaxconfig";
     String ERRORSMINMAXINTCONFIG = "errors.maxminIntRateconfig";
     String ERRORSDEFINTCONFIG = "errors.defIntRateconfig";

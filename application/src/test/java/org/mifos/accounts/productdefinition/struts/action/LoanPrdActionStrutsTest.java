@@ -162,7 +162,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
                 "Please select the Product category.", "Please specify the Applicable for.",
                 "Please specify the Frequency of installments.", "Please specify the Product instance name.",
                 "Please specify the Recur every.", "Please specify the Short name.", "Please specify the Start date.",
-                "errors.mandatoryconfig", "errors.mandatoryconfig", "errors.mandatoryconfig", "errors.select",
+                "errors.mandatoryMinInterestRate", "errors.mandatoryMaxInterestRate", "errors.mandatoryDefaultInterestRate", "errors.select",
                 "errors.selectconfig", "errors.calcloanamounttype", "errors.calcinstallmenttype" });
         verifyInputForward();
     }
@@ -817,7 +817,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
                 "Please select the Product category.", "Please specify the Applicable for.",
                 "Please specify the Frequency of installments.", "Please specify the Product instance name.",
                 "Please specify the Recur every.", "Please specify the Short name.", "Please specify the Start date.",
-                "errors.mandatoryconfig", "errors.mandatoryconfig", "errors.mandatoryconfig", "errors.select",
+                "errors.mandatoryMinInterestRate", "errors.mandatoryMaxInterestRate", "errors.mandatoryDefaultInterestRate", "errors.select",
                 "errors.select", "errors.selectconfig", "errors.calcloanamounttype", "errors.calcinstallmenttype" });
         verifyInputForward();
     }
