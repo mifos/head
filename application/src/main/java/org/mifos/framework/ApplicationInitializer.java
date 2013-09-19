@@ -883,12 +883,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
         File directory = new File(destinationDirectoryForJobs);
         directory.mkdirs();
-        FileUtils.cleanDirectory(directory);
         File jarDest = new File(destinationDirectoryForJar);
         File reportDirectory = new File(destinationDirectoryForReportJobs);
         reportDirectory.mkdirs();
 
         if (protocol.getProtocol().equals("jar")) {
+            FileUtils.cleanDirectory(directory);
             // Mifos WAR
             URL fullPath = sc.getResource(pathFromJar);
             File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
@@ -945,6 +945,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 // Mifos Cloud Foundry WAR
                 URL fullPath = sc.getResource(pathFromJar);
                 File f = new File(sc.getRealPath("/") + pathFromJobs);
+                if(f.listFiles().equals(null)){
+                    throw new NullPointerException();
+                }
+                FileUtils.cleanDirectory(directory);
                 for (File fileEntry : f.listFiles()) {
                     FileUtils.copyFileToDirectory(fileEntry, directory);
                     logger.info("Copy file: " + fileEntry.getName() + " to: " + directory);
