@@ -107,7 +107,7 @@
         [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
             [@form.label "mandatoryDepositAmount" false][@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /][/@form.label]
         [/#if]
-        [@form.input path="savingsAccountFormBean.mandatoryDepositAmount" id="continuecreatesavingsaccount.input.recommendedAmount" attributes="class=separatedNumber" /]
+        [@form.numberInput path="savingsAccountFormBean.mandatoryDepositAmount" id="continuecreatesavingsaccount.input.recommendedAmount" attributes="class=separatedNumber" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
