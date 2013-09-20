@@ -88,8 +88,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final Integer gracePeriodInInstallments;
     private final ApplicationConfigurationDto appConfig;
     private final boolean isGroupLoanWithMembersEnabled;
+    private final String currency;
 
-    public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
+    public LoanCreationLoanDetailsDto(String currency, boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, Integer gracePeriodInInstallments, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
             String interestRateType, List<FundDto> fundDtos, LinkedHashMap<String, String> collateralOptions, 
@@ -145,9 +146,14 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.disbursalPaymentTypes = disbursalPaymentTypes;
         this.repaymentPaymentTypes = repaymentPaymentTypes;
         this.isGroupLoanWithMembersEnabled = isGroupLoanWithMembersEnabled;
+        this.currency = currency;
     }
 
-    public Integer getGracePeriodInInstallments() {
+    public String getCurrency() {
+		return currency;
+	}
+
+	public Integer getGracePeriodInInstallments() {
         return gracePeriodInInstallments;
     }
 
