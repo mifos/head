@@ -163,6 +163,10 @@
         <div class="value">${loanProductReferenceData.productDto.description}</div>
     </div>
     <div class="row">
+        <div class="attribute">[@spring.message "productSummary.currency"/]</div>
+        <div class="value">${loanProductReferenceData.currency}</div>
+    </div>
+    <div class="row">
         <div class="attribute">[@spring.message "productSummary.interestRateType"/]</div>
         <div class="value">${loanProductReferenceData.interestRateType}</div>
     </div>
