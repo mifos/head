@@ -751,8 +751,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 throw new SystemException(e);
             }
 
+            String currency = loanProduct.getCurrency().getCurrencyCode();
 
-            return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
+            return new LoanCreationLoanDetailsDto(currency, isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, gracePeriodInInstallments, customerDetailDto, loanProductDtos,
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions,
                     defaultFeeOptions, additionalFeeOptions, defaultFees, additionalFees,
