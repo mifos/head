@@ -583,6 +583,10 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                             MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
                             monthRank);
                 }
+            } else {
+                Short recurEvery = recurringSchedule.getEvery().shortValue();
+                newMeetingForRepaymentDay = new MeetingBO(recurEvery, repaymentStartDate, MeetingType.LOAN_INSTALLMENT,
+                        customer.getCustomerMeeting().getMeeting().getMeetingPlace());
             }
             return newMeetingForRepaymentDay;
         } catch (NumberFormatException nfe) {
