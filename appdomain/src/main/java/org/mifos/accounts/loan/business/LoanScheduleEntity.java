@@ -44,6 +44,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
@@ -75,6 +76,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     private int versionNo;
 
     private PaymentAllocation paymentAllocation;
+    
+    private static ConfigurationBusinessService configService = new ConfigurationBusinessService();
 
     protected LoanScheduleEntity() {
         super(null, null, null, null, null);
@@ -315,7 +318,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     private Money calculateAdjustedInterest(CalculatedInterestOnPayment interestOnPayment, Money overdueInterestPaid,
                                             LoanTrxnDetailEntity loanReverseTrxn) {
-        if (interestOnPayment != null && ((LoanBO)account).isDecliningBalanceInterestRecalculation()) {
+        boolean isDecliningBalanceIR = ((LoanBO)account).isDecliningBalanceInterestRecalculation();
+        boolean isRecalculateInterestEnabled = configService.isRecalculateInterestEnabled();
+        boolean isDecliningBalanceEPI = ((LoanBO)account).isDecliningBalanceEqualPrincipleCalculation();
+        if (interestOnPayment != null 
+                && ( isDecliningBalanceIR || ( isRecalculateInterestEnabled && isDecliningBalanceEPI ) ) ) {
             return interestOnPayment.getOriginalInterest().subtract(loanReverseTrxn.getInterestAmount()).subtract(overdueInterestPaid.
                     add(interestOnPayment.getInterestDueTillPaid()));
         }
@@ -694,6 +701,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public PaymentAllocation getPaymentAllocation() {
         return paymentAllocation;
+    }
+
+    public ConfigurationBusinessService getConfigService() {
+        return configService;
+    }
+
+    public void setConfigService(ConfigurationBusinessService configService) {
+        LoanScheduleEntity.configService = configService;
     }
 
     void recordForAdjustment() {

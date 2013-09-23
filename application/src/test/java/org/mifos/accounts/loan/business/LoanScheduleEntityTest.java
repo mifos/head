@@ -46,6 +46,7 @@ import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -65,6 +66,8 @@ public class LoanScheduleEntityTest {
     private LegacyLoanDao legacyLoanDao;
     @Mock
     private AccountPaymentEntity accountPaymentEntity;
+    @Mock
+    private ConfigurationBusinessService configService;
 
     private LoanScheduleEntity loanScheduleEntity;
     private Date paymentDate;
@@ -276,8 +279,10 @@ public class LoanScheduleEntityTest {
     @Test
     public void shouldPopulateComputedInterestForPAWDEPAdjustment() {
         loanScheduleEntity.setAccount(loanBO);
+        loanScheduleEntity.setConfigService(configService);
         when(loanBO.getCurrency()).thenReturn(RUPEE);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        when(configService.isRecalculateInterestEnabled()).thenReturn(false);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         LoanTrxnDetailEntity loanReverseTrxn = new LoanTrxnDetailEntity(accountPayment,
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
@@ -305,8 +310,10 @@ public class LoanScheduleEntityTest {
     @Test
     public void shouldNotPopulateComputedInterestForPAWDEPAdjustmentForFutureInstallment() {
         loanScheduleEntity.setAccount(loanBO);
+        loanScheduleEntity.setConfigService(configService);
         when(loanBO.getCurrency()).thenReturn(RUPEE);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        when(configService.isRecalculateInterestEnabled()).thenReturn(false);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         LoanTrxnDetailEntity loanReverseTrxn = new LoanTrxnDetailEntity(accountPayment,
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
@@ -330,8 +337,10 @@ public class LoanScheduleEntityTest {
     @Test
     public void shouldPopulateComputedInterestForNormalAdjustment() {
         loanScheduleEntity.setAccount(loanBO);
+        loanScheduleEntity.setConfigService(configService);
         when(loanBO.getCurrency()).thenReturn(RUPEE);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
+        when(configService.isRecalculateInterestEnabled()).thenReturn(false);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         LoanTrxnDetailEntity loanReverseTrxn = new LoanTrxnDetailEntity(accountPayment,
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
