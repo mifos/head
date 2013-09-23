@@ -191,7 +191,8 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DISBURSE_LOAN')")
-    void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId);
+    void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId, Short paymentTypeIdForFees,
+            Integer accountForTransferId);
     
     @PreAuthorize("isFullyAuthenticated()")
     void updateMemberLoansFeeAmounts(Integer accountId);

@@ -195,6 +195,7 @@ public interface NamedQueryConstants {
     String OFFICE_GET_HEADOFFICE = "office.getHeadOffice";
 
     /** Account */
+    String RETRIEVE_ACCOUNT_ID_BY_GLOBAL_ACCOUNT_NUMBER = "accounts.retrieveAccountIdByGlobalNum";
     String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
     String GET_LAST_MEETINGDATE_FOR_CUSTOMER = "accounts.getLastMeetingDateforCustomer";
     String GET_FIRST_MEETINGDATE_FOR_CUSTOMER = "accounts.getFirstMeetingDateForCustomer";

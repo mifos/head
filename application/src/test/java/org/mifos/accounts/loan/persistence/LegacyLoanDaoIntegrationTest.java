@@ -228,7 +228,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
     @SuppressWarnings("deprecation")
     private void disburseLoan(final Date startDate) throws Exception {
         ((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate, Short.valueOf("1"),
-                loanAccountForDisbursement.getPersonnel(), startDate, Short.valueOf("1"));
+                loanAccountForDisbursement.getPersonnel(), startDate, Short.valueOf("1"), Short.valueOf("1"), null);
         StaticHibernateUtil.flushSession();
     }
 

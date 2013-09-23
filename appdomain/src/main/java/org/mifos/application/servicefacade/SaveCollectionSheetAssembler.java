@@ -179,7 +179,7 @@ public class SaveCollectionSheetAssembler {
     public List<LoanBO> loanAccountAssemblerFromDto(
             final List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers,
             final AccountPaymentEntity payment, final List<String> failedLoanDisbursementAccountNumbers,
-            final List<String> failedLoanRepaymentAccountNumbers) {
+            final List<String> failedLoanRepaymentAccountNumbers, Short paymentTypeIdForFees) {
 
         final List<LoanBO> loans = new ArrayList<LoanBO>();
         Map<Integer, AccountPaymentEntity> groupLoanAccountParentsPayments = 
@@ -205,7 +205,9 @@ public class SaveCollectionSheetAssembler {
                                     payment.getPaymentDate());
                             accountDisbursalPayment.setCreatedByUser(payment.getCreatedByUser());
 
-                            account.disburseLoan(accountDisbursalPayment);
+                            Integer transferAccountId = (payment.getOtherTransferPayment() == null || payment.getOtherTransferPayment().getAccount() == null
+                                    || payment.getOtherTransferPayment().getAccount().getAccountId() == null) ? null : payment.getOtherTransferPayment().getAccount().getAccountId();
+                            account.disburseLoan(accountDisbursalPayment, paymentTypeIdForFees, transferAccountId);
                             loans.add(account);
                         } catch (AccountException ae) {
                             logger.warn("Disbursal of loan on account [" + globalAccountNum

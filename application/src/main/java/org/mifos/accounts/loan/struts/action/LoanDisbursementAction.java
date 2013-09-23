@@ -38,6 +38,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
+import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -47,11 +49,13 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRulesConstants;
@@ -78,7 +82,10 @@ import org.slf4j.LoggerFactory;
 public class LoanDisbursementAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(LoanDisbursementAction.class);
-
+    
+    private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao = ApplicationContextProvider
+            .getBean(LegacyAcceptedPaymentTypeDao.class);
+    
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
@@ -109,10 +116,14 @@ public class LoanDisbursementAction extends BaseAction {
         
         List<PaymentTypeEntity> feesTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_repayment.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.FEE_PAYMENT_TYPE, feesTypes, request);
-
+        SessionUtils.setAttribute(LoanConstants.PAYMENT_TYPE_TRANSFER_FROM_SAVINGS_ID,
+                legacyAcceptedPaymentTypeDao.getSavingsTransferId(), request);
+        SessionUtils.setCollectionAttribute(Constants.ACCOUNTS_FOR_TRANSFER,
+                accountServiceFacade.getActiveSavingsAccountsForClientByLoanId(loanAccountId), request);
+        
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
-
+    
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
@@ -139,6 +150,8 @@ public class LoanDisbursementAction extends BaseAction {
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
 
         Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
+        Integer accountForTransferId = (StringUtils.isBlank(actionForm.getAccountForTransfer())) ? null
+                : legacyAccountDao.getAccountIdByGlobalAccountNumber(actionForm.getAccountForTransfer());
         AccountBO accountBO = new AccountBusinessService().getAccount(loanAccountId);
         Date originalDisbursementDate = DateUtils.getDateWithoutTimeStamp(((LoanBO)accountBO).getDisbursementDate());
         
@@ -146,9 +159,11 @@ public class LoanDisbursementAction extends BaseAction {
 
         try {
             String paymentTypeIdStringForDisbursement = actionForm.getPaymentTypeId();
+            String paymentTypeIdStringForFees = actionForm.getPaymentModeOfPayment();
             Short paymentTypeIdForDisbursement = StringUtils.isEmpty(paymentTypeIdStringForDisbursement) ? PaymentTypes.CASH.getValue() : Short
                     .valueOf(paymentTypeIdStringForDisbursement);
-
+            Short paymentTypeIdForFees = StringUtils.isEmpty(paymentTypeIdStringForFees) ? PaymentTypes.CASH.getValue()
+                    : Short.valueOf(paymentTypeIdStringForFees);
 
             Short paymentTypeId = Short.valueOf(paymentTypeIdForDisbursement);
             final String comment = "";
@@ -170,14 +185,14 @@ public class LoanDisbursementAction extends BaseAction {
                 }
             }
 
-            this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+            this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId, paymentTypeIdForFees, accountForTransferId);
 
             for (LoanBO individual : individualLoans) {
                 loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
                         individual.getAccountId()), individual.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
                         new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
                 
-                this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+                this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId, paymentTypeIdForFees, accountForTransferId);
             }
             
             if (!((LoanBO)accountBO).isFixedRepaymentSchedule() && 

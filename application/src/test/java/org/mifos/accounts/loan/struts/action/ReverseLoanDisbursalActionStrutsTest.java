@@ -305,7 +305,8 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
 
     private void disburseLoan() throws AccountException, NumberFormatException, PersistenceException {
         loan.setUserContext(userContext);
-        loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"));
+        loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"),
+                Short.valueOf("1"), null);
         StaticHibernateUtil.flushSession();
     }
 }

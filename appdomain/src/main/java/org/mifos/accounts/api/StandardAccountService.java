@@ -467,7 +467,8 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception {
+    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale, Short paymentTypeIdForFees,
+            Integer accountForTransferId) throws Exception {
 
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
@@ -476,13 +477,14 @@ public class StandardAccountService implements AccountService {
           .getUserId());
             BigDecimal paymentAmount = accountPaymentParametersDto.getPaymentAmount();
             handleLoanDisbursal(locale, loan, personnelBO, paymentAmount, accountPaymentParametersDto.getPaymentType(), accountPaymentParametersDto.getReceiptDate(), accountPaymentParametersDto.getPaymentDate(), 
-                    accountPaymentParametersDto.getReceiptId());
+                    accountPaymentParametersDto.getReceiptId(), paymentTypeIdForFees, accountForTransferId);
         }
         StaticHibernateUtil.commitTransaction();
     }
 
-    public void handleLoanDisbursal(Locale locale, LoanBO loan, PersonnelBO personnelBO, BigDecimal paymentAmount, PaymentTypeDto paymentType, LocalDate receiptLocalDate, LocalDate paymentLocalDate, String receiptId)
-            throws PersistenceException, AccountException {
+    public void handleLoanDisbursal(Locale locale, LoanBO loan, PersonnelBO personnelBO, BigDecimal paymentAmount,
+            PaymentTypeDto paymentType, LocalDate receiptLocalDate, LocalDate paymentLocalDate, String receiptId,
+            Short paymentTypeIdForFees, Integer accountForTransferId) throws PersistenceException, AccountException {
 
         if ("MPESA".equals(paymentType.getName())) {
             paymentAmount = computeWithdrawnForMPESA(paymentAmount, loan);
@@ -504,7 +506,7 @@ public class StandardAccountService implements AccountService {
 
         Date oldDisbursementDate = loan.getDisbursementDate();
         List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
-        loan.disburseLoan(disbursalPayment);
+        loan.disburseLoan(disbursalPayment, paymentTypeIdForFees, accountForTransferId);
         if (!loan.isVariableInstallmentsAllowed()) {
             originalInstallments = loan.toRepaymentScheduleDto(locale);
         }

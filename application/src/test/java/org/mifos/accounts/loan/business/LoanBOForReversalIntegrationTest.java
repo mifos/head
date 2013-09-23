@@ -122,7 +122,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
     private void disburseLoan() throws AccountException, NumberFormatException, PersistenceException {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
         loan.setUserContext(userContext);
-        loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"));
+        loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"), Short.valueOf("1"), null);
         long numberOfTransactions = getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         Assert.assertTrue("numberOfTransactions=" + numberOfTransactions + " should be: " + 0,
                 numberOfTransactions == 0);

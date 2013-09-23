@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.business;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 import java.math.BigDecimal;
@@ -43,9 +44,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
+import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -71,7 +75,6 @@ import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
-import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -88,6 +91,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -108,6 +112,7 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -115,6 +120,9 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounderHelper;
@@ -145,8 +153,10 @@ import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.Localization;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
@@ -159,13 +169,17 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.AccountPaymentDto.AmountWithInterest;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PaymentDto;
+import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
+import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -177,10 +191,13 @@ import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 public class LoanBO extends AccountBO implements Loan {
 
@@ -189,7 +206,11 @@ public class LoanBO extends AccountBO implements Loan {
     private LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
     private LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
     private Integer businessActivityId;
-
+    private AccountServiceFacade accountServiceFacade = ApplicationContextProvider.getBean(AccountServiceFacade.class);
+    private AccountService accountService = ApplicationContextProvider.getBean(AccountService.class);
+    private SavingsServiceFacade savingsServiceFacade = ApplicationContextProvider.getBean(SavingsServiceFacade.class);
+    private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao = ApplicationContextProvider.getBean(LegacyAcceptedPaymentTypeDao.class);
+    
     private Money loanAmount;
     private Money loanBalance;
     private Short noOfInstallments;
@@ -475,6 +496,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     public Set<LoanScheduleEntity> getLoanScheduleEntities() {
+        Hibernate.initialize(this.getAccountActionDates());
         return CollectionUtils.collect(this.getAccountActionDates(), new Transformer<AccountActionDateEntity, LoanScheduleEntity>() {
             @Override
             public LoanScheduleEntity transform(AccountActionDateEntity input) {
@@ -1188,9 +1210,10 @@ public class LoanBO extends AccountBO implements Loan {
      */
     @Deprecated
     public void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId,
-            final PersonnelBO personnel, final Date receiptDate, final Short rcvdPaymentTypeId)
-            throws AccountException, PersistenceException {
-        disburseLoan(receiptNum, transactionDate, paymentTypeId, personnel, receiptDate, rcvdPaymentTypeId, true);
+            final PersonnelBO personnel, final Date receiptDate, final Short rcvdPaymentTypeId,
+            Short paymentTypeIdForFees, Integer accountForTransferId) throws AccountException, PersistenceException {
+        disburseLoan(receiptNum, transactionDate, paymentTypeId, personnel, receiptDate, rcvdPaymentTypeId, true,
+                paymentTypeIdForFees, accountForTransferId);
     }
 
     /**
@@ -1198,14 +1221,16 @@ public class LoanBO extends AccountBO implements Loan {
      * @deprecated use {@link LoanBO#disburseLoan(AccountPaymentEntity)}
      */
     @Deprecated
-    public void disburseLoan(final PersonnelBO personnel, final Short rcvdPaymentTypeId, final boolean persistChange)
-            throws AccountException, PersistenceException {
-        disburseLoan(null, getDisbursementDate(), rcvdPaymentTypeId, personnel, null, rcvdPaymentTypeId, persistChange);
+    public void disburseLoan(final PersonnelBO personnel, final Short rcvdPaymentTypeId, final boolean persistChange,
+            Short paymentTypeIdForFees, Integer accountForTransferId) throws AccountException, PersistenceException {
+        disburseLoan(null, getDisbursementDate(), rcvdPaymentTypeId, personnel, null, rcvdPaymentTypeId, persistChange,
+                paymentTypeIdForFees, accountForTransferId);
     }
 
     private void disburseLoan(final String receiptNum, final Date transactionDate, final Short paymentTypeId,
             final PersonnelBO loggedInUser, final Date receiptDate, final Short rcvdPaymentTypeId,
-            final boolean persistChange) throws AccountException, PersistenceException {
+            final boolean persistChange, final Short paymentTypeIdForFees, Integer accountForTransferId)
+            throws AccountException, PersistenceException {
 
         if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
                 && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
@@ -1270,11 +1295,11 @@ public class LoanBO extends AccountBO implements Loan {
             // Disbursal process has to create its own accountPayment taking into account any disbursement fees
             Money feeAmountAtDisbursement = getFeesDueAtDisbursement();
             accountPayment = new AccountPaymentEntity(this, this.loanAmount.subtract(feeAmountAtDisbursement),
-                    receiptNum, receiptDate, getPaymentTypeEntity(paymentTypeId), transactionDate);
+                    receiptNum, receiptDate, getPaymentTypeEntity(paymentTypeIdForFees), transactionDate);
             accountPayment.setCreatedByUser(loggedInUser);
 
             if (feeAmountAtDisbursement.isGreaterThanZero()) {
-                processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
+                processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement, paymentTypeIdForFees, accountForTransferId);
             }
         }
 
@@ -1297,7 +1322,8 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
 
-    public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
+    public void disburseLoan(final AccountPaymentEntity disbursalPayment, Short paymentTypeIdForFees, Integer accountForTransferId)
+            throws AccountException, PersistenceException {
 
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {
             throw new AccountException("Loan Amount to be Disbursed Held on Database : "
@@ -1307,7 +1333,7 @@ public class LoanBO extends AccountBO implements Loan {
 
         disburseLoan(disbursalPayment.getReceiptNumber(), disbursalPayment.getPaymentDate(), disbursalPayment
                 .getPaymentType().getId(), disbursalPayment.getCreatedByUser(), disbursalPayment.getReceiptDate(),
-                disbursalPayment.getPaymentType().getId(), false);
+                disbursalPayment.getPaymentType().getId(), false, paymentTypeIdForFees, accountForTransferId);
     }
 
     public Money getEarlyRepayAmount() {
@@ -2966,28 +2992,64 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
+    @Transactional(readOnly = false)
     public void processFeesAtDisbursement(final AccountPaymentEntity accountPayment,
-            final Money feeAmountAtDisbursement) {
+            final Money feeAmountAtDisbursement, final Short paymentTypeIdForFees, Integer accountForTransferId) {
+        try {
+            loanSummary.updateFeePaid(feeAmountAtDisbursement);
 
-        loanSummary.updateFeePaid(feeAmountAtDisbursement);
+            List<AccountFeesEntity> applicableAccountFees = new ArrayList<AccountFeesEntity>();
+            for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+                if (accountFeesEntity.isTimeOfDisbursement()) {
+                    applicableAccountFees.add(accountFeesEntity);
+                }
+            }
 
-        List<AccountFeesEntity> applicableAccountFees = new ArrayList<AccountFeesEntity>();
-        for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-            if (accountFeesEntity.isTimeOfDisbursement()) {
-                applicableAccountFees.add(accountFeesEntity);
+            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
+                    AccountActionTypes.FEE_REPAYMENT, Short.valueOf("0"), accountPayment.getPaymentDate(),
+                    accountPayment.getCreatedByUser(), accountPayment.getPaymentDate(), feeAmountAtDisbursement, "-",
+                    null, new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), new Money(
+                            getCurrency()), new Money(getCurrency()), applicableAccountFees, null);
+
+            accountPayment.addAccountTrxn(loanTrxnDetailEntity);
+
+            addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), accountPayment.getCreatedByUser(),
+                    AccountConstants.PAYMENT_RCVD, accountPayment.getPaymentDate()));
+
+            Short transferFromSavingsPaymentType = legacyAcceptedPaymentTypeDao.getSavingsTransferId();
+            if (paymentTypeIdForFees != null && accountForTransferId != null && paymentTypeIdForFees.equals(transferFromSavingsPaymentType)) {
+                if (AccountingRules.isGroupLoanWithMembers() && (!this.isParentGroupLoanAccount() && this.isGroupLoanAccountMember())) {
+                    return;
+                }
+                if (this.getParentAccount() != null
+                        && this.getAccountType().getAccountTypeId()
+                                .equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue())) {
+                    return;
+                }
+                
+                MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                Locale preferredLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+
+                SavingsWithdrawalDto savingsWithdrawalDto = new SavingsWithdrawalDto(new Long(accountForTransferId),
+                        new Long(accountPayment.getAccount().getCustomer().getCustomerId()), new LocalDate(
+                                accountPayment.getPaymentDate().getTime()), Double.parseDouble(feeAmountAtDisbursement
+                                .getAmount().toString()), new Integer(paymentTypeIdForFees.toString()),
+                        accountPayment.getReceiptNumber(), new LocalDate(accountPayment.getReceiptDate().getTime()),
+                        preferredLocale);
+                this.savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
+            }
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private PaymentTypeDto getFeePaymentTypeDtoForId(short id) throws Exception {
+        for (PaymentTypeDto paymentTypeDto : accountService.getFeePaymentTypes()) {
+            if (paymentTypeDto.getValue() == id) {
+                return paymentTypeDto;
             }
         }
-
-        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
-                AccountActionTypes.FEE_REPAYMENT, Short.valueOf("0"), accountPayment.getPaymentDate(), accountPayment
-                        .getCreatedByUser(), accountPayment.getPaymentDate(), feeAmountAtDisbursement, "-", null,
-                new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), applicableAccountFees, null);
-
-        accountPayment.addAccountTrxn(loanTrxnDetailEntity);
-
-        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), accountPayment.getCreatedByUser(),
-                AccountConstants.PAYMENT_RCVD, accountPayment.getPaymentDate()));
+        throw new MifosRuntimeException("Expected fee PaymentTypeDto not found for id: " + id);
     }
 
     /**
@@ -3674,7 +3736,8 @@ public class LoanBO extends AccountBO implements Loan {
         accountPayment.setCreatedByUser(createdBy);
 
         if (feeAmountAtDisbursement.isGreaterThanZero()) {
-            processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
+            processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement, disbursalPayment.getOtherTransferPaymentDto().getPaymentTypeId(),
+                    disbursalPayment.getOtherTransferPayment().getAccount().getAccountId());
         }
 
         // create trxn entry for disbursal

@@ -69,7 +69,8 @@ public interface AccountService {
      * @param accountPaymentParametersDtoList a list of loan payment parameters
      * @param locale
      */
-    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception;
+    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale, Short paymentTypeIdForFees,
+            Integer accountForTransferId) throws Exception;
 
     /**
      * Lookup a loan account reference for a loan with a matching primary key.

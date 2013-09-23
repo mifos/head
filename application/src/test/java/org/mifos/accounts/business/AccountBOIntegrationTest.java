@@ -497,7 +497,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     }
 
     private void disburseLoan(final LoanBO loan, final Date startDate) throws Exception {
-        loan.disburseLoan("receiptNum", startDate, Short.valueOf("1"), loan.getPersonnel(), startDate, Short.valueOf("1"));
+        loan.disburseLoan("receiptNum", startDate, Short.valueOf("1"), loan.getPersonnel(), startDate, Short.valueOf("1"), Short.valueOf("1"), null);
         StaticHibernateUtil.flushAndClearSession();
     }
 

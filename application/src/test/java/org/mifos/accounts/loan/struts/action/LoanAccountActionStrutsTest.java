@@ -532,7 +532,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     private void disburseLoan(Date startDate) throws Exception {
         ((LoanBO) accountBO).disburseLoan("1234", startDate, Short.valueOf("1"), accountBO.getPersonnel(), startDate,
-                Short.valueOf("1"));
+                Short.valueOf("1"), Short.valueOf("1"), null);
         StaticHibernateUtil.flushSession();
     }
 

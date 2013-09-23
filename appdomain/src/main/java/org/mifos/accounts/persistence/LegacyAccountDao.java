@@ -88,6 +88,17 @@ public class LegacyAccountDao extends LegacyGenericDao {
 
     private LegacyAccountDao() {
     }
+    
+    public Integer getAccountIdByGlobalAccountNumber(String globalAccountNum) {
+        try {
+            HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+            queryParameters.put("globalAccountNum", globalAccountNum);
+            return (Integer) this.executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCOUNT_ID_BY_GLOBAL_ACCOUNT_NUMBER,
+                    queryParameters).get(0);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
 
     public AccountBO getAccount(Integer accountId) throws PersistenceException {
         return getPersistentObject(AccountBO.class, accountId);

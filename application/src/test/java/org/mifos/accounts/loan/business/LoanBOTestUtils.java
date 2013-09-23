@@ -398,7 +398,7 @@ public class LoanBOTestUtils {
         Calendar cal = new GregorianCalendar(disbursalDate.get(Calendar.YEAR), disbursalDate.get(Calendar.MONTH),
                 disbursalDate.get(Calendar.DATE), 0, 0);
         ((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short.valueOf("1"), accountBO.getPersonnel(),
-                startDate, Short.valueOf("1"));
+                startDate, Short.valueOf("1"), Short.valueOf("1"), null);
 
         Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);

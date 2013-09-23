@@ -760,4 +760,27 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         return sum;
     }
 
+    @Override
+    public List<SavingsDetailDto> getActiveSavingsAccountsForClientByLoanId(Integer loanAccountId) {
+        try {
+            AccountBO account = accountBusinessService.getAccount(loanAccountId);
+            CustomerDto customer = account.getCustomer().toCustomerDto();
+
+            List<SavingsDetailDto> savingsInUse = clientServiceFacade.retrieveSavingsInUseForClient(customer
+                    .getCustomerId());
+            List<SavingsDetailDto> accountsForTransfer = new ArrayList<SavingsDetailDto>();
+            if (savingsInUse != null) {
+                for (SavingsDetailDto savingsAccount : savingsInUse) {
+                    if (savingsAccount.getAccountStateId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
+                        accountsForTransfer.add(savingsAccount);
+                    }
+                }
+            }
+
+            return accountsForTransfer;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
 }

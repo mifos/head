@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -40,8 +41,12 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
     private String loanAmount;
 
     private String paymentModeOfPayment;
+    
+    private String accountForTransfer;
 
     private List<QuestionGroupDetail> questionGroups;
+    
+    private Short transferPaymentTypeId;
 
     @Override
     public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
@@ -65,6 +70,14 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
         if (isPreviewMethod(method) && getPaymentAmountGreaterThanZero()
                 && StringUtils.isBlank(paymentModeOfPayment)) {
             String errorMessage = this.getLocalizedMessage("loan.paymentid");
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                    errorMessage));
+        }
+        
+        if (isPreviewMethod(method) && getPaymentAmountGreaterThanZero() && !StringUtils.isBlank(paymentModeOfPayment)
+                && Short.valueOf(paymentModeOfPayment).equals(transferPaymentTypeId)
+                && StringUtils.isBlank(accountForTransfer)) {
+            String errorMessage = this.getLocalizedMessage("loan.accountForTransfer");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                     errorMessage));
         }
@@ -92,6 +105,14 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
     public void setPaymentModeOfPayment(String paymentModeOfPayment) {
         this.paymentModeOfPayment = paymentModeOfPayment;
     }
+    
+    public String getAccountForTransfer() {
+        return accountForTransfer;
+    }
+    
+    public void setAccountForTransfer(String accountForTransfer) {
+        this.accountForTransfer = accountForTransfer;
+    }
 
     public String getLoanAmount() {
         return loanAmount;
@@ -107,6 +128,14 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
 
     public void setLoanAmount(String loanAmount) {
         this.loanAmount = loanAmount;
+    }
+    
+    public Short getTransferPaymentTypeId() {
+        return transferPaymentTypeId;
+    }
+    
+    public void setTransferPaymentTypeId(Short transferPaymentTypeId) {
+        this.transferPaymentTypeId = transferPaymentTypeId;
     }
 
     @Override

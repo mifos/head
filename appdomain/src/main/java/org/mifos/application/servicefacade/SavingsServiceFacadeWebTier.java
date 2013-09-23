@@ -246,13 +246,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.savingsDao.save(savingsAccount);
 
             Date lastIntPostDate = savingsAccount.getLastIntPostDate();
-            if (lastIntPostDate != null &&
-                    DateUtils.dateFallsOnOrBeforeDate(payment.getTransactionDate(), lastIntPostDate)) {
+            if (lastIntPostDate != null
+                    && DateUtils.dateFallsOnOrBeforeDate(payment.getTransactionDate(), lastIntPostDate)) {
                 this.recalculateInterestPostings(savingsAccount.getAccountId(),
                         new LocalDate(payment.getTransactionDate()));
             }
 
-            //commit
+            // commit
             if (inTransaction) {
                 this.transactionHelper.flushSession();
             } else {
@@ -324,13 +324,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.savingsDao.save(savingsAccount);
 
             Date lastIntPostDate = savingsAccount.getLastIntPostDate();
-            if (lastIntPostDate != null &&
-                    DateUtils.dateFallsOnOrBeforeDate(payment.getTransactionDate(), lastIntPostDate)) {
+            if (lastIntPostDate != null
+                    && DateUtils.dateFallsOnOrBeforeDate(payment.getTransactionDate(), lastIntPostDate)) {
                 this.recalculateInterestPostings(savingsAccount.getAccountId(),
                         new LocalDate(payment.getTransactionDate()));
             }
 
-            //commit
+            // commit
             if (inTransaction) {
                 this.transactionHelper.flushSession();
             } else {
@@ -401,8 +401,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
             this.transactionHelper.beginAuditLoggingFor(savingsAccount);
 
-            AccountPaymentEntity newPayment = savingsAccount.adjustUserAction(amountAdjustedTo, savingsAdjustment.getNote(),
-                    savingsAdjustment.getTrxnDate(), updatedBy, savingsAdjustment.getPaymentId());
+            AccountPaymentEntity newPayment = savingsAccount.adjustUserAction(amountAdjustedTo,
+                    savingsAdjustment.getNote(), savingsAdjustment.getTrxnDate(), updatedBy,
+                    savingsAdjustment.getPaymentId());
             recalculateInterestPostings(savingsAccount.getAccountId(), new LocalDate(adjustedPayment.getPaymentDate()));
 
             if (hasAccountNegativeBalance(savingsAccount)) {
@@ -418,9 +419,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 SavingsBO otherSavingsAccount = this.savingsDao.findById(otherTransferPayment.getAccountId());
                 otherSavingsAccount.updateDetails(userContext);
 
-                AccountPaymentEntity newOtherTransferPayment = otherSavingsAccount.adjustUserAction(amountAdjustedTo, savingsAdjustment.getNote(),
-                        savingsAdjustment.getTrxnDate(), updatedBy, otherTransferPayment.getPaymentId());
-                recalculateInterestPostings(savingsAccount.getAccountId(), new LocalDate(adjustedPayment.getPaymentDate()));
+                AccountPaymentEntity newOtherTransferPayment = otherSavingsAccount.adjustUserAction(amountAdjustedTo,
+                        savingsAdjustment.getNote(), savingsAdjustment.getTrxnDate(), updatedBy,
+                        otherTransferPayment.getPaymentId());
+                recalculateInterestPostings(savingsAccount.getAccountId(),
+                        new LocalDate(adjustedPayment.getPaymentDate()));
 
                 if (hasAccountNegativeBalance(otherSavingsAccount)) {
                     throw new BusinessRuleException("errors.insufficentbalance",
@@ -492,7 +495,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     /**
      * This method is responsible for posting interest for the last posting period only.
-     *
+     * 
      * It assumes that interest calculation and interest posting frequencies cannot change on savings product of savings
      * account. It assumes that the interest posting date is correct and valid with respect to the interest posting
      * frequency of the product/account.
@@ -512,7 +515,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
-    private void postInterestForAccount(Integer savingsId, UserContext userContext, PersonnelBO createdBy, boolean inTransaction) {
+    private void postInterestForAccount(Integer savingsId, UserContext userContext, PersonnelBO createdBy,
+            boolean inTransaction) {
 
         SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
         savingsAccount.updateDetails(userContext);
@@ -993,7 +997,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(),
                 openingBalanceSavingsAccount.getRecommendedOrMandatoryAmount());
         Money openingBalance = new Money(savingsProduct.getCurrency(), new BigDecimal(0));
-        
 
         LocalDate activationDate = openingBalanceSavingsAccount.getActivationDate();
 
@@ -1010,20 +1013,21 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         DateTimeService dateTimeService = new DateTimeService();
         savingsAccount.setDateTimeService(dateTimeService);
         openingBalance = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getOpeningBalance());
-        if(savingsAccountState.isActiveLoanAccountState()) {
+        if (savingsAccountState.isActiveLoanAccountState()) {
             savingsAccount.resetRecommendedAmountOnFutureInstallments();
         }
         try {
-            if(openingBalance.isGreaterThanZero()){
-                PaymentData paymentData = new PaymentData(openingBalance, createdBy, Short.valueOf("1"), activationDate.toDateMidnight().toDate());
+            if (openingBalance.isGreaterThanZero()) {
+                PaymentData paymentData = new PaymentData(openingBalance, createdBy, Short.valueOf("1"), activationDate
+                        .toDateMidnight().toDate());
                 paymentData.setCustomer(customer);
                 savingsAccount.applyPayment(paymentData);
             }
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();
-            //savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
-            
+            // savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
+
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
             return savingsAccount.getGlobalAccountNum();
@@ -1044,7 +1048,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-        
+
         LocalDate createdDate = new LocalDate();
         Integer createdById = user.getUserId();
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(createdById.shortValue());
@@ -1079,12 +1083,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
 
             try {
-                personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer()
-                        .getLoanOfficerId());
+                personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount
+                        .getCustomer().getLoanOfficerId());
             } catch (AccountException e) {
                 throw new MifosRuntimeException("Access denied!", e);
             }
-            
+
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();
@@ -1569,9 +1573,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     /**
      * Calculate the correct offset in SQL "limit" clause.
-     *
+     * 
      * This method has protected visibility so that it can be tested.
-     *
+     * 
      * @param currentPage
      *            Current page number. Page number starts at 1.
      * @param itemsPerPage

@@ -344,6 +344,11 @@
             from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1
             where savingsTrxn1.account.accountId=:accountId)]]>
     </query>
+    
+    <query name="accounts.retrieveAccountIdByGlobalNum">
+        <![CDATA[select accountId from org.mifos.accounts.business.AccountBO
+            where globalAccountNum = :globalAccountNum]]>
+    </query>
 
     <query name="accounts.retrieveSavingsAccounts">
         <![CDATA[from org.mifos.accounts.savings.business.SavingsBO savings

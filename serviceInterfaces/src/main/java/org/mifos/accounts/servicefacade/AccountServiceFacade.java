@@ -28,6 +28,7 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.dto.domain.ApplicableCharge;
+import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,5 +79,8 @@ public interface AccountServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     void applyGroupCharge(Map<Integer, String> idsAndValues, Short chargeId, boolean isPenaltyType);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<SavingsDetailDto> getActiveSavingsAccountsForClientByLoanId(Integer loanAccountId);
     
 }

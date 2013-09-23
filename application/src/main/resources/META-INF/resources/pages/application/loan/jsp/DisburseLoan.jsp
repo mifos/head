@@ -31,9 +31,12 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+    <mifos:NumberFormattingInfo />
+    <span id="transfer.id" title="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'transferPaymentTypeId')}"></span>
 	<span id="page.id" title="DisburseLoan"></span>
 
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+    <script type="text/javascript" src="pages/js/applyPayment.js"></script>
 		
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BackDatedTransactionsAllowed')}" var="allowBackDatedTransactions" />
@@ -168,6 +171,7 @@ explanation of the license and how it is applied.
 							<td>
 							    <c:set var="disablePaymentModeOfPayment" value="${!loanDisbursementActionForm.paymentAmountGreaterThanZero}"/>
 							    <mifos:select property="paymentModeOfPayment"
+                                        styleId="applypayment.input.paymentType"
 										style="width:136px;" disabled="${disablePaymentModeOfPayment}">
 										<c:forEach var="PT"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FeePaymentType')}">
@@ -176,6 +180,36 @@ explanation of the license and how it is applied.
 									</mifos:select>
 								</td>
 						</tr>
+                        <tr id="applypayment.row.savingsForTransfer">
+                            <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="accounts.account_for_transfer" mandatory="yes" isColonRequired="Yes" /></td>
+
+                            <td class="fontnormal"><mifos:select
+                                styleId="applypayment.input.accountForTransfer" property="accountForTransfer">
+                                <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
+                                    <html-el:option value="${acc.globalAccountNum}">
+                                        ${acc.globalAccountNum} - ${acc.prdOfferingName}
+                                    </html-el:option>
+                                </c:forEach>
+                            </mifos:select></td>
+                        </tr>
+                        <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
+                            <tr class="${acc.globalAccountNum}" style="display:none">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="accounts.type" isColonRequired="Yes" /></td>
+                                <td class="fontnormal">${acc.savingsType}</td>
+                            </tr>
+                            <tr class="${acc.globalAccountNum}" style="display:none">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="accounts.balance" isColonRequired="Yes" /></td>
+                                <td class="fontnormal"><fmt:formatNumber value="${acc.savingsBalance}" /></td>
+                            </tr>
+                            <tr class="${acc.globalAccountNum}" style="display:none">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="Savings.maxAmountPerWithdrawl" isColonRequired="Yes" /></td>
+                                <td class="fontnormal"><fmt:formatNumber value="${acc.maxWithdrawalAmount}" /></td>
+                            </tr>
+                        </c:forEach>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
@@ -204,6 +238,8 @@ explanation of the license and how it is applied.
 				value="${loanDisbursementActionForm.globalAccountNum}" />
 			<html-el:hidden property="accountId"
 				value="${loanDisbursementActionForm.accountId}" />
+            <html-el:hidden property="transferPaymentTypeId"
+                value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'transferPaymentTypeId')}" />
 			<html-el:hidden property="method" value="" />
 		</html-el:form>
 

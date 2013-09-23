@@ -155,9 +155,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
                 saveCollectionSheet.getSaveCollectionSheetCustomers(), payment, failedSavingsDepositAccountNums,
                 failedSavingsWithdrawalNums);
 
+        Short paymentTypeId = (payment.getPaymentType() == null || payment.getPaymentType().getId() == null) ? null : payment.getPaymentType().getId();
         final List<LoanBO> loanAccounts = saveCollectionSheetAssembler.loanAccountAssemblerFromDto(saveCollectionSheet
                 .getSaveCollectionSheetCustomers(), payment, failedLoanDisbursementAccountNumbers,
-                failedLoanRepaymentAccountNumbers);
+                failedLoanRepaymentAccountNumbers, paymentTypeId);
 
         final List<AccountBO> customerAccounts = saveCollectionSheetAssembler.customerAccountAssemblerFromDto(
                 saveCollectionSheet.getSaveCollectionSheetCustomers(), payment, failedCustomerAccountPaymentNums);

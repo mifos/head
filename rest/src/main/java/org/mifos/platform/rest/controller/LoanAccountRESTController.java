@@ -269,7 +269,8 @@ public class LoanAccountRESTController {
                     customerDto);
         }
 
-        this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+        // TODO : Pass the account for transfer id properly
+        this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId, paymentModeOfPayment, null);
 
         CustomerBO client = loan.getCustomer();
 

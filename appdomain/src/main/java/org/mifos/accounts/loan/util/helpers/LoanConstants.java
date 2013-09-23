@@ -224,4 +224,6 @@ public interface LoanConstants {
     String QUESTION_GROUP_INSTANCES = "questionGroupInstances";
     String BACK_DATED_LOAN_PRODUCT_CREATION = "BackDatedLoanProductCreationAllowed";
     String MEMBER_LOAN_REPAYMENT = "memberRepayLoanDto";
+    
+    String PAYMENT_TYPE_TRANSFER_FROM_SAVINGS_ID = "transferPaymentTypeId";
 }

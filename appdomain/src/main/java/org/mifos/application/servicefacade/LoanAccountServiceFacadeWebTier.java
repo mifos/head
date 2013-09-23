@@ -2146,7 +2146,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId) {
+    public void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId, Short paymentTypeIdForFees,
+            Integer accountForTransferId) {
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
@@ -2199,7 +2200,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         loanDisbursements.add(loanDisbursement);
 
         try {
-            accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
+            accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale(), paymentTypeIdForFees,
+                    accountForTransferId);
         } catch (Exception e) {
             throw new MifosRuntimeException(e.getMessage(), e);
         }
