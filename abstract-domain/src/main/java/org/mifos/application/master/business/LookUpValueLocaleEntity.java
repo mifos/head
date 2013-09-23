@@ -20,6 +20,8 @@
 
 package org.mifos.application.master.business;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +41,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "lookup_value_locale")
-public class LookUpValueLocaleEntity {
+public class LookUpValueLocaleEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /*
      * The maximum length of lookUpValue as defined in the SQL schema. This
      * value should track changes in the schema.

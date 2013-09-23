@@ -530,8 +530,8 @@ explanation of the license and how it is applied.
                                 </td></br>
                             </tr>
                    </table>
-                   <mifoscustom:mifostabletag source="guarantyClientInformation"scope="session"
-                   xmlFileName="GuarantyClientInformation.xml"moduleName="org/mifos/customers/client/util/resources"
+                   <mifoscustom:mifostabletag source="guarantyClientInformation" scope="session"
+                   xmlFileName="GuarantyClientInformation.xml" moduleName="org/mifos/customers/client/util/resources"
                    passLocale="true" randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}"/>
                    
 					<!-- Account Info ends --> <!--- MFI Information Starts -->

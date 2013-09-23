@@ -20,8 +20,12 @@
 
 package org.mifos.dto.screen;
 
-public class CustomerStatusDetailDto {
+import java.io.Serializable;
 
+public class CustomerStatusDetailDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    
     private final String id;
     private final String statusName;
     private final String flagName;

@@ -886,7 +886,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <c:param name="backPageUrl" value="${backPageUrl}" />
                                     </c:url>
                                     <td width="50%" align="right" class="fontnormal"> 
-                                        <html-el:link styleId="loanaccountdetail.link.applyGuaranty"href="${applyGuarantyUrl}">
+                                        <html-el:link styleId="loanaccountdetail.link.applyGuaranty" href="${applyGuarantyUrl}">
                                             <mifos:mifoslabel name="loan.applyGuarantorLink" bundle="loanUIResources"></mifos:mifoslabel>
                                         </html-el:link>
                                     </td>
@@ -894,7 +894,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                             </tr>
                         </table>
                         <mifoscustom:mifostabletag source="guarantyInformation"
-                        scope="session" xmlFileName="GuarantyInformation.xml"moduleName="org/mifos/accounts/loan/util/resources" 
+                        scope="session" xmlFileName="GuarantyInformation.xml" moduleName="org/mifos/accounts/loan/util/resources" 
                         passLocale="true" globalAccountNum="${loanInformationDto.globalAccountNum}"
                         accountId="${loanInformationDto.accountId}" randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}"/>
                     </c:if>
