@@ -119,11 +119,6 @@ public class Schedule {
                     computeInterestTillDueDate(transactionDate, principalOutstanding, installment));
             BigDecimal earlierBalance = balance;
             balance = installment.payPrincipal(balance, transactionDate);
-            
-            if (installment.getDueDate().after(transactionDate) && earlierBalance.compareTo(installment.getTotalDue()) == 0) {
-                balance = installment.payInterest(balance, transactionDate);
-            }
-            
             if (earlierBalance.compareTo(balance) > 0) {
                 principalOutstanding = principalOutstanding.subtract(earlierBalance.subtract(balance));
             }
