@@ -38,6 +38,7 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.servicefacade.CreationAccountPenaltyDto;
 import org.mifos.application.servicefacade.CreationFeeDto;
 import org.mifos.application.servicefacade.CreationGLIMAccountsDto;
@@ -105,7 +106,7 @@ public class LoanAccountRESTController {
     public @ResponseBody
     Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam BigDecimal amount,
             @RequestParam(required = false) String paymentDate, @RequestParam(required = false) Short receiptId,
-            @RequestParam(required = false) String receiptDate, @RequestParam Short paymentModeId) throws Exception {
+            @RequestParam(required = false) String receiptDate, @RequestParam(required = false) Short paymentModeId) throws Exception {
 
         validateAmount(amount);
 
@@ -167,7 +168,7 @@ public class LoanAccountRESTController {
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum,
             @RequestParam(required = false) String paymentDate, @RequestParam(required = false) Short receiptId,
-            @RequestParam(required = false) String receiptDate, @RequestParam Short paymentModeId,
+            @RequestParam(required = false) String receiptDate, @RequestParam(required = false) Short paymentModeId,
             @RequestParam Boolean waiveInterest) throws Exception {
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -194,7 +195,7 @@ public class LoanAccountRESTController {
             receiptDateTime = new Date(validateDateString(receiptDate, format).toDate().getTime());
         }
 
-        String paymentTypeId = "1";
+        String paymentTypeId = null;
         if (paymentModeId != null) {
             paymentTypeId = paymentModeId.toString();
         }
@@ -270,7 +271,7 @@ public class LoanAccountRESTController {
         }
 
         // TODO : Pass the account for transfer id properly
-        this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId, paymentModeOfPayment, null);
+        this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId, PaymentTypes.CASH.getValue(), null);
 
         CustomerBO client = loan.getCustomer();
 
