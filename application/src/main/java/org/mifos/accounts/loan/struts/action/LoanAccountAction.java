@@ -263,7 +263,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(VIEWINSTALLMENTDETAILS_SUCCESS);
     }
 
-    @TransactionDemarcate(saveToken = true)
+    @TransactionDemarcate(joinToken = true)
     public ActionForward getAllActivity(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
                                         final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
