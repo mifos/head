@@ -25,7 +25,7 @@ public class QueryIntroductionAdvisor extends DefaultIntroductionAdvisor {
             return false;
         }
 
-        if (clazz.getName().startsWith("com.")) {
+        if (clazz.getName().startsWith("com.") && !clazz.getName().startsWith("com.sun.proxy.")) {
             return false;
         }
 
