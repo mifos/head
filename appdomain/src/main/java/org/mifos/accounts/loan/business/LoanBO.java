@@ -1295,7 +1295,7 @@ public class LoanBO extends AccountBO implements Loan {
             // Disbursal process has to create its own accountPayment taking into account any disbursement fees
             Money feeAmountAtDisbursement = getFeesDueAtDisbursement();
             accountPayment = new AccountPaymentEntity(this, this.loanAmount.subtract(feeAmountAtDisbursement),
-                    receiptNum, receiptDate, getPaymentTypeEntity(paymentTypeIdForFees), transactionDate);
+                    receiptNum, receiptDate, getPaymentTypeEntity(paymentTypeId), transactionDate);
             accountPayment.setCreatedByUser(loggedInUser);
 
             if (feeAmountAtDisbursement.isGreaterThanZero()) {
