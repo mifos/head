@@ -691,4 +691,21 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
     }
+    
+	@Test
+	public void testDisburseLoanPaymentType() throws Exception {
+		setMifosUserFromContext();		
+		
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
+		Short paymentTypeId = Short.valueOf("2");
+
+		((LoanBO) accountBO).disburseLoan("1235", startDate, paymentTypeId,
+				accountBO.getPersonnel(), startDate, Short.valueOf("1"),
+				Short.valueOf("1"), null);
+		StaticHibernateUtil.flushSession();
+
+		LoanBO loan = (LoanBO) accountBO;
+		Assert.assertEquals("Payment type id should be 2", paymentTypeId, loan.getLastPmnt().getPaymentType().getId());
+	}
 }
