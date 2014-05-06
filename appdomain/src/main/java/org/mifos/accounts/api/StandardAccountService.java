@@ -482,6 +482,11 @@ public class StandardAccountService implements AccountService {
         StaticHibernateUtil.commitTransaction();
     }
 
+    @Override
+    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception {
+        disburseLoans(accountPaymentParametersDtoList, locale, null, null);
+    }
+
     public void handleLoanDisbursal(Locale locale, LoanBO loan, PersonnelBO personnelBO, BigDecimal paymentAmount,
             PaymentTypeDto paymentType, LocalDate receiptLocalDate, LocalDate paymentLocalDate, String receiptId,
             Short paymentTypeIdForFees, Integer accountForTransferId) throws PersistenceException, AccountException {

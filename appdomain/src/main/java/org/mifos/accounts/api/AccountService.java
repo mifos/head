@@ -73,6 +73,15 @@ public interface AccountService {
             Integer accountForTransferId) throws Exception;
 
     /**
+     * Mock up method of disburseLoans to fix the MIFOS-6127
+     *
+     * @param accountPaymentParametersDtoList a list of loan payment parameters
+     * @param locale
+     */
+
+    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception;
+
+    /**
      * Lookup a loan account reference for a loan with a matching primary key.
      *
      * @param id primary key of loan account
