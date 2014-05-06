@@ -840,4 +840,9 @@ public class StandardAccountService implements AccountService {
         }
         return withdrawAmount;
     }
+
+    public boolean isAccountGroupLoanMember(Integer accountId) throws Exception {
+        AccountBO account = this.legacyAccountDao.getAccount(accountId);
+        return account.isGroupLoanAccountMember();
+    }
 }

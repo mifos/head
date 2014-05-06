@@ -263,4 +263,10 @@ public interface AccountService {
      * @param savingsGlobalAccNum savings account number
      */
     public void makePaymentFromSavings(AccountPaymentParametersDto accountPaymentParametersDto, String savingsGlobalAccNum);
+
+    /**
+     * Checks if account with accountId is member of group loan account
+     * @param accountId checks account with this ID
+     */
+    boolean isAccountGroupLoanMember(Integer accountId) throws Exception;
 }
