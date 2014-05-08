@@ -246,6 +246,29 @@ public class RESTAPITest extends UiTestCaseBase {
         logOut();
         helper.navigateToJsonAjaxPage();
     }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void personnelOverdueBorrowersByCurrentId() throws Exception {
+        logOut();
+        helper.navigateToJsonAjaxPageAsLoanOfficer();
+        String type = Type.PERSONNEL;
+        String by = By.ID;
+        String value = PERSONNEL_CURRENT_ID + Op.OVERDUE_BORROWERS;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSONList jsonAssert = new AssertJSONList(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("id");
+        jsonAssert.assertEqual("displayName");
+        jsonAssert.assertEqual("globalCustNum");
+        jsonAssert.assertEqual("searchId");
+        jsonAssert.assertEqual("phoneNumber");
+        jsonAssert.assertEqual("address");
+        jsonAssert.assertEqual("overdueLoans");
+        jsonAssert.assertEqual("group");
+        logOut();
+        helper.navigateToJsonAjaxPage();
+    }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
