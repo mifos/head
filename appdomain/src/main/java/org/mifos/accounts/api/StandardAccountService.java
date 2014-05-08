@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.NonUniqueResultException;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
@@ -48,6 +49,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.OverpaymentStatus;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -68,6 +70,7 @@ import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountPaymentParametersDto.PaymentOptions;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.GroupIndividualLoanDto;
@@ -280,7 +283,7 @@ public class StandardAccountService implements AccountService {
                 createMembersLoanPaymentsData(parentPaymentParametersDto);
             }
             for (Map.Entry<Integer, String> member : parentPaymentParametersDto.getMemberInfo().entrySet()) {
-                
+
                 AccountBO memberAcc = this.legacyAccountDao.getAccount(member.getKey());
                 if (null == parentPaymentParametersDto.getMemberAccountIdToRepay() || 
                         (null != parentPaymentParametersDto.getMemberAccountIdToRepay()&& !parentPaymentParametersDto.getMemberAccountIdToRepay().equals(memberAcc.getAccountId()))) {
@@ -362,7 +365,7 @@ public class StandardAccountService implements AccountService {
         StaticHibernateUtil.startTransaction();
         int i = 0;
         for (AccountPaymentParametersDto accountPaymentParametersDTO : accountPaymentParametersDtoList) {
-            accounts.add(makeImportedPayments(accountPaymentParametersDTO));
+            CollectionUtils.addIgnoreNull(accounts, makeImportedPayments(accountPaymentParametersDTO));
             if (i%30 == 0) {
             	StaticHibernateUtil.getSessionTL().flush();
             	StaticHibernateUtil.getSessionTL().clear();
@@ -451,12 +454,22 @@ public class StandardAccountService implements AccountService {
         }
         paymentData.setComment(accountPaymentParametersDto.getComment());
         paymentData.setOverpaymentAmount(overpaymentAmount);
+        if (accountPaymentParametersDto.getPaymentOptions().contains(PaymentOptions.ALLOW_OVERPAYMENTS)) {
+        	paymentData.setAllowOverpayment(true);
+        }
 
         AccountPaymentEntity paymentEntity = account.applyPayment(paymentData);
         
         handleParentGroupLoanPayment(account, accountPaymentParametersDto, savingsPaymentId, paymentEntity);
         
         this.legacyAccountDao.createOrUpdate(account);
+        
+        /*
+         * Return null when only overpayment is being apply
+         */
+        if (amount.isZero() && overpaymentAmount != null && overpaymentAmount.isGreaterThanZero()) {
+            return null;
+        }
         
         return account;
     }

@@ -48,6 +48,8 @@ public class PaymentData {
     private Money overpaymentAmount;
     private boolean adjustment;
 
+    private boolean allowOverpayment;
+
     private AccountPaymentEntity otherTransferPayment;
     /*
      * Holds information including the installment this payment is to be applied
@@ -122,7 +124,15 @@ public class PaymentData {
 		this.adjustment = adjustment;
 	}
 
-	public void setReceiptDate(Date receiptDate) {
+    public boolean isAllowOverpayment() {
+        return allowOverpayment;
+    }
+
+    public void setAllowOverpayment(boolean allowOverpayment) {
+        this.allowOverpayment = allowOverpayment;
+    }
+
+    public void setReceiptDate(Date receiptDate) {
         this.receiptDate = receiptDate;
     }
 

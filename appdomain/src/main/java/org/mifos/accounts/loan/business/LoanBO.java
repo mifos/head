@@ -2079,7 +2079,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     private void validationForMakePayment(PaymentData paymentData) throws AccountException {
-        validateForLoanStatus();
+        validateForLoanStatus(paymentData);
         validateForTotalAmount(paymentData);
     }
 
@@ -2089,9 +2089,13 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
 
-    private void validateForLoanStatus() throws AccountException {
-        if ((this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) != 0)
-                && (this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)) {
+    private void validateForLoanStatus(PaymentData paymentData) throws AccountException {
+        if ((!paymentData.isAllowOverpayment() && this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) != 0
+                && this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)  || 
+                (paymentData.isAllowOverpayment() &&
+                this.getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET) != 0 && 
+                this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) != 0 && 
+                this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)) {
             throw new AccountException("Loan not in a State for a Repayment to be made: " + this.getState().toString());
         }
     }
