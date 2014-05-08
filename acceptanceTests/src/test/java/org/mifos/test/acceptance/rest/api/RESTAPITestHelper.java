@@ -81,6 +81,7 @@ public class RESTAPITestHelper {
         public static final String DEPOSIT = "/deposit";
         public static final String WITHDRAW = "/withdraw";
         public static final String CREATE = "/create";
+        public static final String OVERDUE_BORROWERS = "/overdue_borrowers";
     }
 
     public RESTAPITestHelper(Selenium selenium) {

@@ -1,0 +1,40 @@
+[
+    {
+        "id": null,
+        "displayName": "group1",
+        "globalCustNum": "0002-000000041",
+        "searchId": null,
+        "phoneNumber": "",
+        "address": null,
+        "overdueLoans": [
+            {
+                "totalAmountInArrears": "620.0",
+                "globalAccountNum": "000100000000074",
+                "prdOfferingName": "REST Loan Product A",
+                "accountStateName": "Active in Bad Standing",
+                "accountStateId": 9,
+                "totalAmountDue": "620.0"
+            }
+        ],
+        "group": true
+    },
+    {
+        "id": null,
+        "displayName": "client1",
+        "globalCustNum": "0002-000000042",
+        "searchId": null,
+        "phoneNumber": "",
+        "address": null,
+        "overdueLoans": [
+            {
+                "totalAmountInArrears": "620.0",
+                "globalAccountNum": "000100000000077",
+                "prdOfferingName": "REST Loan Product A",
+                "accountStateName": "Active in Bad Standing",
+                "accountStateId": 9,
+                "totalAmountDue": "620.0"
+            }
+        ],
+        "group": false
+    }
+]

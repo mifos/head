@@ -1,65 +1,71 @@
 {
-   "address":{
-      "state":"",
-      "country":"",
-      "displayAddress":null,
-      "city":"",
-      "zip":"",
-      "phoneNumber":""
-   },
-   "centerPerformanceHistory":{
-      "numberOfGroups":1,
-      "portfolioAtRisk":"0.2",
-      "totalSavingsInvalid":false,
-      "totalSavings":"105.0",
-      "totalOutstandingPortfolioInvalid":false,
-      "totalOutstandingPortfolio":"1100.0",
-      "numberOfClients":1
-   },
-   "customFields":[
-
-   ],
-   "customerMeeting":{
-      "meetingSchedule":"Recur every 1 Week(s) on Monday",
-      "meetingPlace":"rest"
-   },
-   "customerPositions":null,
-   "recentCustomerNotes":null,
-   "activeSurveys":false,
-   "centerDisplay":{
-      "displayName":"Client-REST",
-      "branchId":2,
-      "customerId":1,
-      "loanOfficerId":2,
-      "globalCustNum":"0002-000000001",
-      "externalId":"",
-      "createdDate":"2011-09-12",
-      "customerLevelId":3,
-      "versionNo":15,
-      "mfiJoiningDate":"2011-09-12",
-      "customerStatusName":"Active",
-      "customerStatusId":13,
-      "loanOfficerName":"loan officer"
-   },
-   "customerAccountSummary":{
-      "globalAccountNum":"000100000000001",
-      "nextDueAmount":"0.0"
-   },
-   "groupsOtherThanClosedAndCancelled":[
-      {
-         "address":null,
-         "displayName":"Group-REST",
-         "customerId":2,
-         "searchId":"1.1.1",
-         "loanOfficerId":null,
-         "globalCustNum":"0002-000000002",
-         "externalId":null,
-         "loanOfficerIdAsString":null
-      }
-   ],
-   "savingsAccountsInUse":null,
-   "customerSurveys":[
-
-   ],
-   "closedSavingsAccounts":[]
+    "centerDisplay": {
+        "customerId": 1,
+        "globalCustNum": "0002-000000001",
+        "displayName": "Client-REST",
+        "branchId": 2,
+        "mfiJoiningDate": "2011-09-12",
+        "createdDate": "2011-09-12",
+        "versionNo": 15,
+        "externalId": "",
+        "customerLevelId": 3,
+        "customerStatusId": 13,
+        "customerStatusName": "Active",
+        "loanOfficerId": 2,
+        "loanOfficerName": "loan officer"
+    },
+    "customerAccountSummary": {
+        "globalAccountNum": "000100000000001",
+        "nextDueAmount": "0.0"
+    },
+    "centerPerformanceHistory": {
+        "numberOfGroups": 2,
+        "numberOfClients": 2,
+        "totalOutstandingPortfolio": "2960.0",
+        "totalSavings": "105.0",
+        "portfolioAtRisk": "0.2",
+        "totalOutstandingPortfolioInvalid": false,
+        "totalSavingsInvalid": false
+    },
+    "address": {
+        "displayAddress": null,
+        "city": "",
+        "state": "",
+        "zip": "",
+        "country": "",
+        "phoneNumber": ""
+    },
+    "groupsOtherThanClosedAndCancelled": [
+        {
+            "customerId": 2,
+            "displayName": "Group-REST",
+            "searchId": "1.1.1",
+            "globalCustNum": "0002-000000002",
+            "loanOfficerId": null,
+            "externalId": null,
+            "address": null,
+            "loanOfficerIdAsString": null
+        },
+        {
+            "customerId": 41,
+            "displayName": "group1",
+            "searchId": "1.1.2",
+            "globalCustNum": "0002-000000041",
+            "loanOfficerId": null,
+            "externalId": null,
+            "address": null,
+            "loanOfficerIdAsString": null
+        }
+    ],
+    "recentCustomerNotes": null,
+    "customerPositions": null,
+    "savingsAccountsInUse": null,
+    "customerMeeting": {
+        "meetingSchedule": "Recur every 1 Week(s) on Monday",
+        "meetingPlace": "rest"
+    },
+    "activeSurveys": false,
+    "customerSurveys": [],
+    "customFields": [],
+    "closedSavingsAccounts": []
 }

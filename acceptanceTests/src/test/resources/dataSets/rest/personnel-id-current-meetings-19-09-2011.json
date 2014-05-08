@@ -3,21 +3,35 @@
 		{
 			"id": 1,
 			"displayName": "Client-REST",
-			"searchId": "1.1",
 			"globalCustNum": "0002-000000001",
+			"searchId": "1.1",
 			"groups": [
 				{
 					"id": 2,
 					"displayName": "Group-REST",
-					"searchId": "1.1.1",
 					"globalCustNum": "0002-000000002",
+					"searchId": "1.1.1",
 					"clients": [
 						{
 							"id": 3,
 							"displayName": "Client REST API",
-							"searchId": "1.1.1.1",
-							"globalCustNum": "0002-000000003"
-						}		
+							"globalCustNum": "0002-000000003",
+							"searchId": "1.1.1.1"
+						}
+					]
+				},
+				{
+					"id": 41,
+					"displayName": "group1",
+					"globalCustNum": "0002-000000041",
+					"searchId": "1.1.2",
+					"clients": [
+						{
+							"id": 42,
+							"displayName": "client1",
+							"globalCustNum": "0002-000000042",
+							"searchId": "1.1.2.1"
+						}
 					]
 				}
 			]
