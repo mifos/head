@@ -170,6 +170,13 @@ explanation of the license and how it is applied.
 										</c:otherwise>
 									</c:choose>
                                 </tr>
+                                <tr class="fontnormal">
+                                    <td><fmt:message key="admin.importexport.numberOfOverpayments">
+                                        <fmt:param>
+                                            <fmt:formatNumber value="${requestScope.numberOfOverpayments}" />
+                                        </fmt:param>
+                                    </fmt:message></td>
+                                </tr>
                                 <tr class="fontnormalred">
                                     <td><br />
                                     <c:if test="${!empty importTransactionsErrors}">

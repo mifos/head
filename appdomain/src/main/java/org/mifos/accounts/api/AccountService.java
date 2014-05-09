@@ -269,4 +269,10 @@ public interface AccountService {
      * @param accountId checks account with this ID
      */
     boolean isAccountGroupLoanMember(Integer accountId) throws Exception;
+
+    /**
+     * Checks if particular payment would have overpayment
+     * @param payment payment dto
+     */
+    boolean doesTransactionIntroduceOverpayment(AccountPaymentParametersDto payment) throws Exception;
 }

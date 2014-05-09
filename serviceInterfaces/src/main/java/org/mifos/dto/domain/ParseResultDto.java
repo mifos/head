@@ -39,6 +39,7 @@ public class ParseResultDto {
     private int numberRowSuccessfullyParsed;
     private String statusLogFile;
     private List<AccountTrxDto> trxIdsToUndo;
+    private int numberOfOverpayments;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
@@ -47,6 +48,11 @@ public class ParseResultDto {
         this.totalAmountOfTransactionsImported = new BigDecimal(BigInteger.ZERO);
         this.totalAmountOfTransactionsWithError = new BigDecimal(BigInteger.ZERO);
         this.trxIdsToUndo = new ArrayList<AccountTrxDto>();
+    }
+
+    public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows, int numberOfOverpayments) {
+        this(parseErrors, successfullyParsedRows);
+        this.numberOfOverpayments = numberOfOverpayments;
     }
 
     public List<String> getParseErrors() {
@@ -137,4 +143,11 @@ public class ParseResultDto {
         this.trxIdsToUndo = trxIdsToUndo;
     }
 
+    public int getNumberOfOverpayments() {
+        return numberOfOverpayments;
+    }
+
+    public void setNumberOfOverpayments(int numberOfOverpayments) {
+        this.numberOfOverpayments = numberOfOverpayments;
+    }
 }

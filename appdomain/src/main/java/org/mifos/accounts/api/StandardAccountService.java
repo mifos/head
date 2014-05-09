@@ -862,4 +862,9 @@ public class StandardAccountService implements AccountService {
         AccountBO account = this.legacyAccountDao.getAccount(accountId);
         return account.isGroupLoanAccountMember();
     }
+    public boolean doesTransactionIntroduceOverpayment(AccountPaymentParametersDto payment) throws Exception {
+        AccountBO account = this.legacyAccountDao.getAccount(payment.getAccountId());
+        Money amount = new Money(account.getCurrency(), payment.getPaymentAmount());
+        return amount.isGreaterThan(((LoanBO) account).getTotalRepayableAmount());
+    }
 }

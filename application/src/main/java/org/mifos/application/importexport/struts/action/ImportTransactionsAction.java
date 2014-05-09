@@ -126,6 +126,7 @@ public class ImportTransactionsAction extends BaseAction {
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
         request.setAttribute("numSuccessfulRows", numberRowSuccessfullyParsed);
         request.setAttribute("submitButtonDisabled", submitButtonDisabled);
+        request.setAttribute("numberOfOverpayments", importResult.getNumberOfOverpayments());
 
         stream.close();
 
