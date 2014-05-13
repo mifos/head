@@ -118,6 +118,81 @@
                 "totalCustomerAccountCollectionFee": 0
             },
             "individualSavingAccounts": []
+        },
+        {
+            "customerId": 41,
+            "name": "group1",
+            "levelId": 2,
+            "parentCustomerId": 1,
+            "searchId": "1.1.2",
+            "branchId": 2,
+            "attendanceId": null,
+            "collectionSheetCustomerAccount": {
+                "accountId": 71,
+                "currencyId": 2,
+                "totalCustomerAccountCollectionFee": 0
+            },
+            "collectionSheetCustomerLoan": [
+                {
+                    "customerId": 41,
+                    "accountId": 74,
+                    "accountStateId": 9,
+                    "productShortName": "RLPA",
+                    "productId": 1,
+                    "currencyId": 2,
+                    "payInterestAtDisbursement": 0,
+                    "amountDueAtDisbursement": 0,
+                    "totalDisbursement": 0,
+                    "totalRepaymentDue": 620,
+                    "disbursalAccount": false
+                }
+            ],
+            "collectionSheetCustomerSaving": [],
+            "individualSavingAccounts": []
+        },
+        {
+            "customerId": 42,
+            "name": "client1",
+            "levelId": 1,
+            "parentCustomerId": 41,
+            "searchId": "1.1.2.1",
+            "branchId": 2,
+            "attendanceId": null,
+            "collectionSheetCustomerAccount": {
+                "accountId": 72,
+                "currencyId": 2,
+                "totalCustomerAccountCollectionFee": 0
+            },
+            "collectionSheetCustomerLoan": [
+                {
+                    "customerId": 42,
+                    "accountId": 75,
+                    "accountStateId": 9,
+                    "productShortName": "RLPA",
+                    "productId": 1,
+                    "currencyId": 2,
+                    "payInterestAtDisbursement": 0,
+                    "amountDueAtDisbursement": 0,
+                    "totalDisbursement": 0,
+                    "totalRepaymentDue": 620,
+                    "disbursalAccount": false
+                },
+                {
+                    "customerId": 42,
+                    "accountId": 77,
+                    "accountStateId": 9,
+                    "productShortName": "RLPA",
+                    "productId": 1,
+                    "currencyId": 2,
+                    "payInterestAtDisbursement": 0,
+                    "amountDueAtDisbursement": 0,
+                    "totalDisbursement": 0,
+                    "totalRepaymentDue": 620,
+                    "disbursalAccount": false
+                }
+            ],
+            "collectionSheetCustomerSaving": [],
+            "individualSavingAccounts": []
         }
     ]
 }
