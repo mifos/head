@@ -697,17 +697,25 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             BigDecimal rescaled = factors.get(i).multiply(scale);
             factors.set(i, rescaled);
         }
-        
         for (int i = 0; i < members.size(); ++i) {
+            BigDecimal currentAmount;
             LoanBO memberAccount = members.get(i);
-                if(i < members.size() - 1) {
-                    BigDecimal currentAmount = amount.divide(factors.get(i), RoundingMode.HALF_UP);
-                    memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
-                    amountSpent = amountSpent.add(currentAmount);
-                } else {
-                    //last element
-                    memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), amount.subtract(amountSpent), memberAccount.getAccountId()));
-                }
+            BigDecimal totalAmountToPay = loanAccount.getTotalRepayableAmount().getAmount();
+            totalAmountToPay = totalAmountToPay.setScale(AccountingRules.getDigitsAfterDecimal());
+
+            if (totalAmountToPay.equals(amount)) {
+                currentAmount = memberAccount.getTotalRepayableAmount().getAmount();
+                memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
+                continue;
+            }
+            if(i < members.size() - 1) {
+                currentAmount = amount.divide(factors.get(i), RoundingMode.HALF_UP);
+                memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
+                amountSpent = amountSpent.add(currentAmount);
+            } else {
+                //last element
+                memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), amount.subtract(amountSpent), memberAccount.getAccountId()));
+            }
         }
         
         Collections.sort(memberAccountDtos);

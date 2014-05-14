@@ -169,7 +169,15 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
             List<ListItem<Short>> paymentTypeList = constructPaymentTypeList(paymentType, localeId);
             AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
-            String totalPaymentDue = account.getTotalPaymentDue().toString();
+            
+            Money totalPaymentDueMoney = account.getTotalPaymentDue();
+            String totalPaymentDue;
+            if (totalPaymentDueMoney.isNonZero()) {
+                totalPaymentDue = totalPaymentDueMoney.toString();
+            }
+            else {
+                totalPaymentDue = ((LoanBO)account).getTotalRepayableAmount().toString();
+            }
             clearSessionAndRollback();
 
             return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, totalPaymentDue,

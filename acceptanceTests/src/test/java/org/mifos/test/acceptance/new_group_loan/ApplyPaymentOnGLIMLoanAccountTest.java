@@ -125,6 +125,26 @@ public class ApplyPaymentOnGLIMLoanAccountTest extends UiTestCaseBase {
             verifyRepaymentScheduleInstallmentsPaid(viewRepaymentSchedulePage, INDIVIDUAL_EXPECTED_PAID_INSTALLMENTS[i]);
             loanAccountPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
         }
+
+        // Test applying payment for last installment
+
+        applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        applyGroupPaymentPage.setPaymentMethod("1");
+        applyGroupPaymentPage.setAmount("1500");
+        applyGroupPaymentConfirmation = applyGroupPaymentPage.submit();
+        loanAccountPage = applyGroupPaymentConfirmation.submitAndNavigateToLoanAccountDetailsPage();
+        
+        // Last installment left to payoff whole account
+        applyGroupPaymentPage = loanAccountPage.navigateToApplyGroupPayment();
+        applyGroupPaymentPage.verifyAmount("60.0");
+        applyGroupPaymentPage.verifyIndividualAmount(0, "15.7");    
+        applyGroupPaymentPage.verifyIndividualAmount(1, "21.4");
+        applyGroupPaymentPage.verifyIndividualAmount(2, "22.9");
+        applyGroupPaymentPage.setPaymentMethod("1");
+        
+        applyGroupPaymentConfirmation = applyGroupPaymentPage.submit();
+        loanAccountPage = applyGroupPaymentConfirmation.submitAndNavigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyLoanStatus(LoanAccountPage.CLOSED);
     }
     
     private void verifyRepaymentScheduleInstallmentsPaid(ViewRepaymentSchedulePage viewRepaymentSchedulePage, String[][] expectedInstallments) {

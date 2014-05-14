@@ -141,6 +141,7 @@ public class WebTierAccountServiceFacadeTest {
         when(accountTypeEntity.getAccountTypeId()).thenReturn((short)1);
         when(loanBO.getAccountType()).thenReturn(accountTypeEntity);
         when(loanBO.getTotalPaymentDue()).thenReturn(Money.zero(rupee));
+        when(loanBO.getTotalRepayableAmount()).thenReturn(Money.zero(rupee));
         Date lastPaymentDate = TestUtils.getDate(12, 12, 2012);
         when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(new AccountPaymentEntity(null, null, null, null, null, lastPaymentDate));
         Short transactionId = Short.valueOf("2");
@@ -167,6 +168,7 @@ public class WebTierAccountServiceFacadeTest {
         when(accountTypeEntity.getAccountTypeId()).thenReturn((short)1);
         when(loanBO.getAccountType()).thenReturn(accountTypeEntity);
         when(loanBO.getTotalPaymentDue()).thenReturn(Money.zero(rupee));
+        when(loanBO.getTotalRepayableAmount()).thenReturn(Money.zero(rupee));
         when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(null);
         Short transactionId = Short.valueOf("2");
         when(acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId)).thenReturn(EMPTY_LIST);
