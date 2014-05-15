@@ -172,11 +172,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             
             Money totalPaymentDueMoney = account.getTotalPaymentDue();
             String totalPaymentDue;
-            if (totalPaymentDueMoney.isNonZero()) {
-                totalPaymentDue = totalPaymentDueMoney.toString();
+            if (account instanceof LoanBO && totalPaymentDueMoney.isZero()) {
+                totalPaymentDue = ((LoanBO)account).getTotalRepayableAmount().toString();
             }
             else {
-                totalPaymentDue = ((LoanBO)account).getTotalRepayableAmount().toString();
+                totalPaymentDue = totalPaymentDueMoney.toString();
             }
             clearSessionAndRollback();
 
