@@ -16,7 +16,8 @@
                 "totalAmountDue": "620.0"
             }
         ],
-        "group": true
+        "group": true,
+        "totalCapitalOutstanding": 0
     },
     {
         "id": null,
@@ -35,6 +36,7 @@
                 "totalAmountDue": "620.0"
             }
         ],
-        "group": false
+        "group": false,
+        "totalCapitalOutstanding": 620
     }
 ]

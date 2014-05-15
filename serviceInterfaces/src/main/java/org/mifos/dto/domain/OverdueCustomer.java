@@ -20,6 +20,7 @@
 
 package org.mifos.dto.domain;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -33,6 +34,7 @@ public class OverdueCustomer extends ClientDescriptionDto {
 	private String address;
 	private List<OverdueLoan> overdueLoans;
 	private boolean group;
+    private BigDecimal totalCapitalOutstanding;
 
 	public List<OverdueLoan> getOverdueLoans() {
 		return overdueLoans;
@@ -65,5 +67,12 @@ public class OverdueCustomer extends ClientDescriptionDto {
 	public void setGroup(boolean group) {
 		this.group = group;
 	}
-	
+
+    public BigDecimal getTotalCapitalOutstanding() {
+        return totalCapitalOutstanding;
+    }
+
+    public void setTotalCapitalOutstanding(BigDecimal totalCapitalOutstanding) {
+        this.totalCapitalOutstanding = totalCapitalOutstanding;
+    }
 }

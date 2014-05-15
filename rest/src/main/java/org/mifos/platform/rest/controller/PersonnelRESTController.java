@@ -255,6 +255,7 @@ public class PersonnelRESTController {
 		overdueCustomer.setOverdueLoans(new ArrayList<OverdueLoan>());
 		overdueCustomer.setPhoneNumber(client.getAddress().getPhoneNumber());
 		overdueCustomer.setAddress(client.getDisplayAddress());
+        overdueCustomer.setTotalCapitalOutstanding(client.getTotalCapitalOutstanding());
 		if (client instanceof GroupBO) {
 			overdueCustomer.setGroup(true);
 		}
