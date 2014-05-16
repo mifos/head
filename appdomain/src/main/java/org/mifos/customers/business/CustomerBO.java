@@ -1433,19 +1433,4 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     	}
     	return false;
     }
-
-    /**
-     * Calculates total capital outstanding
-     */
-    public BigDecimal getTotalCapitalOutstanding() {
-        BigDecimal amount = BigDecimal.ZERO;
-        Set<AccountBO> accounts = getAccounts();
-        for (AccountBO account : accounts) {
-            if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
-                BigDecimal partialAmount = ((LoanBO) account).getTotalRepayableAmount().getAmount();
-                amount = amount.add(partialAmount);
-            }
-        }
-        return amount.setScale(AccountingRules.getDigitsAfterDecimal());
-    }
 }

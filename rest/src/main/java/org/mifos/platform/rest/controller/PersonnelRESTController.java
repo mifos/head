@@ -47,6 +47,7 @@ import org.mifos.dto.domain.OverdueCustomer;
 import org.mifos.dto.domain.OverdueLoan;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -229,6 +230,7 @@ public class PersonnelRESTController {
     
     private void addClientIfHasOverdueLoan(CustomerBO client, List<OverdueCustomer> overdueCustomers) {
     	OverdueCustomer customerToAdd = null;
+        Money amount = null;
     	List<LoanBO> loans = client.isGroup() ? client.getOpenLoanAccountsAndGroupLoans() : client.getOpenLoanAccounts();
     	for (LoanBO loan: loans) {
     		if (loan.getTotalAmountInArrears() != null && loan.getTotalAmountInArrears().isNonZero()) {
@@ -241,11 +243,21 @@ public class PersonnelRESTController {
         			}
         			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
         					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalAmountDue().toString());
-        			
+
+                    Money partialAmount = loan.getTotalAmountInArrears();
+                    if (amount == null) {
+                        amount = partialAmount;
+                    } else {
+                        amount = amount.add(partialAmount);
+                    }
+
         			customerToAdd.getOverdueLoans().add(overdueLoan);
             	}
             }
     	}
+        if (customerToAdd != null) {
+            customerToAdd.setTotalCapitalOutstanding(amount == null ? "0" : amount.toString());
+        }
     }
     
     private OverdueCustomer createOverdueCustomer(CustomerBO client) {
@@ -255,7 +267,6 @@ public class PersonnelRESTController {
 		overdueCustomer.setOverdueLoans(new ArrayList<OverdueLoan>());
 		overdueCustomer.setPhoneNumber(client.getAddress().getPhoneNumber());
 		overdueCustomer.setAddress(client.getDisplayAddress());
-        overdueCustomer.setTotalCapitalOutstanding(client.getTotalCapitalOutstanding());
 		if (client instanceof GroupBO) {
 			overdueCustomer.setGroup(true);
 		}

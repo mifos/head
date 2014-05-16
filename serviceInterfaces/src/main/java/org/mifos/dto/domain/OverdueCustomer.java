@@ -34,7 +34,7 @@ public class OverdueCustomer extends ClientDescriptionDto {
 	private String address;
 	private List<OverdueLoan> overdueLoans;
 	private boolean group;
-    private BigDecimal totalCapitalOutstanding;
+    private String totalCapitalOutstanding;
 
 	public List<OverdueLoan> getOverdueLoans() {
 		return overdueLoans;
@@ -68,11 +68,11 @@ public class OverdueCustomer extends ClientDescriptionDto {
 		this.group = group;
 	}
 
-    public BigDecimal getTotalCapitalOutstanding() {
+    public String getTotalCapitalOutstanding() {
         return totalCapitalOutstanding;
     }
 
-    public void setTotalCapitalOutstanding(BigDecimal totalCapitalOutstanding) {
+    public void setTotalCapitalOutstanding(String totalCapitalOutstanding) {
         this.totalCapitalOutstanding = totalCapitalOutstanding;
     }
 }
