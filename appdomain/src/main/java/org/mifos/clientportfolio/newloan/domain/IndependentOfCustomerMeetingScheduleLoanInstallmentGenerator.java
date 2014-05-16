@@ -59,7 +59,7 @@ public class IndependentOfCustomerMeetingScheduleLoanInstallmentGenerator implem
             List<Holiday> holidays = new ArrayList<Holiday>();
 
             DateTime startFromMeetingDate = meetingStartDate.toDateMidnight().toDateTime();
-            holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, startFromMeetingDate.toLocalDate().toString());
+            //holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, startFromMeetingDate.toLocalDate().toString());
 
             final int occurrences = noOfInstallments + installmentToSkip;
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);

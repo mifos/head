@@ -221,7 +221,7 @@ public class LoanBusinessService implements BusinessService {
     private Collection<CustomerBO> getClientsAssociatedWithGroupLoan(final LoanBO loan) throws ServiceException {
         Collection<CustomerBO> clients;
 
-        if (getConfigService().isGlimEnabled()) {
+        if (getConfigService().isGlimEnabled() || getConfigService().isNewGlimEnabled()) {
             clients = getAccountBusinessService().getCoSigningClientsForGlim(loan.getAccountId());
         } else {
             clients = loan.getCustomer().getChildren();

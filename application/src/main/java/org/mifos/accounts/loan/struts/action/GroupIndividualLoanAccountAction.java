@@ -1,4 +1,5 @@
 package org.mifos.accounts.loan.struts.action;
+
 /*
  * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
@@ -50,6 +51,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -78,7 +80,6 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
     
     private InformationOrderServiceFacade informationOrderServiceFacade;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
-
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
     public static final String GLOBAL_ACCOUNT_NUM = "globalAccountNum";
@@ -141,15 +142,19 @@ public class GroupIndividualLoanAccountAction extends AccountAppAction {
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
 
         Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationValueInteger(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED);
-
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled.intValue(), request);
+        }
+
+        Boolean GroupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
+        if (null != GroupLoanWithMembers && GroupLoanWithMembers != false) {
+            SessionUtils.setAttribute("GroupLoanWithMembers", GroupLoanWithMembers.booleanValue(), request);
         }
 
         List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, allLoanPurposes, request);
 
-        if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
+        if (((null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()) || (null != GroupLoanWithMembers && GroupLoanWithMembers != false))
                 && loanInformationDto.isGroup()) {
 
             List<LoanAccountDetailsDto> loanAccountDetails = this.loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);

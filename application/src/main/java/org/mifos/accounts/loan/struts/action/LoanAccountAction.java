@@ -46,6 +46,7 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -325,12 +326,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled.intValue(), request);
         }
-
+        Boolean GroupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
+        if (null != GroupLoanWithMembers && GroupLoanWithMembers != false) {
+            SessionUtils.setAttribute("GroupLoanWithMembers", GroupLoanWithMembers.booleanValue(), request);
+        }
         List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
 //        List<BusinessActivityEntity> loanPurposes = (List<BusinessActivityEntity>)masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request).getLocaleId());
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, allLoanPurposes, request);
 
-        if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
+        if ((null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue() || (null != GroupLoanWithMembers && GroupLoanWithMembers != false)) 
                 && loanInformationDto.isGroup()) {
 
             List<LoanAccountDetailsDto> loanAccountDetails = this.loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);
@@ -619,7 +623,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         CustomerBO customer = getCustomerFromRequest(request);
 
-        if (isGlimEnabled()) {
+        if (isGlimEnabled() || isNewGlimEnabled()) {
             populateGlimAttributes(request, loanActionForm, globalAccountNum, customer);
         }
 
@@ -719,7 +723,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     GlimSessionAttributes getGlimSpecificPropertiesToSet(final LoanAccountActionForm loanActionForm,
                                                          final String globalAccountNum, final CustomerBO customer, final List<ValueListElement> businessActivities)
             throws ServiceException {
-        if (configService.isGlimEnabled() && customer.isGroup()) {
+        if ((configService.isGlimEnabled() || configService.isNewGlimEnabled()) && customer.isGroup()) {
             List<LoanBO> individualLoans = loanBusinessService.getAllChildrenForParentGlobalAccountNum(globalAccountNum);
 
             List<ClientBO> activeClientsUnderGroup = this.customerDao.findActiveClientsUnderGroup(customer);
@@ -807,7 +811,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                        final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
-        if (isGlimEnabled()) {
+        if (isGlimEnabled() || isNewGlimEnabled()) {
             performGlimSpecificOnManagePreview(request, loanAccountForm);
             addEmptyBuisnessActivities(loanAccountForm.getClientDetails());
         }
@@ -835,6 +839,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setGlimEnabledSessionAttributes(request, customer.isGroup());
         if (customer.isGroup()) {
             List<LoanAccountDetailsDto> loanAccountDetailsView = populateDetailsForSelectedClients(loanAccountForm.getClientDetails(), loanAccountForm.getClients());
+            //
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsView, request);
         }
     }
@@ -850,7 +855,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                 return ((LoanAccountDetailsDto) object).getClientId().equals(clientId);
                             }
                         });
-
                 if (matchingClientDetail != null) {
                     setGovernmentIdAndPurpose(matchingClientDetail);
                     loanAccountDetailsView.add(matchingClientDetail);
@@ -919,8 +923,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
 
         loanBO.setExternalId(loanAccountActionForm.getExternalId());
-        boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
-        if ((configService.isGlimEnabled() && customer.isGroup()) || (groupLoanWithMembers && customer.isGroup())) {
+        if ((configService.isGlimEnabled() || configService.isNewGlimEnabled()) && customer.isGroup()) {
+        	//
             List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
             List<LoanBO> individualLoans = loanDao.findIndividualLoans(Integer.valueOf(
                   loanBO.getAccountId()));
@@ -948,16 +952,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                final boolean isRepaymentIndepOfMeetingEnabled, final List<LoanAccountDetailsDto> loanAccountDetailsList,
                                final List<LoanBO> individualLoans, final Locale locale) throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
+        BigDecimal totalAmount = new BigDecimal("0.00");
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
-            Predicate predicateNewGlim = new Predicate() {
-                
-                @Override
-                public boolean evaluate(final Object object) {
-                    return ((LoanBO) object).getAccountId().toString().equals(
-                            loanAccountDetail.getLoanAccountId());
-                }
-
-            };
+        	String test = loanAccountDetail.getLoanAmount();
+            totalAmount = totalAmount.add(new BigDecimal(loanAccountDetail.getLoanAmount()));
             Predicate predicateOldGlim = new Predicate() {
                 
                 @Override
@@ -967,21 +965,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 }
 
             };
-            LoanBO individualLoan ;
-            if(AccountingRules.isGroupLoanWithMembers()){
-                individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicateNewGlim);
-            }
-            else{
-                individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicateOldGlim);
-            }
+            LoanBO individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicateOldGlim);
             if (individualLoan == null) {
 //                glimLoanUpdater.createIndividualLoan(loanAccountActionForm, loanBO, isRepaymentIndepOfMeetingEnabled,
 //                        loanAccountDetail);
             } else {
                 foundLoans.add(individualLoan.getAccountId());
                 try {
-                    if(loanAccountActionForm.getLoanAmount()!=null)
-                    loanAccountDetail.setLoanAmount(loanAccountActionForm.getLoanAmountAsBigDecimal().divide(individualLoan.calcFactorOfEntireLoan(), 10, RoundingMode.HALF_UP).toString());
+                	if (!AccountingRules.isGroupLoanWithMembers() && loanAccountActionForm.getLoanAmount() != null) {
+                    	loanAccountDetail.setLoanAmount(loanAccountActionForm.getLoanAmountAsBigDecimal().divide(individualLoan.calcFactorOfEntireLoan(), 10, RoundingMode.HALF_UP).toString());
+                	}
                     glimLoanUpdater.updateIndividualLoan(
                             loanAccountActionForm.getDisbursementDateValue(locale), loanAccountActionForm.getInterestDoubleValue(), loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
                 } catch (InvalidDateException e) {
@@ -994,6 +987,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 glimLoanUpdater.delete(loan);
             }
         }
+        loanAccountActionForm.setLoanAmount(totalAmount.toString());
     }
 
     /**
@@ -1084,6 +1078,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         void putIntoSession(final HttpServletRequest request) throws PageExpiredException {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, isGlimEnabled, request);
+            Boolean GroupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
+            if (null != GroupLoanWithMembers && GroupLoanWithMembers != false) {
+                SessionUtils.setAttribute("GroupLoanWithMembers", GroupLoanWithMembers.booleanValue(), request);
+                }
             SessionUtils.setCollectionAttribute(CLIENT_LIST, clients, request);
             SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP, loanAccountOwnerIsGroup, request);
         }
@@ -1154,6 +1152,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private boolean isGlimEnabled() {
         return new ConfigurationBusinessService().isGlimEnabled();
+    }
+    private boolean isNewGlimEnabled(){
+        return new ConfigurationBusinessService().isNewGlimEnabled();
     }
 
     private void setGlimEnabledSessionAttributes(final HttpServletRequest request, final boolean isGroup)
@@ -1285,12 +1286,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled.intValue(), request);
         }
+        Boolean GroupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
+        if (null != GroupLoanWithMembers && GroupLoanWithMembers != false) {
+            SessionUtils.setAttribute("GroupLoanWithMembers", GroupLoanWithMembers.booleanValue(), request);        
+            }
 
         List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, allLoanPurposes, request);
 
         if ((null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
-                && loanInformationDto.isGroup() ) || loanInformationDto.isGroupLoanWithMembersEnabled()) {
+                && loanInformationDto.isGroup() ) || loanInformationDto.isGroupLoanWithMembersEnabled() || 
+                (null != GroupLoanWithMembers && GroupLoanWithMembers!=false)) {
 
             List<LoanAccountDetailsDto> loanAccountDetails = this.loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);
             addEmptyBuisnessActivities(loanAccountDetails);
