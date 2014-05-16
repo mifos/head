@@ -20,7 +20,6 @@
 
 package org.mifos.dto.domain;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
