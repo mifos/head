@@ -31,6 +31,7 @@ import java.util.Map;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.core.MifosRuntimeException;
@@ -147,6 +148,9 @@ public class ConfigurationPersistence extends LegacyGenericDao {
 
     public boolean isGlimEnabled() {
         return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED) == LoanConstants.GLIM_ENABLED_VALUE);
+    }
+    public boolean isNewGlimEnabled(){
+    	return AccountingRules.isGroupLoanWithMembers();
     }
     
     public boolean isMonthClosingDaySet(){

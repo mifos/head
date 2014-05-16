@@ -59,6 +59,9 @@ public class ConfigurationBusinessService implements BusinessService {
     public boolean isGlimEnabled() {
         return configurationPersistence.isGlimEnabled();
     }
+    public boolean isNewGlimEnabled(){
+    	return configurationPersistence.isNewGlimEnabled();
+    }
 
      public boolean isRepaymentIndepOfMeetingEnabled() {
         return new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();

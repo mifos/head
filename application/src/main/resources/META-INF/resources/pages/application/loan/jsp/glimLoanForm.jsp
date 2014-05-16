@@ -62,7 +62,7 @@ explanation of the license and how it is applied.
                     name="${ConfigurationConstants.LOAN}" /></td>
             </tr>
             <script type="text/javascript">var CLIENTS_COUNT = 0;</script>
-
+            
             <c:forEach var="client" varStatus="loopStatus1"
                 items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
                 <bean:define id="indice" toScope="request">
@@ -136,7 +136,7 @@ explanation of the license and how it is applied.
                     <td align="right" class="fontnormalbold" width="28%"><span id="glimLoanForm.label.totalAmount"><mifos:mifoslabel
                         name="loan.totalamount" /></span>:</td>
                     <td valign="top" class="fontnormal"><html-el:text
-                        property="loanAmount" value="0.0" readonly="true"  styleId="sumLoanAmount"  />
+                        property="loanAmount" readonly="true" value="0.0" styleId="sumLoanAmount"  />
                     <mifos:mifoslabel
                         name="loan.allowed_amount" /> &nbsp; <fmt:formatNumber
                         value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <fmt:formatNumber

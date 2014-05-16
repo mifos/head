@@ -139,6 +139,7 @@ explanation of the license and how it is applied.
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"	var="loanIndividualMonitoringIsEnabled" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GroupLoanWithMembers')}"	var="GroupLoanWithMembers" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceId')}" var="recurrenceId" />
@@ -186,7 +187,7 @@ explanation of the license and how it is applied.
 							<br>
 							</td>
 						</tr>
-							<c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
+							<c:if test="${(loanIndividualMonitoringIsEnabled == '1') || (GroupLoanWithMembers == 'true')}">
 								<c:if test="${loanaccountownerisagroup == 'yes'}">
 									<tiles:insert definition=".individualLoansForm" flush="false">
 									</tiles:insert>

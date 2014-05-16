@@ -41,5 +41,8 @@ public class ConfigurationServiceFacadeWebTier implements ConfigurationServiceFa
 	public boolean isGlimEnabled() {
 		return configurationBusinessService.isGlimEnabled();
 	}
+	public boolean isNewGlimEnabled(){
+		return configurationBusinessService.isNewGlimEnabled();
+	}
 
 }

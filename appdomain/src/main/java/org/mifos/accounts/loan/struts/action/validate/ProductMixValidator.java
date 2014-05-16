@@ -82,7 +82,7 @@ public class ProductMixValidator {
         List<LoanBO> activeLoansWhereClientIsAMember = new ArrayList<LoanBO>();
 
         for (LoanBO loanBO : groupLoans) {
-            if (configService.isGlimEnabled()) {
+            if (configService.isGlimEnabled() || configService.isNewGlimEnabled()) {
                 if (isCustomerACoSigningClient(customer, loanBO)) {
                     activeLoansWhereClientIsAMember.add(loanBO);
                 }

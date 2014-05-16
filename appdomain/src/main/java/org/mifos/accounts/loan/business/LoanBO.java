@@ -1829,7 +1829,9 @@ public class LoanBO extends AccountBO implements Loan {
         if (getAccountState().getId().equals(AccountState.LOAN_APPROVED.getValue())
                 || getAccountState().getId().equals(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue())
                 || getAccountState().getId().equals(AccountState.LOAN_PARTIAL_APPLICATION.getValue())
-                || getAccountState().getId().equals(AccountState.LOAN_PENDING_APPROVAL.getValue())) {
+                || getAccountState().getId().equals(AccountState.LOAN_PENDING_APPROVAL.getValue())
+                || getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())
+        		|| getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
             // only check the disbursement date if it has changed
             if (disbursementDate != null && !disbursementDate.equals(getDisbursementDate())
                     && isDisbursementDateLessThanCurrentDate(disbursementDate)) {

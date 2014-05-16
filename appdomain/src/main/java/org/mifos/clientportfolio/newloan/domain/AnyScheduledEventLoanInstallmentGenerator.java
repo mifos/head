@@ -43,7 +43,7 @@ public class AnyScheduledEventLoanInstallmentGenerator implements LoanInstallmen
                 startFromMeetingDate = actualDisbursementDate.plusDays(1);
             }
 
-            holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, startFromMeetingDate.toString());
+            //holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, startFromMeetingDate.toString());
 
             int occurrences = numberOfInstallments;
             if (graceType == GraceType.GRACEONALLREPAYMENTS) {
