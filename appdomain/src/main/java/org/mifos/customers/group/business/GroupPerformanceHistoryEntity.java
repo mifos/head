@@ -360,7 +360,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         LoanOfferingBO loanOffering = loan.getLoanOffering();
         updateLoanCounter(loanOffering, YesNoFlag.YES);
         try {
-            if (configService.isGlimEnabled() && loan.getAccountId() != null) {
+            if ((configService.isNewGlimEnabled() || configService.isGlimEnabled()) && loan.getAccountId() != null) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
                         new UpdateClientPerfHistoryForGroupLoanOnDisbursement(loan));
             }
@@ -376,7 +376,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     public void updateOnWriteOff(LoanBO loan) throws AccountException {
         updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
         try {
-            if (configService.isGlimEnabled()) {
+            if (configService.isGlimEnabled() || configService.isNewGlimEnabled()) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
                         new UpdateClientPerfHistoryForGroupLoanOnWriteOff(loan));
             }
@@ -388,7 +388,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     public void updateOnReversal(LoanBO loan, Money lastLoanAmount) throws AccountException {
         updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
         try {
-            if (configService.isGlimEnabled()) {
+            if (configService.isGlimEnabled() || configService.isNewGlimEnabled()) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
                         new UpdateClientPerfHistoryForGroupLoanOnReversal(loan));
             }
@@ -400,7 +400,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     public void updateOnFullRepayment(LoanBO loan) throws AccountException {
         setLastGroupLoanAmount(loan.getLoanAmount());
         try {
-            if (configService.isGlimEnabled() && !loan.isGroupLoanAccount()) {
+            if ((configService.isNewGlimEnabled() || configService.isGlimEnabled()) && !loan.isGroupLoanAccount()) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
                         new UpdateClientPerfHistoryForGroupLoanOnRepayment(loan));
             }

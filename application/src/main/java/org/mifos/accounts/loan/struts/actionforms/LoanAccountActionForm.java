@@ -858,7 +858,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         validateCustomFields(request, errors);
         performGlimSpecificValidations(errors, currency, request);
         validateRepaymentDayRequired(errors);
-        if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
+        if (!configService.isNewGlimEnabled() || !configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
             validatePurposeOfLoanFields(errors, getMandatoryFields(request));
         }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
@@ -887,7 +887,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private void performGlimSpecificValidations(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
             throws PageExpiredException, PersistenceException {
-        if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
+        if ((configService.isNewGlimEnabled() || configService.isGlimEnabled()) && getCustomer(request).isGroup()) {
             Locale locale = getUserContext(request).getPreferredLocale();
             removeClientsNotCheckedInForm(request);
             validateIndividualLoanFieldsForGlim(errors, locale, currency);
@@ -1021,7 +1021,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         performGlimSpecificValidations(errors, currency, request);
         validateCustomFields(request, errors);
         validateRepaymentDayRequired(errors);
-        if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
+        if (!configService.isNewGlimEnabled() || !configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
             validatePurposeOfLoanFields(errors, getMandatoryFields(request));
         }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
@@ -1043,7 +1043,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             throws ApplicationException {
         LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request);
 
-        if (!(configService.isGlimEnabled() && getCustomer(request).isGroup())) {
+        if ((!configService.isNewGlimEnabled() || !configService.isGlimEnabled()) && getCustomer(request).isGroup()) {
             checkForMinMax(errors, loanAmount, amountRange, this.getLocalizedMessage("loan.amount"));
         }
         checkForMinMax(errors, interestRate, maxInterestRate, minInterestRate,
