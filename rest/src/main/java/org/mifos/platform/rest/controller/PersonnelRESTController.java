@@ -241,10 +241,12 @@ public class PersonnelRESTController {
         				overdueCustomers.add(customerToAdd);
         				
         			}
-        			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
-        					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalAmountDue().toString());
 
-                    Money partialAmount = loan.getTotalAmountInArrears();
+                    Money partialAmount = loan.getRemainingPrincipalAmount();
+        			OverdueLoan overdueLoan = new OverdueLoan(loan.getTotalAmountInArrears().toString(), loan.getGlobalAccountNum(), loanInfo.getPrdOfferingName(),
+        					loan.getAccountState().getName(), new Integer(loan.getAccountState().getId()), loan.getTotalRepayableAmount().toString(), partialAmount.toString());
+
+
                     if (amount == null) {
                         amount = partialAmount;
                     } else {

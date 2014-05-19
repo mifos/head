@@ -40,6 +40,7 @@ public class OverdueLoan implements Serializable {
 	private String accountStateName;
 	private Integer accountStateId;
 	private String totalAmountDue;
+    private String capitalExposure;
 
 	public OverdueLoan(String totalAmountInArrears, String globalAccountNum,
 			String prdOfferingName, String accountStateName,
@@ -53,7 +54,14 @@ public class OverdueLoan implements Serializable {
 		this.totalAmountDue = totalAmountDue;
 	}
 
-	public Integer getAccountStateId() {
+    public OverdueLoan(String totalAmountInArrears, String globalAccountNum,
+                       String prdOfferingName, String accountStateName,
+                       Integer accountStateId, String totalAmountDue, String capitalExposure) {
+        this(totalAmountInArrears, globalAccountNum, prdOfferingName, accountStateName, accountStateId, totalAmountDue);
+        this.capitalExposure = capitalExposure;
+    }
+
+    public Integer getAccountStateId() {
 		return accountStateId;
 	}
 
@@ -100,5 +108,12 @@ public class OverdueLoan implements Serializable {
 	public void setGlobalAccountNum(String globalAccountNum) {
 		this.globalAccountNum = globalAccountNum;
 	}
-	
+
+    public String getCapitalExposure() {
+        return capitalExposure;
+    }
+
+    public void setCapitalExposure(String capitalExposure) {
+        this.capitalExposure = capitalExposure;
+    }
 }
