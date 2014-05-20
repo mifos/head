@@ -13,11 +13,12 @@
                 "prdOfferingName": "REST Loan Product A",
                 "accountStateName": "Active in Bad Standing",
                 "accountStateId": 9,
-                "totalAmountDue": "620.0"
+                "totalAmountDue": "620.0",
+                "capitalExposure": "5555.0"
             }
         ],
         "group": true,
-        "totalCapitalOutstanding": 0
+        "totalCapitalOutstanding": "5555.0"
     },
     {
         "id": null,
@@ -33,10 +34,11 @@
                 "prdOfferingName": "REST Loan Product A",
                 "accountStateName": "Active in Bad Standing",
                 "accountStateId": 9,
-                "totalAmountDue": "620.0"
+                "totalAmountDue": "620.0",
+                "capitalExposure": "1000.0"
             }
         ],
         "group": false,
-        "totalCapitalOutstanding": 620
+        "totalCapitalOutstanding": "1000.0"
     }
 ]

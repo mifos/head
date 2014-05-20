@@ -839,7 +839,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setGlimEnabledSessionAttributes(request, customer.isGroup());
         if (customer.isGroup()) {
             List<LoanAccountDetailsDto> loanAccountDetailsView = populateDetailsForSelectedClients(loanAccountForm.getClientDetails(), loanAccountForm.getClients());
-            //
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsView, request);
         }
     }
@@ -951,10 +950,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                final boolean isRepaymentIndepOfMeetingEnabled, final List<LoanAccountDetailsDto> loanAccountDetailsList,
                                final List<LoanBO> individualLoans, final Locale locale) throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
-        BigDecimal totalAmount = new BigDecimal("0.00");
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
-        	String test = loanAccountDetail.getLoanAmount();
-            totalAmount = totalAmount.add(new BigDecimal(loanAccountDetail.getLoanAmount()));
             Predicate predicateOldGlim = new Predicate() {
                 
                 @Override
@@ -986,7 +982,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 glimLoanUpdater.delete(loan);
             }
         }
-        loanAccountActionForm.setLoanAmount(totalAmount.toString());
     }
 
     /**

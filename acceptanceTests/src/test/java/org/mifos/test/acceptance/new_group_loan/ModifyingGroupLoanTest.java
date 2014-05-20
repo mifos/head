@@ -60,12 +60,10 @@ public class ModifyingGroupLoanTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createGroupLoanAccount(searchParameters, glimClients);
         
         EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-        editLoanAccountInformationPage.setAmount("3500");
         editLoanAccountInformationPage.setInterestRate("33");
         editLoanAccountInformationPage.setNumberOfInstallments("8");
         
         EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
-        editAccountParameters.setPurposeOfLoan("0004-Ox/Buffalo");
         editAccountParameters.setCollateralNotes("Test Edit new GLIM Loan");
         editAccountParameters.setExternalID("1234");
         
@@ -78,9 +76,7 @@ public class ModifyingGroupLoanTest extends UiTestCaseBase {
     private void verifyEditedAccountParameters(LoanAccountPage loanAccountPage) {
         Assert.assertTrue(selenium.isTextPresent("Edit account information"));
         loanAccountPage.verifyInterestRate("33");
-        loanAccountPage.verifyLoanAmount("3500");
         loanAccountPage.verifyNumberOfInstallments("8");
-        loanAccountPage.verifyPurposeOfLoan("0004-Ox/Buffalo");
         loanAccountPage.verifyCollateralNotes("Test Edit new GLIM Loan");
         loanAccountPage.verifyExternalId("1234");
     }
@@ -89,7 +85,6 @@ public class ModifyingGroupLoanTest extends UiTestCaseBase {
         loanAccountPage.navigateToIndividualLoanAccountPageFromPendingApprovalGroupLoan(1);
         Assert.assertFalse(selenium.isTextPresent("Edit account information"));
         loanAccountPage.verifyInterestRate("33");
-        loanAccountPage.verifyLoanAmount("42.6");
         loanAccountPage.verifyNumberOfInstallments("8");
         loanAccountPage.navigateBack();
     }

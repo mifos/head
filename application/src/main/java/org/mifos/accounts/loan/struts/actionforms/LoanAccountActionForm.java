@@ -1043,7 +1043,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             throws ApplicationException {
         LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request);
 
-        if ((!configService.isNewGlimEnabled() || !configService.isGlimEnabled()) && getCustomer(request).isGroup()) {
+        if (!((configService.isNewGlimEnabled() || configService.isGlimEnabled()) && getCustomer(request).isGroup())) {
             checkForMinMax(errors, loanAmount, amountRange, this.getLocalizedMessage("loan.amount"));
         }
         checkForMinMax(errors, interestRate, maxInterestRate, minInterestRate,
