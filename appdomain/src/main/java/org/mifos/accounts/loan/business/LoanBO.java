@@ -1267,7 +1267,9 @@ public class LoanBO extends AccountBO implements Loan {
                 this.disbursementDate = transactionDate;
             }
             regeneratePaymentSchedule(lsimEnabled, null);
-            groupLoanAccountServiceFacade.fixMemberAndParentInstallmentDetails(this.getAccountId());
+            if (this.isParentGroupLoanAccount()) {
+                groupLoanAccountServiceFacade.fixMemberAndParentInstallmentDetails(this.getAccountId());
+            }
         }
         this.disbursementDate = transactionDate;
 

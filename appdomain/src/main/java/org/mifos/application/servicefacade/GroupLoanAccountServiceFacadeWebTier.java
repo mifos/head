@@ -709,7 +709,8 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             BigDecimal totalAmountToPay = loanAccount.getTotalRepayableAmount().getAmount();
             totalAmountToPay = totalAmountToPay.setScale(AccountingRules.getDigitsAfterDecimal());
 
-            if (totalAmountToPay.equals(amount)) {
+            if (totalAmountToPay.equals(amount) || (loanAccount.isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)
+                    && (loanAccount.getAccountOverpayments() == null || loanAccount.getAccountOverpayments().isEmpty()))) {
                 currentAmount = memberAccount.getTotalRepayableAmount().getAmount();
                 memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
                 continue;
