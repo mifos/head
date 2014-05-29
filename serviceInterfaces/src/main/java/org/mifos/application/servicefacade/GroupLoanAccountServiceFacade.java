@@ -37,4 +37,6 @@ public interface GroupLoanAccountServiceFacade {
     List<GroupLoanMemberAdjustmentDto> retrieveMemberAdjustmentDtos(Integer parentAccountId, Integer parentPaymentId, BigDecimal newAmount);
     
     GroupLoanScheduleDto getGroupLoanScheduleDto(CreateGroupLoanAccount createGroupLoanAccount, List<CreateLoanAccount> memberDetails);
+
+    void fixMemberAndParentInstallmentDetails(Integer loanId);
 }

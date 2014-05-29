@@ -120,6 +120,7 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -210,6 +211,7 @@ public class LoanBO extends AccountBO implements Loan {
     private AccountService accountService = ApplicationContextProvider.getBean(AccountService.class);
     private SavingsServiceFacade savingsServiceFacade = ApplicationContextProvider.getBean(SavingsServiceFacade.class);
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao = ApplicationContextProvider.getBean(LegacyAcceptedPaymentTypeDao.class);
+    private GroupLoanAccountServiceFacade groupLoanAccountServiceFacade = ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class);
     
     private Money loanAmount;
     private Money loanBalance;
@@ -1265,6 +1267,7 @@ public class LoanBO extends AccountBO implements Loan {
                 this.disbursementDate = transactionDate;
             }
             regeneratePaymentSchedule(lsimEnabled, null);
+            groupLoanAccountServiceFacade.fixMemberAndParentInstallmentDetails(this.getAccountId());
         }
         this.disbursementDate = transactionDate;
 

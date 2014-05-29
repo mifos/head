@@ -484,6 +484,12 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             this.transactionHelper.closeSession();
         }
     }
+
+    public void fixMemberAndParentInstallmentDetails(Integer loanId) {
+        LoanBO loanAccount = loanDao.findById(loanId);
+        List<LoanBO> memberLoans = new ArrayList<LoanBO>(loanAccount.getMemberAccounts());
+        fixMemberAndParentInstallmentDetails(loanAccount, memberLoans);
+    }
     
     // fix installment details in order to match sum of interest of member accounts to interest of parent account
     // update member fee amounts in order to match parent fee amount
