@@ -56,7 +56,7 @@
         <powermock.version>1.4.7</powermock.version>
         <varying.target.dir>target</varying.target.dir>
         <liquibase.version>2.0.3</liquibase.version>
-        <mysql.connector.version>5.1.18</mysql.connector.version>
+        <mysql.connector.version>8.0.16</mysql.connector.version>
         <jetty.version>7.3.0.v20110203</jetty.version>
         <jackson.version>1.9.3</jackson.version>
         <maven.surefire.memory>-Xmx1024m -XX:MaxPermSize=128m</maven.surefire.memory>
