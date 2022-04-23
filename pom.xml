@@ -49,7 +49,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>3.6.8.Final</hibernate.version>
         <c3p0.version>0.9.1.2</c3p0.version>
-        <spring.version>3.1.0.RELEASE</spring.version>
+        <spring.version>5.3.19</spring.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <spring.mob.version>1.0.0.M3</spring.mob.version>
         <slf4j.version>1.6.1</slf4j.version>
